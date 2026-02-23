@@ -1,0 +1,123 @@
+{
+    "navigation": {
+        "home": "Home",
+        "services": "Services",
+        "successCases": "Success Stories",
+        "softwareDevelopment": "Software Development",
+        "staffAugmentation": "Staff Augmentation",
+        "portfolio": "Portfolio",
+        "aboutUs": "About Us",
+        "careers": "Careers",
+        "contact": "Contact",
+        "scheduleCall": "Schedule a Call",
+        "conversionHook": "Let's talk about your next digital product.",
+        "conversionCta": "[ Book a 30-min Discovery Call ]"
+    },
+    "home": {
+        "hero": {
+            "title": "Accelerating your Digital Transformation",
+            "subtitle": "Empowering Startups and Enterprises with Elite Software Engineering Talent.",
+            "cta": "Let's Talk",
+            "welcome": "Welcome to Dibrand"
+        },
+        "whatWeDo": {
+            "title": "What we do",
+            "subtitle": "We build and run dedicated development teams for companies that need to move fast.",
+            "description": "From product execution to continuous development, we help you scale without growing internal structure. Let’s turn your roadmap into real progress.",
+            "tagline": "Let us make your idea a reality!"
+        },
+        "stats": {
+            "trustLabel": "Global Trust",
+            "items": [
+                {
+                    "label": "Successful Projects",
+                    "value": "+50"
+                },
+                {
+                    "label": "Global Reach",
+                    "value": "LATAM & US"
+                },
+                {
+                    "label": "Talent Retention",
+                    "value": "98%"
+                }
+            ]
+        },
+        "services": {
+            "title": "Our Solutions",
+            "items": [
+                {
+                    "title": "AI-Augmented Staffing",
+                    "desc": "Scale your squad in 72 hours with Senior Developers equipped with AI tools."
+                },
+                {
+                    "title": "Rapid Software Dev",
+                    "desc": "High-performance Web & Mobile apps built with modern stacks. MVPs in weeks."
+                },
+                {
+                    "title": "AI Agents & Automation",
+                    "desc": "Optimize operations with custom LLMs, intelligent bots, and predictive algorithms."
+                },
+                {
+                    "title": "Conversion-Driven UX",
+                    "desc": "Interfaces designed to convert users and reduce friction."
+                },
+                {
+                    "title": "Blockchain Solutions",
+                    "desc": "Secure decentralized apps and audit-ready Smart Contracts."
+                },
+                {
+                    "title": "Cloud & DevOps",
+                    "desc": "Resilient architecture on AWS & Azure for maximum uptime."
+                },
+                {
+                    "title": "Data & BI",
+                    "desc": "Turn raw data into actionable insights."
+                },
+                {
+                    "title": "Immersive Tech",
+                    "desc": "High-impact 3D visuals and AR experiences."
+                }
+            ]
+        },
+        "whyUs": {
+            "title": "Why Dibrand?",
+            "items": [
+                {
+                    "title": "Speed",
+                    "desc": "Fast delivery without compromising quality."
+                },
+                {
+                    "title": "Quality",
+                    "desc": "Clean, tested, and maintainable code."
+                },
+                {
+                    "title": "Top Talent",
+                    "desc": "Exclusive access to the region's best engineers."
+                }
+            ]
+        },
+        "techStack": {
+            "title": "Yes. We cover your tech stack.",
+            "subtitle": "Our expert team has mastery over the most in-demand languages and frameworks."
+        },
+        "testimonials": {
+            "title": "What people say about us",
+            "subtitle": "We are the strategic partner for companies seeking excellence in software engineering."
+        }
+    },
+    "contact": {
+        "title": "Contact Dibrand",
+        "form": {
+            "name": "First Name",
+            "lastName": "Last Name",
+            "email": "Email",
+            "company": "Company",
+            "message": "Message",
+            "submit": "Send Message",
+            "sending": "Sending...",
+            "success": "Message sent successfully! We'll be in touch soon.",
+            "error": "There was an error sending the message. Please try again."
+        }
+    }
+}

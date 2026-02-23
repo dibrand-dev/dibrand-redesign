@@ -1,26 +1,71 @@
 @import "tailwindcss";
 
 :root {
+  /* Dibrand Palette */
+  --color-dibrand-purple: #A3369D;
+  --color-dibrand-magenta: #D83484;
+  --color-corporate-grey: #212121;
+
+  /* Backgrounds */
   --background: #ffffff;
-  --foreground: #171717;
+  --background-alt: #F5F5F5;
+
+  /* Text */
+  --foreground: var(--color-corporate-grey);
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
+  --color-background-alt: var(--background-alt);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-primary: var(--color-dibrand-purple);
+  --color-secondary: var(--color-dibrand-magenta);
+  --color-corporate-grey: var(--color-corporate-grey);
+
+  --font-sans: var(--font-outfit), sans-serif;
+  --font-heading: var(--font-outfit), sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes scroll {
+  from {
+    transform: translateX(0);
   }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+.animate-scroll-reverse {
+  animation: scroll-reverse 30s linear infinite;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
 }

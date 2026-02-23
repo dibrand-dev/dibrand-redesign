@@ -1,0 +1,123 @@
+{
+    "navigation": {
+        "home": "Inicio",
+        "services": "Servicios",
+        "successCases": "Casos de Éxito",
+        "softwareDevelopment": "Desarrollo de Software",
+        "staffAugmentation": "Staff Augmentation",
+        "portfolio": "Portfolio",
+        "aboutUs": "Nosotros",
+        "careers": "Carreras",
+        "contact": "Contacto",
+        "scheduleCall": "Agendar Llamada",
+        "conversionHook": "Hablemos de tu próximo producto digital.",
+        "conversionCta": "[ Agendá una Discovery Call de 30 min ]"
+    },
+    "home": {
+        "hero": {
+            "title": "Aceleramos tu Transformación Digital",
+            "subtitle": "Impulsamos Startups y Empresas con Talento de Ingeniería de Software de Elite.",
+            "cta": "Hablemos",
+            "welcome": "Bienvenido a Dibrand"
+        },
+        "whatWeDo": {
+            "title": "Qué hacemos",
+            "subtitle": "Construimos y gestionamos equipos de desarrollo dedicados para empresas que necesitan velocidad.",
+            "description": "Desde la ejecución del producto hasta el desarrollo continuo, te ayudamos a escalar sin aumentar tu estructura interna. Convirtamos tu roadmap en progreso real.",
+            "tagline": "¡Hagamos realidad tu idea!"
+        },
+        "stats": {
+            "trustLabel": "Confianza Global",
+            "items": [
+                {
+                    "label": "Proyectos Exitosos",
+                    "value": "+50"
+                },
+                {
+                    "label": "Alcance Global",
+                    "value": "LATAM & US"
+                },
+                {
+                    "label": "Retención de Talento",
+                    "value": "98%"
+                }
+            ]
+        },
+        "services": {
+            "title": "Nuestras Soluciones",
+            "items": [
+                {
+                    "title": "Staffing Potenciado por IA",
+                    "desc": "Escala tu equipo en 72 horas con desarrolladores Senior equipados con herramientas de IA."
+                },
+                {
+                    "title": "Desarrollo de Software Rápido",
+                    "desc": "Apps Web y Móviles de alto rendimiento construidas con stacks modernos. MVPs en semanas."
+                },
+                {
+                    "title": "Agentes de IA y Automatización",
+                    "desc": "Optimiza operaciones con LLMs personalizados, bots inteligentes y algoritmos predictivos."
+                },
+                {
+                    "title": "UX Orientado a Conversión",
+                    "desc": "Interfaces diseñadas para convertir usuarios y reducir la fricción."
+                },
+                {
+                    "title": "Soluciones Blockchain",
+                    "desc": "Apps descentralizadas seguras y Smart Contracts listos para auditoría."
+                },
+                {
+                    "title": "Cloud y DevOps",
+                    "desc": "Arquitectura resiliente en AWS y Azure para un tiempo de actividad máximo."
+                },
+                {
+                    "title": "Datos y BI",
+                    "desc": "Convierte datos brutos en información accionable."
+                },
+                {
+                    "title": "Tecnologías Inmersivas",
+                    "desc": "Visuales 3D de alto impacto y experiencias de RA."
+                }
+            ]
+        },
+        "whyUs": {
+            "title": "¿Por qué Dibrand?",
+            "items": [
+                {
+                    "title": "Velocidad",
+                    "desc": "Entregas rápidas sin comprometer la calidad."
+                },
+                {
+                    "title": "Calidad",
+                    "desc": "Código limpio, testeado y mantenible."
+                },
+                {
+                    "title": "Talento Top",
+                    "desc": "Acceso exclusivo a los mejores ingenieros de la región."
+                }
+            ]
+        },
+        "techStack": {
+            "title": "Sí. Cubrimos tu stack tecnológico.",
+            "subtitle": "Nuestro equipo experto domina los lenguajes y frameworks más demandados."
+        },
+        "testimonials": {
+            "title": "Lo que dicen de nosotros",
+            "subtitle": "Somos el socio estratégico de las empresas que buscan excelencia en ingeniería de software."
+        }
+    },
+    "contact": {
+        "title": "Contacto Dibrand",
+        "form": {
+            "name": "Nombre",
+            "lastName": "Apellido",
+            "email": "Email",
+            "company": "Empresa",
+            "message": "Mensaje",
+            "submit": "Enviar Mensaje",
+            "sending": "Enviando...",
+            "success": "¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.",
+            "error": "Hubo un error al enviar el mensaje. Por favor intenta nuevamente."
+        }
+    }
+}
