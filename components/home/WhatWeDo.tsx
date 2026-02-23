@@ -11,7 +11,7 @@ interface WhatWeDoProps {
 
 export default function WhatWeDo({ dict }: WhatWeDoProps) {
     return (
-        <section className="bg-white py-20 md:py-28">
+        <section className="bg-white py-12">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="max-w-5xl text-left">
                     <h2 className="uppercase tracking-widest text-sm font-bold text-[#D83484] mb-4">
