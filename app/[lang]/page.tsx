@@ -2,7 +2,6 @@ import { getDictionary } from "@/lib/dictionaries";
 import ContactForm from "@/components/ContactForm";
 import HeroSection from "@/components/home/HeroSection";
 import WhatWeDo from "@/components/home/WhatWeDo";
-import ValueProposition from "@/components/home/ValueProposition";
 import ServicesGrid from "@/components/home/ServicesGrid";
 import TechStack from "@/components/home/TechStack";
 import Testimonials from "@/components/home/Testimonials";
@@ -23,8 +22,6 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
       <HeroSection dict={dict.home} />
 
       <WhatWeDo dict={dict.home} />
-
-      <ValueProposition dict={dict.home} />
 
       <ServicesGrid dict={dict.home} />
       <TechStack dict={dict.home} />
