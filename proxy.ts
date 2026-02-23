@@ -17,7 +17,7 @@ function getLocale(request: NextRequest): string {
     return wantsSpanish ? 'es' : 'en';
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl
 
     // EXCLUDE STATIC ASSETS AND INTERNAL PATHS FROM ALL MIDDLEWARE
