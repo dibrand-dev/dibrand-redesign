@@ -77,6 +77,22 @@
                 {
                     "title": "Tecnologías Inmersivas",
                     "desc": "Visuales 3D de alto impacto y experiencias de RA."
+                },
+                {
+                    "title": "Integraciones ERP y CRM",
+                    "desc": "Conectamos tu lógica de negocio con las mejores soluciones empresariales del mercado."
+                },
+                {
+                    "title": "E-commerce de Alto Rendimiento",
+                    "desc": "Tiendas online escalables diseñadas para velocidad y alta conversión."
+                },
+                {
+                    "title": "Estrategia de Producto y QA",
+                    "desc": "Aseguramos que tu producto no solo funcione, sino que domine el mercado."
+                },
+                {
+                    "title": "Ciberseguridad y Auditoría",
+                    "desc": "Protegemos tus activos digitales con arquitecturas cifradas y auditorías rigurosas."
                 }
             ]
         },

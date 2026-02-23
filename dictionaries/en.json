@@ -77,6 +77,22 @@
                 {
                     "title": "Immersive Tech",
                     "desc": "High-impact 3D visuals and AR experiences."
+                },
+                {
+                    "title": "ERP & CRM Integrations",
+                    "desc": "Connecting your business logic with the best enterprise solutions on the market."
+                },
+                {
+                    "title": "High-Performance E-commerce",
+                    "desc": "Scalable online stores designed for speed and high conversion."
+                },
+                {
+                    "title": "Product Strategy & QA",
+                    "desc": "We ensure your product not only works, but dominates the market."
+                },
+                {
+                    "title": "Cybersecurity & Audit",
+                    "desc": "Protecting your digital assets with encrypted architectures and rigorous audits."
                 }
             ]
         },

@@ -1,4 +1,5 @@
-import { Users, Rocket, Brain, MousePointerClick, Shield, Cloud, PieChart, Boxes, ArrowRight } from 'lucide-react';
+import { Users, Rocket, Brain, MousePointerClick, Shield, Cloud, PieChart, Boxes, ArrowRight, Database, ShoppingBag, Landmark, Lock } from 'lucide-react';
+
 import Link from 'next/link';
 
 interface ServicesGridProps {
@@ -18,7 +19,11 @@ const iconMap = [
     Shield,              // Blockchain Solutions
     Cloud,               // Cloud & DevOps
     PieChart,            // Data & BI
-    Boxes                // Immersive Tech
+    Boxes,               // Immersive Tech
+    Database,            // ERP & CRM
+    ShoppingBag,         // E-commerce
+    Landmark,            // Strategy & QA
+    Lock                 // Cybersecurity
 ];
 
 export default function ServicesGrid({ dict }: ServicesGridProps) {
