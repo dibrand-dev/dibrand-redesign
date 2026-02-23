@@ -23,7 +23,7 @@ const iconMap = [
 
 export default function ServicesGrid({ dict }: ServicesGridProps) {
     return (
-        <section className="bg-gray-50 py-24 md:py-32" id="services">
+        <section className="bg-gray-50 flex flex-col justify-start pt-24 pb-32" id="services">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-16">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
