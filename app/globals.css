@@ -23,8 +23,14 @@
   --color-secondary: var(--color-dibrand-magenta);
   --color-corporate-grey: var(--color-corporate-grey);
 
-  --font-sans: var(--font-outfit), sans-serif;
-  --font-heading: var(--font-outfit), sans-serif;
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  }
 }
 
 @keyframes scroll {
