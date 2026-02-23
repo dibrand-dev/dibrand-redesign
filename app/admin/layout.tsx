@@ -1,17 +1,11 @@
-import React from 'react';
-import { Montserrat, Lato } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "../globals.css";
 
-const montserrat = Montserrat({
-    variable: "--font-montserrat",
+const outfit = Outfit({
+    variable: "--font-outfit",
     subsets: ["latin"],
-});
-
-const lato = Lato({
-    variable: "--font-lato",
-    weight: ["400", "700"],
-    style: ["normal", "italic"],
-    subsets: ["latin"],
+    display: "swap",
+    weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 export default function AdminRootLayout({
@@ -20,8 +14,8 @@ export default function AdminRootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
-            <body className={`${montserrat.variable} ${lato.variable} antialiased`}>
+        <html lang="en" className={`${outfit.variable} scroll-smooth`}>
+            <body className="font-sans antialiased">
                 {children}
             </body>
         </html>
