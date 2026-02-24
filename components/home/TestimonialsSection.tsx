@@ -1,5 +1,6 @@
+'use client'
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Quote } from 'lucide-react';
 
@@ -26,11 +27,18 @@ interface TestimonialsSectionProps {
 }
 
 export default function TestimonialsSection({ testimonials, dict, lang }: TestimonialsSectionProps) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     if (!testimonials || testimonials.length === 0) return null;
+    if (!mounted) return null;
 
     return (
-        <section className="bg-gray-900 py-24 lg:py-32 relative overflow-hidden" id="testimonials">
-            {/* Background elements */}
+        <section className="bg-zinc-900 py-24 lg:py-32 relative overflow-hidden" id="testimonials">
+            {/* Background elements refined for zinc-900 */}
             <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 transform opacity-10">
                 <div className="h-[40rem] w-[40rem] rounded-full bg-gradient-to-br from-[#D83484] to-[#A3369D] blur-3xl" />
             </div>
@@ -50,7 +58,7 @@ export default function TestimonialsSection({ testimonials, dict, lang }: Testim
                     {testimonials.map((t) => (
                         <div
                             key={t.id}
-                            className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 flex flex-col h-full hover:border-[#D83484]/30 transition-all duration-300 group"
+                            className="bg-zinc-800/40 backdrop-blur-md border border-white/5 rounded-2xl p-8 flex flex-col h-full hover:border-[#D83484]/30 transition-all duration-300 group"
                         >
                             <Quote className="h-8 w-8 text-[#D83484] opacity-40 mb-6 group-hover:scale-110 transition-transform" />
 

@@ -38,7 +38,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
       <TechStack dict={dict.home} />
       <TestimonialsSection testimonials={testimonials || []} dict={dict.home} lang={params.lang} />
 
-      <section id="contact" className="bg-gray-900 py-20 lg:py-28 relative overflow-hidden">
+      <section id="contact" className="bg-black py-20 lg:py-28 relative overflow-hidden border-t border-white/10">
         {/* Abstract Background for Contact */}
         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 transform opacity-20">
           <div className="h-[40rem] w-[40rem] rounded-full bg-gradient-to-br from-[#D83484] to-[#A3369D] blur-3xl" />
