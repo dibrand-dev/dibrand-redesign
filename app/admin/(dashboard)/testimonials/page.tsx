@@ -97,7 +97,7 @@ export default function TestimonialsAdminPage() {
                                                         <Image src={t.avatar_url} alt={t.name} fill className="object-cover" />
                                                     ) : (
                                                         <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold text-xs uppercase">
-                                                            {t.name.substring(0, 2)}
+                                                            {t.name ? t.name.substring(0, 2) : '??'}
                                                         </div>
                                                     )}
                                                 </div>

@@ -67,7 +67,7 @@ export default function TestimonialsSection({ testimonials, dict }: Testimonials
                                         />
                                     ) : (
                                         <div className="w-full h-full bg-gray-700 flex items-center justify-center text-white font-bold text-xs">
-                                            {t.name.substring(0, 2).toUpperCase()}
+                                            {t.name ? t.name.substring(0, 2).toUpperCase() : '??'}
                                         </div>
                                     )}
                                 </div>
