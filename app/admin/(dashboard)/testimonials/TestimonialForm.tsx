@@ -3,7 +3,9 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { saveTestimonial } from './actions';
-import { Loader2, X } from 'lucide-react';
+import { Loader2, X, Upload, ImageIcon } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import Image from 'next/image';
 
 interface TestimonialFormProps {
     testimonial?: any;
@@ -12,6 +14,8 @@ interface TestimonialFormProps {
 
 export default function TestimonialForm({ testimonial, onClose }: TestimonialFormProps) {
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string>(testimonial?.avatar_url || '');
     const [formData, setFormData] = useState({
         id: testimonial?.id || null,
         name: testimonial?.name || '',
@@ -22,15 +26,53 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
         is_visible: testimonial?.is_visible !== undefined ? testimonial.is_visible : true,
     });
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+            const objectUrl = URL.createObjectURL(file);
+            setPreviewUrl(objectUrl);
+        }
+    };
+
+    const uploadImage = async (file: File) => {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `avatars/${fileName}`;
+
+        const { error: uploadError, data } = await supabase.storage
+            .from('testimonials-avatars')
+            .upload(filePath, file);
+
+        if (uploadError) {
+            throw uploadError;
+        }
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('testimonials-avatars')
+            .getPublicUrl(filePath);
+
+        return publicUrl;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            await saveTestimonial(formData);
+            let finalAvatarUrl = formData.avatar_url;
+
+            if (selectedFile) {
+                finalAvatarUrl = await uploadImage(selectedFile);
+            }
+
+            await saveTestimonial({
+                ...formData,
+                avatar_url: finalAvatarUrl
+            });
             onClose();
         } catch (error) {
             console.error('Error saving testimonial:', error);
-            alert('Error al guardar el testimonio');
+            alert('Error al guardar el testimonio: ' + (error as any).message);
         } finally {
             setIsLoading(false);
         }
@@ -86,15 +128,46 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
                             />
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">URL del Avatar (Opcional)</label>
-                            <input
-                                type="text"
-                                value={formData.avatar_url}
-                                onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
-                                placeholder="https://..."
-                            />
+                        <div className="space-y-4 md:col-span-2">
+                            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest block">Avatar del Cliente</label>
+                            <div className="flex items-center gap-6">
+                                <div className="relative h-20 w-20 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border-2 border-gray-100">
+                                    {previewUrl ? (
+                                        <Image
+                                            src={previewUrl}
+                                            alt="Preview"
+                                            fill
+                                            unoptimized
+                                            className="object-cover"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                            <ImageIcon size={32} />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex-1">
+                                    <div className="relative">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
+                                            className="hidden"
+                                            id="avatar-upload"
+                                        />
+                                        <label
+                                            htmlFor="avatar-upload"
+                                            className="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors text-sm font-medium text-gray-600"
+                                        >
+                                            <Upload size={16} />
+                                            {selectedFile ? 'Cambiar imagen' : 'Subir foto de perfil'}
+                                        </label>
+                                        <p className="mt-1 text-[10px] text-gray-400">
+                                            JPG, PNG or GIF. Máximo 2MB.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
