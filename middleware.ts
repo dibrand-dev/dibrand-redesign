@@ -8,16 +8,26 @@ let locales = ['en', 'es']
 let defaultLocale = 'en'
 
 function getLocale(request: NextRequest): string {
-    const acceptLanguage = request.headers.get('accept-language') || '';
-    const headers = { 'accept-language': acceptLanguage };
-    const languages = new Negotiator({ headers }).languages();
+    // 1. Obtener los idiomas preferidos del navegador
+    const negotiatorHeaders: Record<string, string> = {}
+    request.headers.forEach((value, key) => (negotiatorHeaders[key] = value))
 
-    // Strict rule: If browser accepts any form of Spanish, return 'es'. Otherwise default to 'en'.
-    const wantsSpanish = languages.some((lang: string) => lang.toLowerCase().startsWith('es'));
-    return wantsSpanish ? 'es' : 'en';
+    // @ts-ignore
+    const languages = new Negotiator({ headers: negotiatorHeaders }).languages()
+
+    // 2. REGLA DE ORO: Si alguno de los idiomas preferidos empieza con 'es', retornamos 'es'.
+    // Esto cubre es, es-AR, es-MX, es-ES, etc.
+    const isSpanish = languages.some(lang => lang.startsWith('es'));
+
+    if (isSpanish) {
+        return 'es';
+    }
+
+    // 3. Para CUALQUIER otro caso (en, fr, pt, de, o sin headers), retornamos SIEMPRE 'en'.
+    return 'en';
 }
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
 
     // EXCLUDE STATIC ASSETS AND INTERNAL PATHS FROM ALL MIDDLEWARE
