@@ -44,11 +44,12 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
     <div className="flex min-h-screen flex-col bg-white">
       <HeroSection dict={dict.home} />
 
+      <WhatWeDo dict={dict.home} />
+
       <ServicesGrid dict={dict.home} />
 
       <TrustedBySection brands={brands} />
 
-      <WhatWeDo dict={dict.home} />
       <TechStack dict={dict.home} />
       <TestimonialsSection testimonials={testimonials || []} dict={dict.home} lang={params.lang} />
 
