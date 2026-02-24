@@ -44,3 +44,24 @@ export async function deleteTestimonial(id: string) {
     revalidatePath('/admin/testimonials');
     revalidatePath('/');
 }
+
+export async function uploadTestimonialAvatar(formData: FormData) {
+    const file = formData.get('file') as File;
+    if (!file) throw new Error('No file provided');
+
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `avatars/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+        .from('testimonials-avatars')
+        .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage
+        .from('testimonials-avatars')
+        .getPublicUrl(filePath);
+
+    return publicUrl;
+}

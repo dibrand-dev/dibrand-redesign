@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { saveTestimonial } from './actions';
+import { saveTestimonial, uploadTestimonialAvatar } from './actions';
 import { Loader2, X, Upload, ImageIcon } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
 
 interface TestimonialFormProps {
@@ -35,26 +34,6 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
         }
     };
 
-    const uploadImage = async (file: File) => {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `avatars/${fileName}`;
-
-        const { error: uploadError, data } = await supabase.storage
-            .from('testimonials-avatars')
-            .upload(filePath, file);
-
-        if (uploadError) {
-            throw uploadError;
-        }
-
-        const { data: { publicUrl } } = supabase.storage
-            .from('testimonials-avatars')
-            .getPublicUrl(filePath);
-
-        return publicUrl;
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -62,7 +41,9 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
             let finalAvatarUrl = formData.avatar_url;
 
             if (selectedFile) {
-                finalAvatarUrl = await uploadImage(selectedFile);
+                const uploadData = new FormData();
+                uploadData.append('file', selectedFile);
+                finalAvatarUrl = await uploadTestimonialAvatar(uploadData);
             }
 
             await saveTestimonial({
