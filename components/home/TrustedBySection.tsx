@@ -37,9 +37,9 @@ export default function TrustedBySection({ brands }: TrustedBySectionProps) {
                     pauseOnHover={true}
                     className="flex items-center"
                 >
-                    {brands.concat(brands).map((brand, index) => (
+                    {brands.map((brand) => (
                         <div
-                            key={`${brand.id}-${index}`}
+                            key={brand.id}
                             className="mx-12 md:mx-20 flex items-center justify-center group"
                         >
                             <div className="relative h-20 md:h-24 w-auto min-w-[150px] flex items-center justify-center">
