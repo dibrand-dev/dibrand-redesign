@@ -10,9 +10,8 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-async function checkDetailedColumns() {
+async function checkColumns() {
     try {
-        // 1. Fetch one record to see keys
         const { data: records, error: fetchError } = await supabase.from('testimonials').select().limit(1);
 
         if (fetchError) {
@@ -20,21 +19,16 @@ async function checkDetailedColumns() {
         } else {
             console.log('--- TESTIMONIAL RECORD KEYS ---');
             console.log(records && records.length > 0 ? Object.keys(records[0]) : 'Table is empty');
+
+            if (records && records.length === 0) {
+                // If empty, try to get column names via select * on empty table
+                const { data, error } = await supabase.from('testimonials').select('*');
+                console.log('Empty table record keys:', data && data.length > 0 ? Object.keys(data[0]) : 'Still empty');
+            }
         }
-
-        // 2. Query information_schema for exact column definitions (if permissions allow via RPC or similar)
-        // Since we usually don't have direct access to info schema via anon/service key in standard client, 
-        // we'll try a common trick: requesting a non-existent column to see the error message which often lists columns
-
-        const { error: probeError } = await supabase.from('testimonials').select('non_existent_column_probe').limit(1);
-        if (probeError) {
-            console.log('\n--- PROBE ERROR (MAY CONTAIN COLUMN LIST) ---');
-            console.log(probeError.message);
-        }
-
     } catch (err) {
         console.error('Unexpected error:', err);
     }
 }
 
-checkDetailedColumns();
+checkColumns();
