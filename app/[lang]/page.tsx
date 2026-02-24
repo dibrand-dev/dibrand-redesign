@@ -3,6 +3,7 @@ import ContactForm from "@/components/ContactForm";
 import HeroSection from "@/components/home/HeroSection";
 import WhatWeDo from "@/components/home/WhatWeDo";
 import ServicesGrid from "@/components/home/ServicesGrid";
+import StaffAugmentation from "@/components/home/StaffAugmentation";
 import TechStack from "@/components/home/TechStack";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import TrustedBySection from "@/components/home/TrustedBySection";
@@ -47,6 +48,8 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
       <WhatWeDo dict={dict.home} />
 
       <ServicesGrid dict={dict.home} />
+
+      <StaffAugmentation />
 
       <TrustedBySection brands={brands} />
 
