@@ -16,10 +16,10 @@ export default function TrustedBySection({ brands }: TrustedBySectionProps) {
     if (!brands || brands.length === 0) return null;
 
     return (
-        <section className="bg-gray-900 py-24 overflow-hidden">
+        <section className="bg-white py-24 overflow-hidden">
             <div className="container mx-auto px-6 mb-16">
                 <div className="flex flex-col items-center">
-                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center font-outfit">
+                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 text-center font-outfit">
                         SOME COMPANIES THAT TRUST US
                     </h2>
                     <div className="h-1 w-20 bg-gradient-to-r from-[#D83484] to-[#A3369D] mb-8" />
@@ -28,8 +28,8 @@ export default function TrustedBySection({ brands }: TrustedBySectionProps) {
 
             <div className="relative">
                 {/* Gradient Masks */}
-                <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-gray-900 to-transparent z-10 pointer-events-none hidden md:block" />
-                <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-gray-900 to-transparent z-10 pointer-events-none hidden md:block" />
+                <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none hidden md:block" />
+                <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none hidden md:block" />
 
                 <Marquee
                     gradient={false}
@@ -46,7 +46,7 @@ export default function TrustedBySection({ brands }: TrustedBySectionProps) {
                                 <img
                                     src={brand.logo_url}
                                     alt={brand.name}
-                                    className="h-full w-auto object-contain grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none"
+                                    className="h-full w-auto object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none"
                                 />
                             </div>
                         </div>
