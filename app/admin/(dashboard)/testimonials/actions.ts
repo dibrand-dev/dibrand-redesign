@@ -14,11 +14,11 @@ export async function getTestimonials() {
     return (data || []).map((t: any) => ({
         id: t.id,
         name: t.author_name,
-        role_es: t.role_es,
-        role_en: t.role_en,
+        role_es: t.author_role,
+        role_en: null,
         company: t.client_name,
-        content_es: t.content_es,
-        content_en: t.content_en,
+        content_es: t.quote,
+        content_en: null,
         avatar_url: t.client_logo_url,
         is_visible: true
     }));
@@ -29,11 +29,9 @@ export async function saveTestimonial(testimonial: any) {
 
     const dbData = {
         author_name: name,
-        role_es: role_es,
-        role_en: role_en,
+        author_role: role_es, // Store Spanish version in legacy column
         client_name: company,
-        content_es: content_es,
-        content_en: content_en,
+        quote: content_es,    // Store Spanish version in legacy column
         client_logo_url: avatar_url
     };
 
