@@ -16,34 +16,43 @@ export default function TrustedBySection({ brands }: TrustedBySectionProps) {
     if (!brands || brands.length === 0) return null;
 
     return (
-        <section className="bg-white py-12 overflow-hidden">
-            <div className="container mx-auto px-6 mb-10">
-                <h3 className="text-center text-gray-500 font-outfit text-xs md:text-sm font-bold tracking-[0.2em] uppercase">
-                    SOME COMPANIES THAT TRUST US
-                </h3>
+        <section className="bg-gray-900 py-24 overflow-hidden">
+            <div className="container mx-auto px-6 mb-16">
+                <div className="flex flex-col items-center">
+                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center font-outfit">
+                        SOME COMPANIES THAT TRUST US
+                    </h2>
+                    <div className="h-1 w-20 bg-gradient-to-r from-[#D83484] to-[#A3369D] mb-8" />
+                </div>
             </div>
 
-            <Marquee
-                gradient={false}
-                speed={40}
-                pauseOnHover={true}
-                className="flex items-center"
-            >
-                {brands.concat(brands).map((brand, index) => (
-                    <div
-                        key={`${brand.id}-${index}`}
-                        className="mx-8 md:mx-12 flex items-center justify-center group"
-                    >
-                        <div className="relative h-8 md:h-10 w-auto min-w-[100px] flex items-center justify-center">
-                            <img
-                                src={brand.logo_url}
-                                alt={brand.name}
-                                className="h-full w-auto object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"
-                            />
+            <div className="relative">
+                {/* Gradient Masks */}
+                <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-gray-900 to-transparent z-10 pointer-events-none hidden md:block" />
+                <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-gray-900 to-transparent z-10 pointer-events-none hidden md:block" />
+
+                <Marquee
+                    gradient={false}
+                    speed={40}
+                    pauseOnHover={true}
+                    className="flex items-center"
+                >
+                    {brands.concat(brands).map((brand, index) => (
+                        <div
+                            key={`${brand.id}-${index}`}
+                            className="mx-12 md:mx-20 flex items-center justify-center group"
+                        >
+                            <div className="relative h-20 md:h-24 w-auto min-w-[150px] flex items-center justify-center">
+                                <img
+                                    src={brand.logo_url}
+                                    alt={brand.name}
+                                    className="h-full w-auto object-contain grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none"
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </Marquee>
+                    ))}
+                </Marquee>
+            </div>
         </section>
     );
 }
