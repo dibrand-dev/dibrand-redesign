@@ -18,9 +18,11 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
     const [formData, setFormData] = useState({
         id: testimonial?.id || null,
         name: testimonial?.name || '',
-        role: testimonial?.role || '',
+        role_es: testimonial?.role_es || '',
+        role_en: testimonial?.role_en || '',
         company: testimonial?.company || '',
-        content: testimonial?.content || '',
+        content_es: testimonial?.content_es || '',
+        content_en: testimonial?.content_en || '',
         avatar_url: testimonial?.avatar_url || '',
         is_visible: testimonial?.is_visible !== undefined ? testimonial.is_visible : true,
     });
@@ -86,12 +88,23 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Cargo / Role</label>
+                            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Cargo (ES)</label>
                             <input
                                 type="text"
                                 required
-                                value={formData.role}
-                                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                                value={formData.role_es}
+                                onChange={(e) => setFormData({ ...formData, role_es: e.target.value })}
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                                placeholder="Ej: CEO"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Cargo (EN)</label>
+                            <input
+                                type="text"
+                                value={formData.role_en}
+                                onChange={(e) => setFormData({ ...formData, role_en: e.target.value })}
                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
                                 placeholder="Ej: CEO"
                             />
@@ -153,14 +166,25 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Contenido del Testimonio</label>
+                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Contenido (ES)</label>
                         <textarea
                             required
-                            rows={4}
-                            value={formData.content}
-                            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                            rows={3}
+                            value={formData.content_es}
+                            onChange={(e) => setFormData({ ...formData, content_es: e.target.value })}
                             className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none"
-                            placeholder="Escribe el testimonio aquí..."
+                            placeholder="Testimonio en español..."
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Contenido (EN)</label>
+                        <textarea
+                            rows={3}
+                            value={formData.content_en}
+                            onChange={(e) => setFormData({ ...formData, content_en: e.target.value })}
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none"
+                            placeholder="Testimonial in english..."
                         />
                     </div>
 

@@ -103,7 +103,7 @@ export default function TestimonialsAdminPage() {
                                                 </div>
                                                 <div>
                                                     <div className="font-bold text-corporate-grey">{t.name}</div>
-                                                    <div className="text-xs text-gray-500 font-medium">{t.role}</div>
+                                                    <div className="text-xs text-gray-500 font-medium">{t.role_es}</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -113,7 +113,7 @@ export default function TestimonialsAdminPage() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-5">
-                                            <p className="text-sm text-gray-600 line-clamp-2 max-w-md">{t.content}</p>
+                                            <p className="text-sm text-gray-600 line-clamp-2 max-w-md">{t.content_es}</p>
                                         </td>
                                         <td className="px-6 py-5">
                                             <div className="flex justify-center">

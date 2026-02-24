@@ -14,22 +14,26 @@ export async function getTestimonials() {
     return (data || []).map((t: any) => ({
         id: t.id,
         name: t.author_name,
-        role: t.author_role,
+        role_es: t.role_es,
+        role_en: t.role_en,
         company: t.client_name,
-        content: t.quote,
+        content_es: t.content_es,
+        content_en: t.content_en,
         avatar_url: t.client_logo_url,
-        is_visible: true // Defaulting to true as the column is missing
+        is_visible: true
     }));
 }
 
 export async function saveTestimonial(testimonial: any) {
-    const { id, name, role, company, content, avatar_url } = testimonial;
+    const { id, name, role_es, role_en, company, content_es, content_en, avatar_url } = testimonial;
 
     const dbData = {
         author_name: name,
-        author_role: role,
+        role_es: role_es,
+        role_en: role_en,
         client_name: company,
-        quote: content,
+        content_es: content_es,
+        content_en: content_en,
         client_logo_url: avatar_url
     };
 

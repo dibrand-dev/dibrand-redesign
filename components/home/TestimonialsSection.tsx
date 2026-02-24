@@ -6,9 +6,11 @@ import { Quote } from 'lucide-react';
 interface Testimonial {
     id: string;
     name: string;
-    role: string;
+    role_es: string;
+    role_en: string | null;
     company: string;
-    content: string;
+    content_es: string;
+    content_en: string | null;
     avatar_url?: string;
 }
 
@@ -20,9 +22,10 @@ interface TestimonialsSectionProps {
             subtitle: string;
         };
     };
+    lang: string;
 }
 
-export default function TestimonialsSection({ testimonials, dict }: TestimonialsSectionProps) {
+export default function TestimonialsSection({ testimonials, dict, lang }: TestimonialsSectionProps) {
     if (!testimonials || testimonials.length === 0) return null;
 
     return (
@@ -52,7 +55,7 @@ export default function TestimonialsSection({ testimonials, dict }: Testimonials
                             <Quote className="h-8 w-8 text-[#D83484] opacity-40 mb-6 group-hover:scale-110 transition-transform" />
 
                             <p className="text-gray-300 text-lg leading-relaxed mb-10 font-outfit italic">
-                                "{t.content}"
+                                "{lang === 'en' ? (t.content_en || t.content_es) : t.content_es}"
                             </p>
 
                             <div className="mt-auto flex items-center gap-4">
@@ -75,7 +78,7 @@ export default function TestimonialsSection({ testimonials, dict }: Testimonials
                                         {t.name}
                                     </div>
                                     <div className="text-gray-500 text-sm font-outfit">
-                                        {t.role}, <span className="text-[#D83484]/80">{t.company}</span>
+                                        {lang === 'en' ? (t.role_en || t.role_es) : t.role_es}, <span className="text-[#D83484]/80">{t.company}</span>
                                     </div>
                                 </div>
                             </div>

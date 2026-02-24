@@ -20,9 +20,11 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
   const testimonials = (rawTestimonials || []).map((t: any) => ({
     id: t.id,
     name: t.author_name,
-    role: t.author_role,
+    role_es: t.role_es,
+    role_en: t.role_en,
     company: t.client_name,
-    content: t.quote,
+    content_es: t.content_es,
+    content_en: t.content_en,
     avatar_url: t.client_logo_url
   }));
 
@@ -34,7 +36,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
 
       <ServicesGrid dict={dict.home} />
       <TechStack dict={dict.home} />
-      <TestimonialsSection testimonials={testimonials || []} dict={dict.home} />
+      <TestimonialsSection testimonials={testimonials || []} dict={dict.home} lang={params.lang} />
 
       <section id="contact" className="bg-gray-900 py-20 lg:py-28 relative overflow-hidden">
         {/* Abstract Background for Contact */}
