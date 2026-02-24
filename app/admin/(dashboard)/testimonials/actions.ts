@@ -20,7 +20,7 @@ export async function getTestimonials() {
         content_es: t.content_es,
         content_en: t.content_en,
         avatar_url: t.client_logo_url,
-        is_visible: true
+        is_visible: t.is_visible ?? true
     }));
 }
 
@@ -34,7 +34,8 @@ export async function saveTestimonial(testimonial: any) {
         client_name: company,
         content_es: content_es,
         content_en: content_en || null,
-        client_logo_url: avatar_url
+        client_logo_url: avatar_url,
+        is_visible: testimonial.is_visible ?? true
     };
 
     if (id) {
