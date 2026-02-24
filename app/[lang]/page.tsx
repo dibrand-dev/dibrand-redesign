@@ -27,7 +27,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
   }));
 
   return (
-    <main className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white">
       <HeroSection dict={dict.home} />
 
       <WhatWeDo dict={dict.home} />
@@ -101,6 +101,6 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
