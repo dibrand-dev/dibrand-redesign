@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { LayoutDashboard, FileText, Settings, Briefcase, Users, Code, Trophy, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, Briefcase, Users, Code, Trophy, MessageSquare, Building2 } from 'lucide-react';
 import LogoutButton from './LogoutButton';
 import { createClient } from '@/lib/supabase-server-client';
 
@@ -33,6 +33,10 @@ export default async function DashboardLayout({
                     <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
                         <LayoutDashboard size={20} />
                         <span>Dashboard</span>
+                    </Link>
+                    <Link href="/admin/brands" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
+                        <Building2 size={20} />
+                        <span>Clientes</span>
                     </Link>
                     <Link href="/admin/success-stories" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
                         <Trophy size={20} />

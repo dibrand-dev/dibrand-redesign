@@ -5,6 +5,7 @@ import WhatWeDo from "@/components/home/WhatWeDo";
 import ServicesGrid from "@/components/home/ServicesGrid";
 import TechStack from "@/components/home/TechStack";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
+import TrustedBySection from "@/components/home/TrustedBySection";
 import { supabase } from "@/lib/supabase";
 import { FaLinkedin, FaFacebook, FaInstagram, FaXTwitter } from "react-icons/fa6";
 
@@ -28,13 +29,26 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
     avatar_url: t.client_logo_url
   }));
 
+  const { data: rawBrands } = await supabase
+    .from('brands')
+    .select('id, name, logo_url')
+    .eq('is_visible', true);
+
+  const brands = (rawBrands || []).map((b: any) => ({
+    id: b.id,
+    name: b.name,
+    logo_url: b.logo_url
+  }));
+
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <HeroSection dict={dict.home} />
 
-      <WhatWeDo dict={dict.home} />
-
       <ServicesGrid dict={dict.home} />
+
+      <TrustedBySection brands={brands} />
+
+      <WhatWeDo dict={dict.home} />
       <TechStack dict={dict.home} />
       <TestimonialsSection testimonials={testimonials || []} dict={dict.home} lang={params.lang} />
 
