@@ -39,7 +39,7 @@ export default function TestimonialsSection({ testimonials, dict }: Testimonials
                         {dict.testimonials.title}
                     </h2>
                     <div className="h-1 w-20 bg-gradient-to-r from-[#D83484] to-[#A3369D] mb-8" />
-                    <p className="text-gray-400 max-w-2xl text-lg font-outfit">
+                    <p className="text-gray-400 max-w-4xl text-lg font-outfit">
                         {dict.testimonials.subtitle}
                     </p>
                 </div>

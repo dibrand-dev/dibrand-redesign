@@ -12,11 +12,19 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
   const params = await props.params;
   const dict = await getDictionary(params.lang);
 
-  const { data: testimonials } = await supabase
+  const { data: rawTestimonials } = await supabase
     .from('testimonials')
     .select('*')
-    .eq('is_visible', true)
     .order('created_at', { ascending: true });
+
+  const testimonials = (rawTestimonials || []).map((t: any) => ({
+    id: t.id,
+    name: t.author_name,
+    role: t.author_role,
+    company: t.client_name,
+    content: t.quote,
+    avatar_url: t.client_logo_url
+  }));
 
   return (
     <main className="flex min-h-screen flex-col bg-white">
