@@ -4,7 +4,7 @@ import HeroSection from "@/components/home/HeroSection";
 import WhatWeDo from "@/components/home/WhatWeDo";
 import ServicesGrid from "@/components/home/ServicesGrid";
 import TechStack from "@/components/home/TechStack";
-import Testimonials from "@/components/home/Testimonials";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
 import { supabase } from "@/lib/supabase";
 import { FaLinkedin, FaFacebook, FaInstagram, FaXTwitter } from "react-icons/fa6";
 
@@ -15,6 +15,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
   const { data: testimonials } = await supabase
     .from('testimonials')
     .select('*')
+    .eq('is_visible', true)
     .order('created_at', { ascending: true });
 
   return (
@@ -25,7 +26,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
 
       <ServicesGrid dict={dict.home} />
       <TechStack dict={dict.home} />
-      <Testimonials testimonials={testimonials || []} dict={dict.home} />
+      <TestimonialsSection testimonials={testimonials || []} dict={dict.home} />
 
       <section id="contact" className="bg-gray-900 py-20 lg:py-28 relative overflow-hidden">
         {/* Abstract Background for Contact */}
