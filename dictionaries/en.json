@@ -31,7 +31,7 @@
             "items": [
                 {
                     "label": "Successful Projects",
-                    "value": "+50"
+                    "value": "+200"
                 },
                 {
                     "label": "Global Reach",
@@ -120,6 +120,11 @@
         "testimonials": {
             "title": "What people say about us",
             "subtitle": "We are the strategic partner for companies seeking excellence in software engineering."
+        },
+        "staffAugmentationTeaser": {
+            "title": "Staff Augmentation",
+            "description": "Accelerate your development with dedicated teams that integrate into your culture.",
+            "cta": "Learn more"
         }
     },
     "contact": {
@@ -134,6 +139,50 @@
             "sending": "Sending...",
             "success": "Message sent successfully! We'll be in touch soon.",
             "error": "There was an error sending the message. Please try again."
+        }
+    },
+    "staffAugmentation": {
+        "hero": {
+            "title": "Your team, powered up. Elite IT talent integrated into your processes.",
+            "subtitle": "Scale your technological capacity with Senior engineers from LATAM who integrate into your culture, rituals, and time zones.",
+            "cta": "Schedule Consultation"
+        },
+        "whatIs": {
+            "title": "What is Staff Augmentation at Dibrand?",
+            "content": "It is a flexible hiring strategy that allows for covering skill gaps and accelerating roadmaps without the costs or commitments of traditional long-term hiring. We provide you with experts who work under your management, 100% aligned with your objectives."
+        },
+        "benefits": {
+            "items": [
+                {
+                    "title": "Rigorous Selection (Top 3%)",
+                    "desc": "We evaluate technical skills, critical thinking, and cultural fit. We only present profiles that have already passed our Live Coding tests."
+                },
+                {
+                    "title": "Fast Onboarding",
+                    "desc": "Don't wait months. We integrate specialists into your team within 2 to 4 weeks, ready to deliver value from the first sprint."
+                },
+                {
+                    "title": "Total Alignment",
+                    "desc": "Real-time collaboration. Our developers work in your time zone, are proficient in English, and join your dailies as one more member of the house."
+                }
+            ]
+        },
+        "process": {
+            "steps": [
+                {
+                    "title": "Discovery",
+                    "desc": "We understand your technical needs and team culture."
+                },
+                {
+                    "title": "Technical Match",
+                    "desc": "We select the best candidates from our pre-validated pool."
+                },
+                {
+                    "title": "Integration",
+                    "desc": "Guided onboarding and continuous scaling according to project demand."
+                }
+            ],
+            "cta": "Schedule a Call"
         }
     }
 }

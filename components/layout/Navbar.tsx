@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
+import { CONTACT_CALENDAR_URL } from '@/lib/constants';
 
 interface NavbarProps {
     dict: {
@@ -51,7 +52,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
 
     const navLinks = [
         { name: dict.navigation.softwareDevelopment, href: `/${lang}#services` },
-        { name: dict.navigation.staffAugmentation, href: `/${lang}#services` },
+        { name: dict.navigation.staffAugmentation, href: `/${lang}/staff-augmentation` },
         { name: dict.navigation.portfolio, href: `/${lang}/success-stories` },
         { name: dict.navigation.aboutUs, href: `/${lang}#about` },
     ];
@@ -135,7 +136,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                             </h3>
 
                             <a
-                                href="https://calendar.app.google/DSkxdye3jUZhBY5aA"
+                                href={CONTACT_CALENDAR_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="block w-full text-center bg-white text-black px-6 py-4 rounded-xl text-sm font-bold hover:bg-gray-200 transition-all mb-8 hover:scale-[1.02]"
