@@ -4,15 +4,14 @@ import { match } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 
-let locales = ['en', 'es']
-let defaultLocale = 'en'
+const locales = ['en', 'es']
+const defaultLocale = 'en'
 
 function getLocale(request: NextRequest): string {
     // 1. Obtener los idiomas preferidos del navegador
     const negotiatorHeaders: Record<string, string> = {}
     request.headers.forEach((value, key) => (negotiatorHeaders[key] = value))
 
-    // @ts-ignore
     const languages = new Negotiator({ headers: negotiatorHeaders }).languages()
 
     // 2. REGLA DE ORO: Si alguno de los idiomas preferidos empieza con 'es', retornamos 'es'.
@@ -27,7 +26,7 @@ function getLocale(request: NextRequest): string {
     return 'en';
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl
 
     // EXCLUDE STATIC ASSETS AND INTERNAL PATHS FROM ALL MIDDLEWARE

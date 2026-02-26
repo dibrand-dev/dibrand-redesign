@@ -6,11 +6,18 @@ import BrandsForm from './BrandsForm';
 import { Plus, Edit2, Trash2, CheckCircle2, XCircle } from 'lucide-react';
 import Image from 'next/image';
 
+interface Brand {
+    id: string;
+    name: string;
+    logo_url: string;
+    is_visible: boolean;
+}
+
 export default function BrandsAdminPage() {
-    const [brands, setBrands] = useState<any[]>([]);
+    const [brands, setBrands] = useState<Brand[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
-    const [editingBrand, setEditingBrand] = useState<any>(null);
+    const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
 
     const loadBrands = async () => {
         setIsLoading(true);
@@ -40,7 +47,7 @@ export default function BrandsAdminPage() {
         }
     };
 
-    const openEdit = (brand: any) => {
+    const openEdit = (brand: Brand) => {
         setEditingBrand(brand);
         setShowForm(true);
     };

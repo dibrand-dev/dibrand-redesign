@@ -2,8 +2,10 @@ import React from 'react';
 import { FaLinkedin, FaFacebook, FaInstagram, FaXTwitter } from "react-icons/fa6";
 import ContactForm from "@/components/ContactForm";
 
+import { Dictionary } from '@/lib/types';
+
 interface FooterProps {
-    dict: any;
+    dict: Dictionary;
 }
 
 export default function Footer({ dict }: FooterProps) {
@@ -22,7 +24,7 @@ export default function Footer({ dict }: FooterProps) {
                             className="block text-5xl lg:text-6xl font-black text-gray-900 tracking-wide mb-2 leading-none"
                             style={{ textShadow: '-1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}
                         >
-                            LET'S TALK
+                            LET&apos;S TALK
                         </span>
                         <span className="block text-4xl lg:text-5xl font-black text-white leading-tight mb-8">
                             about your next project.

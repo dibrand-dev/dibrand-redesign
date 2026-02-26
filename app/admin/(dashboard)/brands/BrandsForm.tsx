@@ -5,8 +5,15 @@ import { saveBrand, uploadBrandLogo } from './actions';
 import { Loader2, X, Upload, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 
+interface Brand {
+    id: string | null;
+    name: string;
+    logo_url: string;
+    is_visible: boolean;
+}
+
 interface BrandsFormProps {
-    brand?: any;
+    brand?: Brand | null;
     onClose: () => void;
 }
 
@@ -53,7 +60,8 @@ export default function BrandsForm({ brand, onClose }: BrandsFormProps) {
             onClose();
         } catch (error) {
             console.error('Error saving brand:', error);
-            alert('Error al guardar la marca: ' + (error as any).message);
+            const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+            alert('Error al guardar la marca: ' + errorMessage);
         } finally {
             setIsLoading(false);
         }
