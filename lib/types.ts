@@ -67,5 +67,13 @@ export interface Dictionary {
             steps: Array<{ title: string; desc: string }>;
             cta: string;
         };
+        roles: {
+            title: string;
+            items: Array<{ title: string; desc: string }>;
+        };
+        theDibrandWay: {
+            title: string;
+            items: Array<{ title: string; desc: string }>;
+        };
     };
 }

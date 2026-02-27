@@ -122,9 +122,27 @@
             "subtitle": "Somos el socio estratégico de las empresas que buscan excelencia en ingeniería de software."
         },
         "staffAugmentationTeaser": {
-            "title": "Staff Augmentation",
-            "description": "Acelera tu desarrollo con equipos dedicados que se integran a tu cultura.",
-            "cta": "Saber más"
+            "title": "Talento que potencia tu visión.",
+            "subtitle": "No sumamos gente, sumamos valor. Construimos el equipo ideal para tus desafíos más complejos.",
+            "pillars": [
+                {
+                    "title": "El Talento Correcto",
+                    "desc": "Ingenieros Senior con seniority técnico y pensamiento crítico comprobado."
+                },
+                {
+                    "title": "La Cultura Correcta",
+                    "desc": "Fit cultural total. Comunicación fluida en inglés y alineación con tus rituales."
+                },
+                {
+                    "title": "El Tiempo Correcto",
+                    "desc": "Onboarding en tiempo récord. Escalamiento de equipo en menos de 3 semanas."
+                },
+                {
+                    "title": "El Equipo Correcto",
+                    "desc": "Desde desarrolladores individuales hasta escuadrones multidisciplinarios."
+                }
+            ],
+            "cta": "Explorar Staff Augmentation"
         }
     },
     "contact": {
@@ -183,6 +201,48 @@
                 }
             ],
             "cta": "Agendar una llamada"
+        },
+        "roles": {
+            "title": "Perfiles que potenciamos",
+            "items": [
+                {
+                    "title": "Fullstack Developers",
+                    "desc": "Expertos en Node.js, React, Python y arquitecturas escalables."
+                },
+                {
+                    "title": "Mobile Engineers",
+                    "desc": "Desarrollo nativo e híbrido (React Native, Flutter, Swift, Kotlin)."
+                },
+                {
+                    "title": "DevOps & Cloud",
+                    "desc": "Infraestructura como código, CI/CD y gestión en AWS/Azure/GCP."
+                },
+                {
+                    "title": "QA Automation",
+                    "desc": "Aseguramos la calidad con testing automatizado y manual riguroso."
+                },
+                {
+                    "title": "Data & AI",
+                    "desc": "Ingenieros de datos y especialistas en modelos de Machine Learning."
+                }
+            ]
+        },
+        "theDibrandWay": {
+            "title": "The Dibrand Way",
+            "items": [
+                {
+                    "title": "Timezone match",
+                    "desc": "Trabajamos en tu misma zona horaria para una colaboración fluida y en tiempo real."
+                },
+                {
+                    "title": "Seniority 100% comprobado",
+                    "desc": "Nuestros ingenieros pasan por un proceso de validación técnica exhaustivo antes de unirse."
+                },
+                {
+                    "title": "Cultura de Producto",
+                    "desc": "No solo escribimos código; entendemos el negocio y proponemos soluciones que suman valor."
+                }
+            ]
         }
     }
 }

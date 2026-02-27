@@ -1,120 +1,108 @@
 import React from 'react';
 import Image from 'next/image';
-import { ShieldCheck, Zap, Clock, Search, UserCheck, ArrowUpRight } from 'lucide-react';
+import Link from 'next/link';
+import { UserCheck, Heart, Zap, Users, ArrowRight } from 'lucide-react';
+
+const pillars = [
+    {
+        icon: UserCheck,
+        title: "El Talento Correcto",
+        description: "Ingenieros Senior con seniority técnico y pensamiento crítico comprobado."
+    },
+    {
+        icon: Heart,
+        title: "La Cultura Correcta",
+        description: "Fit cultural total. Comunicación fluida en inglés y alineación con tus rituales."
+    },
+    {
+        icon: Zap,
+        title: "El Tiempo Correcto",
+        description: "Onboarding en tiempo récord. Escalamiento de equipo en menos de 3 semanas."
+    },
+    {
+        icon: Users,
+        title: "El Equipo Correcto",
+        description: "Desde desarrolladores individuales hasta escuadrones multidisciplinarios."
+    }
+];
+
+const teamRoles = [
+    { name: "Software Developers", color: "bg-[#D83484]", shape: "rounded-full" },
+    { name: "QA Engineers", color: "bg-[#3B82F6]", shape: "rounded-lg rotate-12" },
+    { name: "UX/UI Designers", color: "bg-[#F59E0B]", shape: "rounded-2xl -rotate-12" },
+    { name: "Project Managers", color: "bg-[#D83484]", shape: "rounded-[30%]" }
+];
 
 export default function StaffAugmentation() {
     return (
-        <section className="relative min-h-[800px] w-full flex items-center py-24 overflow-hidden" id="staff-augmentation">
-            {/* Background Image with grayscale and overlay */}
-            <div className="absolute inset-0 z-0">
-                <Image
-                    src="/staff-aug.png"
-                    alt="Elite IT Talent"
-                    fill
-                    className="object-cover grayscale"
-                    priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-zinc-800 via-gray-900/80 to-gray-900" />
-            </div>
+        <section className="relative w-full py-24 bg-[#0A0A0A] overflow-hidden" id="staff-augmentation">
+            {/* Background geometric 'life' elements */}
+            <div className="absolute top-1/4 -right-20 w-96 h-96 bg-[#D83484]/10 blur-[120px] rounded-full" />
+            <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-[#3B82F6]/10 blur-[120px] rounded-full" />
 
             <div className="container mx-auto px-6 relative z-10">
-                <div className="max-w-4xl mb-20">
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-8 font-outfit leading-tight tracking-tight">
-                        Tu equipo, potenciado.<br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D83484] to-[#A3369D]">
-                            Talento IT de élite
-                        </span> integrado a tus procesos.
+                {/* 1. Encabezado y Texto */}
+                <div className="text-center max-w-4xl mx-auto mb-20">
+                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-outfit tracking-tight">
+                        Talento que potencia tu visión.
                     </h2>
-                    <p className="text-xl md:text-2xl text-gray-300 font-outfit leading-relaxed max-w-3xl">
-                        Escala tu capacidad tecnológica con ingenieros Senior de LATAM que se integran a tu cultura, rituales y zonas horarias. Sin fricciones de reclutamiento.
+                    <p className="text-xl md:text-2xl text-gray-400 font-outfit font-light">
+                        No sumamos gente, sumamos valor. Construimos el equipo ideal para tus desafíos más complejos.
                     </p>
                 </div>
 
-                {/* Concept Block */}
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-12 mb-20 max-w-5xl">
-                    <h3 className="text-2xl font-bold text-white mb-6 font-outfit">¿Qué es Staff Augmentation en Dibrand?</h3>
-                    <p className="text-lg text-gray-300 font-outfit leading-relaxed">
-                        Es una estrategia de contratación flexible que permite cubrir brechas de habilidades y acelerar roadmaps sin los costos ni compromisos de una contratación tradicional a largo plazo. Te proporcionamos expertos que trabajan bajo tu gestión, alineados al 100% con tus objetivos.
-                    </p>
+                {/* 2. Grid de 4 Pilares */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-24">
+                    {pillars.map((pillar, index) => (
+                        <div key={index} className="flex gap-6 p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-[#D83484]/50 transition-colors group">
+                            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-[#D83484]/10 flex items-center justify-center text-[#D83484] group-hover:bg-[#D83484] group-hover:text-white transition-all duration-300">
+                                <pillar.icon size={28} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-white mb-2 font-outfit">{pillar.title}</h3>
+                                <p className="text-gray-400 font-outfit leading-relaxed">{pillar.description}</p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
-                {/* Benefits Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                    <div className="group">
-                        <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-[#D83484] group-hover:bg-[#D83484] group-hover:text-white transition-all duration-300">
-                            <ShieldCheck size={32} />
-                        </div>
-                        <h4 className="text-xl font-bold text-white mb-4 font-outfit">Selección Rigurosa (Top 3%)</h4>
-                        <p className="text-gray-400 font-outfit leading-relaxed">
-                            Evaluamos habilidades técnicas, pensamiento crítico y fit cultural. Solo te presentamos perfiles que ya han superado nuestras pruebas de Live Coding.
-                        </p>
-                    </div>
+                {/* 3. Galería de Roles (Visual Team Showcase) */}
+                <div className="mb-24">
+                    <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20">
+                        {teamRoles.map((role, index) => (
+                            <div key={index} className="group relative flex flex-col items-center">
+                                {/* Geometric shape behind */}
+                                <div className={`absolute -inset-4 ${role.color} opacity-20 blur-xl group-hover:opacity-40 transition-opacity ${role.shape}`} />
+                                <div className={`absolute -inset-1 ${role.color} opacity-30 ${role.shape} scale-90 group-hover:scale-100 transition-transform duration-500`} />
 
-                    <div className="group">
-                        <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-[#D83484] group-hover:bg-[#D83484] group-hover:text-white transition-all duration-300">
-                            <Zap size={32} />
-                        </div>
-                        <h4 className="text-xl font-bold text-white mb-4 font-outfit">Onboarding en tiempo récord</h4>
-                        <p className="text-gray-400 font-outfit leading-relaxed">
-                            No esperes meses. Integramos especialistas en tu equipo en un plazo de 2 a 4 semanas, listos para entregar valor desde el primer sprint.
-                        </p>
-                    </div>
-
-                    <div className="group">
-                        <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-[#D83484] group-hover:bg-[#D83484] group-hover:text-white transition-all duration-300">
-                            <Clock size={32} />
-                        </div>
-                        <h4 className="text-xl font-bold text-white mb-4 font-outfit">Alineación Total</h4>
-                        <p className="text-gray-400 font-outfit leading-relaxed">
-                            Colaboración en tiempo real. Nuestros desarrolladores trabajan en tu franja horaria, dominan el inglés y se suman a tus dailies como un miembro más de la casa.
-                        </p>
-                    </div>
-                </div>
-
-                {/* Process Timeline */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-                    {/* Horizontal Line for Desktop */}
-                    <div className="hidden md:block absolute top-8 left-0 right-0 h-px bg-white/10 z-0" />
-
-                    <div className="relative z-10 pt-16">
-                        <div className="absolute top-0 left-0 w-16 h-16 rounded-full bg-zinc-800 border-4 border-gray-900 flex items-center justify-center text-white font-bold text-xl">
-                            <Search size={24} className="text-[#D83484]" />
-                        </div>
-                        <h5 className="text-[#D83484] font-bold text-sm uppercase tracking-widest mb-2">Paso 1</h5>
-                        <h6 className="text-xl font-bold text-white mb-3 font-outfit">Descubrimiento</h6>
-                        <p className="text-gray-400 text-sm font-outfit">Entendemos tus necesidades técnicas y cultura de equipo.</p>
-                    </div>
-
-                    <div className="relative z-10 pt-16">
-                        <div className="absolute top-0 left-0 w-16 h-16 rounded-full bg-zinc-800 border-4 border-gray-900 flex items-center justify-center text-white font-bold text-xl">
-                            <UserCheck size={24} className="text-[#D83484]" />
-                        </div>
-                        <h5 className="text-[#D83484] font-bold text-sm uppercase tracking-widest mb-2">Paso 2</h5>
-                        <h6 className="text-xl font-bold text-white mb-3 font-outfit">Match Técnico</h6>
-                        <p className="text-gray-400 text-sm font-outfit">Seleccionamos a los mejores candidatos de nuestro pool pre-validado.</p>
-                    </div>
-
-                    <div className="relative z-10 pt-16">
-                        <div className="absolute top-0 left-0 w-16 h-16 rounded-full bg-zinc-800 border-4 border-gray-900 flex items-center justify-center text-white font-bold text-xl">
-                            <Zap size={24} className="text-[#D83484]" />
-                        </div>
-                        <h5 className="text-[#D83484] font-bold text-sm uppercase tracking-widest mb-2">Paso 3</h5>
-                        <h6 className="text-xl font-bold text-white mb-3 font-outfit">Integración</h6>
-                        <p className="text-gray-400 text-sm font-outfit">Onboarding guiado y escalamiento continuo según la demanda del proyecto.</p>
+                                {/* Avatar placeholder */}
+                                <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full bg-zinc-800 border-4 border-zinc-700 overflow-hidden z-10 shadow-2xl">
+                                    <div className="w-full h-full flex items-center justify-center text-zinc-500">
+                                        <Users size={48} />
+                                    </div>
+                                    {/* Abstract pattern to make it look less generic */}
+                                    <div className={`absolute inset-0 opacity-10 bg-gradient-to-tr from-white to-transparent`} />
+                                </div>
+                                <span className="mt-6 text-sm md:text-base font-bold text-white font-outfit tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity text-center px-4">
+                                    {role.name}
+                                </span>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* CTA */}
-                <div className="mt-24">
-                    <a
-                        href="#contact"
-                        className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-[#D83484] to-[#A3369D] text-white font-bold rounded-full hover:scale-105 transition-all shadow-xl shadow-[#D83484]/20 group"
+                {/* 4. Call to Action (CTA) */}
+                <div className="flex justify-center">
+                    <Link
+                        href="/staff-augmentation"
+                        className="inline-flex items-center gap-4 px-12 py-6 bg-white text-black font-black text-lg rounded-full hover:bg-[#D83484] hover:text-white transition-all duration-300 shadow-2xl hover:shadow-[#D83484]/30 active:scale-95 group"
                     >
-                        Escalar mi equipo ahora
-                        <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                    </a>
+                        Explorar Staff Augmentation
+                        <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+                    </Link>
                 </div>
             </div>
         </section>
     );
 }
+
