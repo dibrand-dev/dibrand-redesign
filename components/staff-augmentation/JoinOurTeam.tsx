@@ -4,8 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { MapPin, ArrowRight, Share2, Building2 } from 'lucide-react';
 import { FaLinkedinIn, FaWhatsapp } from 'react-icons/fa6';
-import JobDetailsModal from './JobDetailsModal';
-import { AnimatePresence } from 'framer-motion';
 
 interface JobOpening {
     id: string;
@@ -44,7 +42,6 @@ interface JoinOurTeamProps {
 export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
     const activeJobs = jobs || [];
     const [openShareId, setOpenShareId] = useState<string | null>(null);
-    const [selectedJob, setSelectedJob] = useState<JobOpening | null>(null);
 
     const isEn = lang === 'en';
 
@@ -133,13 +130,13 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                     </div>
 
                                     <div className="mt-auto flex items-center gap-6">
-                                        <button
-                                            onClick={() => setSelectedJob(job)}
-                                            className="inline-flex items-center gap-2 bg-[#D83484] text-white font-bold py-3.5 px-8 rounded-xl hover:opacity-90 transition-all duration-300 shadow-sm shadow-[#D83484]/10 active:scale-95"
+                                        <Link
+                                            href={`/${lang}/join-us/${job.id}`}
+                                            className="inline-flex items-center gap-2 bg-[#D83484] text-white font-bold py-3.5 px-8 rounded-xl hover:opacity-90 transition-all duration-300 shadow-sm shadow-[#D83484]/10 active:scale-95 text-center"
                                         >
                                             <span>{texts.viewOpening}</span>
                                             <ArrowRight size={18} />
-                                        </button>
+                                        </Link>
 
                                         <div className="relative">
                                             <button
@@ -195,16 +192,6 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                     )}
                 </div>
             </div>
-
-            <AnimatePresence>
-                {selectedJob && (
-                    <JobDetailsModal
-                        job={selectedJob}
-                        onClose={() => setSelectedJob(null)}
-                        texts={texts}
-                    />
-                )}
-            </AnimatePresence>
         </section>
     );
 }
