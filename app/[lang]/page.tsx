@@ -56,7 +56,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
       <TechStack dict={dict.home} />
       <TestimonialsSection testimonials={testimonials || []} dict={dict.home} lang={params.lang} />
 
-      <Footer dict={dict} />
+      <Footer dict={dict} lang={params.lang} />
     </div>
   );
 }

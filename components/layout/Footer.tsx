@@ -6,9 +6,10 @@ import { Dictionary } from '@/lib/types';
 
 interface FooterProps {
     dict: Dictionary;
+    lang: string;
 }
 
-export default function Footer({ dict }: FooterProps) {
+export default function Footer({ dict, lang }: FooterProps) {
     return (
         <section id="contact" className="bg-black py-20 lg:py-28 relative overflow-hidden border-t border-white/10 w-full">
             {/* Abstract Background for Contact */}
@@ -50,21 +51,30 @@ export default function Footer({ dict }: FooterProps) {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <span className="text-white font-medium">Follow us</span>
-                        <div className="flex items-center gap-4 mt-2">
-                            <a href="https://www.linkedin.com/company/dibrand/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                                <FaLinkedin size={28} />
+                    <div className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-2">
+                            <span className="text-white font-medium">Careers</span>
+                            <a href={`/${lang}/careers`} className="text-gray-400 hover:text-[#D83484] transition-colors text-lg">
+                                {dict.navigation.careers}
                             </a>
-                            <a href="https://www.facebook.com/dibrand.ok" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                                <FaFacebook size={28} />
-                            </a>
-                            <a href="https://www.instagram.com/dibrand.ok/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                                <FaInstagram size={28} />
-                            </a>
-                            <a href="https://x.com/Dibrand_ok" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                                <FaXTwitter size={28} />
-                            </a>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <span className="text-white font-medium">Follow us</span>
+                            <div className="flex items-center gap-4 mt-2">
+                                <a href="https://www.linkedin.com/company/dibrand/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                                    <FaLinkedin size={28} />
+                                </a>
+                                <a href="https://www.facebook.com/dibrand.ok" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                                    <FaFacebook size={28} />
+                                </a>
+                                <a href="https://www.instagram.com/dibrand.ok/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                                    <FaInstagram size={28} />
+                                </a>
+                                <a href="https://x.com/Dibrand_ok" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                                    <FaXTwitter size={28} />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
