@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { MapPin, ArrowRight } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface JobOpening {
     id: string;
@@ -8,6 +9,10 @@ interface JobOpening {
     location: string;
     employment_type: string;
     is_active: boolean;
+    description: string;
+    requirements?: string;
+    seniority?: string;
+    department?: string;
 }
 
 interface JoinOurTeamProps {
@@ -29,7 +34,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
     const texts = {
         title: dict?.title || 'We are excited to hear from you',
         subtitle: dict?.subtitle || 'Join our team and be part of a community where innovation and collaboration thrive.',
-        viewOpening: dict?.viewOpening || 'View opening',
+        viewOpening: dict?.viewOpening || 'Apply',
         fallbackText: dict?.fallbackText || 'No open positions at the moment, but we are always looking for talent.',
         fallbackLink: dict?.fallbackLink || 'Send us your CV!'
     };
@@ -50,24 +55,47 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                 {/* Openings Grid - Flat & Clean */}
                 <div className="max-w-6xl">
                     {activeJobs.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {activeJobs.map((job) => (
-                                <div key={job.id} className="flex flex-col group">
-                                    <div className="flex flex-col mb-4">
-                                        <h3 className="text-xl font-bold text-[#D83484] font-outfit mb-1">
+                                <div key={job.id} className="flex flex-col bg-white border border-zinc-200 rounded-2xl p-8 hover:bg-zinc-50/50 transition-colors">
+                                    <div className="flex flex-col mb-6">
+                                        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">
+                                            {job.seniority || job.department || 'Senior / Expert'}
+                                        </span>
+                                        <h3 className="text-2xl font-bold text-[#D83484] font-outfit mb-4">
                                             {job.title}
                                         </h3>
-                                        <p className="text-sm text-zinc-500 font-outfit font-light">
-                                            {job.location} • {job.employment_type.replace('_', ' ')}
-                                        </p>
+
+                                        <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500 font-outfit">
+                                            <div className="flex items-center gap-1.5">
+                                                <MapPin size={14} className="text-zinc-400" />
+                                                {job.location}
+                                            </div>
+                                            <div className="px-2.5 py-0.5 bg-zinc-100 text-zinc-600 rounded-full text-xs font-medium uppercase tracking-tight">
+                                                {job.employment_type.replace('_', ' ')}
+                                            </div>
+                                            <div className="px-2.5 py-0.5 bg-zinc-100 text-zinc-600 rounded-full text-xs font-medium uppercase tracking-tight">
+                                                Remote
+                                            </div>
+                                        </div>
                                     </div>
-                                    <Link
-                                        href={`/${lang}/careers/${job.id}`}
-                                        className="inline-flex items-center gap-2 text-zinc-900 font-bold text-sm hover:gap-3 transition-all duration-300"
-                                    >
-                                        <span>{texts.viewOpening}</span>
-                                        <ArrowRight size={16} className="text-[#D83484]" />
-                                    </Link>
+
+                                    {/* Description Body - Rich Text Render */}
+                                    <div className="prose prose-zinc prose-sm max-w-none text-zinc-600 mb-8 prose-headings:text-zinc-900 prose-strong:text-zinc-900 prose-li:marker:text-zinc-400 prose-li:my-1">
+                                        <ReactMarkdown>
+                                            {job.description}
+                                        </ReactMarkdown>
+                                    </div>
+
+                                    <div className="mt-auto">
+                                        <Link
+                                            href={`/${lang}/contact?job=${job.id}`}
+                                            className="inline-flex items-center gap-2 bg-[#D83484] text-white font-bold py-3 px-8 rounded-xl hover:bg-[#c02d75] transition-all duration-300 shadow-sm"
+                                        >
+                                            <span>{texts.viewOpening}</span>
+                                            <ArrowRight size={18} />
+                                        </Link>
+                                    </div>
                                 </div>
                             ))}
                         </div>

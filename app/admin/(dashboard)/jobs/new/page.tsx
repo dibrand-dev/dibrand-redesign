@@ -17,6 +17,7 @@ export default function NewJobPage() {
         employment_type: 'Full-time',
         description: '',
         requirements: '',
+        seniority: '',
         is_active: true,
     });
 
@@ -56,8 +57,20 @@ export default function NewJobPage() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid md:grid-cols-3 gap-6">
                         <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Seniority</label>
+                            <input
+                                required
+                                type="text"
+                                name="seniority"
+                                value={formData.seniority || ''}
+                                onChange={handleChange}
+                                placeholder="e.g. Senior / Lead"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
+                            />
+                        </div>
+                        <div className="md:col-span-2 space-y-2">
                             <label className="text-sm font-semibold text-gray-700">Job Title</label>
                             <input
                                 required
@@ -69,6 +82,9 @@ export default function NewJobPage() {
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
                             />
                         </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-700">Department</label>
                             <input
@@ -81,9 +97,6 @@ export default function NewJobPage() {
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
                             />
                         </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-700">Location</label>
                             <input
@@ -96,45 +109,52 @@ export default function NewJobPage() {
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
                             />
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Employment Type</label>
-                            <select
-                                name="employment_type"
-                                value={formData.employment_type}
-                                onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm bg-white"
-                            >
-                                <option value="Full-time">Full-time</option>
-                                <option value="Part-time">Part-time</option>
-                                <option value="Contractor">Contractor</option>
-                                <option value="Freelance">Freelance</option>
-                            </select>
-                        </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Job Description</label>
+                        <label className="text-sm font-semibold text-gray-700">Employment Type</label>
+                        <select
+                            name="employment_type"
+                            value={formData.employment_type}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm bg-white"
+                        >
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contractor">Contractor</option>
+                            <option value="Freelance">Freelance</option>
+                        </select>
+                    </div>
+
+                    <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                            <label className="text-sm font-semibold text-gray-700">Job Description</label>
+                            <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Markdown Supported</span>
+                        </div>
                         <textarea
                             required
                             name="description"
-                            rows={6}
+                            rows={8}
                             value={formData.description}
                             onChange={handleChange}
-                            placeholder="Describe the role, the team, and the mission..."
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
+                            placeholder="Describe the role... Use **bold** and *italics*. Use - for lists."
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm font-mono text-sm"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Requirements</label>
+                        <div className="flex justify-between items-center">
+                            <label className="text-sm font-semibold text-gray-700">Requirements</label>
+                            <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Markdown Supported</span>
+                        </div>
                         <textarea
                             required
                             name="requirements"
-                            rows={6}
+                            rows={8}
                             value={formData.requirements}
                             onChange={handleChange}
-                            placeholder="List the required skills, experience, and certifications..."
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
+                            placeholder="List the required skills... Use - for lists."
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm font-mono text-sm"
                         />
                     </div>
 

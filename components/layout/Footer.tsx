@@ -53,8 +53,8 @@ export default function Footer({ dict, lang }: FooterProps) {
 
                     <div className="flex flex-col gap-6">
                         <div className="flex flex-col gap-2">
-                            <span className="text-white font-medium">Careers</span>
-                            <a href={`/${lang}/careers`} className="text-gray-400 hover:text-[#D83484] transition-colors text-lg">
+                            <span className="text-white font-medium">Join Us</span>
+                            <a href={`/${lang}/join-us`} className="text-gray-400 hover:text-[#D83484] transition-colors text-lg">
                                 {dict.navigation.careers}
                             </a>
                         </div>
