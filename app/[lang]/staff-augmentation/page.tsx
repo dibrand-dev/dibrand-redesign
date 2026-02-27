@@ -12,6 +12,7 @@ import TrustedBySection from "@/components/home/TrustedBySection";
 import { supabase } from "@/lib/supabase";
 
 import StaffingServices from "@/components/staff-augmentation/StaffingServices";
+import JoinOurTeam from "@/components/staff-augmentation/JoinOurTeam";
 
 export default async function StaffAugmentationPage(props: { params: Promise<{ lang: "en" | "es" }> }) {
     const params = await props.params;
@@ -29,6 +30,13 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
         name: b.name,
         logo_url: b.logo_url
     }));
+
+    // Fetch job openings
+    const { data: jobs } = await supabase
+        .from('job_openings')
+        .select('id, title, location, employment_type, is_active')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
 
     const wayIcons = [Clock, UserCheck, Heart];
 
@@ -127,6 +135,9 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                     </div>
                 </div>
             </section>
+
+            {/* Join Our Team Section */}
+            <JoinOurTeam jobs={jobs || []} lang={params.lang} />
 
             {/* Footer / Contact Section */}
             <Footer dict={dict} />
