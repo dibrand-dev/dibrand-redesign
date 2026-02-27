@@ -252,6 +252,13 @@
         "shareOpening": "Compartir vacante",
         "shareLinkedIn": "Compartir en LinkedIn",
         "shareWhatsApp": "Enviar por WhatsApp",
+        "applyNow": "Postúlate para esta posición",
+        "fullName": "Nombre Completo",
+        "email": "Correo Electrónico",
+        "linkedin": "Perfil de LinkedIn / URL de Portfolio",
+        "sendApplication": "Enviar Postulación",
+        "sending": "Enviando...",
+        "success": "¡Postulación Enviada!",
         "fallbackText": "No hay posiciones abiertas en este momento, pero siempre estamos buscando talento.",
         "fallbackLink": "¡Envíanos tu CV!"
     }

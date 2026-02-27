@@ -2,21 +2,21 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { MapPin, ArrowRight, Share2 } from 'lucide-react';
+import { MapPin, ArrowRight, Share2, Building2 } from 'lucide-react';
 import { FaLinkedinIn, FaWhatsapp } from 'react-icons/fa6';
-import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
+import JobDetailsModal from './JobDetailsModal';
+import { AnimatePresence } from 'framer-motion';
 
 interface JobOpening {
     id: string;
     title: string;
     location: string;
+    industry: string;
     employment_type: string;
     is_active: boolean;
     description: string;
-    requirements?: string;
-    seniority?: string;
-    department?: string;
+    requirements: string;
+    seniority: string;
 }
 
 interface JoinOurTeamProps {
@@ -29,6 +29,13 @@ interface JoinOurTeamProps {
         shareOpening?: string;
         shareLinkedIn?: string;
         shareWhatsApp?: string;
+        applyNow?: string;
+        fullName?: string;
+        email?: string;
+        linkedin?: string;
+        sendApplication?: string;
+        sending?: string;
+        success?: string;
         fallbackText?: string;
         fallbackLink?: string;
     };
@@ -37,6 +44,7 @@ interface JoinOurTeamProps {
 export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
     const activeJobs = jobs || [];
     const [openShareId, setOpenShareId] = useState<string | null>(null);
+    const [selectedJob, setSelectedJob] = useState<JobOpening | null>(null);
 
     const isEn = lang === 'en';
 
@@ -48,6 +56,13 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
         shareOpening: dict?.shareOpening || (isEn ? 'Share position' : 'Compartir vacante'),
         shareLinkedIn: dict?.shareLinkedIn || (isEn ? 'Share on LinkedIn' : 'Compartir en LinkedIn'),
         shareWhatsApp: dict?.shareWhatsApp || (isEn ? 'Send via WhatsApp' : 'Enviar por WhatsApp'),
+        applyNow: dict?.applyNow || (isEn ? 'Apply for this position' : 'Postúlate para esta posición'),
+        fullName: dict?.fullName || (isEn ? 'Full Name' : 'Nombre Completo'),
+        email: dict?.email || (isEn ? 'Email Address' : 'Correo Electrónico'),
+        linkedin: dict?.linkedin || (isEn ? 'LinkedIn Profile / Portfolio URL' : 'Perfil de LinkedIn / URL de Portfolio'),
+        sendApplication: dict?.sendApplication || (isEn ? 'Send Application' : 'Enviar Postulación'),
+        sending: dict?.sending || (isEn ? 'Sending...' : 'Enviando...'),
+        success: dict?.success || (isEn ? 'Application Sent!' : '¡Postulación Enviada!'),
         fallbackText: dict?.fallbackText || (isEn ? 'No open positions at the moment, but we are always looking for talent.' : 'No hay posiciones abiertas en este momento, pero siempre buscamos talento.'),
         fallbackLink: dict?.fallbackLink || (isEn ? 'Send us your CV!' : '¡Envíanos tu CV!')
     };
@@ -86,42 +101,45 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                             {activeJobs.map((job) => (
                                 <div key={job.id} id={job.id} className="flex flex-col bg-white border border-zinc-200 rounded-2xl p-8 hover:bg-zinc-50/50 transition-colors relative">
                                     <div className="flex flex-col mb-6">
-                                        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">
-                                            {job.seniority || job.department || 'Senior / Expert'}
-                                        </span>
-                                        <h3 className="text-2xl font-bold text-[#D83484] font-outfit mb-4">
+                                        <div className="flex flex-wrap items-center gap-2 mb-3">
+                                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">
+                                                {job.seniority || 'Expert'}
+                                            </span>
+                                            <span className="text-zinc-300">•</span>
+                                            <span className="text-[10px] font-bold text-[#D83484] uppercase tracking-[0.2em] flex items-center gap-1">
+                                                <Building2 size={10} />
+                                                {job.industry}
+                                            </span>
+                                        </div>
+
+                                        <h3 className="text-2xl font-bold text-zinc-900 font-outfit mb-4">
                                             {job.title}
                                         </h3>
 
                                         <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500 font-outfit">
-                                            <div className="flex items-center gap-1.5">
+                                            <div className="flex items-center gap-1.5 opacity-70">
                                                 <MapPin size={14} className="text-zinc-400" />
                                                 {job.location}
                                             </div>
-                                            <div className="px-2.5 py-0.5 bg-zinc-100 text-zinc-600 rounded-full text-xs font-medium uppercase tracking-tight">
+                                            <div className="px-2.5 py-0.5 bg-zinc-100 text-zinc-500 rounded-lg text-xs font-bold uppercase tracking-tight">
                                                 {job.employment_type.replace('_', ' ')}
-                                            </div>
-                                            <div className="px-2.5 py-0.5 bg-zinc-100 text-zinc-600 rounded-full text-xs font-medium uppercase tracking-tight">
-                                                Remote
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Description Body - Rich Text Render */}
-                                    <div className="prose prose-zinc prose-sm max-w-none text-zinc-600 mb-8 prose-headings:text-zinc-900 prose-strong:text-zinc-900 prose-li:marker:text-zinc-400 prose-li:my-1">
-                                        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
-                                            {job.description}
-                                        </ReactMarkdown>
+                                    {/* Brief summary (extracted or first part) */}
+                                    <div className="text-zinc-600 mb-8 line-clamp-3 font-outfit font-light leading-relaxed">
+                                        {job.description.replace(/[#*`]/g, '').slice(0, 160)}...
                                     </div>
 
                                     <div className="mt-auto flex items-center gap-6">
-                                        <Link
-                                            href={`/${lang}/contact?job=${job.id}`}
-                                            className="inline-flex items-center gap-2 bg-[#D83484] text-white font-bold py-3 px-8 rounded-xl hover:bg-[#c02d75] transition-all duration-300"
+                                        <button
+                                            onClick={() => setSelectedJob(job)}
+                                            className="inline-flex items-center gap-2 bg-[#D83484] text-white font-bold py-3.5 px-8 rounded-xl hover:opacity-90 transition-all duration-300 shadow-sm shadow-[#D83484]/10 active:scale-95"
                                         >
                                             <span>{texts.viewOpening}</span>
                                             <ArrowRight size={18} />
-                                        </Link>
+                                        </button>
 
                                         <div className="relative">
                                             <button
@@ -177,6 +195,16 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                     )}
                 </div>
             </div>
+
+            <AnimatePresence>
+                {selectedJob && (
+                    <JobDetailsModal
+                        job={selectedJob}
+                        onClose={() => setSelectedJob(null)}
+                        texts={texts}
+                    />
+                )}
+            </AnimatePresence>
         </section>
     );
 }

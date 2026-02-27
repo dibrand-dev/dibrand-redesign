@@ -13,14 +13,22 @@ export default function NewJobPage() {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
-        department: '',
+        industry: 'SaaS',
         location: '',
         employment_type: 'Full-time',
         description: '',
         requirements: '',
-        seniority: '',
+        seniority: 'Senior',
+        salary_range: '',
         is_active: true,
     });
+
+    const industries = [
+        'Fintech', 'Pharma', 'eCommerce', 'Big Tech', 'Automotive',
+        'Energy', 'SaaS', 'Retail', 'Entertainment & Media', 'Other'
+    ];
+
+    const seniorities = ['Trainee', 'Junior', 'Semi Senior', 'Senior'];
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target as any;
@@ -58,20 +66,8 @@ export default function NewJobPage() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 space-y-6">
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Seniority</label>
-                            <input
-                                required
-                                type="text"
-                                name="seniority"
-                                value={formData.seniority || ''}
-                                onChange={handleChange}
-                                placeholder="e.g. Senior / Lead"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
-                            />
-                        </div>
-                        <div className="md:col-span-2 space-y-2">
                             <label className="text-sm font-semibold text-gray-700">Job Title</label>
                             <input
                                 required
@@ -83,20 +79,30 @@ export default function NewJobPage() {
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
                             />
                         </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Seniority</label>
+                            <select
+                                name="seniority"
+                                value={formData.seniority}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm bg-white"
+                            >
+                                {seniorities.map(s => <option key={s} value={s}>{s}</option>)}
+                            </select>
+                        </div>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Department</label>
-                            <input
-                                required
-                                type="text"
-                                name="department"
-                                value={formData.department}
+                            <label className="text-sm font-semibold text-gray-700">Industry</label>
+                            <select
+                                name="industry"
+                                value={formData.industry}
                                 onChange={handleChange}
-                                placeholder="e.g. Engineering"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
-                            />
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm bg-white"
+                            >
+                                {industries.map(i => <option key={i} value={i}>{i}</option>)}
+                            </select>
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-700">Location</label>
@@ -112,19 +118,35 @@ export default function NewJobPage() {
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Employment Type</label>
-                        <select
-                            name="employment_type"
-                            value={formData.employment_type}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm bg-white"
-                        >
-                            <option value="Full-time">Full-time</option>
-                            <option value="Part-time">Part-time</option>
-                            <option value="Contractor">Contractor</option>
-                            <option value="Freelance">Freelance</option>
-                        </select>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Employment Type</label>
+                            <select
+                                name="employment_type"
+                                value={formData.employment_type}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm bg-white"
+                            >
+                                <option value="Full-time">Full-time</option>
+                                <option value="Part-time">Part-time</option>
+                                <option value="Contractor">Contractor</option>
+                                <option value="Freelance">Freelance</option>
+                            </select>
+                        </div>
+                        <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                                <label className="text-sm font-semibold text-gray-700 font-outfit">Salary Range (Internal Only)</label>
+                                <span className="text-[10px] text-fuchsia-500 font-bold uppercase tracking-widest">Confidential</span>
+                            </div>
+                            <input
+                                type="text"
+                                name="salary_range"
+                                value={formData.salary_range}
+                                onChange={handleChange}
+                                placeholder="e.g. $4000 - $6000 USD"
+                                className="w-full px-4 py-2 border border-fuchsia-100 bg-fuchsia-50/30 rounded-lg focus:ring-2 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 outline-none transition-all shadow-sm"
+                            />
+                        </div>
                     </div>
 
                     <div className="space-y-2">

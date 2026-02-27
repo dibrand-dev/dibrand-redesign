@@ -9,7 +9,7 @@ import { getJobs, toggleJobStatus, deleteJob } from '@/app/actions/jobs';
 interface JobOpening {
     id: string;
     title: string;
-    department: string;
+    industry: string;
     location: string;
     employment_type: string;
     is_active: boolean;
@@ -82,7 +82,7 @@ export default function JobsPage() {
                         <table className="w-full text-left">
                             <thead>
                                 <tr className="bg-gray-50 border-b border-gray-100">
-                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Position / Dept</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Position / Industry</th>
                                     <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Location / Type</th>
                                     <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
                                     <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
@@ -93,7 +93,7 @@ export default function JobsPage() {
                                     <tr key={job.id} className="hover:bg-gray-50/50 transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="font-semibold text-corporate-grey">{job.title}</div>
-                                            <div className="text-sm text-gray-500">{job.department}</div>
+                                            <div className="text-sm text-gray-500">{job.industry}</div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-1.5 text-sm text-gray-600">
@@ -106,8 +106,8 @@ export default function JobsPage() {
                                             <button
                                                 onClick={() => handleToggle(job.id, job.is_active)}
                                                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${job.is_active
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : 'bg-orange-100 text-orange-800'
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-orange-100 text-orange-800'
                                                     }`}
                                             >
                                                 {job.is_active ? 'Active' : 'Paused'}
