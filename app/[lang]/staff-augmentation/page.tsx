@@ -84,7 +84,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(216,52,132,0.15),transparent_70%)]" />
 
                 <div className="container mx-auto px-6 relative z-10">
-                    <div className="text-center mb-20">
+                    <div className="text-center mb-12">
                         <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-outfit tracking-tight">
                             {content.theDibrandWay.title}
                         </h2>
@@ -114,9 +114,6 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                 </div>
             </section>
 
-            {/* Social Proof Section */}
-            <TrustedBySection brands={brands} />
-
             {/* Benefits Section - Selection Top 3% - Flat & Clean */}
             <section className="py-16 bg-white">
                 <div className="container mx-auto px-6">
@@ -137,7 +134,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
             </section>
 
             {/* Join Our Team Section */}
-            <JoinOurTeam jobs={jobs || []} lang={params.lang} />
+            <JoinOurTeam jobs={jobs || []} lang={params.lang} dict={dict.joinOurTeam} />
 
             {/* Footer / Contact Section */}
             <Footer dict={dict} />

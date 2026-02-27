@@ -13,21 +13,37 @@ interface JobOpening {
 interface JoinOurTeamProps {
     jobs: JobOpening[];
     lang: string;
+    dict?: {
+        title?: string;
+        subtitle?: string;
+        viewOpening?: string;
+        fallbackText?: string;
+        fallbackLink?: string;
+    };
 }
 
-export default function JoinOurTeam({ jobs, lang }: JoinOurTeamProps) {
+export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
     const activeJobs = jobs || [];
 
+    // Fallback texts based on requirements
+    const texts = {
+        title: dict?.title || 'We are excited to hear from you',
+        subtitle: dict?.subtitle || 'Join our team and be part of a community where innovation and collaboration thrive.',
+        viewOpening: dict?.viewOpening || 'View opening',
+        fallbackText: dict?.fallbackText || 'No open positions at the moment, but we are always looking for talent.',
+        fallbackLink: dict?.fallbackLink || 'Send us your CV!'
+    };
+
     return (
-        <section className="bg-white py-16 border-t border-zinc-100">
+        <section className="bg-white pt-12 pb-16">
             <div className="container mx-auto px-6">
                 {/* Header Section - Compact & Shared Style */}
                 <div className="max-w-4xl mb-12">
                     <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 mb-4 font-outfit tracking-tight leading-tight">
-                        We are excited to hear from you
+                        {texts.title}
                     </h2>
                     <p className="text-lg md:text-xl text-zinc-600 font-outfit font-light leading-relaxed">
-                        Join our team and be part of a community where innovation and collaboration thrive.
+                        {texts.subtitle}
                     </p>
                 </div>
 
@@ -49,7 +65,7 @@ export default function JoinOurTeam({ jobs, lang }: JoinOurTeamProps) {
                                         href={`/${lang}/careers/${job.id}`}
                                         className="inline-flex items-center gap-2 text-zinc-900 font-bold text-sm hover:gap-3 transition-all duration-300"
                                     >
-                                        <span>View opening</span>
+                                        <span>{texts.viewOpening}</span>
                                         <ArrowRight size={16} className="text-[#D83484]" />
                                     </Link>
                                 </div>
@@ -58,9 +74,9 @@ export default function JoinOurTeam({ jobs, lang }: JoinOurTeamProps) {
                     ) : (
                         <div className="p-8 bg-zinc-50 rounded-2xl border border-zinc-100">
                             <p className="text-lg text-zinc-600 font-outfit">
-                                No open positions at the moment, but we are always looking for talent. {' '}
+                                {texts.fallbackText} {' '}
                                 <Link href={`/${lang}/contact`} className="text-[#D83484] font-bold underline">
-                                    Send us your CV!
+                                    {texts.fallbackLink}
                                 </Link>
                             </p>
                         </div>

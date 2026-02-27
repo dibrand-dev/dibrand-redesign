@@ -244,5 +244,12 @@
                 }
             ]
         }
+    },
+    "joinOurTeam": {
+        "title": "Estamos ansiosos por escucharte",
+        "subtitle": "Únete a nuestro equipo y sé parte de una comunidad donde la innovación y la colaboración prosperan.",
+        "viewOpening": "Ver vacante",
+        "fallbackText": "No hay posiciones abiertas en este momento, pero siempre estamos buscando talento.",
+        "fallbackLink": "¡Envíanos tu CV!"
     }
 }

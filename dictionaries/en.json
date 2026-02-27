@@ -244,5 +244,12 @@
                 }
             ]
         }
+    },
+    "joinOurTeam": {
+        "title": "We are excited to hear from you",
+        "subtitle": "Join our team and be part of a community where innovation and collaboration thrive.",
+        "viewOpening": "View opening",
+        "fallbackText": "No open positions at the moment, but we are always looking for talent.",
+        "fallbackLink": "Send us your CV!"
     }
 }
