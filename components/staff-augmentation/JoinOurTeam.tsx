@@ -1,6 +1,8 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { MapPin, ArrowRight } from 'lucide-react';
+import { MapPin, ArrowRight, Share2, Linkedin, MessageCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 interface JobOpening {
@@ -29,14 +31,32 @@ interface JoinOurTeamProps {
 
 export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
     const activeJobs = jobs || [];
+    const [openShareId, setOpenShareId] = useState<string | null>(null);
 
-    // Fallback texts based on requirements
+    const isEn = lang === 'en';
+
+    // Fallback texts
     const texts = {
-        title: dict?.title || 'We are excited to hear from you',
-        subtitle: dict?.subtitle || 'Join our team and be part of a community where innovation and collaboration thrive.',
-        viewOpening: dict?.viewOpening || 'Apply',
-        fallbackText: dict?.fallbackText || 'No open positions at the moment, but we are always looking for talent.',
-        fallbackLink: dict?.fallbackLink || 'Send us your CV!'
+        title: dict?.title || (isEn ? 'We are excited to hear from you' : 'Nos entusiasma saber de ti'),
+        subtitle: dict?.subtitle || (isEn ? 'Join our team and be part of a community where innovation and collaboration thrive.' : 'Únete a nuestro equipo y forma parte de una comunidad donde la innovación y la colaboración prosperan.'),
+        viewOpening: dict?.viewOpening || (isEn ? 'Apply' : 'Aplicar'),
+        shareOpening: (dict as any)?.shareOpening || (isEn ? 'Share position' : 'Compartir vacante'),
+        fallbackText: dict?.fallbackText || (isEn ? 'No open positions at the moment, but we are always looking for talent.' : 'No hay posiciones abiertas en este momento, pero siempre buscamos talento.'),
+        fallbackLink: dict?.fallbackLink || (isEn ? 'Send us your CV!' : '¡Envíanos tu CV!')
+    };
+
+    const handleShare = (job: JobOpening, platform: 'linkedin' | 'whatsapp') => {
+        const url = `${window.location.origin}/${lang}/join-us#${job.id}`;
+        const text = isEn
+            ? `Check out this opportunity at Dibrand! ${job.title}`
+            : `¡Mira esta oportunidad en Dibrand! ${job.title}`;
+
+        if (platform === 'linkedin') {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+        } else {
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+        }
+        setOpenShareId(null);
     };
 
     return (
@@ -57,7 +77,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                     {activeJobs.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {activeJobs.map((job) => (
-                                <div key={job.id} className="flex flex-col bg-white border border-zinc-200 rounded-2xl p-8 hover:bg-zinc-50/50 transition-colors">
+                                <div key={job.id} id={job.id} className="flex flex-col bg-white border border-zinc-200 rounded-2xl p-8 hover:bg-zinc-50/50 transition-colors relative">
                                     <div className="flex flex-col mb-6">
                                         <span className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">
                                             {job.seniority || job.department || 'Senior / Expert'}
@@ -87,14 +107,49 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                         </ReactMarkdown>
                                     </div>
 
-                                    <div className="mt-auto">
+                                    <div className="mt-auto flex items-center gap-6">
                                         <Link
                                             href={`/${lang}/contact?job=${job.id}`}
-                                            className="inline-flex items-center gap-2 bg-[#D83484] text-white font-bold py-3 px-8 rounded-xl hover:bg-[#c02d75] transition-all duration-300 shadow-sm"
+                                            className="inline-flex items-center gap-2 bg-[#D83484] text-white font-bold py-3 px-8 rounded-xl hover:bg-[#c02d75] transition-all duration-300"
                                         >
                                             <span>{texts.viewOpening}</span>
                                             <ArrowRight size={18} />
                                         </Link>
+
+                                        <div className="relative">
+                                            <button
+                                                onClick={() => setOpenShareId(openShareId === job.id ? null : job.id)}
+                                                className="text-zinc-500 hover:text-zinc-900 text-sm font-medium underline underline-offset-4 transition-colors flex items-center gap-2"
+                                            >
+                                                <Share2 size={16} />
+                                                {texts.shareOpening}
+                                            </button>
+
+                                            {openShareId === job.id && (
+                                                <>
+                                                    <div
+                                                        className="fixed inset-0 z-10"
+                                                        onClick={() => setOpenShareId(null)}
+                                                    />
+                                                    <div className="absolute bottom-full left-0 mb-2 w-48 bg-white border border-zinc-200 rounded-xl py-2 z-20 shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+                                                        <button
+                                                            onClick={() => handleShare(job, 'linkedin')}
+                                                            className="w-full px-4 py-2.5 text-left text-sm text-zinc-700 hover:bg-zinc-50 flex items-center gap-3 transition-colors"
+                                                        >
+                                                            <Linkedin size={16} className="text-[#0077b5]" />
+                                                            LinkedIn
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleShare(job, 'whatsapp')}
+                                                            className="w-full px-4 py-2.5 text-left text-sm text-zinc-700 hover:bg-zinc-50 flex items-center gap-3 transition-colors"
+                                                        >
+                                                            <MessageCircle size={16} className="text-[#25D366]" />
+                                                            WhatsApp
+                                                        </button>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             ))}
