@@ -253,10 +253,10 @@
         "shareLinkedIn": "Share on LinkedIn",
         "shareWhatsApp": "Send via WhatsApp",
         "applyNow": "Apply Now",
-        "firstName": "First Name",
-        "lastName": "Last Name",
+        "fullName": "Full Name",
         "email": "Email Address",
-        "phone": "Phone / International Mobile",
+        "phone": "Phone",
+        "mobilePhone": "Mobile Phone",
         "country": "Country",
         "stateProvince": "State / Province",
         "techStacks": "Tech Stacks (Skills)",
@@ -266,7 +266,7 @@
         "pdfOnly": "PDF only (Max 5MB)",
         "sendApplication": "Send Application",
         "sending": "Sending...",
-        "success": "Application Sent!",
+        "success": "Application received! Thank you for wanting to join Dibrand. We already have your profile on our radar and, if there is a match, we will contact you shortly. Good luck!",
         "fallbackText": "No open positions at the moment, but we are always looking for talent.",
         "fallbackLink": "Send us your CV!"
     }
