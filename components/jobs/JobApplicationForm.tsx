@@ -4,14 +4,15 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { Country, State } from 'country-state-city';
 import { getTechStacks, uploadResume, submitApplication } from '@/app/actions/applications';
-import { CheckCircle2, Loader2, UploadCloud } from 'lucide-react';
+import { CheckCircle2, Loader2, UploadCloud, Send } from 'lucide-react';
 
 interface JobApplicationFormProps {
     jobId: string;
     lang: string;
+    dict: any;
 }
 
-export default function JobApplicationForm({ jobId, lang }: JobApplicationFormProps) {
+export default function JobApplicationForm({ jobId, lang, dict }: JobApplicationFormProps) {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [stacks, setStacks] = useState<{ value: string, label: string }[]>([]);
@@ -24,11 +25,15 @@ export default function JobApplicationForm({ jobId, lang }: JobApplicationFormPr
 
     useEffect(() => {
         async function init() {
-            const dbStacks = await getTechStacks();
-            setStacks(dbStacks.map(s => ({ value: s.id, label: s.name })));
+            try {
+                const dbStacks = await getTechStacks();
+                setStacks(dbStacks.map(s => ({ value: s.id, label: s.name })));
 
-            const allCountries = Country.getAllCountries();
-            setCountries(allCountries.map(c => ({ value: c.isoCode, label: c.name })));
+                const allCountries = Country.getAllCountries();
+                setCountries(allCountries.map(c => ({ value: c.isoCode, label: c.name })));
+            } catch (error) {
+                console.error("Error initializing form data:", error);
+            }
         }
         init();
     }, []);
@@ -42,15 +47,15 @@ export default function JobApplicationForm({ jobId, lang }: JobApplicationFormPr
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const form = e.currentTarget; // Capture form reference immediately
+        const form = e.currentTarget;
 
         if (!resumeFile) {
-            alert('Please upload your resume');
+            alert(dict.attachResume || 'Please upload your resume');
             return;
         }
 
         if (!selectedCountry || !selectedState) {
-            alert('Please select your Country and State/Province');
+            alert(dict.stateProvince || 'Please select your Country and State/Province');
             return;
         }
 
@@ -76,9 +81,8 @@ export default function JobApplicationForm({ jobId, lang }: JobApplicationFormPr
             await submitApplication(data);
             setSuccess(true);
         } catch (error: any) {
-            console.error('FULL SUBMISSION ERROR:', error);
-            const msg = error.message || error.details || JSON.stringify(error);
-            alert('Error submitting application: ' + msg);
+            console.error('SUBMISSION ERROR:', error);
+            alert('Error: ' + (error.message || 'Unknown error'));
         } finally {
             setLoading(false);
         }
@@ -86,132 +90,145 @@ export default function JobApplicationForm({ jobId, lang }: JobApplicationFormPr
 
     if (success) {
         return (
-            <div className="p-12 text-center space-y-6 flex flex-col items-center justify-center min-h-[400px]">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                    <CheckCircle2 size={48} className="text-green-600" />
+            <div className="text-center py-12 px-6">
+                <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Send size={32} />
                 </div>
-                <h3 className="text-3xl font-bold text-corporate-grey">¡Postulación enviada con éxito!</h3>
-                <p className="text-corporate-grey/60 text-lg max-w-sm mx-auto">
-                    Nuestro equipo revisará tu perfil y nos pondremos en contacto contigo a la brevedad. ¡Gracias por querer ser parte de Dibrand!
+                <h3 className="text-2xl font-bold text-zinc-900 mb-4 font-outfit">
+                    {lang === 'es' ? '¡Postulación recibida!' : 'Application received!'}
+                </h3>
+                <p className="text-zinc-600 font-outfit leading-relaxed max-w-lg mx-auto">
+                    {dict.success}
                 </p>
             </div>
         );
     }
 
-    return (
-        <form onSubmit={handleSubmit} className="p-8 space-y-6">
-            <h3 className="text-2xl font-bold text-corporate-grey mb-6">Apply for this position</h3>
+    const selectStyles = {
+        control: (base: any, state: any) => ({
+            ...base,
+            borderRadius: '0.75rem',
+            backgroundColor: 'white',
+            borderColor: state.isFocused ? '#D83484' : '#d4d4d8',
+            padding: '4px 8px',
+            boxShadow: state.isFocused ? '0 0 0 4px rgba(216, 52, 132, 0.1)' : 'none',
+            '&:hover': {
+                borderColor: '#D83484'
+            }
+        }),
+        option: (base: any, state: any) => ({
+            ...base,
+            backgroundColor: state.isSelected ? '#D83484' : state.isFocused ? '#fce7f3' : 'white',
+            color: state.isSelected ? 'white' : '#18181b',
+            '&:active': {
+                backgroundColor: '#D83484'
+            }
+        })
+    };
 
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">First Name *</label>
+    return (
+        <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-2">
+                <h3 className="text-2xl font-bold text-zinc-900 font-outfit">{dict.applyNow}</h3>
+                <p className="text-zinc-500 font-outfit leading-relaxed">
+                    {lang === 'es'
+                        ? 'Completa tus datos para postularte a esta posición.'
+                        : 'Please fill in your details to apply for this position.'}
+                </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest font-outfit">{dict.firstName} *</label>
                     <input
                         name="first_name"
                         required
-                        className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                        placeholder="John"
+                        className="w-full px-5 py-4 bg-white border border-zinc-300 rounded-xl focus:ring-4 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all font-outfit text-zinc-900"
                     />
                 </div>
-                <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">Last Name *</label>
+                <div className="space-y-3">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest font-outfit">{dict.lastName} *</label>
                     <input
                         name="last_name"
                         required
-                        className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                        placeholder="Doe"
+                        className="w-full px-5 py-4 bg-white border border-zinc-300 rounded-xl focus:ring-4 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all font-outfit text-zinc-900"
                     />
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">Email *</label>
+            <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest font-outfit">{dict.email} *</label>
                     <input
                         name="email"
                         type="email"
                         required
-                        className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                        placeholder="john@example.com"
+                        className="w-full px-5 py-4 bg-white border border-zinc-300 rounded-xl focus:ring-4 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all font-outfit text-zinc-900"
                     />
                 </div>
-                <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">Phone</label>
+                <div className="space-y-3">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest font-outfit">{dict.phone} *</label>
                     <input
                         name="phone"
-                        className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                        required
+                        placeholder="+1 234 567 890"
+                        className="w-full px-5 py-4 bg-white border border-zinc-300 rounded-xl focus:ring-4 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all font-outfit text-zinc-900"
                     />
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">Country *</label>
+            <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest font-outfit">{dict.country} *</label>
                     <Select
                         options={countries}
                         value={selectedCountry}
                         onChange={handleCountryChange}
-                        className="text-sm"
-                        styles={{
-                            control: (base) => ({
-                                ...base,
-                                borderRadius: '0.75rem',
-                                backgroundColor: '#F9FAFB',
-                                borderColor: '#E5E7EB',
-                                padding: '2px'
-                            })
-                        }}
+                        styles={selectStyles}
+                        className="font-outfit"
                     />
                 </div>
-                <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">State / Province *</label>
+                <div className="space-y-3">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest font-outfit">{dict.stateProvince} *</label>
                     <Select
                         options={states}
                         value={selectedState}
                         onChange={(s) => setSelectedState(s)}
                         isDisabled={!selectedCountry}
-                        className="text-sm"
-                        styles={{
-                            control: (base) => ({
-                                ...base,
-                                borderRadius: '0.75rem',
-                                backgroundColor: '#F9FAFB',
-                                borderColor: '#E5E7EB',
-                                padding: '2px'
-                            })
-                        }}
+                        styles={selectStyles}
+                        className="font-outfit"
                     />
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700">Your Tech Stack *</label>
+            <div className="space-y-3">
+                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest font-outfit">{dict.techStacks} *</label>
                 <Select
                     isMulti
                     options={stacks}
                     value={selectedStacks}
                     onChange={(s) => setSelectedStacks(s)}
-                    className="text-sm"
-                    styles={{
-                        control: (base) => ({
-                            ...base,
-                            borderRadius: '0.75rem',
-                            backgroundColor: '#F9FAFB',
-                            borderColor: '#E5E7EB',
-                            padding: '2px'
-                        })
-                    }}
+                    styles={selectStyles}
+                    className="font-outfit"
                 />
             </div>
 
-            <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700">LinkedIn URL</label>
+            <div className="space-y-3">
+                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest font-outfit">{dict.linkedin} *</label>
                 <input
                     name="linkedin_url"
                     type="url"
-                    placeholder="https://linkedin.com/in/..."
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                    required
+                    placeholder="https://linkedin.com/in/username"
+                    className="w-full px-5 py-4 bg-white border border-zinc-300 rounded-xl focus:ring-4 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all font-outfit text-zinc-900"
                 />
             </div>
 
-            <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700">Resume (PDF) *</label>
+            <div className="space-y-3">
+                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest font-outfit">{dict.attachResume} *</label>
                 <div className="relative group">
                     <input
                         type="file"
@@ -219,22 +236,21 @@ export default function JobApplicationForm({ jobId, lang }: JobApplicationFormPr
                         onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
                         className="hidden"
                         id="resume-upload"
-                        required
                     />
                     <label
                         htmlFor="resume-upload"
-                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer bg-gray-50 group-hover:bg-gray-100 group-hover:border-primary transition-all"
+                        className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-zinc-200 rounded-2xl cursor-pointer bg-white group-hover:bg-zinc-50 group-hover:border-[#D83484] transition-all"
                     >
                         {resumeFile ? (
-                            <div className="flex items-center gap-2 text-primary font-bold">
-                                <CheckCircle2 size={24} />
-                                <span className="truncate max-w-[200px]">{resumeFile.name}</span>
+                            <div className="flex flex-col items-center gap-3 text-[#D83484]">
+                                <CheckCircle2 size={40} />
+                                <span className="font-bold font-outfit text-center px-4 truncate max-w-full italic">{resumeFile.name}</span>
                             </div>
                         ) : (
-                            <div className="flex flex-col items-center text-gray-400 group-hover:text-primary transition-colors">
-                                <UploadCloud size={32} className="mb-2" />
-                                <span className="text-sm font-medium">Click to upload or drag & drop</span>
-                                <span className="text-xs">PDF only (Max 5MB)</span>
+                            <div className="flex flex-col items-center text-zinc-400 group-hover:text-[#D83484] transition-colors">
+                                <UploadCloud size={40} className="mb-3" />
+                                <span className="text-sm font-bold font-outfit">{dict.clickToUpload}</span>
+                                <span className="text-xs font-outfit">{dict.pdfOnly}</span>
                             </div>
                         )}
                     </label>
@@ -244,15 +260,15 @@ export default function JobApplicationForm({ jobId, lang }: JobApplicationFormPr
             <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20 disabled:opacity-50 disabled:scale-100"
+                className="w-full py-5 bg-[#D83484] text-white font-bold rounded-xl hover:opacity-95 disabled:opacity-50 transition-all flex items-center justify-center gap-3 group text-lg shadow-lg shadow-[#D83484]/20"
             >
                 {loading ? (
-                    <>
-                        <Loader2 className="animate-spin" />
-                        <span>Submitting Application...</span>
-                    </>
+                    <span className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
-                    <span>Submit Application</span>
+                    <>
+                        <span>{dict.sendApplication}</span>
+                        <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </>
                 )}
             </button>
         </form>

@@ -8,7 +8,7 @@ import { getDictionary } from "@/lib/dictionaries";
 import Footer from "@/components/layout/Footer";
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
-import ApplicationForm from './ApplicationForm';
+import JobApplicationForm from '@/components/jobs/JobApplicationForm';
 
 interface Props {
     params: Promise<{ lang: 'en' | 'es', id: string }>;
@@ -143,7 +143,8 @@ export default async function JobDetailPage({ params }: Props) {
 
                     {/* Application Form Section */}
                     <div id="apply" className="bg-zinc-50 rounded-3xl p-8 md:p-12 border border-zinc-200 scroll-mt-32">
-                        <ApplicationForm
+                        <JobApplicationForm
+                            jobId={id}
                             lang={lang}
                             dict={dict.joinOurTeam}
                         />
