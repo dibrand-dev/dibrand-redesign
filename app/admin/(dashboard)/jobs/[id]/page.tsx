@@ -21,9 +21,12 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
         description: '',
         requirements: '',
         seniority: '',
+        modality: '',
         salary_range: '',
         is_active: true,
     });
+
+    const modalities = ['Remoto', 'Híbrido', 'Presencial'];
 
     const industries = [
         'Fintech', 'Pharma', 'eCommerce', 'Big Tech', 'Automotive',
@@ -48,6 +51,7 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
                     description: data.description,
                     requirements: data.requirements,
                     seniority: data.seniority || '',
+                    modality: data.modality || 'Remoto',
                     salary_range: data.salary_range || '',
                     is_active: data.is_active,
                 });
@@ -185,6 +189,20 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
                                 <option value="Freelance">Freelance</option>
                             </select>
                         </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Modality</label>
+                            <select
+                                name="modality"
+                                value={formData.modality}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm bg-white"
+                            >
+                                {modalities.map(m => <option key={m} value={m}>{m}</option>)}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <div className="flex justify-between items-center">
                                 <label className="text-sm font-semibold text-gray-700 font-outfit">Salary Range (Internal Only)</label>

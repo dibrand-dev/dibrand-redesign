@@ -24,7 +24,7 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
     // Fetch active job openings
     const { data: jobs } = await supabase
         .from('job_openings')
-        .select('id, title, location, employment_type, is_active, description, requirements, industry, seniority')
+        .select('id, title, location, employment_type, is_active, description, requirements, industry, seniority, modality')
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 

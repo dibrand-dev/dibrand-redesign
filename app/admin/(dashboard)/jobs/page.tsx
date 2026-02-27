@@ -12,6 +12,7 @@ interface JobOpening {
     industry: string;
     location: string;
     employment_type: string;
+    modality: string;
     is_active: boolean;
     created_at: string;
 }

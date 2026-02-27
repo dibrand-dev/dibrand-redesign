@@ -15,6 +15,7 @@ interface JobOpening {
     description: string;
     requirements: string;
     seniority: string;
+    modality: string;
 }
 
 interface JoinOurTeamProps {
@@ -121,6 +122,11 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                             <div className="px-2.5 py-0.5 bg-zinc-100 text-zinc-500 rounded-lg text-xs font-bold uppercase tracking-tight">
                                                 {job.employment_type.replace('_', ' ')}
                                             </div>
+                                            {job.modality && (
+                                                <div className="px-2.5 py-0.5 bg-fuchsia-50 text-[#D83484] rounded-lg text-xs font-bold uppercase tracking-tight">
+                                                    {job.modality}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 

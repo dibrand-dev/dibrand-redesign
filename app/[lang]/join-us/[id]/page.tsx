@@ -96,50 +96,42 @@ export default async function JobDetailPage({ params }: Props) {
                     </div>
 
                     {/* Main Job Title Header (Full Width) */}
-                    <header className="mb-16 border-b border-zinc-100 pb-12">
-                        <div className="flex flex-wrap items-center gap-3 mb-6">
-                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">
-                                {job.seniority || 'Expert'}
-                            </span>
-                            <span className="text-zinc-200">•</span>
-                            <span className="text-[10px] font-bold text-[#D83484] uppercase tracking-[0.2em] flex items-center gap-1.5">
-                                <Building2 size={12} />
-                                {job.industry}
-                            </span>
-                        </div>
-                        <h1 className="text-5xl md:text-7xl font-bold text-[#D83484] mb-8 font-outfit tracking-tight leading-none lg:max-w-5xl">
+                    <header className="mb-8 border-b border-zinc-100 pb-8">
+                        <h1 className="text-5xl md:text-7xl font-bold text-[#D83484] mb-4 font-outfit tracking-tight leading-none lg:max-w-5xl">
                             {job.title}
                         </h1>
 
-                        <div className="flex flex-wrap items-center gap-8 text-zinc-500 font-outfit font-medium">
-                            <div className="flex items-center gap-2 text-sm">
-                                <MapPin size={18} className="text-zinc-300" />
-                                <span>{job.location}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                                <Briefcase size={18} className="text-zinc-300" />
-                                <span>{job.employment_type}</span>
-                            </div>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] md:text-xs font-bold text-zinc-400 uppercase tracking-[0.15em] font-outfit">
+                            <span>{job.seniority || 'Expert'}</span>
+                            <span className="text-zinc-200">|</span>
+                            <span>{job.industry}</span>
+                            <span className="text-zinc-200">|</span>
+                            <span>{job.location}</span>
+                            <span className="text-zinc-200">|</span>
+                            <span>{job.employment_type}</span>
+                            <span className="text-zinc-200">|</span>
+                            <span className="text-[#D83484]">{job.modality || 'Remoto'}</span>
                         </div>
                     </header>
 
                     {/* Split View Content */}
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
                         {/* Columna Izquierda: Descripción (65% aprox) */}
-                        <div className="lg:col-span-8">
+                        <div className="lg:col-span-8 mt-0">
                             <article className="prose prose-zinc max-w-none
-                                prose-headings:font-outfit prose-headings:font-bold prose-headings:text-zinc-900
-                                prose-p:text-zinc-600 prose-p:leading-relaxed prose-p:text-justify prose-p:font-light
+                                prose-headings:font-outfit prose-headings:font-bold prose-headings:text-zinc-900 prose-headings:mb-3 prose-headings:mt-8 first:prose-headings:mt-0
+                                prose-p:text-zinc-600 prose-p:leading-relaxed prose-p:text-justify prose-p:font-light prose-p:mb-4
                                 prose-strong:text-zinc-900 prose-strong:font-bold
-                                prose-li:marker:text-[#D83484] prose-li:text-zinc-600 prose-li:font-light
+                                prose-li:marker:text-[#D83484] prose-li:text-zinc-600 prose-li:font-light prose-li:mb-1
+                                prose-ul:mt-2 prose-ul:mb-4
                             ">
                                 <ReactMarkdown rehypePlugins={[rehypeRaw]}>
                                     {job.description}
                                 </ReactMarkdown>
 
                                 {job.requirements && (
-                                    <div className="mt-16 pt-12 border-t border-zinc-50">
-                                        <h2 className="text-3xl mb-8">Requirements</h2>
+                                    <div className="mt-12 pt-8 border-t border-zinc-50">
+                                        <h2 className="text-3xl mb-4">Requirements</h2>
                                         <ReactMarkdown rehypePlugins={[rehypeRaw]}>
                                             {job.requirements}
                                         </ReactMarkdown>
