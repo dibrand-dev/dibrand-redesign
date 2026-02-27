@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { UserCheck, Heart, Zap, Users, ArrowRight } from 'lucide-react';
+import { Check, ArrowRight } from 'lucide-react';
 
 interface StaffAugmentationTeaserProps {
     dict: {
@@ -17,32 +17,18 @@ interface StaffAugmentationTeaserProps {
     };
 }
 
-const icons = [UserCheck, Heart, Zap, Users];
-
 const teamRoles = [
     {
-        name: "Software Developers",
-        color: "bg-[#D83484]",
-        shape: "rounded-full",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"
+        name: "Product",
+        image: "/images/staff/Product.png"
     },
     {
-        name: "QA Engineers",
-        color: "bg-[#3B82F6]",
-        shape: "rounded-lg rotate-12",
-        image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop"
+        name: "UX/UI Design",
+        image: "/images/staff/UXUI.png"
     },
     {
-        name: "UX/UI Designers",
-        color: "bg-[#F59E0B]",
-        shape: "rounded-2xl -rotate-12",
-        image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop"
-    },
-    {
-        name: "Project Managers",
-        color: "bg-[#D83484]",
-        shape: "rounded-[30%]",
-        image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop"
+        name: "Engineering & AI",
+        image: "/images/staff/Developer.png"
     }
 ];
 
@@ -50,59 +36,58 @@ export default function StaffAugmentationTeaser({ dict }: StaffAugmentationTease
     const { title, subtitle, pillars, cta } = dict.staffAugmentationTeaser;
 
     return (
-        <section className="relative w-full py-28 bg-slate-50 overflow-hidden" id="staff-augmentation">
-            {/* Soft Ambient Background Elements */}
-            <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white to-transparent pointer-events-none" />
-
+        <section className="relative w-full py-32 bg-white overflow-hidden" id="staff-augmentation">
             <div className="container mx-auto px-6 relative z-10">
-                {/* 1. Encabezado y Texto - Light Style */}
+                {/* 1. Header and Subtitle */}
                 <div className="text-center max-w-4xl mx-auto mb-20">
-                    <h2 className="text-4xl md:text-6xl font-bold text-slate-900 mb-6 font-outfit tracking-tight">
+                    <h2 className="text-4xl md:text-6xl font-bold text-zinc-900 mb-8 font-outfit tracking-tight">
                         {title}
                     </h2>
-                    <p className="text-xl md:text-2xl text-slate-500 font-outfit font-light leading-relaxed">
+                    <p className="text-lg md:text-xl text-zinc-500 font-outfit font-light leading-relaxed max-w-2xl mx-auto">
                         {subtitle}
                     </p>
                 </div>
 
-                {/* 2. Grid de 4 Pilares (Clean White Cards) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-28">
-                    {pillars.map((pillar, index) => {
-                        const Icon = icons[index];
-                        return (
-                            <div key={index}
-                                className="flex gap-6 p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 group"
-                            >
-                                <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-[#D83484]/10 flex items-center justify-center text-[#D83484] group-hover:bg-[#D83484] group-hover:text-white transition-all duration-300">
-                                    <Icon size={28} />
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2 font-outfit">{pillar.title}</h3>
-                                    <p className="text-slate-500 font-outfit leading-relaxed">{pillar.desc}</p>
-                                </div>
+                {/* 2. Benefits Grid (2 columns - Ref: 13.35.59.png) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12 max-w-5xl mx-auto mb-28 border-y border-zinc-100 py-16">
+                    {pillars.map((pillar, index) => (
+                        <div key={index} className="flex items-start gap-6 group">
+                            {/* Fucsia Checkbox - Dibrand Flavor */}
+                            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#D83484] flex items-center justify-center text-white shadow-lg shadow-[#D83484]/20 mt-1 transform group-hover:scale-110 transition-transform duration-300">
+                                <Check size={18} strokeWidth={4} />
                             </div>
-                        );
-                    })}
+                            <div className="flex flex-col">
+                                <h3 className="text-xl font-bold text-zinc-900 font-outfit tracking-tight mb-2">
+                                    {pillar.title}
+                                </h3>
+                                <p className="text-base text-zinc-500 font-outfit leading-relaxed">
+                                    {pillar.desc}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
-                {/* 3. Galería de Roles (Visual Team Showcase - Reference Style) */}
-                <div className="mb-28">
-                    <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20">
+                {/* 3. Talent Gallery (3 Justified Circles) */}
+                <div className="mb-24">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12 max-w-6xl mx-auto px-4">
                         {teamRoles.map((role, index) => (
-                            <div key={index} className="group relative flex flex-col items-center">
-                                {/* Geometric shape behind - Reference Style */}
-                                <div className={`absolute -inset-4 ${role.color} opacity-20 ${role.shape} group-hover:scale-110 group-hover:opacity-30 transition-all duration-500`} />
-
-                                {/* Photo Avatar */}
-                                <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-lg overflow-hidden z-10">
+                            <div key={index} className="flex flex-col items-center group">
+                                {/* Photo Avatar - Perfect Circle */}
+                                <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-white shadow-2xl overflow-hidden mb-10 transition-all duration-500 group-hover:scale-105 group-hover:shadow-zinc-200">
                                     <Image
                                         src={role.image}
                                         alt={role.name}
                                         fill
-                                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 192px, 256px"
+                                        priority={index === 0}
                                     />
+                                    {/* Subtle Overlay */}
+                                    <div className="absolute inset-0 bg-zinc-900/5 group-hover:bg-transparent transition-colors duration-300" />
                                 </div>
-                                <span className="mt-8 text-sm md:text-base font-bold text-slate-800 font-outfit tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity text-center px-4">
+
+                                <span className="text-sm font-black text-zinc-800 font-outfit tracking-[0.25em] uppercase text-center opacity-70 group-hover:opacity-100 transition-all duration-300">
                                     {role.name}
                                 </span>
                             </div>
@@ -110,21 +95,17 @@ export default function StaffAugmentationTeaser({ dict }: StaffAugmentationTease
                     </div>
                 </div>
 
-                {/* 4. Call to Action (CTA) - Solid Modern Style */}
-                <div className="flex justify-center">
+                {/* 4. Call to Action (CTA) */}
+                <div className="flex justify-center mt-12">
                     <Link
                         href="/staff-augmentation"
-                        className="relative overflow-hidden inline-flex items-center gap-4 px-12 py-6 bg-slate-900 text-white font-black text-lg rounded-full hover:bg-[#D83484] hover:shadow-2xl hover:shadow-[#D83484]/40 hover:-translate-y-1 active:scale-95 group transition-all duration-300"
+                        className="inline-flex items-center gap-4 px-12 py-6 bg-zinc-900 text-white font-bold text-lg rounded-full hover:bg-black hover:shadow-2xl hover:-translate-y-1 active:scale-95 transition-all duration-300 group"
                     >
-                        <span className="relative z-10">{cta}</span>
-                        <ArrowRight size={22} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                        <span>{cta}</span>
+                        <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
                     </Link>
                 </div>
             </div>
         </section>
     );
 }
-
-
-
-
