@@ -48,19 +48,19 @@ export default function StaffAugmentationTeaser({ dict }: StaffAugmentationTease
                     </p>
                 </div>
 
-                {/* 2. Benefits Grid (2 columns - Ref: 13.35.59.png) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12 max-w-5xl mx-auto mb-28 border-y border-zinc-100 py-16">
+                {/* 2. Benefits Grid (4 horizontal columns in desktop) - Flat Design */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-12 max-w-7xl mx-auto mb-28 border-y border-zinc-100 py-16">
                     {pillars.map((pillar, index) => (
-                        <div key={index} className="flex items-start gap-6 group">
-                            {/* Fucsia Checkbox - Dibrand Flavor */}
-                            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#D83484] flex items-center justify-center text-white shadow-lg shadow-[#D83484]/20 mt-1 transform group-hover:scale-110 transition-transform duration-300">
+                        <div key={index} className="flex items-start gap-4 group">
+                            {/* Fucsia Checkbox - Flat Design */}
+                            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#D83484] flex items-center justify-center text-white mt-1 transform group-hover:scale-110 transition-transform duration-300">
                                 <Check size={18} strokeWidth={4} />
                             </div>
                             <div className="flex flex-col">
-                                <h3 className="text-xl font-bold text-zinc-900 font-outfit tracking-tight mb-2">
+                                <h3 className="text-lg font-bold text-zinc-900 font-outfit tracking-tight mb-2">
                                     {pillar.title}
                                 </h3>
-                                <p className="text-base text-zinc-500 font-outfit leading-relaxed">
+                                <p className="text-sm text-zinc-500 font-outfit leading-relaxed">
                                     {pillar.desc}
                                 </p>
                             </div>
@@ -68,13 +68,13 @@ export default function StaffAugmentationTeaser({ dict }: StaffAugmentationTease
                     ))}
                 </div>
 
-                {/* 3. Talent Gallery (3 Justified Circles) */}
+                {/* 3. Talent Gallery (3 Justified Circles) - Flat Design */}
                 <div className="mb-24">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12 max-w-6xl mx-auto px-4">
                         {teamRoles.map((role, index) => (
                             <div key={index} className="flex flex-col items-center group">
-                                {/* Photo Avatar - Perfect Circle */}
-                                <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-white shadow-2xl overflow-hidden mb-10 transition-all duration-500 group-hover:scale-105 group-hover:shadow-zinc-200">
+                                {/* Photo Avatar - Perfect Circle - Flat Design */}
+                                <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-white overflow-hidden mb-10 transition-all duration-500 group-hover:scale-105">
                                     <Image
                                         src={role.image}
                                         alt={role.name}
@@ -99,7 +99,7 @@ export default function StaffAugmentationTeaser({ dict }: StaffAugmentationTease
                 <div className="flex justify-center mt-12">
                     <Link
                         href="/staff-augmentation"
-                        className="inline-flex items-center gap-4 px-12 py-6 bg-zinc-900 text-white font-bold text-lg rounded-full hover:bg-black hover:shadow-2xl hover:-translate-y-1 active:scale-95 transition-all duration-300 group"
+                        className="inline-flex items-center gap-4 px-12 py-6 bg-zinc-900 text-white font-bold text-lg rounded-full hover:bg-black hover:-translate-y-1 active:scale-95 transition-all duration-300 group"
                     >
                         <span>{cta}</span>
                         <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
