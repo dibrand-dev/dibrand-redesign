@@ -250,6 +250,8 @@
         "subtitle": "Join our team and be part of a community where innovation and collaboration thrive.",
         "viewOpening": "Apply",
         "shareOpening": "Share position",
+        "shareLinkedIn": "Share on LinkedIn",
+        "shareWhatsApp": "Send via WhatsApp",
         "fallbackText": "No open positions at the moment, but we are always looking for talent.",
         "fallbackLink": "Send us your CV!"
     }

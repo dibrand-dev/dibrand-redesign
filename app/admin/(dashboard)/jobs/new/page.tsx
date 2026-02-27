@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 import { createJob } from '@/app/actions/jobs';
+import RichMarkdownEditor from '@/components/admin/RichMarkdownEditor';
 
 export default function NewJobPage() {
     const router = useRouter();
@@ -127,34 +128,20 @@ export default function NewJobPage() {
                     </div>
 
                     <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                            <label className="text-sm font-semibold text-gray-700">Job Description</label>
-                            <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Markdown Supported</span>
-                        </div>
-                        <textarea
-                            required
-                            name="description"
-                            rows={8}
+                        <RichMarkdownEditor
+                            label="Job Description"
                             value={formData.description}
-                            onChange={handleChange}
-                            placeholder="Describe the role... Use **bold** and *italics*. Use - for lists."
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm font-mono text-sm"
+                            onChange={(val) => setFormData(prev => ({ ...prev, description: val }))}
+                            placeholder="Describe the role... Use the toolbar for bold, lists, and alignment."
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                            <label className="text-sm font-semibold text-gray-700">Requirements</label>
-                            <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Markdown Supported</span>
-                        </div>
-                        <textarea
-                            required
-                            name="requirements"
-                            rows={8}
+                        <RichMarkdownEditor
+                            label="Requirements"
                             value={formData.requirements}
-                            onChange={handleChange}
-                            placeholder="List the required skills... Use - for lists."
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm font-mono text-sm"
+                            onChange={(val) => setFormData(prev => ({ ...prev, requirements: val }))}
+                            placeholder="List the required skills... Use the toolbar for lists."
                         />
                     </div>
 

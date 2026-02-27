@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { MapPin, ArrowRight, Share2, Linkedin, MessageCircle } from 'lucide-react';
+import { MapPin, ArrowRight, Share2 } from 'lucide-react';
+import { FaLinkedinIn, FaWhatsapp } from 'react-icons/fa6';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 
 interface JobOpening {
     id: string;
@@ -24,6 +26,9 @@ interface JoinOurTeamProps {
         title?: string;
         subtitle?: string;
         viewOpening?: string;
+        shareOpening?: string;
+        shareLinkedIn?: string;
+        shareWhatsApp?: string;
         fallbackText?: string;
         fallbackLink?: string;
     };
@@ -40,7 +45,9 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
         title: dict?.title || (isEn ? 'We are excited to hear from you' : 'Nos entusiasma saber de ti'),
         subtitle: dict?.subtitle || (isEn ? 'Join our team and be part of a community where innovation and collaboration thrive.' : 'Únete a nuestro equipo y forma parte de una comunidad donde la innovación y la colaboración prosperan.'),
         viewOpening: dict?.viewOpening || (isEn ? 'Apply' : 'Aplicar'),
-        shareOpening: (dict as any)?.shareOpening || (isEn ? 'Share position' : 'Compartir vacante'),
+        shareOpening: dict?.shareOpening || (isEn ? 'Share position' : 'Compartir vacante'),
+        shareLinkedIn: dict?.shareLinkedIn || (isEn ? 'Share on LinkedIn' : 'Compartir en LinkedIn'),
+        shareWhatsApp: dict?.shareWhatsApp || (isEn ? 'Send via WhatsApp' : 'Enviar por WhatsApp'),
         fallbackText: dict?.fallbackText || (isEn ? 'No open positions at the moment, but we are always looking for talent.' : 'No hay posiciones abiertas en este momento, pero siempre buscamos talento.'),
         fallbackLink: dict?.fallbackLink || (isEn ? 'Send us your CV!' : '¡Envíanos tu CV!')
     };
@@ -102,7 +109,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
 
                                     {/* Description Body - Rich Text Render */}
                                     <div className="prose prose-zinc prose-sm max-w-none text-zinc-600 mb-8 prose-headings:text-zinc-900 prose-strong:text-zinc-900 prose-li:marker:text-zinc-400 prose-li:my-1">
-                                        <ReactMarkdown>
+                                        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
                                             {job.description}
                                         </ReactMarkdown>
                                     </div>
@@ -119,9 +126,9 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                         <div className="relative">
                                             <button
                                                 onClick={() => setOpenShareId(openShareId === job.id ? null : job.id)}
-                                                className="text-zinc-500 hover:text-zinc-900 text-sm font-medium underline underline-offset-4 transition-colors flex items-center gap-2"
+                                                className="text-zinc-500 hover:text-zinc-900 text-sm font-medium underline underline-offset-4 transition-colors flex items-center gap-2 group/share"
                                             >
-                                                <Share2 size={16} />
+                                                <Share2 size={16} className="text-zinc-400 group-hover/share:text-zinc-900 transition-colors" />
                                                 {texts.shareOpening}
                                             </button>
 
@@ -131,20 +138,24 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                                         className="fixed inset-0 z-10"
                                                         onClick={() => setOpenShareId(null)}
                                                     />
-                                                    <div className="absolute bottom-full left-0 mb-2 w-48 bg-white border border-zinc-200 rounded-xl py-2 z-20 shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+                                                    <div className="absolute bottom-full left-0 mb-3 w-56 bg-white border border-zinc-200 rounded-xl py-2 z-20 shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
                                                         <button
                                                             onClick={() => handleShare(job, 'linkedin')}
-                                                            className="w-full px-4 py-2.5 text-left text-sm text-zinc-700 hover:bg-zinc-50 flex items-center gap-3 transition-colors"
+                                                            className="w-full px-4 py-2.5 text-left text-sm text-zinc-600 hover:text-[#0077b5] hover:bg-zinc-50 flex items-center gap-3 transition-all group/item"
                                                         >
-                                                            <Linkedin size={16} className="text-[#0077b5]" />
-                                                            LinkedIn
+                                                            <div className="w-8 h-8 rounded-lg bg-zinc-50 flex items-center justify-center group-hover/item:bg-[#0077b5]/10 transition-colors">
+                                                                <FaLinkedinIn size={16} className="text-zinc-400 group-hover/item:text-[#0077b5] transition-colors" />
+                                                            </div>
+                                                            <span className="font-medium">{texts.shareLinkedIn}</span>
                                                         </button>
                                                         <button
                                                             onClick={() => handleShare(job, 'whatsapp')}
-                                                            className="w-full px-4 py-2.5 text-left text-sm text-zinc-700 hover:bg-zinc-50 flex items-center gap-3 transition-colors"
+                                                            className="w-full px-4 py-2.5 text-left text-sm text-zinc-600 hover:text-[#25D366] hover:bg-zinc-50 flex items-center gap-3 transition-all group/item"
                                                         >
-                                                            <MessageCircle size={16} className="text-[#25D366]" />
-                                                            WhatsApp
+                                                            <div className="w-8 h-8 rounded-lg bg-zinc-50 flex items-center justify-center group-hover/item:bg-[#25D366]/10 transition-colors">
+                                                                <FaWhatsapp size={18} className="text-zinc-400 group-hover/item:text-[#25D366] transition-colors" />
+                                                            </div>
+                                                            <span className="font-medium">{texts.shareWhatsApp}</span>
                                                         </button>
                                                     </div>
                                                 </>
