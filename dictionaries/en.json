@@ -4,7 +4,7 @@
         "services": "Services",
         "successCases": "Success Stories",
         "softwareDevelopment": "Software Development",
-        "staffAugmentation": "Staff Augmentation",
+        "staffAugmentation": "Strategic Engineering",
         "portfolio": "Portfolio",
         "aboutUs": "About Us",
         "careers": "Join Us",
@@ -15,8 +15,8 @@
     },
     "home": {
         "hero": {
-            "title": "Accelerating your Digital Transformation",
-            "subtitle": "Empowering Startups and Enterprises with Elite Software Engineering Talent.",
+            "title": "Engineering Velocity for Decision Makers.",
+            "subtitle": "Stop adding headcount. Start adding impact. We deploy AI-augmented engineering squads that don't just fill seats—they own your roadmap and accelerate your time-to-market.",
             "cta": "Let's Talk",
             "welcome": "Welcome to Dibrand"
         },
@@ -122,27 +122,65 @@
             "subtitle": "We are the strategic partner for companies seeking excellence in software engineering."
         },
         "staffAugmentationTeaser": {
-            "title": "Talent that powers your vision.",
-            "subtitle": "We don’t just add people, we add value. We build the ideal team for your most complex challenges.",
+            "title": "Strategic Talent Integration",
+            "subtitle": "Access the top 3% of LATAM’s senior engineering talent. Our professionals are not just coders; they are AI-native consultants who integrate into your culture, align with your timezone, and multiply your team’s productivity from day one.",
             "pillars": [
                 {
-                    "title": "The Right Talent",
-                    "desc": "Senior Engineers with proven technical seniority and critical thinking."
+                    "title": "AI-Native Workflow",
+                    "desc": "Every developer is equipped with an advanced AI stack to automate testing and documentation."
                 },
                 {
-                    "title": "The Right Culture",
-                    "desc": "Total cultural fit. Fluid English communication and alignment with your rituals."
+                    "title": "72-Hour Deployment",
+                    "desc": "Scalable capacity with pre-vetted seniors ready to ship code."
                 },
                 {
-                    "title": "The Right Time",
-                    "desc": "Record-time onboarding. Team scaling in less than 3 weeks."
-                },
-                {
-                    "title": "The Right Team",
-                    "desc": "From individual developers to multidisciplinary squads."
+                    "title": "Direct Ownership",
+                    "desc": "We handle the back-office, benefits, and retention; you keep 100% of the IP and control."
                 }
             ],
-            "cta": "Explore Staff Augmentation"
+            "cta": "Explore Strategic Engineering"
+        },
+        "trustedByTitle": "Some companies that trust us",
+        "aiAdvantage": {
+            "title": "The Dibrand AI-Advantage",
+            "content": "In 2026, raw hours are a commodity. Insight is the currency. Our engineers use proprietary AI agents to handle boilerplate code, unit testing, and architecture validation. The result? A 35% reduction in development cycles compared to traditional staff augmentation. You pay for seniority; you get hyper-efficiency."
+        },
+        "compliance": {
+            "title": "Zero-Friction Compliance",
+            "items": [
+                {
+                    "title": "IP Protection",
+                    "desc": "Full legal transfer of intellectual property under international standards."
+                },
+                {
+                    "title": "Secure Coding",
+                    "desc": "SOC2-aligned development practices and rigorous background checks."
+                },
+                {
+                    "title": "Nearshore Synergy",
+                    "desc": "Real-time collaboration. No 'black boxes', no lag, just high-bandwidth communication."
+                }
+            ]
+        },
+        "successCase": {
+            "title": "From Legacy to Scale: +25% Revenue Growth",
+            "copy": "We didn't just rebuild their platform; we optimized their entire checkout flow using AI-driven insights. Our squad took ownership of the technical debt, allowing the client's internal team to focus on new market expansion.",
+            "cta": "Explore Success Stories"
+        },
+        "caseDetail": {
+            "challenge": "The Challenge",
+            "solution": "AI-Augmented Solution",
+            "impact": "Outcome & Impact",
+            "resultsDescription": "Business Results",
+            "metrics": "Key Metrics",
+            "techStack": "Tech Stack",
+            "cta": "Book a Call",
+            "backLink": "Back to all stories",
+            "share": "Share success story"
+        },
+        "portfolio": {
+            "headline": "Our Work",
+            "subheadline": "Explore our portfolio to see how we turn ideas into exceptional experiences."
         }
     },
     "contact": {
@@ -161,13 +199,13 @@
     },
     "staffAugmentation": {
         "hero": {
-            "title": "Your team, powered up. Elite IT talent integrated into your processes.",
-            "subtitle": "Scale your technological capacity with Senior engineers from LATAM who integrate into your culture, rituals, and time zones.",
-            "cta": "Schedule Consultation"
+            "title": "Engineering Velocity for Decision Makers.",
+            "subtitle": "Stop adding headcount. Start adding impact. We deploy AI-augmented engineering squads that don't just fill seats—they own your roadmap and accelerate your time-to-market.",
+            "cta": "Schedule Strategic Consultation"
         },
         "whatIs": {
-            "title": "What is Staff Augmentation at Dibrand?",
-            "content": "It is a flexible hiring strategy that allows for covering skill gaps and accelerating roadmaps without the costs or commitments of traditional long-term hiring. We provide you with experts who work under your management, 100% aligned with your objectives."
+            "title": "Strategic Talent Integration",
+            "content": "Access the top 3% of LATAM’s senior engineering talent. Our professionals are not just coders; they are AI-native consultants who integrate into your culture, align with your timezone, and multiply your team’s productivity from day one."
         },
         "benefits": {
             "items": [
@@ -224,6 +262,62 @@
                 {
                     "title": "Data & AI",
                     "desc": "Data engineers and Machine Learning model specialists."
+                }
+            ]
+        },
+        "services": {
+            "intro": "At Dibrand, we accelerate your technical roadmap by integrating AI-augmented engineering squads directly into your organization—with zero friction.",
+            "categories": [
+                {
+                    "title": "Product & Innovation",
+                    "roles": [
+                        {
+                            "name": "Product Managers",
+                            "desc": "Drive backlog prioritization and roadmap planning."
+                        },
+                        {
+                            "name": "Product Owners & Analysts",
+                            "desc": "Bridge the gap between business needs and delivery."
+                        },
+                        {
+                            "name": "Innovation Consultants",
+                            "desc": "Lead discovery sprints and build investment-ready cases."
+                        }
+                    ]
+                },
+                {
+                    "title": "UX/UI Design",
+                    "roles": [
+                        {
+                            "name": "UX Designers",
+                            "desc": "User research, customer journeys, and intuitive flows."
+                        },
+                        {
+                            "name": "UI Designers",
+                            "desc": "Polished interfaces and scalable design systems."
+                        },
+                        {
+                            "name": "Interaction Designers",
+                            "desc": "Prototypes and motion that drive user delight."
+                        }
+                    ]
+                },
+                {
+                    "title": "Engineering & AI",
+                    "roles": [
+                        {
+                            "name": "FE/BE Developers",
+                            "desc": "Experts in React, Node.js, Python, and Java."
+                        },
+                        {
+                            "name": "AI & LLM Engineers",
+                            "desc": "Intelligent systems and agentic applications (LLMs)."
+                        },
+                        {
+                            "name": "Mobile, QA & DevOps",
+                            "desc": "Native apps, CI/CD, and high-availability systems."
+                        }
+                    ]
                 }
             ]
         },

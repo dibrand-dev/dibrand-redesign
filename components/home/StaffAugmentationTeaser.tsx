@@ -48,19 +48,19 @@ export default function StaffAugmentationTeaser({ dict }: StaffAugmentationTease
                     </p>
                 </div>
 
-                {/* 2. Benefits Grid (4 horizontal columns in desktop) - Minimal & Flat */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-10 max-w-7xl mx-auto mb-16">
+                {/* 2. Benefits Grid (3 columns) - Minimal & Flat */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10 max-w-6xl mx-auto mb-16">
                     {pillars.map((pillar, index) => (
                         <div key={index} className="flex items-start gap-4 group">
                             {/* Fucsia Checkbox - Flat Design */}
-                            <div className="flex-shrink-0 w-7 h-7 rounded-md bg-[#D83484] flex items-center justify-center text-white mt-1 transform group-hover:scale-110 transition-transform duration-300">
-                                <Check size={16} strokeWidth={4} />
+                            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#D83484] flex items-center justify-center text-white mt-1 transform group-hover:rotate-12 transition-transform duration-300">
+                                <Check size={18} strokeWidth={3} />
                             </div>
                             <div className="flex flex-col">
-                                <h3 className="text-base font-bold text-zinc-900 font-outfit tracking-tight mb-1">
+                                <h3 className="text-lg font-bold text-zinc-900 font-outfit tracking-tight mb-2">
                                     {pillar.title}
                                 </h3>
-                                <p className="text-xs text-zinc-500 font-outfit leading-relaxed">
+                                <p className="text-sm text-zinc-500 font-outfit leading-relaxed font-light">
                                     {pillar.desc}
                                 </p>
                             </div>

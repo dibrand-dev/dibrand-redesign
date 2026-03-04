@@ -1,12 +1,13 @@
 import { getDictionary } from "@/lib/dictionaries";
-import ContactForm from "@/components/ContactForm";
 import HeroSection from "@/components/home/HeroSection";
-import WhatWeDo from "@/components/home/WhatWeDo";
 import ServicesGrid from "@/components/home/ServicesGrid";
 import TechStack from "@/components/home/TechStack";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import TrustedBySection from "@/components/home/TrustedBySection";
 import StaffAugmentationTeaser from "@/components/home/StaffAugmentationTeaser";
+import AIAdvantage from "@/components/home/AIAdvantage";
+import ComplianceSection from "@/components/home/ComplianceSection";
+import SuccessCaseSection from "@/components/home/SuccessCaseSection";
 import { supabase } from "@/lib/supabase";
 import Footer from "@/components/layout/Footer";
 
@@ -42,21 +43,34 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
   }));
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <>
+      {/* 1. Hero Section (Reinvención del Valor) */}
       <HeroSection dict={dict.home} />
 
-      <WhatWeDo dict={dict.home} />
-
-      <ServicesGrid dict={dict.home} />
-
+      {/* 2. Sección Staffing (Strategic Talent Integration) */}
       <StaffAugmentationTeaser dict={dict.home} />
 
-      <TrustedBySection brands={brands} />
+      {/* 3. The Dibrand AI-Advantage */}
+      <AIAdvantage dict={dict.home} />
 
+      {/* 4. Social Proof (Business Results Success Case) */}
+      <SuccessCaseSection dict={dict.home} lang={params.lang} />
+
+      {/* 5. Solutions / Services Grid */}
+      <ServicesGrid dict={dict.home} />
+
+      {/* 6. Compliance (Zero-Friction) */}
+      <ComplianceSection dict={dict.home} />
+
+      {/* 7. Brands & Tech Stack */}
+      <TrustedBySection brands={brands} dict={dict.home} />
       <TechStack dict={dict.home} />
+
+      {/* 8. Testimonials (Individual Social Proof) */}
       <TestimonialsSection testimonials={testimonials || []} dict={dict.home} lang={params.lang} />
 
+      {/* Footer */}
       <Footer dict={dict} lang={params.lang} />
-    </div>
+    </>
   );
 }

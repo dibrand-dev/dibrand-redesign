@@ -26,24 +26,47 @@ export async function getCaseStudy(id: string) {
 }
 
 export async function createCaseStudy(formData: any) {
+    // Slug generation fallback
+    if (!formData.slug && formData.title) {
+        formData.slug = formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+
     const { error } = await supabase
         .from('case_studies')
         .insert([formData]);
 
     if (error) throw error;
+
+    // Revalidate admin and public routes
     revalidatePath('/admin/cases');
+    revalidatePath('/[lang]/success-stories', 'layout');
+    revalidatePath('/[lang]/success-stories/[slug]', 'layout');
+
     return { success: true };
 }
 
 export async function updateCaseStudy(id: string, formData: any) {
+    // Slug generation fallback
+    if (!formData.slug && formData.title) {
+        formData.slug = formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+
     const { error } = await supabase
         .from('case_studies')
         .update(formData)
         .eq('id', id);
 
     if (error) throw error;
+
+    // Revalidate admin and public routes
     revalidatePath('/admin/cases');
     revalidatePath(`/admin/cases/${id}`);
+    revalidatePath('/[lang]/success-stories', 'layout');
+    revalidatePath(`/[lang]/success-stories/[slug]`, 'layout');
+    if (formData.slug) {
+        revalidatePath(`/[lang]/success-stories/${formData.slug}`, 'layout');
+    }
+
     return { success: true };
 }
 

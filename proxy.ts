@@ -28,6 +28,7 @@ function getLocale(request: NextRequest): string {
 
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl
+    console.log(`[Proxy] Path: ${pathname}`);
 
     // EXCLUDE STATIC ASSETS AND INTERNAL PATHS FROM ALL MIDDLEWARE
     if (

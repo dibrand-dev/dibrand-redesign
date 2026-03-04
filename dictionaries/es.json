@@ -4,7 +4,7 @@
         "services": "Servicios",
         "successCases": "Casos de Éxito",
         "softwareDevelopment": "Desarrollo de Software",
-        "staffAugmentation": "Staff Augmentation",
+        "staffAugmentation": "Ingeniería Estratégica",
         "portfolio": "Portfolio",
         "aboutUs": "Nosotros",
         "careers": "Join Us",
@@ -15,8 +15,8 @@
     },
     "home": {
         "hero": {
-            "title": "Aceleramos tu Transformación Digital",
-            "subtitle": "Impulsamos Startups y Empresas con Talento de Ingeniería de Software de Elite.",
+            "title": "Velocidad de Ingeniería para Decision Makers.",
+            "subtitle": "Deja de sumar headcount. Empieza a sumar impacto. Desplegamos squads de ingeniería aumentados por IA que no solo ocupan un lugar: se adueñan de tu roadmap y aceleran tu time-to-market.",
             "cta": "Hablemos",
             "welcome": "Bienvenido a Dibrand"
         },
@@ -122,27 +122,65 @@
             "subtitle": "Somos el socio estratégico de las empresas que buscan excelencia en ingeniería de software."
         },
         "staffAugmentationTeaser": {
-            "title": "Talento que potencia tu visión.",
-            "subtitle": "No sumamos gente, sumamos valor. Construimos el equipo ideal para tus desafíos más complejos.",
+            "title": "Integración de Talento Estratégico",
+            "subtitle": "Accede al top 3% del talento senior de ingeniería de LATAM. Nuestros profesionales no son solo programadores; son consultores nativos en IA que se integran a tu cultura, se alinean con tu zona horaria y multiplican la productividad de tu equipo desde el primer día.",
             "pillars": [
                 {
-                    "title": "El Talento Correcto",
-                    "desc": "Ingenieros Senior con seniority técnico y pensamiento crítico comprobado."
+                    "title": "Workflow Nativo en IA",
+                    "desc": "Cada desarrollador está equipado con un stack de IA avanzado para automatizar pruebas y documentación."
                 },
                 {
-                    "title": "La Cultura Correcta",
-                    "desc": "Fit cultural total. Comunicación fluida en inglés y alineación con tus rituales."
+                    "title": "Despliegue en 72 Horas",
+                    "desc": "Capacidad escalable con seniors pre-validados listos para entregar código."
                 },
                 {
-                    "title": "El Tiempo Correcto",
-                    "desc": "Onboarding en tiempo récord. Escalamiento de equipo en menos de 3 semanas."
-                },
-                {
-                    "title": "El Equipo Correcto",
-                    "desc": "Desde desarrolladores individuales hasta escuadrones multidisciplinarios."
+                    "title": "Propiedad Directa",
+                    "desc": "Nosotros gestionamos el back-office, beneficios y retención; tú conservas el 100% de la propiedad intelectual y el control."
                 }
             ],
-            "cta": "Explorar Staff Augmentation"
+            "cta": "Explorar Ingeniería Estratégica"
+        },
+        "trustedByTitle": "Empresas que confían en nosotros",
+        "aiAdvantage": {
+            "title": "La Ventaja de IA de Dibrand",
+            "content": "En 2026, las horas brutas son un commodity. El insight es la moneda de cambio. Nuestros ingenieros utilizan agentes de IA propios para manejar código repetitivo, pruebas unitarias y validación de arquitectura. ¿El resultado? Una reducción del 35% en los ciclos de desarrollo en comparación con el staff augmentation tradicional. Pagas por seniority; obtienes hiper-eficiencia."
+        },
+        "compliance": {
+            "title": "Cumplimiento Sin Fricciones",
+            "items": [
+                {
+                    "title": "Protección de IP",
+                    "desc": "Transferencia legal total de la propiedad intelectual bajo estándares internacionales."
+                },
+                {
+                    "title": "Código Seguro",
+                    "desc": "Prácticas de desarrollo alineadas con SOC2 y rigurosas verificaciones de antecedentes."
+                },
+                {
+                    "title": "Sinergia Nearshore",
+                    "desc": "Colaboración en tiempo real. Sin 'cajas negras', sin retrasos, solo comunicación de alto ancho de banda."
+                }
+            ]
+        },
+        "successCase": {
+            "title": "De Legado a Escala: +25% de Crecimiento en Ingresos",
+            "copy": "No solo reconstruimos su plataforma; optimizamos todo su flujo de pago utilizando insights impulsados por IA. Nuestro squad se hizo cargo de la deuda técnica, permitiendo que el equipo interno del cliente se enfocara en la expansión a nuevos mercados.",
+            "cta": "Explorar Casos de Éxito"
+        },
+        "caseDetail": {
+            "challenge": "El Desafío",
+            "solution": "Solución Aumentada por IA",
+            "impact": "Resultados e Impacto",
+            "resultsDescription": "Impacto de Negocio",
+            "metrics": "Métricas Clave",
+            "techStack": "Tech Stack",
+            "cta": "Agendar una llamada",
+            "backLink": "Volver a todas las historias",
+            "share": "Compartir caso de éxito"
+        },
+        "portfolio": {
+            "headline": "Nuestro Trabajo",
+            "subheadline": "Explora nuestro portfolio para ver cómo transformamos ideas en experiencias excepcionales."
         }
     },
     "contact": {
@@ -161,13 +199,13 @@
     },
     "staffAugmentation": {
         "hero": {
-            "title": "Tu equipo, potenciado. Talento IT de élite integrado a tus procesos.",
-            "subtitle": "Escala tu capacidad tecnológica con ingenieros Senior de LATAM que se integran a tu cultura, rituales y zonas horarias.",
-            "cta": "Agendar Consulta"
+            "title": "Velocidad de Ingeniería para Decision Makers.",
+            "subtitle": "Deja de sumar headcount. Empieza a sumar impacto. Desplegamos squads de ingeniería aumentados por IA que no solo ocupan un lugar: se adueñan de tu roadmap y aceleran tu time-to-market.",
+            "cta": "Agendar Consulta Estratégica"
         },
         "whatIs": {
-            "title": "¿Qué es Staff Augmentation en Dibrand?",
-            "content": "Es una estrategia de contratación flexible que permite cubrir brechas de habilidades y acelerar roadmaps sin los costos ni compromisos de una contratación tradicional a largo plazo. Te proporcionamos expertos que trabajan bajo tu gestión, alineados al 100% con tus objetivos."
+            "title": "Integración de Talento Estratégico",
+            "content": "Accede al top 3% del talento senior de ingeniería de LATAM. Nuestros profesionales no son solo programadores; son consultores nativos en IA que se integran a tu cultura, se alinean con tu zona horaria y multiplican la productividad de tu equipo desde el primer día."
         },
         "benefits": {
             "items": [
@@ -224,6 +262,62 @@
                 {
                     "title": "Data & AI",
                     "desc": "Ingenieros de datos y especialistas en modelos de Machine Learning."
+                }
+            ]
+        },
+        "services": {
+            "intro": "En Dibrand, aceleramos tu roadmap técnico integrando squads de ingeniería aumentados por IA directamente en tu organización, con cero fricción.",
+            "categories": [
+                {
+                    "title": "Producto e Innovación",
+                    "roles": [
+                        {
+                            "name": "Product Managers",
+                            "desc": "Impulsa la priorización del backlog y la planificación del roadmap."
+                        },
+                        {
+                            "name": "Product Owners & Analysts",
+                            "desc": "Conecta las necesidades del negocio con la entrega de producto."
+                        },
+                        {
+                            "name": "Innovation Consultants",
+                            "desc": "Lidera sprints de descubrimiento y crea casos listos para inversión."
+                        }
+                    ]
+                },
+                {
+                    "title": "Diseño UX/UI",
+                    "roles": [
+                        {
+                            "name": "UX Designers",
+                            "desc": "Investigación de usuarios, customer journeys y flujos intuitivos."
+                        },
+                        {
+                            "name": "UI Designers",
+                            "desc": "Interfaces pulidas y sistemas de diseño escalables."
+                        },
+                        {
+                            "name": "Interaction Designers",
+                            "desc": "Prototipos y movimiento que deleitan al usuario."
+                        }
+                    ]
+                },
+                {
+                    "title": "Ingeniería e IA",
+                    "roles": [
+                        {
+                            "name": "FE/BE Developers",
+                            "desc": "Expertos en React, Node.js, Python y Java."
+                        },
+                        {
+                            "name": "AI & LLM Engineers",
+                            "desc": "Sistemas inteligentes y aplicaciones agénticas (LLMs)."
+                        },
+                        {
+                            "name": "Mobile, QA & DevOps",
+                            "desc": "Apps nativas, CI/CD y sistemas de alta disponibilidad."
+                        }
+                    ]
                 }
             ]
         },

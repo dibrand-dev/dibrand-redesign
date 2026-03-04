@@ -35,7 +35,9 @@ export default async function RootLayout({
     <html lang={lang} className={`${outfit.variable} scroll-smooth`}>
       <body className="font-sans antialiased pt-16">
         <Navbar dict={dict} lang={lang} />
-        {children}
+        <div className="flex min-h-screen flex-col bg-white">
+          {children}
+        </div>
       </body>
     </html>
   );

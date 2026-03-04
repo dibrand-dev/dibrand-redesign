@@ -34,9 +34,9 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
     const wayIcons = [Clock, UserCheck, Heart];
 
     return (
-        <div className="flex min-h-screen flex-col bg-white">
+        <div className="bg-white overflow-x-hidden">
             {/* Hero Section - Compact & Consistent */}
-            <section className="relative min-h-[60vh] w-full flex items-center py-20 bg-slate-50 overflow-hidden">
+            <section className="relative min-h-[50vh] w-full flex items-center py-16 bg-slate-50 overflow-hidden">
                 <div className="container mx-auto px-6 relative z-10 text-center lg:text-left">
                     <div className="max-w-4xl mx-auto lg:mx-0">
                         <h1 className="text-3xl md:text-5xl font-bold text-zinc-900 mb-6 font-outfit tracking-tight leading-tight">
@@ -53,7 +53,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
             </section>
 
             {/* Detailed Section (The "What is") - Compact & Unified */}
-            <section className="bg-white pt-16 pb-4">
+            <section className="bg-white pt-12 pb-2">
                 <div className="container mx-auto px-6">
                     <div className="max-w-5xl mx-auto text-center">
                         <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 mb-6 font-outfit tracking-tight">
@@ -67,7 +67,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
             </section>
 
             {/* New Staffing Services Section */}
-            <StaffingServices />
+            <StaffingServices dict={content.services} />
 
             {/* Social Proof Section - More Compact & No Borders */}
             <TrustedBySection brands={brands} />
@@ -126,7 +126,6 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                 </div>
             </section>
 
-            {/* Footer / Contact Section */}
             <Footer dict={dict} lang={params.lang} />
         </div>
     );

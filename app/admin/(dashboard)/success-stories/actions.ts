@@ -25,6 +25,68 @@ export async function getSuccessStory(id: string) {
     return data;
 }
 
+// ─── Helper: resolve tech stack IDs to names ────────────────────────────────
+async function resolveStackNames(stackIds: string[]): Promise<string[]> {
+    if (!stackIds || stackIds.length === 0) return [];
+    const { data } = await supabase
+        .from('tech_stacks')
+        .select('name')
+        .in('id', stackIds);
+    return data?.map(s => s.name) || [];
+}
+
+// ─── Helper: sync data to case_studies (frontend table) ─────────────────────
+async function syncToCaseStudies(payload: {
+    title: string;
+    client_company: string;
+    executive_summary: string;
+    hero_image_url: string;
+    industry: string;
+    stack_ids: string[];
+    problem_text: string;
+    solution_text: string;
+    result_text: string;
+}) {
+    const slug = payload.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const tags = await resolveStackNames(payload.stack_ids);
+
+    const caseData = {
+        title: payload.title,
+        client_name: payload.client_company,
+        summary: payload.executive_summary,
+        image_url: payload.hero_image_url,
+        industry: payload.industry,
+        slug,
+        challenge: payload.problem_text,
+        solution: payload.solution_text,
+        outcome_impact: payload.result_text,
+        tags,
+        is_published: true,
+    };
+
+    // Try to upsert: update if slug exists, insert otherwise
+    const { data: existing } = await supabase
+        .from('case_studies')
+        .select('id')
+        .ilike('slug', slug)
+        .single();
+
+    if (existing) {
+        await supabase
+            .from('case_studies')
+            .update(caseData)
+            .eq('id', existing.id);
+    } else {
+        await supabase
+            .from('case_studies')
+            .insert([caseData]);
+    }
+
+    // Revalidate frontend routes
+    revalidatePath('/[lang]/success-stories', 'layout');
+    revalidatePath(`/[lang]/success-stories/${slug}`, 'layout');
+}
+
 export async function createSuccessStory(payload: {
     title: string;
     client_company: string;
@@ -39,6 +101,10 @@ export async function createSuccessStory(payload: {
 }) {
     const { error } = await supabase.from('success_stories').insert([payload]);
     if (error) throw new Error(error.message);
+
+    // Sync to case_studies for frontend
+    await syncToCaseStudies(payload);
+
     revalidatePath('/admin/success-stories');
     redirect('/admin/success-stories');
 }
@@ -60,6 +126,28 @@ export async function updateSuccessStory(id: string, payload: Partial<{
         .update(payload)
         .eq('id', id);
     if (error) throw new Error(error.message);
+
+    // Fetch full row to sync to case_studies
+    const { data: fullRow } = await supabase
+        .from('success_stories')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+    if (fullRow) {
+        await syncToCaseStudies({
+            title: fullRow.title,
+            client_company: fullRow.client_company,
+            executive_summary: fullRow.executive_summary,
+            hero_image_url: fullRow.hero_image_url,
+            industry: fullRow.industry,
+            stack_ids: fullRow.stack_ids || [],
+            problem_text: fullRow.problem_text,
+            solution_text: fullRow.solution_text,
+            result_text: fullRow.result_text,
+        });
+    }
+
     revalidatePath('/admin/success-stories');
     revalidatePath(`/admin/success-stories/${id}`);
     redirect('/admin/success-stories');
