@@ -207,14 +207,22 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                     <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-700">Industry</label>
-                            <input
-                                type="text"
+                            <select
                                 name="industry"
                                 value={formData.industry}
-                                onChange={handleChange}
-                                placeholder="e.g. Fintech, Healthcare"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
-                            />
+                                onChange={handleChange as any}
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm bg-white"
+                            >
+                                <option value="">Select an industry...</option>
+                                <option value="Media & Entertainment">Media & Entertainment</option>
+                                <option value="Fintech">Fintech</option>
+                                <option value="E-commerce & Retail">E-commerce & Retail</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="EdTech">EdTech</option>
+                                <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+                                <option value="Real Estate">Real Estate</option>
+                                <option value="SaaS / Enterprise Software">SaaS / Enterprise Software</option>
+                            </select>
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-700">Tags (comma separated)</label>
