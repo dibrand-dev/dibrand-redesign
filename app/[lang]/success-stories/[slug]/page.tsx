@@ -9,6 +9,7 @@ import { getDictionary } from "@/lib/dictionaries";
 import Footer from "@/components/layout/Footer";
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import { CASE_INDUSTRIES, MAP_OLD_PROJECT_TYPE, cleanOldServiceName } from '@/lib/case-constants';
 
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
@@ -104,25 +105,18 @@ export default async function CaseStudyDetailPage({ params }: Props) {
                 try {
                     const parsed = JSON.parse(metaObj.value);
                     if (parsed.project_type) pTypeRaw = parsed.project_type;
-                    if (parsed.services && Array.isArray(parsed.services)) pServices = parsed.services;
+                    if (parsed.services && Array.isArray(parsed.services)) {
+                        pServices = parsed.services.map(cleanOldServiceName);
+                    }
                 } catch (e) { }
             }
             cleanMetrics = metrics.filter((m: any) => m.label !== '__METADATA__');
         }
 
-        const PROJECT_TYPE_MAP: Record<string, string> = {
-            'webapp': 'Web App', 'mobileapp': 'Mobile App', 'plataforma': 'Full-Stack Platform',
-            'migracion': 'Migración', 'mvp': 'MVP', 'aisolution': 'AI Solution', 'otro': 'Otro',
-            'Web Development': 'Web App', 'Mobile Development': 'Mobile App'
-        };
-        const pTypeDisplay = PROJECT_TYPE_MAP[pTypeRaw] || pTypeRaw;
+        const pTypeDisplay = MAP_OLD_PROJECT_TYPE[pTypeRaw] || pTypeRaw;
 
-        const INDUSTRY_MAP: Record<string, string> = {
-            'media': 'Media & Entertainment', 'fintech': 'Fintech', 'ecommerce': 'E-commerce & Retail',
-            'healthcare': 'Healthcare', 'edtech': 'EdTech', 'logistics': 'Logistics & Supply Chain',
-            'realestate': 'Real Estate', 'saas': 'SaaS / Enterprise Software', 'gov': 'Gov'
-        };
-        const industryDisplay = caseStudy.industry ? (INDUSTRY_MAP[caseStudy.industry] || caseStudy.industry) : '-';
+        const industryObj = CASE_INDUSTRIES.find(ind => ind.value === caseStudy.industry);
+        const industryDisplay = industryObj ? industryObj.label : (caseStudy.industry || '-');
 
         const jsonLd = {
             "@context": "https://schema.org",

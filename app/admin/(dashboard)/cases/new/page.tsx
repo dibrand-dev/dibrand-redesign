@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { createCaseStudy } from '@/app/actions/cases';
 import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
+import { CASE_SERVICES, CASE_TECH_STACK, CASE_PROJECT_TYPES, CASE_INDUSTRIES, cleanOldServiceName } from '@/lib/case-constants';
 
 export default function NewCasePage() {
     const router = useRouter();
@@ -31,40 +32,8 @@ export default function NewCasePage() {
     });
     const [services, setServices] = useState<string[]>([]);
 
-    const AVAILABLE_SERVICES = [
-        "Product Discovery & Strategy",
-        "UI/UX Design",
-        "Web Development",
-        "Mobile Development",
-        "Backend Engineering",
-        "Cloud & DevOps",
-        "QA & Testing",
-        "AI & Machine Learning Integration",
-        "Staff Augmentation",
-        "Outsourcing"
-    ];
+    const [selectedTech, setSelectedTech] = useState<string[]>([]);
 
-    const PROJECT_TYPES = [
-        { value: 'webapp', label: 'Web App' },
-        { value: 'mobileapp', label: 'Mobile App' },
-        { value: 'plataforma', label: 'Full-Stack Platform' },
-        { value: 'migracion', label: 'Migración' },
-        { value: 'mvp', label: 'MVP' },
-        { value: 'aisolution', label: 'AI Solution' },
-        { value: 'otro', label: 'Otro' }
-    ];
-
-    const INDUSTRIES = [
-        { value: 'media', label: 'Media' },
-        { value: 'fintech', label: 'Fintech' },
-        { value: 'ecommerce', label: 'E-commerce' },
-        { value: 'healthcare', label: 'Healthcare' },
-        { value: 'edtech', label: 'EdTech' },
-        { value: 'logistics', label: 'Logistics' },
-        { value: 'realestate', label: 'Real Estate' },
-        { value: 'saas', label: 'SaaS / Enterprise Software' },
-        { value: 'gov', label: 'Gov' }
-    ];
     const [metrics, setMetrics] = useState<Array<{ label: string, value: string }>>([
         { label: 'ROI', value: '' },
         { label: 'Velocity', value: '' }
@@ -104,6 +73,12 @@ export default function NewCasePage() {
         );
     };
 
+    const toggleTech = (tech: string) => {
+        setSelectedTech(prev =>
+            prev.includes(tech) ? prev.filter(t => t !== tech) : [...prev, tech]
+        );
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -133,16 +108,23 @@ export default function NewCasePage() {
 
             // Encode extended metadata into the existing JSONB column to avoid Postgres schema errors
             const baseMetrics = metrics.filter(m => m.label && m.value);
+
+            // Clean service names according to migration rule
+            const cleanedServices = services.map(cleanOldServiceName);
+
             baseMetrics.push({
                 label: '__METADATA__',
-                value: JSON.stringify({ project_type: formData.project_type, services })
+                value: JSON.stringify({
+                    project_type: formData.project_type,
+                    services: cleanedServices
+                })
             });
 
             const dataToInsert = {
                 ...formData,
                 results_metrics: baseMetrics,
                 image_url: finalImageUrl,
-                tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean)
+                tags: selectedTech
             };
 
             // Delete virtual fields
@@ -224,7 +206,7 @@ export default function NewCasePage() {
                                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm bg-white"
                             >
                                 <option value="">Select an industry...</option>
-                                {INDUSTRIES.map(ind => (
+                                {CASE_INDUSTRIES.map(ind => (
                                     <option key={ind.value} value={ind.value}>{ind.label}</option>
                                 ))}
                             </select>
@@ -240,28 +222,35 @@ export default function NewCasePage() {
                                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm bg-white"
                             >
                                 <option value="">Select a project type...</option>
-                                {PROJECT_TYPES.map(type => (
-                                    <option key={type.value} value={type.value}>{type.label}</option>
+                                {CASE_PROJECT_TYPES.map(type => (
+                                    <option key={type} value={type}>{type}</option>
                                 ))}
                             </select>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Tech Stack (comma separated)</label>
-                            <input
-                                type="text"
-                                name="tags"
-                                value={formData.tags}
-                                onChange={handleChange}
-                                placeholder="e.g. React, Node.js, Python, AWS"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
-                            />
+                        <div className="space-y-3 col-span-full">
+                            <label className="text-sm font-semibold text-gray-700">Tech Stack (Tags)</label>
+                            <div className="flex flex-wrap gap-2 p-4 border border-gray-100 rounded-2xl bg-gray-50/30">
+                                {CASE_TECH_STACK.map(tech => {
+                                    const isSelected = selectedTech.includes(tech);
+                                    return (
+                                        <button
+                                            type="button"
+                                            key={tech}
+                                            onClick={() => toggleTech(tech)}
+                                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isSelected ? 'bg-zinc-900 border-zinc-900 text-white shadow-md' : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'}`}
+                                        >
+                                            {tech}
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
 
                     <div className="space-y-3">
                         <label className="text-sm font-semibold text-gray-700">Services Provided</label>
                         <div className="flex flex-wrap gap-2">
-                            {AVAILABLE_SERVICES.map(service => {
+                            {CASE_SERVICES.map(service => {
                                 const isSelected = services.includes(service);
                                 return (
                                     <button
