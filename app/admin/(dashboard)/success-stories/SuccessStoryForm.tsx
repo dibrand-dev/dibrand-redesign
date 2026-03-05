@@ -292,17 +292,19 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
                         <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Tech Stack</h3>
                         <div className="flex flex-wrap gap-2">
                             {CASE_TECH_STACK.map(tech => {
-                                // Match by name instead of ID for standardization if needed
-                                // but for now let's use the local state if it contains names
-                                const active = stackIds.includes(tech);
+                                // Buscamos si existe un ID para este nombre en la lista de stacks del servidor
+                                const stackObj = stacks.find(s => s.name.toLowerCase() === tech.toLowerCase());
+                                const identifier = stackObj ? stackObj.id : tech;
+
+                                const active = stackIds.includes(identifier);
                                 return (
                                     <button
                                         key={tech}
                                         type="button"
-                                        onClick={() => setStackIds(prev => prev.includes(tech) ? prev.filter(t => t !== tech) : [...prev, tech])}
+                                        onClick={() => setStackIds(prev => prev.includes(identifier) ? prev.filter(t => t !== identifier) : [...prev, identifier])}
                                         className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${active
-                                            ? 'bg-secondary border-secondary text-white'
-                                            : 'bg-gray-50 text-gray-500 border-gray-200 shadow-sm'
+                                            ? 'bg-brand border-brand text-white shadow-md'
+                                            : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-brand/30'
                                             }`}
                                     >
                                         {tech}
