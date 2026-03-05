@@ -58,13 +58,15 @@ async function syncToCaseStudies(payload: {
         summary: payload.executive_summary,
         image_url: payload.hero_image_url,
         industry: payload.industry,
+        project_type: payload.project_type,
+        services: payload.services,
         slug,
         challenge: payload.problem_text,
         solution: payload.solution_text,
         outcome_impact: payload.result_text,
         tags,
         is_published: true,
-        // Almacenar metadata extra en el formato que espera el frontend
+        // Almacenar metadata extra para retrocompatibilidad
         results_metrics: [
             {
                 label: '__METADATA__', value: JSON.stringify({
@@ -75,12 +77,23 @@ async function syncToCaseStudies(payload: {
         ]
     };
 
-    // Try to upsert: update if slug exists, insert otherwise
-    const { data: existing } = await supabase
+    // Try to upsert:
+    // 1. Try by Slug (legacy/standard)
+    let { data: existing } = await supabase
         .from('case_studies')
         .select('id')
         .ilike('slug', slug)
-        .single();
+        .maybeSingle();
+
+    // 2. If not found, try by client_name (to avoid duplicates when title changes)
+    if (!existing) {
+        const { data: byClient } = await supabase
+            .from('case_studies')
+            .select('id')
+            .eq('client_name', payload.client_company)
+            .maybeSingle();
+        existing = byClient;
+    }
 
     if (existing) {
         await supabase

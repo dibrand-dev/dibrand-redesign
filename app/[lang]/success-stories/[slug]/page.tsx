@@ -95,7 +95,15 @@ export default async function CaseStudyDetailPage({ params }: Props) {
             author: caseStudy.testimonial_author
         } : null);
 
-        let pTypeRaw = caseStudy.project_type || caseStudy.tags?.[0] || 'Software Development';
+        const CASE_TECH_STACK_NAMES = ['Python', 'JavaScript', 'Java', 'React', 'Node.js', 'Next.js', 'Typescript', 'PostgreSQL', 'AWS', 'Azure', 'GCP']; // Minimal check or import if possible
+        let pTypeRaw = caseStudy.project_type;
+
+        // Fallback robusto: si no hay project_type, intentamos con tags pero que no sean del stack técnico
+        if (!pTypeRaw) {
+            const firstNonTechTag = caseStudy.tags?.find((t: string) => !CASE_TECH_STACK_NAMES.some(ts => t.toLowerCase().includes(ts.toLowerCase())));
+            pTypeRaw = firstNonTechTag || 'Software Development';
+        }
+
         let pServices = Array.isArray(caseStudy.services) ? caseStudy.services : [];
         let cleanMetrics = metrics;
 
