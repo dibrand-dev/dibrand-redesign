@@ -94,6 +94,36 @@ export default async function CaseStudyDetailPage({ params }: Props) {
             author: caseStudy.testimonial_author
         } : null);
 
+        let pTypeRaw = caseStudy.project_type || caseStudy.tags?.[0] || 'Software Development';
+        let pServices = Array.isArray(caseStudy.services) ? caseStudy.services : [];
+        let cleanMetrics = metrics;
+
+        if (hasMetrics) {
+            const metaObj = metrics.find((m: any) => m.label === '__METADATA__');
+            if (metaObj && metaObj.value) {
+                try {
+                    const parsed = JSON.parse(metaObj.value);
+                    if (parsed.project_type) pTypeRaw = parsed.project_type;
+                    if (parsed.services && Array.isArray(parsed.services)) pServices = parsed.services;
+                } catch (e) { }
+            }
+            cleanMetrics = metrics.filter((m: any) => m.label !== '__METADATA__');
+        }
+
+        const PROJECT_TYPE_MAP: Record<string, string> = {
+            'webapp': 'Web App', 'mobileapp': 'Mobile App', 'plataforma': 'Full-Stack Platform',
+            'migracion': 'Migración', 'mvp': 'MVP', 'aisolution': 'AI Solution', 'otro': 'Otro',
+            'Web Development': 'Web App', 'Mobile Development': 'Mobile App'
+        };
+        const pTypeDisplay = PROJECT_TYPE_MAP[pTypeRaw] || pTypeRaw;
+
+        const INDUSTRY_MAP: Record<string, string> = {
+            'media': 'Media & Entertainment', 'fintech': 'Fintech', 'ecommerce': 'E-commerce & Retail',
+            'healthcare': 'Healthcare', 'edtech': 'EdTech', 'logistics': 'Logistics & Supply Chain',
+            'realestate': 'Real Estate', 'saas': 'SaaS / Enterprise Software', 'gov': 'Gov'
+        };
+        const industryDisplay = caseStudy.industry ? (INDUSTRY_MAP[caseStudy.industry] || caseStudy.industry) : '-';
+
         const jsonLd = {
             "@context": "https://schema.org",
             "@type": "CaseStudy",
@@ -121,23 +151,23 @@ export default async function CaseStudyDetailPage({ params }: Props) {
                     <div className="flex items-center justify-between w-full mb-10">
                         <Link
                             href={`/${lang}/success-stories`}
-                            className="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-600 transition-colors font-outfit text-xs font-medium uppercase tracking-widest"
+                            className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-800 transition-colors font-outfit text-xs font-bold uppercase tracking-widest"
                         >
-                            <ArrowLeft size={14} />
+                            <ArrowLeft size={16} />
                             <span>{dict.home.caseDetail.backLink}</span>
                         </Link>
 
                         <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-widest hidden sm:inline">
+                            <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest hidden sm:inline">
                                 {dict.home.caseDetail.share}
                             </span>
                             <a
                                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-1 text-zinc-400 hover:text-brand transition-colors"
+                                className="p-1 text-zinc-500 hover:text-brand transition-colors"
                             >
-                                <FaLinkedinIn size={14} />
+                                <FaLinkedinIn size={16} />
                             </a>
                         </div>
                     </div>
@@ -165,47 +195,47 @@ export default async function CaseStudyDetailPage({ params }: Props) {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-y border-zinc-100 mb-16 px-4">
                         <div className="flex flex-col gap-1.5">
                             <div className="flex items-center gap-2 mb-1">
-                                <UserSquare2 size={14} className="text-brand" />
-                                <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest font-outfit">Client</span>
+                                <UserSquare2 size={16} className="text-brand" />
+                                <span className="text-xs font-extrabold text-zinc-500 uppercase tracking-widest font-outfit">Client</span>
                             </div>
-                            <span className="text-sm font-bold text-zinc-900 font-outfit truncate">{caseStudy.client_name}</span>
+                            <span className="text-[15px] font-bold text-zinc-900 font-outfit truncate">{caseStudy.client_name}</span>
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <div className="flex items-center gap-2 mb-1">
-                                <Building2 size={14} className="text-brand" />
-                                <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest font-outfit">Industry</span>
+                                <Building2 size={16} className="text-brand" />
+                                <span className="text-xs font-extrabold text-zinc-500 uppercase tracking-widest font-outfit">Industry</span>
                             </div>
-                            <span className="text-sm font-bold text-zinc-900 font-outfit truncate">{caseStudy.industry || '-'}</span>
+                            <span className="text-[15px] font-bold text-zinc-900 font-outfit truncate">{industryDisplay}</span>
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <div className="flex items-center gap-2 mb-1">
-                                <FolderKanban size={14} className="text-brand" />
-                                <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest font-outfit">Project Type</span>
+                                <FolderKanban size={16} className="text-brand" />
+                                <span className="text-xs font-extrabold text-zinc-500 uppercase tracking-widest font-outfit">Project Type</span>
                             </div>
-                            <span className="text-sm font-bold text-zinc-900 font-outfit truncate">{caseStudy.project_type || 'Software Development'}</span>
+                            <span className="text-[15px] font-bold text-zinc-900 font-outfit truncate">{pTypeDisplay}</span>
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <div className="flex items-center gap-2 mb-1">
-                                <Wrench size={14} className="text-brand" />
-                                <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest font-outfit">Services</span>
+                                <Wrench size={16} className="text-brand" />
+                                <span className="text-xs font-extrabold text-zinc-500 uppercase tracking-widest font-outfit">Services</span>
                             </div>
                             <div className="flex flex-wrap gap-x-2 gap-y-1">
-                                {(caseStudy.services && Array.isArray(caseStudy.services) && caseStudy.services.length > 0) ? (
-                                    caseStudy.services.map((srv: string, i: number) => {
+                                {(pServices.length > 0) ? (
+                                    pServices.map((srv: string, i: number) => {
                                         const isSpecial = srv === 'Staff Augmentation' || srv === 'Outsourcing';
                                         return (
                                             <span
                                                 key={i}
-                                                className={`text-sm font-bold font-outfit flex items-center gap-1 ${isSpecial ? 'text-brand' : 'text-zinc-900'}`}
+                                                className={`text-[15px] font-bold font-outfit flex items-center gap-1 ${isSpecial ? 'text-brand' : 'text-zinc-900'}`}
                                             >
-                                                {isSpecial && <span className="text-[10px]">✺</span>}
+                                                {isSpecial && <span className="text-xs">✺</span>}
                                                 {srv}
-                                                {i < caseStudy.services.length - 1 && <span className="text-zinc-300 ml-1 font-normal">,</span>}
+                                                {i < pServices.length - 1 && <span className="text-zinc-300 ml-1 font-normal">,</span>}
                                             </span>
                                         );
                                     })
                                 ) : (
-                                    <span className="text-sm font-bold text-zinc-900 font-outfit truncate">
+                                    <span className="text-[15px] font-bold text-zinc-900 font-outfit truncate">
                                         {isEn ? 'Engineering Squad' : 'Desarrollo a Medida'}
                                     </span>
                                 )}

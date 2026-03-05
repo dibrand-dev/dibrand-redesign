@@ -46,11 +46,25 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
     ];
 
     const PROJECT_TYPES = [
-        "Web App",
-        "Mobile App",
-        "Full-Stack Platform",
-        "MVP",
-        "AI Solution"
+        { value: 'webapp', label: 'Web App' },
+        { value: 'mobileapp', label: 'Mobile App' },
+        { value: 'plataforma', label: 'Full-Stack Platform' },
+        { value: 'migracion', label: 'Migración' },
+        { value: 'mvp', label: 'MVP' },
+        { value: 'aisolution', label: 'AI Solution' },
+        { value: 'otro', label: 'Otro' }
+    ];
+
+    const INDUSTRIES = [
+        { value: 'media', label: 'Media' },
+        { value: 'fintech', label: 'Fintech' },
+        { value: 'ecommerce', label: 'E-commerce' },
+        { value: 'healthcare', label: 'Healthcare' },
+        { value: 'edtech', label: 'EdTech' },
+        { value: 'logistics', label: 'Logistics' },
+        { value: 'realestate', label: 'Real Estate' },
+        { value: 'saas', label: 'SaaS / Enterprise Software' },
+        { value: 'gov', label: 'Gov' }
     ];
     const [metrics, setMetrics] = useState<Array<{ label: string, value: string }>>([]);
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -65,6 +79,30 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
         try {
             const data = await getCaseStudy(id);
             if (data) {
+                // Decode virtual metadata from JSONB metrics if it exists
+                let pType = data.project_type || '';
+                let srvs = data.services || [];
+                let metricsClean = data.results_metrics || [];
+
+                if (Array.isArray(data.results_metrics)) {
+                    const metaItem = data.results_metrics.find((m: any) => m.label === '__METADATA__');
+                    if (metaItem && metaItem.value) {
+                        try {
+                            const parsed = JSON.parse(metaItem.value);
+                            if (parsed.project_type) pType = parsed.project_type;
+                            if (parsed.services) srvs = parsed.services;
+                        } catch (e) { }
+                    }
+                    metricsClean = data.results_metrics.filter((m: any) => m.label !== '__METADATA__');
+                }
+
+                if (!metricsClean.length) {
+                    metricsClean = [
+                        { label: 'ROI', value: '' },
+                        { label: 'Velocity', value: '' }
+                    ];
+                }
+
                 setFormData({
                     title: data.title || '',
                     client_name: data.client_name || '',
@@ -79,13 +117,10 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                     image_url: data.image_url || '',
                     is_published: data.is_published,
                     tags: (data.tags || []).join(', '),
-                    project_type: data.project_type || '',
+                    project_type: pType,
                 });
-                setServices(data.services || []);
-                setMetrics(data.results_metrics || [
-                    { label: 'ROI', value: '' },
-                    { label: 'Velocity', value: '' }
-                ]);
+                setServices(srvs);
+                setMetrics(metricsClean);
             }
         } catch (error: any) {
             alert('Error fetching case study: ' + (error.message || 'Unknown error'));
@@ -152,13 +187,23 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                 setUploading(false);
             }
 
+            // Encode extended metadata into the existing JSONB column to avoid Postgres schema errors
+            const baseMetrics = metrics.filter(m => m.label && m.value);
+            baseMetrics.push({
+                label: '__METADATA__',
+                value: JSON.stringify({ project_type: formData.project_type, services })
+            });
+
             const dataToUpdate = {
                 ...formData,
-                services,
-                results_metrics: metrics.filter(m => m.label && m.value),
+                results_metrics: baseMetrics,
                 image_url: finalImageUrl,
                 tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean)
             };
+
+            // Delete virtual fields
+            delete (dataToUpdate as any).project_type;
+            delete (dataToUpdate as any).services;
 
             await updateCaseStudy(id, dataToUpdate);
             router.push('/admin/cases');
@@ -246,14 +291,9 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm bg-white"
                             >
                                 <option value="">Select an industry...</option>
-                                <option value="Media & Entertainment">Media & Entertainment</option>
-                                <option value="Fintech">Fintech</option>
-                                <option value="E-commerce & Retail">E-commerce & Retail</option>
-                                <option value="Healthcare">Healthcare</option>
-                                <option value="EdTech">EdTech</option>
-                                <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
-                                <option value="Real Estate">Real Estate</option>
-                                <option value="SaaS / Enterprise Software">SaaS / Enterprise Software</option>
+                                {INDUSTRIES.map(ind => (
+                                    <option key={ind.value} value={ind.value}>{ind.label}</option>
+                                ))}
                             </select>
                         </div>
                     </div>
@@ -268,7 +308,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                             >
                                 <option value="">Select a project type...</option>
                                 {PROJECT_TYPES.map(type => (
-                                    <option key={type} value={type}>{type}</option>
+                                    <option key={type.value} value={type.value}>{type.label}</option>
                                 ))}
                             </select>
                         </div>

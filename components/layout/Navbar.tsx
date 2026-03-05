@@ -69,7 +69,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                 <div className="flex-shrink-0">
                     <Link href={`/${lang}`} className="flex items-center transition-opacity hover:opacity-90" onClick={() => setIsOpen(false)}>
                         <Image
-                            src="/logo_dibrand.png"
+                            src="/logo_dibrand.svg"
                             alt="Dibrand Logo"
                             width={150}
                             height={21}
