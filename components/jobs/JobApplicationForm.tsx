@@ -108,22 +108,22 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
             ...base,
             borderRadius: '0.75rem',
             backgroundColor: 'white',
-            borderColor: state.isFocused ? '#D83484' : '#e4e4e7',
+            borderColor: state.isFocused ? '#a04c97' : '#e4e4e7',
             padding: '2px 4px',
             boxShadow: 'none',
             '&:hover': {
-                borderColor: '#D83484'
+                borderColor: '#a04c97'
             },
             fontSize: '0.875rem'
         }),
         option: (base: any, state: any) => ({
             ...base,
-            backgroundColor: state.isSelected ? '#D83484' : state.isFocused ? '#fce7f3' : 'white',
+            backgroundColor: state.isSelected ? '#a04c97' : state.isFocused ? '#fce7f3' : 'white',
             color: state.isSelected ? 'white' : '#27272a',
             fontSize: '0.875rem',
             padding: '10px 16px',
             '&:active': {
-                backgroundColor: '#D83484'
+                backgroundColor: '#a04c97'
             }
         })
     };
@@ -145,7 +145,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                     name="full_name"
                     required
                     placeholder="John Doe"
-                    className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all font-outfit text-zinc-900 text-sm"
+                    className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all font-outfit text-zinc-900 text-sm"
                 />
             </div>
 
@@ -156,7 +156,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                     type="email"
                     required
                     placeholder="john@example.com"
-                    className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all font-outfit text-zinc-900 text-sm"
+                    className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all font-outfit text-zinc-900 text-sm"
                 />
             </div>
 
@@ -167,7 +167,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                         name="phone"
                         required
                         placeholder="+1..."
-                        className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all font-outfit text-zinc-900 text-sm"
+                        className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all font-outfit text-zinc-900 text-sm"
                     />
                 </div>
                 <div className="space-y-1.5">
@@ -176,7 +176,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                         name="mobile_phone"
                         required
                         placeholder="+1..."
-                        className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all font-outfit text-zinc-900 text-sm"
+                        className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all font-outfit text-zinc-900 text-sm"
                     />
                 </div>
             </div>
@@ -224,7 +224,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                     type="url"
                     required
                     placeholder="https://linkedin.com/in/..."
-                    className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all font-outfit text-zinc-900 text-sm"
+                    className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all font-outfit text-zinc-900 text-sm"
                 />
             </div>
 
@@ -240,10 +240,10 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                     />
                     <label
                         htmlFor="resume-upload"
-                        className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-zinc-100 rounded-2xl cursor-pointer bg-zinc-50 transition-all hover:bg-zinc-100/50 hover:border-[#D83484]"
+                        className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-zinc-100 rounded-2xl cursor-pointer bg-zinc-50 transition-all hover:bg-zinc-100/50 hover:border-brand"
                     >
                         {resumeFile ? (
-                            <div className="flex items-center gap-2 text-[#D83484]">
+                            <div className="flex items-center gap-2 text-brand">
                                 <CheckCircle2 size={20} />
                                 <span className="font-bold font-outfit text-xs truncate max-w-[180px] italic">{resumeFile.name}</span>
                             </div>
@@ -260,7 +260,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
             <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 bg-[#D83484] text-white font-bold rounded-xl hover:opacity-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 group text-base shadow-lg shadow-[#D83484]/10 active:scale-[0.98]"
+                className="w-full py-4 bg-brand text-white font-bold rounded-xl hover:opacity-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 group text-base shadow-lg shadow-brand/10 active:scale-[0.98]"
             >
                 {loading ? (
                     <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

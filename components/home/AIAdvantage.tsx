@@ -17,7 +17,7 @@ export default function AIAdvantage({ dict }: AIAdvantageProps) {
         <section className="relative w-full py-24 bg-zinc-950 overflow-hidden">
             {/* Background elements */}
             <div className="absolute top-0 left-0 w-full h-full opacity-30">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#D83484]/20 blur-[120px] rounded-full" />
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand/20 blur-[120px] rounded-full" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full" />
             </div>
 
@@ -25,7 +25,7 @@ export default function AIAdvantage({ dict }: AIAdvantageProps) {
                 <div className="max-w-6xl mx-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <div className="space-y-8">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[#D83484] text-xs font-bold tracking-[0.2em] uppercase">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-brand text-xs font-bold tracking-[0.2em] uppercase">
                                 <Cpu size={14} />
                                 <span>Future-Proof Engineering</span>
                             </div>
@@ -56,9 +56,9 @@ export default function AIAdvantage({ dict }: AIAdvantageProps) {
 
                         <div className="relative group">
                             {/* Visual representation of AI Advantage */}
-                            <div className="aspect-square rounded-[3rem] bg-gradient-to-tr from-zinc-900 to-zinc-800 border border-white/10 p-8 flex flex-col justify-between group-hover:border-[#D83484]/30 transition-colors duration-500 overflow-hidden">
+                            <div className="aspect-square rounded-[3rem] bg-gradient-to-tr from-zinc-900 to-zinc-800 border border-white/10 p-8 flex flex-col justify-between group-hover:border-brand/30 transition-colors duration-500 overflow-hidden">
                                 <div className="space-y-6">
-                                    <div className="h-2 w-32 bg-[#D83484] rounded-full" />
+                                    <div className="h-2 w-32 bg-brand rounded-full" />
                                     <div className="space-y-2">
                                         <div className="h-4 w-full bg-white/5 rounded-full" />
                                         <div className="h-4 w-5/6 bg-white/5 rounded-full" />
@@ -72,7 +72,7 @@ export default function AIAdvantage({ dict }: AIAdvantageProps) {
                                         {[...Array(18)].map((_, i) => (
                                             <div
                                                 key={i}
-                                                className="bg-white/5 rounded-md transition-all duration-700 hover:bg-[#D83484]/20"
+                                                className="bg-white/5 rounded-md transition-all duration-700 hover:bg-brand/20"
                                                 style={{ height: `${((i * 7 + 3) % 10) * 10}%` }}
                                             />
                                         ))}
@@ -86,7 +86,7 @@ export default function AIAdvantage({ dict }: AIAdvantageProps) {
                             </div>
 
                             {/* Floating decorative elements */}
-                            <div className="absolute -top-6 -right-6 w-24 h-24 bg-[#D83484] rounded-2xl opacity-20 blur-2xl animate-pulse" />
+                            <div className="absolute -top-6 -right-6 w-24 h-24 bg-brand rounded-2xl opacity-20 blur-2xl animate-pulse" />
                         </div>
                     </div>
                 </div>

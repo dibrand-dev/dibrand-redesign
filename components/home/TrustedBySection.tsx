@@ -25,7 +25,7 @@ export default function TrustedBySection({ brands, dict }: TrustedBySectionProps
                     <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 text-center font-outfit uppercase">
                         {dict?.trustedByTitle || "SOME COMPANIES THAT TRUST US"}
                     </h2>
-                    <div className="h-1 w-20 bg-gradient-to-r from-[#D83484] to-[#A3369D] mb-8" />
+                    <div className="h-1 w-20 bg-gradient-to-r from-brand to-brand mb-8" />
                 </div>
             </div>
 

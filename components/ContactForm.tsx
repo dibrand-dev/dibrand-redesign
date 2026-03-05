@@ -143,7 +143,7 @@ export default function ContactForm({ dict }: ContactFormProps) {
                 "w-full md:w-64 py-5 px-8 rounded-lg text-lg font-bold text-white transition-all transform hover:-translate-y-1 hover:shadow-2xl",
                 isSubmitting
                   ? "bg-gray-600 cursor-not-allowed"
-                  : "bg-gradient-to-r from-[#D83484] to-[#A3369D] hover:opacity-90 shadow-lg shadow-purple-500/20"
+                  : "bg-gradient-to-r from-brand to-brand hover:opacity-90 shadow-lg shadow-purple-500/20"
               )}
             >
               {isSubmitting ? (

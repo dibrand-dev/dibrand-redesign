@@ -16,7 +16,7 @@ export default function ScheduleButton({ text, className, showIcon = true }: Sch
             target="_blank"
             rel="noopener noreferrer"
             className={clsx(
-                "inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-[#D83484] to-[#A3369D] text-white font-bold rounded-full hover:scale-105 transition-all shadow-xl shadow-[#D83484]/20 group font-outfit",
+                "inline-flex items-center gap-3 px-10 py-5 bg-brand text-white font-bold rounded-full hover:bg-brand/90 hover:scale-[1.02] transition-all group font-outfit",
                 className
             )}
         >

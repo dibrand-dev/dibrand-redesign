@@ -83,7 +83,7 @@ export default function Testimonials({ testimonials, dict }: TestimonialsProps) 
                                         className="object-contain object-left filter grayscale opacity-70"
                                     />
                                 </div>
-                                <Quote className="h-10 w-10 text-[#D83484]/20" />
+                                <Quote className="h-10 w-10 text-brand/20" />
                             </div>
 
                             <blockquote className="text-gray-800 text-xl md:text-2xl leading-relaxed mb-10 italic font-medium">
@@ -97,7 +97,7 @@ export default function Testimonials({ testimonials, dict }: TestimonialsProps) 
                                 </div>
 
                                 {/* Client Name Tag */}
-                                <div className="text-sm font-bold uppercase tracking-widest text-[#D83484] bg-[#D83484]/5 px-4 py-2 rounded-full">
+                                <div className="text-sm font-bold uppercase tracking-widest text-brand bg-brand/5 px-4 py-2 rounded-full">
                                     {testimonials[currentIndex].client_name}
                                 </div>
                             </div>
@@ -109,7 +109,7 @@ export default function Testimonials({ testimonials, dict }: TestimonialsProps) 
                 <div className="flex justify-center items-center gap-6 mt-12">
                     <button
                         onClick={prevSlide}
-                        className="p-3 rounded-full border border-gray-200 bg-white text-gray-700 transition-all hover:bg-[#D83484] hover:text-white hover:border-[#D83484] hover:shadow-lg focus:outline-none group"
+                        className="p-3 rounded-full border border-gray-200 bg-white text-gray-700 transition-all hover:bg-brand hover:text-white hover:border-brand hover:shadow-lg focus:outline-none group"
                         aria-label="Previous testimonial"
                     >
                         <ChevronLeft className="w-6 h-6" />
@@ -121,7 +121,7 @@ export default function Testimonials({ testimonials, dict }: TestimonialsProps) 
                             <button
                                 key={index}
                                 onClick={() => setCurrentIndex(index)}
-                                className={`h-2 w-2 rounded-full transition-all ${index === currentIndex ? 'bg-[#D83484] w-6' : 'bg-gray-300'
+                                className={`h-2 w-2 rounded-full transition-all ${index === currentIndex ? 'bg-brand w-6' : 'bg-gray-300'
                                     }`}
                                 aria-label={`Go to slide ${index + 1}`}
                             />
@@ -130,7 +130,7 @@ export default function Testimonials({ testimonials, dict }: TestimonialsProps) 
 
                     <button
                         onClick={nextSlide}
-                        className="p-3 rounded-full border border-gray-200 bg-white text-gray-700 transition-all hover:bg-[#D83484] hover:text-white hover:border-[#D83484] hover:shadow-lg focus:outline-none group"
+                        className="p-3 rounded-full border border-gray-200 bg-white text-gray-700 transition-all hover:bg-brand hover:text-white hover:border-brand hover:shadow-lg focus:outline-none group"
                         aria-label="Next testimonial"
                     >
                         <ChevronRight className="w-6 h-6" />

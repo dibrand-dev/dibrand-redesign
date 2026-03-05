@@ -17,7 +17,7 @@ export default function WhatWeDo({ dict }: WhatWeDoProps) {
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl mb-4">
                         {dict.whatWeDo.title}
                     </h2>
-                    <div className="h-1 w-20 bg-gradient-to-r from-[#D83484] to-[#A3369D] mb-8" />
+                    <div className="h-1 w-20 bg-gradient-to-r from-brand to-brand mb-8" />
                     <h3 className="text-2xl md:text-3xl font-bold text-gray-700 mb-8 leading-tight">
                         {dict.whatWeDo.subtitle}
                     </h3>

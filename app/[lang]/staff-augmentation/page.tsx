@@ -91,7 +91,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                             const Icon = wayIcons[idx] || Heart;
                             return (
                                 <div key={idx} className="flex flex-col items-center text-center group">
-                                    <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-[#D83484] group-hover:scale-110 transition-transform duration-500 group-hover:bg-[#D83484] group-hover:text-white">
+                                    <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-brand group-hover:scale-110 transition-transform duration-500 group-hover:bg-brand group-hover:text-white">
                                         <Icon size={40} />
                                     </div>
                                     <h3 className="text-2xl font-bold text-white mb-6 font-outfit">
@@ -113,7 +113,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                         {content.benefits.items.map((benefit, idx) => (
                             <div key={idx} className="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 transition-all duration-300">
-                                <span className="inline-block text-[#D83484] font-black text-6xl opacity-10 mb-4 font-outfit">0{idx + 1}</span>
+                                <span className="inline-block text-brand font-black text-6xl opacity-10 mb-4 font-outfit">0{idx + 1}</span>
                                 <h3 className="text-2xl font-bold text-zinc-900 mb-6 font-outfit">
                                     {benefit.title}
                                 </h3>

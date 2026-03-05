@@ -132,7 +132,7 @@ export default function NewCasePage() {
                                 value={formData.title}
                                 onChange={handleChange}
                                 placeholder="e.g. AI-Powered Healthcare Platform"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                             />
                         </div>
                         <div className="space-y-2">
@@ -144,7 +144,7 @@ export default function NewCasePage() {
                                 value={formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}
                                 onChange={handleChange}
                                 placeholder="e.g. healthcare-ai-platform"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                             />
                         </div>
                     </div>
@@ -158,7 +158,7 @@ export default function NewCasePage() {
                                 value={formData.client_name}
                                 onChange={handleChange}
                                 placeholder="e.g. HealthTech Global"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                             />
                         </div>
                         <div className="space-y-2">
@@ -169,7 +169,7 @@ export default function NewCasePage() {
                                 value={formData.industry}
                                 onChange={handleChange}
                                 placeholder="e.g. Fintech, Healthcare"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                             />
                         </div>
                         <div className="space-y-2">
@@ -180,7 +180,7 @@ export default function NewCasePage() {
                                 value={formData.tags}
                                 onChange={handleChange}
                                 placeholder="e.g. React, Next.js, AI"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                             />
                         </div>
                     </div>
@@ -194,7 +194,7 @@ export default function NewCasePage() {
                             value={formData.summary}
                             onChange={handleChange}
                             placeholder="A brief 1-2 sentence overview for listings..."
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm resize-none"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm resize-none"
                         />
                     </div>
                 </div>
@@ -211,7 +211,7 @@ export default function NewCasePage() {
                             value={formData.challenge}
                             onChange={handleChange}
                             placeholder="What was the specific business problem?"
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                         />
                     </div>
 
@@ -223,7 +223,7 @@ export default function NewCasePage() {
                             value={formData.solution}
                             onChange={handleChange}
                             placeholder="How did you solve it? Mention AI agents and tech stack..."
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                         />
                     </div>
 
@@ -235,7 +235,7 @@ export default function NewCasePage() {
                             value={formData.outcome_impact}
                             onChange={handleChange}
                             placeholder="Summary of the business impact..."
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                         />
                     </div>
                 </div>
@@ -247,7 +247,7 @@ export default function NewCasePage() {
                         <button
                             type="button"
                             onClick={addMetric}
-                            className="text-sm font-bold text-[#D83484] hover:underline"
+                            className="text-sm font-bold text-brand hover:underline"
                         >
                             + Add Metric
                         </button>
@@ -296,7 +296,7 @@ export default function NewCasePage() {
                             value={formData.testimonial_text}
                             onChange={handleChange}
                             placeholder="What did the client say about the project?"
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                         />
                     </div>
 
@@ -308,7 +308,7 @@ export default function NewCasePage() {
                             value={formData.testimonial_author}
                             onChange={handleChange}
                             placeholder="e.g. John Doe, CTO at HealthTech"
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                         />
                     </div>
                 </div>
@@ -335,14 +335,14 @@ export default function NewCasePage() {
 
                         <div className="relative">
                             <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" id="image-upload" />
-                            <label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:bg-gray-50 hover:border-[#D83484] transition-all group">
+                            <label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:bg-gray-50 hover:border-brand transition-all group">
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                     <p className="mb-2 text-sm text-gray-500 font-medium">Click to upload brand asset</p>
                                     <p className="text-xs text-gray-400">16:9 Aspect ratio recommended</p>
                                 </div>
                             </label>
                         </div>
-                        {uploading && <p className="text-sm text-[#D83484] font-bold animate-pulse">Uploading...</p>}
+                        {uploading && <p className="text-sm text-brand font-bold animate-pulse">Uploading...</p>}
                     </div>
 
                     <div className="flex items-center gap-2 pt-2">
@@ -352,7 +352,7 @@ export default function NewCasePage() {
                             name="is_published"
                             checked={formData.is_published}
                             onChange={handleChange}
-                            className="w-5 h-5 text-[#D83484] border-gray-200 rounded focus:ring-[#D83484]"
+                            className="w-5 h-5 text-brand border-gray-200 rounded focus:ring-brand"
                         />
                         <label htmlFor="is_published" className="text-sm font-bold text-gray-700 select-none">
                             Publish immediately to global portfolio
@@ -368,7 +368,7 @@ export default function NewCasePage() {
                     <button
                         disabled={loading}
                         type="submit"
-                        className="inline-flex items-center gap-2 px-12 py-3 bg-[#D83484] text-white rounded-xl font-bold hover:opacity-90 disabled:opacity-50 transition-all shadow-xl shadow-[#D83484]/20 transform active:scale-95 font-outfit uppercase text-xs tracking-widest"
+                        className="inline-flex items-center gap-2 px-12 py-3 bg-brand text-white rounded-xl font-bold hover:opacity-90 disabled:opacity-50 transition-all shadow-xl shadow-brand/20 transform active:scale-95 font-outfit uppercase text-xs tracking-widest"
                     >
                         {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Save size={18} />}
                         <span>{loading ? 'Saving...' : 'Deploy Case Study'}</span>

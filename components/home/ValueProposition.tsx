@@ -26,7 +26,7 @@ export default function ValueProposition({ dict }: ValuePropositionProps) {
                         const Icon = icons[index] || Zap;
                         return (
                             <div key={index} className="flex flex-col items-center text-center">
-                                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-pink-50 text-[#D83484]">
+                                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-pink-50 text-brand">
                                     <Icon className="h-8 w-8" />
                                 </div>
                                 <h3 className="mb-3 text-xl font-bold text-gray-900">

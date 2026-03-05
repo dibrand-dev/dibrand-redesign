@@ -17,7 +17,7 @@
         "hero": {
             "title": "Engineering Velocity for Decision Makers.",
             "subtitle": "Stop adding headcount. Start adding impact. We deploy AI-augmented engineering squads that don't just fill seats—they own your roadmap and accelerate your time-to-market.",
-            "cta": "Let's Talk",
+            "cta": "Book a Call",
             "welcome": "Welcome to Dibrand"
         },
         "whatWeDo": {
@@ -141,9 +141,16 @@
             "cta": "Explore Strategic Engineering"
         },
         "trustedByTitle": "Some companies that trust us",
-        "aiAdvantage": {
-            "title": "The Dibrand AI-Advantage",
-            "content": "In 2026, raw hours are a commodity. Insight is the currency. Our engineers use proprietary AI agents to handle boilerplate code, unit testing, and architecture validation. The result? A 35% reduction in development cycles compared to traditional staff augmentation. You pay for seniority; you get hyper-efficiency."
+        "engineeringExcellence": {
+            "title": "Our Domains of Excellence",
+            "fullCycle": {
+                "title": "Full-Cycle Product Development",
+                "desc": "We build scalable web and mobile applications from scratch. We handle the architectural design, user experience (UX/UI), high-performance development, and cloud deployment."
+            },
+            "staffAug": {
+                "title": "Strategic Staff Augmentation",
+                "desc": "We integrate senior technical talent directly into your team. Pre-validated, bilingual, and AI-native profiles to multiply your roadmap's velocity."
+            }
         },
         "compliance": {
             "title": "Zero-Friction Compliance",
@@ -162,10 +169,10 @@
                 }
             ]
         },
-        "successCase": {
-            "title": "From Legacy to Scale: +25% Revenue Growth",
-            "copy": "We didn't just rebuild their platform; we optimized their entire checkout flow using AI-driven insights. Our squad took ownership of the technical debt, allowing the client's internal team to focus on new market expansion.",
-            "cta": "Explore Success Stories"
+        "selectedWork": {
+            "title": "Selected Work",
+            "viewCase": "View Case Study →",
+            "cta": "Explore All Projects"
         },
         "caseDetail": {
             "challenge": "The Challenge",

@@ -5,9 +5,9 @@ import TechStack from "@/components/home/TechStack";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import TrustedBySection from "@/components/home/TrustedBySection";
 import StaffAugmentationTeaser from "@/components/home/StaffAugmentationTeaser";
-import AIAdvantage from "@/components/home/AIAdvantage";
+import EngineeringExcellence from "@/components/home/EngineeringExcellence";
+import SelectedWork from "@/components/home/SelectedWork";
 import ComplianceSection from "@/components/home/ComplianceSection";
-import SuccessCaseSection from "@/components/home/SuccessCaseSection";
 import { supabase } from "@/lib/supabase";
 import Footer from "@/components/layout/Footer";
 
@@ -42,6 +42,13 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
     logo_url: b.logo_url
   }));
 
+  const { data: rawCases } = await supabase
+    .from('case_studies')
+    .select('id, slug, title, summary, image_url')
+    .limit(4);
+
+  const topCases = rawCases || [];
+
   return (
     <>
       {/* 1. Hero Section (Reinvención del Valor) */}
@@ -50,11 +57,11 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
       {/* 2. Sección Staffing (Strategic Talent Integration) */}
       <StaffAugmentationTeaser dict={dict.home} />
 
-      {/* 3. The Dibrand AI-Advantage */}
-      <AIAdvantage dict={dict.home} />
+      {/* 3. Engineering Excellence (Dual Focus) */}
+      <EngineeringExcellence dict={dict.home} lang={params.lang} />
 
-      {/* 4. Social Proof (Business Results Success Case) */}
-      <SuccessCaseSection dict={dict.home} lang={params.lang} />
+      {/* 4. Selected Work (Mini-Portfolio) */}
+      <SelectedWork dict={dict.home} lang={params.lang} cases={topCases} />
 
       {/* 5. Solutions / Services Grid */}
       <ServicesGrid dict={dict.home} />

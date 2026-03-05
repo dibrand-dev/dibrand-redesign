@@ -32,8 +32,8 @@ export default async function RootLayout({
   const dict = await getDictionary(lang as "en" | "es");
 
   return (
-    <html lang={lang} className={`${outfit.variable} scroll-smooth`}>
-      <body className="font-sans antialiased pt-16">
+    <html lang={lang} className={`${outfit.variable} scroll-smooth`} suppressHydrationWarning>
+      <body className="font-sans antialiased pt-16" suppressHydrationWarning>
         <Navbar dict={dict} lang={lang} />
         <div className="flex min-h-screen flex-col bg-white">
           {children}

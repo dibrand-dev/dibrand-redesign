@@ -66,7 +66,7 @@ export default function BrandsAdminPage() {
                 </div>
                 <button
                     onClick={openNew}
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#D83484] to-[#A3369D] text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20"
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand to-brand text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20"
                 >
                     <Plus size={20} />
                     Nuevo Cliente

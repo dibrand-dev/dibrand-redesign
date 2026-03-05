@@ -53,7 +53,7 @@ export default function StaffAugmentationTeaser({ dict }: StaffAugmentationTease
                     {pillars.map((pillar, index) => (
                         <div key={index} className="flex items-start gap-4 group">
                             {/* Fucsia Checkbox - Flat Design */}
-                            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#D83484] flex items-center justify-center text-white mt-1 transform group-hover:rotate-12 transition-transform duration-300">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-brand flex items-center justify-center text-white mt-1 transform group-hover:rotate-12 transition-transform duration-300">
                                 <Check size={18} strokeWidth={3} />
                             </div>
                             <div className="flex flex-col">

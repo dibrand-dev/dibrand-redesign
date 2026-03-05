@@ -63,7 +63,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
             {/* Header top bar */}
             <nav className={clsx(
                 "fixed top-0 left-0 right-0 z-[60] transition-all duration-300 w-full h-20 flex items-center justify-between px-6 lg:px-8 pb-3",
-                scrolled && !isOpen ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
+                isOpen ? 'bg-transparent' : 'bg-white/80 backdrop-blur-md shadow-sm border-b border-zinc-100/50'
             )}>
                 {/* Contenedor del Logo - Sin márgenes verticales */}
                 <div className="flex-shrink-0">

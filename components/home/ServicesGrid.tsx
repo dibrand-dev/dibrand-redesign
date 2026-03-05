@@ -34,7 +34,7 @@ export default function ServicesGrid({ dict }: ServicesGridProps) {
                     <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl font-outfit">
                         {dict.services.title}
                     </h2>
-                    <div className="mt-4 h-1 w-20 bg-gradient-to-r from-[#D83484] to-[#A3369D] mx-auto" />
+                    <div className="mt-4 h-1 w-20 bg-gradient-to-r from-brand to-brand mx-auto" />
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -44,10 +44,10 @@ export default function ServicesGrid({ dict }: ServicesGridProps) {
                             <Link
                                 key={index}
                                 href="/services"
-                                className="group flex flex-col justify-between rounded-xl bg-white/5 backdrop-blur-sm p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border border-white/10 hover:border-[#D83484]/30"
+                                className="group flex flex-col justify-between rounded-xl bg-white/5 backdrop-blur-sm p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border border-white/10 hover:border-brand/30"
                             >
                                 <div>
-                                    <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/5 text-[#D83484] group-hover:bg-[#D83484] group-hover:text-white transition-all duration-300">
+                                    <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/5 text-brand group-hover:bg-brand group-hover:text-white transition-all duration-300">
                                         <Icon className="h-6 w-6" />
                                     </div>
                                     <h3 className="mb-3 text-lg font-bold text-white font-outfit">
@@ -58,7 +58,7 @@ export default function ServicesGrid({ dict }: ServicesGridProps) {
                                     </p>
                                 </div>
 
-                                <div className="mt-6 flex items-center text-xs font-bold uppercase tracking-wider text-gray-400 group-hover:text-[#D83484] transition-colors">
+                                <div className="mt-6 flex items-center text-xs font-bold uppercase tracking-wider text-gray-400 group-hover:text-brand transition-colors">
                                     <span>Learn More</span>
                                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                                 </div>

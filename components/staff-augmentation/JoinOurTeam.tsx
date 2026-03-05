@@ -104,7 +104,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                                 {job.seniority || 'Expert'}
                                             </span>
                                             <span className="text-zinc-300">•</span>
-                                            <span className="text-[10px] font-bold text-[#D83484] uppercase tracking-[0.2em] flex items-center gap-1">
+                                            <span className="text-[10px] font-bold text-brand uppercase tracking-[0.2em] flex items-center gap-1">
                                                 <Building2 size={10} />
                                                 {job.industry}
                                             </span>
@@ -123,7 +123,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                                 {job.employment_type.replace('_', ' ')}
                                             </div>
                                             {job.modality && (
-                                                <div className="px-2.5 py-0.5 bg-fuchsia-50 text-[#D83484] rounded-lg text-xs font-bold uppercase tracking-tight">
+                                                <div className="px-2.5 py-0.5 bg-fuchsia-50 text-brand rounded-lg text-xs font-bold uppercase tracking-tight">
                                                     {job.modality}
                                                 </div>
                                             )}
@@ -138,7 +138,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                     <div className="mt-auto flex items-center gap-6">
                                         <Link
                                             href={`/${lang}/join-us/${job.id}`}
-                                            className="inline-flex items-center gap-2 bg-[#D83484] text-white font-bold py-3.5 px-8 rounded-xl hover:opacity-90 transition-all duration-300 shadow-sm shadow-[#D83484]/10 active:scale-95 text-center"
+                                            className="inline-flex items-center gap-2 bg-brand text-white font-bold py-3.5 px-8 rounded-xl hover:opacity-90 transition-all duration-300 shadow-sm shadow-brand/10 active:scale-95 text-center"
                                         >
                                             <span>{texts.viewOpening}</span>
                                             <ArrowRight size={18} />
@@ -190,7 +190,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                         <div className="p-8 bg-zinc-50 rounded-2xl border border-zinc-100">
                             <p className="text-lg text-zinc-600 font-outfit">
                                 {texts.fallbackText} {' '}
-                                <Link href={`/${lang}/contact`} className="text-[#D83484] font-bold underline">
+                                <Link href={`/${lang}/contact`} className="text-brand font-bold underline">
                                     {texts.fallbackLink}
                                 </Link>
                             </p>

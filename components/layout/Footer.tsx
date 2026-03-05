@@ -14,7 +14,7 @@ export default function Footer({ dict, lang }: FooterProps) {
         <section id="contact" className="bg-black py-20 lg:py-28 relative overflow-hidden border-t border-white/10 w-full">
             {/* Abstract Background for Contact */}
             <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 transform opacity-20">
-                <div className="h-[40rem] w-[40rem] rounded-full bg-gradient-to-br from-[#D83484] to-[#A3369D] blur-3xl" />
+                <div className="h-[40rem] w-[40rem] rounded-full bg-gradient-to-br from-brand to-brand blur-3xl" />
             </div>
 
             <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
@@ -54,7 +54,7 @@ export default function Footer({ dict, lang }: FooterProps) {
                     <div className="flex flex-col gap-6">
                         <div className="flex flex-col gap-2">
                             <span className="text-white font-medium">Join Us</span>
-                            <a href={`/${lang}/join-us`} className="text-gray-400 hover:text-[#D83484] transition-colors text-lg">
+                            <a href={`/${lang}/join-us`} className="text-gray-400 hover:text-brand transition-colors text-lg">
                                 {dict.navigation.careers}
                             </a>
                         </div>

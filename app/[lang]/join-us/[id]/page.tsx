@@ -42,7 +42,7 @@ export default async function JobDetailPage({ params }: Props) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
                 <h1 className="text-2xl font-bold mb-4">Job not found</h1>
-                <Link href={`/${lang}/join-us`} className="text-[#D83484] font-semibold underline">
+                <Link href={`/${lang}/join-us`} className="text-brand font-semibold underline">
                     Back to careers
                 </Link>
             </div>
@@ -62,7 +62,7 @@ export default async function JobDetailPage({ params }: Props) {
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                         <Link
                             href={`/${lang}/join-us`}
-                            className="inline-flex items-center gap-2 text-zinc-400 hover:text-[#D83484] transition-colors font-outfit text-sm font-medium"
+                            className="inline-flex items-center gap-2 text-zinc-400 hover:text-brand transition-colors font-outfit text-sm font-medium"
                         >
                             <ArrowLeft size={16} />
                             <span>{isEn ? 'Back to all openings' : 'Volver a todas las vacantes'}</span>
@@ -97,7 +97,7 @@ export default async function JobDetailPage({ params }: Props) {
 
                     {/* Main Job Title Header (Full Width) */}
                     <header className="mb-16 border-b border-zinc-100 pb-12">
-                        <h1 className="text-5xl md:text-7xl font-bold text-[#D83484] mb-8 font-outfit tracking-tight leading-[1.1] lg:max-w-5xl">
+                        <h1 className="text-5xl md:text-7xl font-bold text-brand mb-8 font-outfit tracking-tight leading-[1.1] lg:max-w-5xl">
                             {job.title}
                         </h1>
 
@@ -110,7 +110,7 @@ export default async function JobDetailPage({ params }: Props) {
                             <span className="text-zinc-200">|</span>
                             <span>{job.employment_type}</span>
                             <span className="text-zinc-200">|</span>
-                            <span className="text-[#D83484]">{job.modality || 'Remoto'}</span>
+                            <span className="text-brand">{job.modality || 'Remoto'}</span>
                         </div>
                     </header>
 
@@ -122,7 +122,7 @@ export default async function JobDetailPage({ params }: Props) {
                                 prose-headings:font-outfit prose-headings:font-bold prose-headings:text-zinc-900 prose-headings:mb-8 prose-headings:mt-16 first:prose-headings:mt-0
                                 prose-p:text-zinc-600 prose-p:leading-[1.8] prose-p:text-justify prose-p:font-light prose-p:mb-10
                                 prose-strong:text-zinc-900 prose-strong:font-bold
-                                prose-li:marker:text-[#D83484] prose-li:text-zinc-600 prose-li:font-light prose-li:mb-3
+                                prose-li:marker:text-brand prose-li:text-zinc-600 prose-li:font-light prose-li:mb-3
                                 prose-ul:mt-4 prose-ul:mb-8
                             ">
                                 <ReactMarkdown rehypePlugins={[rehypeRaw]}>

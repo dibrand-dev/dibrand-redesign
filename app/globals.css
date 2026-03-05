@@ -3,8 +3,7 @@
 
 :root {
   /* Dibrand Palette */
-  --color-dibrand-purple: #A3369D;
-  --color-dibrand-magenta: #D83484;
+  --color-dibrand-brand: #a04c97;
   --color-corporate-grey: #212121;
 
   /* Backgrounds */
@@ -20,8 +19,8 @@
   --color-background-alt: var(--background-alt);
   --color-foreground: var(--foreground);
 
-  --color-primary: var(--color-dibrand-purple);
-  --color-secondary: var(--color-dibrand-magenta);
+  --color-brand: var(--color-dibrand-brand);
+  --color-primary: var(--color-dibrand-brand);
   --color-corporate-grey: var(--color-corporate-grey);
 
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;

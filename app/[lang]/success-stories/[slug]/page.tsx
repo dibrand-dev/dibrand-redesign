@@ -2,7 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Building2, FolderKanban, Wrench, UserSquare2 } from 'lucide-react';
 import { FaLinkedinIn } from 'react-icons/fa6';
 import { createAdminClient } from "@/lib/supabase-server";
 import { getDictionary } from "@/lib/dictionaries";
@@ -40,8 +40,6 @@ export default async function CaseStudyDetailPage({ params }: Props) {
         const supabase = createAdminClient();
         const isEn = lang === 'en';
 
-        console.log(`[CaseStudyDetail] Request for Slug: ${slug}`);
-
         // Fetch by Slug strictly
         let { data: caseStudy, error } = await supabase
             .from('case_studies')
@@ -72,11 +70,10 @@ export default async function CaseStudyDetailPage({ params }: Props) {
         }
 
         if (error || !caseStudy) {
-            console.error(`[CaseStudyDetail] NotFound/Error for slug "${slug}":`, error?.message || 'No data');
             return (
-                <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+                <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-white">
                     <h1 className="text-2xl font-bold mb-4 font-outfit uppercase tracking-tighter">Case study not found</h1>
-                    <Link href={`/${lang}/success-stories`} className="px-8 py-3 bg-[#D83484] text-white rounded-xl font-bold font-outfit uppercase text-[10px] tracking-widest">
+                    <Link href={`/${lang}/success-stories`} className="px-8 py-3 bg-brand text-white rounded-xl font-bold font-outfit uppercase text-[10px] tracking-widest">
                         Back to all stories
                     </Link>
                 </div>
@@ -90,6 +87,7 @@ export default async function CaseStudyDetailPage({ params }: Props) {
         const summary = caseStudy.summary;
         const metrics = caseStudy.results_metrics || [];
         const hasMetrics = Array.isArray(metrics) && metrics.length > 0;
+        const heroImage = caseStudy.image_url || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop';
 
         const testimonial = caseStudy.testimonial || (caseStudy.testimonial_text ? {
             content: caseStudy.testimonial_text,
@@ -111,108 +109,177 @@ export default async function CaseStudyDetailPage({ params }: Props) {
         };
 
         return (
-            <div className="flex min-h-screen flex-col bg-white">
+            <div className="flex min-h-screen flex-col bg-white pt-28">
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                 />
-                <main className="flex-grow pt-8 pb-16">
-                    <div className="container mx-auto px-6 max-w-7xl">
-                        {/* Navigation Bar */}
-                        <div className="flex items-center justify-between mb-8 border-b border-zinc-100 pb-4">
-                            <Link
-                                href={`/${lang}/success-stories`}
-                                className="inline-flex items-center gap-2 text-zinc-400 hover:text-[#D83484] transition-colors font-outfit text-xs font-bold uppercase tracking-widest"
+
+                <main className="flex-grow container mx-auto px-6 max-w-7xl">
+
+                    {/* Navigation */}
+                    <div className="flex items-center justify-between w-full mb-10">
+                        <Link
+                            href={`/${lang}/success-stories`}
+                            className="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-600 transition-colors font-outfit text-xs font-medium uppercase tracking-widest"
+                        >
+                            <ArrowLeft size={14} />
+                            <span>{dict.home.caseDetail.backLink}</span>
+                        </Link>
+
+                        <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-widest hidden sm:inline">
+                                {dict.home.caseDetail.share}
+                            </span>
+                            <a
+                                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-1 text-zinc-400 hover:text-brand transition-colors"
                             >
-                                <ArrowLeft size={14} />
-                                <span>{dict.home.caseDetail.backLink}</span>
-                            </Link>
-
-                            <div className="flex items-center gap-4">
-                                <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">
-                                    {dict.home.caseDetail.share}
-                                </span>
-                                <a
-                                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="p-2 text-zinc-400 hover:text-[#D83484] transition-colors"
-                                >
-                                    <FaLinkedinIn size={16} />
-                                </a>
-                            </div>
+                                <FaLinkedinIn size={14} />
+                            </a>
                         </div>
+                    </div>
 
-                        {/* Title Section */}
-                        <header className="mb-10">
-                            <div className="flex items-center gap-2 text-[#D83484] font-black tracking-widest uppercase text-[9px] mb-3 font-outfit">
-                                <span>{caseStudy.client_name}</span>
-                                <span className="text-zinc-200">•</span>
-                                <span>{caseStudy.industry}</span>
+                    {/* H1 Title */}
+                    <div className="mb-12">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-zinc-900 font-outfit tracking-tighter leading-[0.95] max-w-5xl not-italic">
+                            {caseStudy.title}
+                        </h1>
+                    </div>
+
+                    {/* Hero Image (Premium Card Style) */}
+                    <section className="relative w-full aspect-[21/9] min-h-[300px] max-h-[680px] overflow-hidden rounded-3xl border border-zinc-100 shadow-sm mb-12">
+                        <Image
+                            src={heroImage}
+                            alt={caseStudy.title}
+                            fill
+                            priority
+                            className="object-cover"
+                            sizes="100vw"
+                        />
+                    </section>
+
+                    {/* Metadata Bar */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-y border-zinc-100 mb-16 px-4">
+                        <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-2 mb-1">
+                                <UserSquare2 size={14} className="text-brand" />
+                                <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest font-outfit">Client</span>
                             </div>
-                            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-zinc-900 font-outfit tracking-tighter leading-none lg:max-w-4xl not-italic">
-                                {caseStudy.title}
-                            </h1>
-                        </header>
+                            <span className="text-sm font-bold text-zinc-900 font-outfit truncate">{caseStudy.client_name}</span>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-2 mb-1">
+                                <Building2 size={14} className="text-brand" />
+                                <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest font-outfit">Industry</span>
+                            </div>
+                            <span className="text-sm font-bold text-zinc-900 font-outfit truncate">{caseStudy.industry || '-'}</span>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-2 mb-1">
+                                <FolderKanban size={14} className="text-brand" />
+                                <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest font-outfit">Project Type</span>
+                            </div>
+                            <span className="text-sm font-bold text-zinc-900 font-outfit truncate">{caseStudy.tags?.[0] || 'Software Development'}</span>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-2 mb-1">
+                                <Wrench size={14} className="text-brand" />
+                                <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest font-outfit">Services</span>
+                            </div>
+                            <span className="text-sm font-bold text-zinc-900 font-outfit truncate">{isEn ? 'Engineering Squad' : 'Desarrollo a Medida'}</span>
+                        </div>
+                    </div>
 
-                        {/* Content Grid */}
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-12 items-start">
-                            <div className="lg:col-span-8 space-y-16">
-                                {summary && (
-                                    <section id="summary" className="relative group">
-                                        <div className="absolute -left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-[#D83484] to-transparent opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block" />
-                                        <article className="prose prose-zinc max-w-none">
-                                            <p className="text-xl md:text-2xl text-zinc-900 font-outfit font-medium leading-[1.8] tracking-tight">
-                                                {summary}
-                                            </p>
-                                        </article>
-                                    </section>
-                                )}
+                    {summary && (
+                        <section className="mb-16">
+                            <p className="text-lg text-zinc-800 font-outfit font-medium leading-[1.8] max-w-3xl">
+                                {summary}
+                            </p>
+                        </section>
+                    )}
+
+                    {/* ═══════════════════════════════════════════════ */}
+                    {/* CONTENT — Split View below the intro           */}
+                    {/* ═══════════════════════════════════════════════ */}
+                    <div className="pb-16 md:pb-20">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-16 gap-y-12 items-start">
+
+                            {/* ─── LEFT COLUMN (65%) ─── */}
+                            <div className="lg:col-span-8 space-y-14">
 
                                 {challenge && (
                                     <section id="challenge">
-                                        <h2 className="text-sm font-bold font-outfit text-[#D83484] mb-3 uppercase tracking-widest not-italic">
+                                        <h2 className="text-3xl md:text-4xl font-bold font-outfit text-zinc-900 mb-6 uppercase tracking-tight not-italic">
                                             {dict.home.caseDetail.challenge}
                                         </h2>
-                                        <article className="prose prose-zinc max-w-none prose-p:text-lg prose-p:leading-[1.8] prose-p:text-zinc-500 prose-p:font-normal prose-p:font-outfit">
+                                        <article className="prose prose-zinc max-w-none prose-p:text-lg prose-p:leading-[1.8] prose-p:mb-8 prose-p:text-zinc-600 prose-p:font-normal prose-p:font-outfit prose-li:text-zinc-600 prose-li:font-outfit prose-li:leading-[1.8] prose-strong:text-zinc-900">
                                             <ReactMarkdown rehypePlugins={[rehypeRaw]}>{challenge}</ReactMarkdown>
                                         </article>
+
+                                        {/* Secondary Gallery */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-14 mb-6">
+                                            <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden border border-zinc-100 shadow-sm">
+                                                <Image src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2000&auto=format&fit=crop" alt="Development process" fill className="object-cover" />
+                                            </div>
+                                            <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden border border-zinc-100 shadow-sm">
+                                                <Image src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" alt="Data analysis" fill className="object-cover" />
+                                            </div>
+                                        </div>
                                     </section>
                                 )}
 
                                 {solution && (
-                                    <section id="solution">
-                                        <h2 className="text-sm font-bold font-outfit text-[#D83484] mb-3 uppercase tracking-widest not-italic">
+                                    <section id="solution" className="pt-14 border-t border-zinc-100 mt-14">
+                                        <h2 className="text-3xl md:text-4xl font-bold font-outfit text-zinc-900 mb-6 uppercase tracking-tight not-italic">
                                             {dict.home.caseDetail.solution}
                                         </h2>
-                                        <article className="prose prose-zinc max-w-none prose-p:text-lg prose-p:leading-[1.8] prose-p:text-zinc-500 prose-p:font-normal prose-p:font-outfit">
+                                        <article className="prose prose-zinc max-w-none prose-p:text-lg prose-p:leading-[1.8] prose-p:mb-8 prose-p:text-zinc-600 prose-p:font-normal prose-p:font-outfit prose-li:text-zinc-600 prose-li:font-outfit prose-li:leading-[1.8] prose-strong:text-zinc-900">
                                             <ReactMarkdown rehypePlugins={[rehypeRaw]}>{solution}</ReactMarkdown>
                                         </article>
                                     </section>
                                 )}
 
                                 {outcomeImpact && (
-                                    <section id="impact">
-                                        <h2 className="text-sm font-bold font-outfit text-[#D83484] mb-3 uppercase tracking-widest not-italic">
+                                    <section id="impact" className="pt-14 border-t border-zinc-100 mt-14">
+                                        <h2 className="text-3xl md:text-4xl font-bold font-outfit text-zinc-900 mb-6 uppercase tracking-tight not-italic">
                                             {isEn ? "BUSINESS IMPACT" : "IMPACTO DE NEGOCIO"}
                                         </h2>
-                                        <article className="prose prose-zinc max-w-none prose-p:text-lg prose-p:leading-[1.8] prose-p:text-zinc-500 prose-p:font-normal prose-p:font-outfit">
+                                        <article className="prose prose-zinc max-w-none prose-p:text-lg prose-p:leading-[1.8] prose-p:mb-8 prose-p:text-zinc-600 prose-p:font-normal prose-p:font-outfit prose-li:text-zinc-600 prose-li:font-outfit prose-li:leading-[1.8] prose-strong:text-zinc-900">
                                             <ReactMarkdown rehypePlugins={[rehypeRaw]}>{outcomeImpact}</ReactMarkdown>
                                         </article>
                                     </section>
                                 )}
 
+                                {/* Key Metrics inline — only if data exists */}
+                                {hasMetrics && (
+                                    <section id="metrics" className="pt-14 border-t border-zinc-100">
+                                        <h2 className="text-sm font-bold font-outfit text-brand mb-8 uppercase tracking-widest not-italic">
+                                            {dict.home.caseDetail.metrics}
+                                        </h2>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+                                            {metrics.map((m: any, i: number) => (
+                                                <div key={i} className="flex flex-col">
+                                                    <span className="text-4xl md:text-5xl font-bold font-outfit tracking-tighter text-zinc-900 mb-1">{m.value}</span>
+                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">{m.label}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </section>
+                                )}
+
                                 {testimonial && (
-                                    <section className="pt-16 border-t border-zinc-100">
-                                        <div className="relative p-10 bg-zinc-50 rounded-[2.5rem] border border-zinc-100">
-                                            <span className="absolute -top-6 left-10 text-6xl text-[#D83484] font-serif leading-none italic select-none">&ldquo;</span>
-                                            <p className="text-xl md:text-2xl text-zinc-900 font-outfit italic font-light leading-[1.8] mb-6 relative z-10">
+                                    <section className="pt-14 border-t border-zinc-100 flex justify-center">
+                                        <div className="p-8 max-w-2xl w-full text-center">
+                                            <span className="block text-4xl text-brand font-serif leading-none select-none mb-3">&ldquo;</span>
+                                            <p className="text-base text-zinc-800 font-outfit font-medium leading-[1.8] mb-6 md:px-6">
                                                 {testimonial.content || testimonial.content_es || testimonial.content_en}
                                             </p>
                                             {(testimonial.author || testimonial.author_name) && (
-                                                <div className="flex items-center gap-4">
-                                                    <div className="h-px w-8 bg-[#D83484]" />
-                                                    <span className="text-zinc-900 font-bold font-outfit uppercase tracking-widest text-[10px]">
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <span className="text-brand font-bold font-outfit uppercase tracking-widest text-[10px]">
                                                         {testimonial.author || testimonial.author_name}
                                                     </span>
                                                 </div>
@@ -222,54 +289,46 @@ export default async function CaseStudyDetailPage({ params }: Props) {
                                 )}
                             </div>
 
-                            <div className="lg:col-span-4 lg:sticky lg:top-28 space-y-10">
-                                {/* Key Metrics - only rendered when data exists */}
-                                {hasMetrics && (
-                                    <div className="bg-white border border-zinc-200 rounded-[2rem] p-10 flex flex-col items-center text-center">
-                                        <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-8">
-                                            {dict.home.caseDetail.metrics}
+                            {/* ─── RIGHT COLUMN (35% — Sticky) ─── */}
+                            <div className="lg:col-span-4 lg:sticky lg:top-36 space-y-6">
+
+                                {/* Tech Stack */}
+                                {caseStudy.tags && caseStudy.tags.length > 0 && (
+                                    <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm">
+                                        <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-5 border-b border-zinc-50 pb-3">
+                                            {dict.home.caseDetail.techStack}
                                         </h3>
-                                        <div className="space-y-10 w-full">
-                                            {metrics.map((m: any, i: number) => (
-                                                <div key={i} className="flex flex-col border-b border-zinc-100 pb-8 last:border-0 last:pb-0">
-                                                    <span className="text-5xl font-bold font-outfit tracking-tighter mb-2 text-zinc-900">{m.value}</span>
-                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">{m.label}</span>
-                                                </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {caseStudy.tags.map((tag: string, i: number) => (
+                                                <span key={i} className="px-3 py-1.5 bg-white border border-brand text-brand rounded-md text-[10px] font-bold font-outfit uppercase shadow-sm">
+                                                    {tag}
+                                                </span>
                                             ))}
                                         </div>
                                     </div>
                                 )}
 
-                                {caseStudy.image_url && (
-                                    <div className="relative aspect-[16/10] bg-zinc-100 rounded-[2.5rem] overflow-hidden border border-zinc-200">
-                                        <Image src={caseStudy.image_url} alt={caseStudy.title} fill className="object-cover" />
-                                    </div>
-                                )}
-
-                                <div className="bg-white border border-zinc-200 rounded-[2.5rem] p-10">
-                                    <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-8 text-center border-b border-zinc-50 pb-4">
-                                        {dict.home.caseDetail.techStack}
+                                {/* CTA Card — Sticky */}
+                                <div className="bg-brand rounded-2xl p-8 shadow-xl shadow-brand/20 flex flex-col items-center text-center">
+                                    <h3 className="text-white font-bold font-outfit text-xl mb-3 leading-snug">
+                                        {isEn ? "Ready to accelerate your roadmap?" : "¿Listo para acelerar tu roadmap?"}
                                     </h3>
-                                    <div className="flex flex-wrap justify-center gap-2">
-                                        {caseStudy.tags && caseStudy.tags.map((tag: string, i: number) => (
-                                            <span key={i} className="px-4 py-2 bg-zinc-50 border border-zinc-100 rounded-lg text-zinc-600 text-[10px] font-bold font-outfit uppercase">
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                    <div className="mt-10">
-                                        <Link
-                                            href={`/${lang}/contact`}
-                                            className="flex items-center justify-center w-full py-6 bg-[#D83484] text-white rounded-2xl font-bold font-outfit uppercase text-[10px] tracking-widest hover:scale-[1.02] transition-transform"
-                                        >
-                                            <span>{dict.home.caseDetail.cta}</span>
-                                        </Link>
-                                    </div>
+                                    <p className="text-white/80 font-outfit text-sm mb-6 max-w-[200px]">
+                                        {isEn ? "Let's discuss how we can help your team." : "Hablemos sobre cómo podemos potenciar a tu equipo."}
+                                    </p>
+                                    <Link
+                                        href={`/${lang}/contact`}
+                                        className="flex items-center justify-center w-full py-4 bg-white text-brand rounded-xl font-bold font-outfit uppercase text-xs tracking-widest hover:scale-105 transition-all shadow-md"
+                                    >
+                                        BOOK A CALL
+                                    </Link>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </main>
+
                 <Footer dict={dict} lang={lang} />
             </div>
         );

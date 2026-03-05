@@ -160,7 +160,7 @@ export default function BrandsForm({ brand, onClose }: BrandsFormProps) {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-[#D83484] to-[#A3369D] text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
+                            className="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-brand to-brand text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
                         >
                             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                             {formData.id ? 'Guardar Cambios' : 'Agregar Cliente'}

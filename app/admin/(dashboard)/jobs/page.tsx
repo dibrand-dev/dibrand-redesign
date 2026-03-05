@@ -64,7 +64,7 @@ export default function JobsPage() {
                 </div>
                 <Link
                     href="/admin/jobs/new"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#D83484] to-[#A3369D] text-white rounded-lg font-medium hover:opacity-90 transition-opacity shadow-md"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-brand to-brand text-white rounded-lg font-medium hover:opacity-90 transition-opacity shadow-md"
                 >
                     <Plus size={18} />
                     <span>New Job Opening</span>

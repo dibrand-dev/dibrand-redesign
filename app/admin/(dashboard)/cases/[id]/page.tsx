@@ -189,7 +189,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                                 name="title"
                                 value={formData.title}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                             />
                         </div>
                         <div className="space-y-2">
@@ -200,7 +200,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                                 name="client_name"
                                 value={formData.client_name}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                             />
                         </div>
                     </div>
@@ -213,7 +213,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                                 value={formData.industry}
                                 onChange={handleChange}
                                 placeholder="e.g. Fintech, Healthcare"
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                             />
                         </div>
                         <div className="space-y-2">
@@ -223,7 +223,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                                 name="tags"
                                 value={formData.tags}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                             />
                         </div>
                     </div>
@@ -236,7 +236,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                             rows={2}
                             value={formData.summary}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm resize-none"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm resize-none"
                         />
                     </div>
                 </div>
@@ -253,7 +253,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                             value={formData.challenge}
                             onChange={handleChange}
                             placeholder="What was the specific business problem?"
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                         />
                     </div>
 
@@ -265,7 +265,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                             value={formData.solution}
                             onChange={handleChange}
                             placeholder="How did you solve it? Mention AI agents and tech stack..."
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                         />
                     </div>
 
@@ -277,7 +277,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                             value={formData.outcome_impact}
                             onChange={handleChange}
                             placeholder="Summary of the business impact..."
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                         />
                     </div>
                 </div>
@@ -289,7 +289,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                         <button
                             type="button"
                             onClick={addMetric}
-                            className="text-sm font-bold text-[#D83484] hover:underline"
+                            className="text-sm font-bold text-brand hover:underline"
                         >
                             + Add Metric
                         </button>
@@ -338,7 +338,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                             value={formData.testimonial_text}
                             onChange={handleChange}
                             placeholder="What did the client say about the project?"
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                         />
                     </div>
 
@@ -350,7 +350,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                             value={formData.testimonial_author}
                             onChange={handleChange}
                             placeholder="e.g. John Doe, CTO at HealthTech"
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D83484]/10 focus:border-[#D83484] outline-none transition-all shadow-sm"
+                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                         />
                     </div>
                 </div>
@@ -392,7 +392,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                             />
                             <label
                                 htmlFor="image-upload"
-                                className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:bg-gray-50 hover:border-[#D83484] transition-all group"
+                                className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:bg-gray-50 hover:border-brand transition-all group"
                             >
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                     <p className="mb-2 text-sm text-gray-500 font-medium">Click to upload brand asset</p>
@@ -401,7 +401,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                             </label>
                         </div>
                         {uploading && (
-                            <p className="text-sm text-[#D83484] font-bold animate-pulse">Uploading image...</p>
+                            <p className="text-sm text-brand font-bold animate-pulse">Uploading image...</p>
                         )}
                     </div>
 
@@ -412,7 +412,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                             name="is_published"
                             checked={formData.is_published}
                             onChange={handleChange}
-                            className="w-5 h-5 text-[#D83484] border-gray-200 rounded focus:ring-[#D83484]"
+                            className="w-5 h-5 text-brand border-gray-200 rounded focus:ring-brand"
                         />
                         <label htmlFor="is_published" className="text-sm font-bold text-gray-700 select-none">
                             Published to global portfolio
@@ -430,7 +430,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                     <button
                         disabled={saving}
                         type="submit"
-                        className="inline-flex items-center gap-2 px-8 py-2.5 bg-gradient-to-r from-[#D83484] to-[#A3369D] text-white rounded-lg font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md transform active:scale-95"
+                        className="inline-flex items-center gap-2 px-8 py-2.5 bg-gradient-to-r from-brand to-brand text-white rounded-lg font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md transform active:scale-95"
                     >
                         {saving ? (
                             <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

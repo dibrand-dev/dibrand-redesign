@@ -31,8 +31,8 @@ export default function ComplianceSection({ dict }: ComplianceSectionProps) {
                     {items.map((item, index) => {
                         const Icon = icons[index] || ShieldCheck;
                         return (
-                            <div key={index} className="flex flex-col items-center text-center p-8 rounded-[3rem] bg-slate-50 border border-slate-100 hover:shadow-xl hover:shadow-[#D83484]/5 hover:-translate-y-2 transition-all duration-500">
-                                <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-[#D83484] mb-8 shadow-sm">
+                            <div key={index} className="flex flex-col items-center text-center p-8 rounded-[3rem] bg-slate-50 border border-slate-100 hover:shadow-xl hover:shadow-brand/5 hover:-translate-y-2 transition-all duration-500">
+                                <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-brand mb-8 shadow-sm">
                                     <Icon size={32} strokeWidth={2.5} />
                                 </div>
                                 <h3 className="text-2xl font-bold text-zinc-900 mb-4 tracking-tight">

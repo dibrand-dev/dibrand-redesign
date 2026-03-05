@@ -27,17 +27,17 @@ const pillars = [
 ];
 
 const teamRoles = [
-    { name: "Software Developers", color: "bg-[#D83484]", shape: "rounded-full" },
+    { name: "Software Developers", color: "bg-brand", shape: "rounded-full" },
     { name: "QA Engineers", color: "bg-[#3B82F6]", shape: "rounded-lg rotate-12" },
     { name: "UX/UI Designers", color: "bg-[#F59E0B]", shape: "rounded-2xl -rotate-12" },
-    { name: "Project Managers", color: "bg-[#D83484]", shape: "rounded-[30%]" }
+    { name: "Project Managers", color: "bg-brand", shape: "rounded-[30%]" }
 ];
 
 export default function StaffAugmentation() {
     return (
         <section className="relative w-full py-24 bg-[#0A0A0A] overflow-hidden" id="staff-augmentation">
             {/* Background geometric 'life' elements */}
-            <div className="absolute top-1/4 -right-20 w-96 h-96 bg-[#D83484]/10 blur-[120px] rounded-full" />
+            <div className="absolute top-1/4 -right-20 w-96 h-96 bg-brand/10 blur-[120px] rounded-full" />
             <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-[#3B82F6]/10 blur-[120px] rounded-full" />
 
             <div className="container mx-auto px-6 relative z-10">
@@ -54,8 +54,8 @@ export default function StaffAugmentation() {
                 {/* 2. Grid de 4 Pilares */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-24">
                     {pillars.map((pillar, index) => (
-                        <div key={index} className="flex gap-6 p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-[#D83484]/50 transition-colors group">
-                            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-[#D83484]/10 flex items-center justify-center text-[#D83484] group-hover:bg-[#D83484] group-hover:text-white transition-all duration-300">
+                        <div key={index} className="flex gap-6 p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-brand/50 transition-colors group">
+                            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center text-brand group-hover:bg-brand group-hover:text-white transition-all duration-300">
                                 <pillar.icon size={28} />
                             </div>
                             <div>
@@ -95,7 +95,7 @@ export default function StaffAugmentation() {
                 <div className="flex justify-center">
                     <Link
                         href="/staff-augmentation"
-                        className="inline-flex items-center gap-4 px-12 py-6 bg-white text-black font-black text-lg rounded-full hover:bg-[#D83484] hover:text-white transition-all duration-300 shadow-2xl hover:shadow-[#D83484]/30 active:scale-95 group"
+                        className="inline-flex items-center gap-4 px-12 py-6 bg-white text-black font-black text-lg rounded-full hover:bg-brand hover:text-white transition-all duration-300 shadow-2xl hover:shadow-brand/30 active:scale-95 group"
                     >
                         Explorar Staff Augmentation
                         <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />

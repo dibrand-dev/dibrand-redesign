@@ -36,7 +36,7 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
                 <div className="container mx-auto px-6 max-w-7xl">
                     {/* Header Section */}
                     <header className="mb-8 border-b border-zinc-100 pb-8">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-50 border border-zinc-100 text-[#D83484] text-[10px] font-black tracking-[0.2em] uppercase mb-3">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-50 border border-zinc-100 text-brand text-[10px] font-black tracking-[0.2em] uppercase mb-3">
                             <TrendingUp size={14} />
                             <span>Business Impact</span>
                         </div>
@@ -59,7 +59,7 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
                                 <Link
                                     key={caseStudy.id}
                                     href={`/${params.lang}/success-stories/${caseStudy.slug || caseStudy.id}`}
-                                    className="group flex flex-col h-full bg-white rounded-[2.5rem] border border-zinc-100 overflow-hidden hover:border-[#D83484]/30 transition-all duration-500"
+                                    className="group flex flex-col h-full bg-white rounded-[2.5rem] border border-zinc-100 overflow-hidden hover:border-brand/30 transition-all duration-500"
                                 >
                                     <div className="relative aspect-[16/10] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
                                         <Image
@@ -71,10 +71,10 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
                                     </div>
 
                                     <div className="p-10 flex-1 flex flex-col">
-                                        <span className="text-[#D83484] font-black tracking-widest uppercase text-[10px] mb-4 font-outfit">
+                                        <span className="text-brand font-black tracking-widest uppercase text-[10px] mb-4 font-outfit">
                                             {caseStudy.client_name}
                                         </span>
-                                        <h3 className="text-2xl font-black text-zinc-900 mb-6 group-hover:text-[#D83484] transition-colors leading-tight font-outfit tracking-tight">
+                                        <h3 className="text-2xl font-black text-zinc-900 mb-6 group-hover:text-brand transition-colors leading-tight font-outfit tracking-tight">
                                             {caseStudy.title}
                                         </h3>
                                         <p className="text-zinc-500 font-outfit font-light leading-relaxed mb-10 flex-1 line-clamp-3">
@@ -112,7 +112,7 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
                                 <div className="pt-8">
                                     <Link
                                         href={`/${params.lang}/contact`}
-                                        className="inline-block px-12 py-6 bg-[#D83484] text-white rounded-2xl font-black font-outfit tracking-tight hover:opacity-90 transition-opacity uppercase text-sm not-italic"
+                                        className="inline-block px-12 py-6 bg-brand text-white rounded-2xl font-black font-outfit tracking-tight hover:opacity-90 transition-opacity uppercase text-sm not-italic"
                                     >
                                         {isEn ? 'Start Your Project' : 'Iniciar tu Proyecto'}
                                     </Link>
