@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { getCaseStudy, updateCaseStudy, deleteCaseStudy } from '@/app/actions/cases';
 import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
-import { CASE_SERVICES, CASE_TECH_STACK, CASE_PROJECT_TYPES, CASE_INDUSTRIES, cleanOldServiceName } from '@/lib/case-constants';
+import { CASE_SERVICES, CASE_TECH_STACK, CASE_PROJECT_TYPES, CASE_INDUSTRIES, cleanOldServiceName, MAP_OLD_PROJECT_TYPE, MAP_OLD_INDUSTRY } from '@/lib/case-constants';
 
 export default function EditCasePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -72,10 +72,17 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                     ];
                 }
 
+                // Match industry with old values if necessary
+                const rawIndustry = data.industry || '';
+                const cleanIndustry = MAP_OLD_INDUSTRY[rawIndustry] || rawIndustry;
+
+                // Match project type with old values
+                const cleanProjectType = MAP_OLD_PROJECT_TYPE[pType] || pType;
+
                 setFormData({
                     title: data.title || '',
                     client_name: data.client_name || '',
-                    industry: data.industry || '',
+                    industry: cleanIndustry,
                     summary: data.summary || '',
                     description: data.description || '',
                     challenge: data.challenge || '',
@@ -86,7 +93,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                     image_url: data.image_url || '',
                     is_published: data.is_published,
                     tags: (data.tags || []).join(', '),
-                    project_type: pType,
+                    project_type: cleanProjectType,
                 });
                 setServices(srvs);
                 setSelectedTech(data.tags || []);

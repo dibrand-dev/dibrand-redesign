@@ -42,6 +42,8 @@ async function syncToCaseStudies(payload: {
     executive_summary: string;
     hero_image_url: string;
     industry: string;
+    project_type?: string;
+    services?: string[];
     stack_ids: string[];
     problem_text: string;
     solution_text: string;
@@ -50,7 +52,7 @@ async function syncToCaseStudies(payload: {
     const slug = payload.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const tags = await resolveStackNames(payload.stack_ids);
 
-    const caseData = {
+    const caseData: any = {
         title: payload.title,
         client_name: payload.client_company,
         summary: payload.executive_summary,
@@ -62,6 +64,15 @@ async function syncToCaseStudies(payload: {
         outcome_impact: payload.result_text,
         tags,
         is_published: true,
+        // Almacenar metadata extra en el formato que espera el frontend
+        results_metrics: [
+            {
+                label: '__METADATA__', value: JSON.stringify({
+                    project_type: payload.project_type,
+                    services: payload.services
+                })
+            }
+        ]
     };
 
     // Try to upsert: update if slug exists, insert otherwise
@@ -94,6 +105,7 @@ export async function createSuccessStory(payload: {
     hero_image_url: string;
     project_type: string;
     industry: string;
+    services: string[];
     stack_ids: string[];
     problem_text: string;
     solution_text: string;
@@ -116,6 +128,7 @@ export async function updateSuccessStory(id: string, payload: Partial<{
     hero_image_url: string;
     project_type: string;
     industry: string;
+    services: string[];
     stack_ids: string[];
     problem_text: string;
     solution_text: string;
@@ -141,6 +154,8 @@ export async function updateSuccessStory(id: string, payload: Partial<{
             executive_summary: fullRow.executive_summary,
             hero_image_url: fullRow.hero_image_url,
             industry: fullRow.industry,
+            project_type: fullRow.project_type,
+            services: fullRow.services || [],
             stack_ids: fullRow.stack_ids || [],
             problem_text: fullRow.problem_text,
             solution_text: fullRow.solution_text,

@@ -9,7 +9,7 @@ import { getDictionary } from "@/lib/dictionaries";
 import Footer from "@/components/layout/Footer";
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
-import { CASE_INDUSTRIES, MAP_OLD_PROJECT_TYPE, cleanOldServiceName } from '@/lib/case-constants';
+import { CASE_INDUSTRIES, MAP_OLD_PROJECT_TYPE, cleanOldServiceName, MAP_OLD_INDUSTRY } from '@/lib/case-constants';
 
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
@@ -114,9 +114,10 @@ export default async function CaseStudyDetailPage({ params }: Props) {
         }
 
         const pTypeDisplay = MAP_OLD_PROJECT_TYPE[pTypeRaw] || pTypeRaw;
-
-        const industryObj = CASE_INDUSTRIES.find(ind => ind.value === caseStudy.industry);
-        const industryDisplay = industryObj ? industryObj.label : (caseStudy.industry || '-');
+        const rawIndustry = caseStudy.industry || '';
+        const cleanIndustry = MAP_OLD_INDUSTRY[rawIndustry] || rawIndustry;
+        const industryObj = CASE_INDUSTRIES.find(ind => ind.value === cleanIndustry);
+        const industryDisplay = industryObj ? industryObj.label : (cleanIndustry || '-');
 
         const jsonLd = {
             "@context": "https://schema.org",

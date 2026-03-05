@@ -5,6 +5,8 @@ import { createAdminClient } from '@/lib/supabase-server';
 import Footer from '@/components/layout/Footer';
 import { TrendingUp } from 'lucide-react';
 import Link from 'next/link';
+import PortfolioFilters from '@/components/portfolio/PortfolioFilters';
+import { MAP_OLD_INDUSTRY } from '@/lib/case-constants';
 
 interface CaseStudy {
     id: string;
@@ -16,6 +18,9 @@ interface CaseStudy {
     is_published: boolean;
     created_at: string;
     slug: string;
+    industry?: string;
+    services?: string[];
+    results_metrics?: any[];
 }
 
 export default async function SuccessStoriesPage(props: { params: Promise<{ lang: "en" | "es" }> }) {
@@ -24,23 +29,45 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
     const supabase = createAdminClient();
     const isEn = params.lang === 'en';
 
-    const { data: cases, error } = await supabase
+    const { data: rawCases, error } = await supabase
         .from('case_studies')
         .select('*')
         .eq('is_published', true)
         .order('created_at', { ascending: false });
 
+
+
+    // Process metadata for filtering
+    const casesWithMeta = (rawCases || []).map((c: any) => {
+        let services = c.services || [];
+        if (Array.isArray(c.results_metrics)) {
+            const meta = c.results_metrics.find((m: any) => m.label === '__METADATA__');
+            if (meta && meta.value) {
+                try {
+                    const parsed = JSON.parse(meta.value);
+                    if (parsed.services) services = parsed.services;
+                } catch (e) { }
+            }
+        }
+
+        // Normalize industry for filtering
+        const rawIndustry = c.industry || '';
+        const industry = MAP_OLD_INDUSTRY[rawIndustry] || rawIndustry;
+
+        return { ...c, services, industry };
+    });
+
     return (
         <div className="flex min-h-screen flex-col bg-white">
-            <main className="flex-grow pt-6 pb-20">
+            <main className="flex-grow pt-8 pb-20">
                 <div className="container mx-auto px-6 max-w-7xl">
                     {/* Header Section */}
-                    <header className="mb-8 border-b border-zinc-100 pb-8">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-50 border border-zinc-100 text-brand text-[10px] font-black tracking-[0.2em] uppercase mb-3">
+                    <header className="mb-14 pb-8">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-50 border border-zinc-100 text-brand text-[10px] font-black tracking-[0.2em] uppercase mb-4">
                             <TrendingUp size={14} />
                             <span>Business Impact</span>
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-3 font-outfit tracking-tighter leading-tight lg:max-w-4xl not-italic">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-zinc-900 mb-6 font-outfit tracking-tighter leading-tight lg:max-w-4xl not-italic">
                             {dict.home.portfolio.headline}
                         </h1>
                         <p className="text-lg md:text-xl text-zinc-400 font-outfit font-light leading-relaxed max-w-3xl">
@@ -48,58 +75,17 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
                         </p>
                     </header>
 
-                    {/* Grid Section */}
-                    {error || !cases || cases.length === 0 ? (
-                        <div className="text-center py-32 bg-zinc-50 rounded-[3rem] border border-zinc-100">
-                            <p className="text-zinc-400 text-lg font-outfit">{isEn ? 'No success stories found yet. Check back soon!' : 'No se encontraron historias de éxito. ¡Vuelve pronto!'}</p>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                            {cases.map((caseStudy: CaseStudy) => (
-                                <Link
-                                    key={caseStudy.id}
-                                    href={`/${params.lang}/success-stories/${caseStudy.slug || caseStudy.id}`}
-                                    className="group flex flex-col h-full bg-white rounded-[2.5rem] border border-zinc-100 overflow-hidden hover:border-brand/30 transition-all duration-500"
-                                >
-                                    <div className="relative aspect-[16/10] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
-                                        <Image
-                                            src={caseStudy.image_url || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop'}
-                                            alt={caseStudy.title}
-                                            fill
-                                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                        />
-                                    </div>
-
-                                    <div className="p-10 flex-1 flex flex-col">
-                                        <span className="text-brand font-black tracking-widest uppercase text-[10px] mb-4 font-outfit">
-                                            {caseStudy.client_name}
-                                        </span>
-                                        <h3 className="text-2xl font-black text-zinc-900 mb-6 group-hover:text-brand transition-colors leading-tight font-outfit tracking-tight">
-                                            {caseStudy.title}
-                                        </h3>
-                                        <p className="text-zinc-500 font-outfit font-light leading-relaxed mb-10 flex-1 line-clamp-3">
-                                            {caseStudy.summary}
-                                        </p>
-
-                                        <div className="flex flex-wrap gap-2 pt-6 border-t border-zinc-50">
-                                            {caseStudy.tags && caseStudy.tags.slice(0, 3).map((tag, index) => (
-                                                <span
-                                                    key={index}
-                                                    className="px-4 py-1.5 bg-zinc-50 text-zinc-400 text-[10px] font-bold rounded-full border border-zinc-100 font-outfit"
-                                                >
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
+                    {/* Interactive Filter Grid */}
+                    <PortfolioFilters
+                        initialCases={casesWithMeta}
+                        lang={params.lang}
+                        dict={dict}
+                    />
 
                     {/* Global CTA Section */}
-                    <footer className="mt-20">
-                        <div className="bg-zinc-900 rounded-[4rem] p-12 lg:p-24 text-center relative overflow-hidden text-white">
+                    <footer className="mt-32">
+                        <div className="bg-zinc-900 rounded-[4rem] p-12 lg:p-24 text-center relative overflow-hidden text-white border border-white/5">
+                            <div className="absolute top-0 right-0 w-96 h-96 bg-brand/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
                             <div className="relative z-10 space-y-8">
                                 <h2 className="text-4xl lg:text-7xl font-black font-outfit tracking-tighter leading-none">
                                     {isEn ? 'Ready to Scale?' : '¿Listo para Escalar?'}
@@ -112,7 +98,7 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
                                 <div className="pt-8">
                                     <Link
                                         href={`/${params.lang}/contact`}
-                                        className="inline-block px-12 py-6 bg-brand text-white rounded-2xl font-black font-outfit tracking-tight hover:opacity-90 transition-opacity uppercase text-sm not-italic"
+                                        className="inline-block px-12 py-6 bg-brand text-white rounded-2xl font-black font-outfit tracking-tight hover:scale-105 transition-all uppercase text-sm not-italic shadow-xl shadow-brand/20"
                                     >
                                         {isEn ? 'Start Your Project' : 'Iniciar tu Proyecto'}
                                     </Link>

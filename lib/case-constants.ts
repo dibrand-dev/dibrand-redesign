@@ -26,16 +26,27 @@ export const CASE_PROJECT_TYPES = [
 ];
 
 export const CASE_INDUSTRIES = [
-    { value: 'media', label: 'Media & Entertainment' },
-    { value: 'fintech', label: 'Fintech' },
-    { value: 'ecommerce', label: 'E-commerce & Retail' },
-    { value: 'healthcare', label: 'Healthcare' },
-    { value: 'edtech', label: 'EdTech' },
-    { value: 'logistics', label: 'Logistics & Supply Chain' },
-    { value: 'realestate', label: 'Real Estate' },
-    { value: 'saas', label: 'SaaS / Enterprise Software' },
-    { value: 'gov', label: 'Gov' }
+    { value: 'Media', label: 'Media & Entertainment' },
+    { value: 'Fintech', label: 'Fintech' },
+    { value: 'Ecommerce', label: 'E-commerce & Retail' },
+    { value: 'Healthcare', label: 'Healthcare' },
+    { value: 'EdTech', label: 'EdTech' },
+    { value: 'Logistics', label: 'Logistics & Supply Chain' },
+    { value: 'Real Estate', label: 'Real Estate' },
+    { value: 'SaaS', label: 'SaaS / Enterprise Software' },
+    { value: 'Gov', label: 'Gov' }
 ];
+
+export const MAP_OLD_INDUSTRY: Record<string, string> = {
+    'media': 'Media',
+    'ecommerce': 'Ecommerce',
+    'healthcare': 'Healthcare',
+    'edtech': 'EdTech',
+    'logistics': 'Logistics',
+    'realestate': 'Real Estate',
+    'saas': 'SaaS',
+    'gov': 'Gov'
+};
 
 export const MAP_OLD_PROJECT_TYPE: Record<string, string> = {
     'webapp': 'Web App',

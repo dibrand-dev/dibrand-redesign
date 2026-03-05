@@ -7,25 +7,12 @@ import { ArrowLeft, UploadCloud, X, Loader2, Save } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
 import { createSuccessStory, updateSuccessStory } from './actions';
 
+import { CASE_SERVICES, CASE_TECH_STACK, CASE_PROJECT_TYPES, CASE_INDUSTRIES, MAP_OLD_PROJECT_TYPE, MAP_OLD_INDUSTRY } from '@/lib/case-constants';
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Stack { id: string; name: string; }
 
-const PROJECT_TYPES = [
-    { value: 'webapp', label: 'Web App' },
-    { value: 'mobileapp', label: 'Mobile App' },
-    { value: 'plataforma', label: 'Plataforma' },
-    { value: 'migracion', label: 'Migración' },
-    { value: 'otro', label: 'Otro' },
-];
 
-const INDUSTRIES = [
-    { value: 'media', label: 'Media' },
-    { value: 'fintech', label: 'Fintech' },
-    { value: 'ecommerce', label: 'E-commerce' },
-    { value: 'gov', label: 'Gov' },
-    { value: 'saas', label: 'SaaS' },
-    { value: 'healthcare', label: 'Healthcare' },
-];
 
 // ─── Field Components ─────────────────────────────────────────────────────────
 function Label({ children, required }: { children: React.ReactNode; required?: boolean }) {
@@ -142,16 +129,28 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Normalizar valores iniciales si vienen de base de datos vieja
+    const initialPType = initialData?.project_type || '';
+    const cleanPType = MAP_OLD_PROJECT_TYPE[initialPType] || initialPType;
+
+    const initialInd = initialData?.industry || '';
+    const cleanInd = MAP_OLD_INDUSTRY[initialInd] || initialInd;
+
     const [title, setTitle] = useState(initialData?.title || '');
     const [clientCompany, setClientCompany] = useState(initialData?.client_company || '');
     const [executiveSummary, setExecutiveSummary] = useState(initialData?.executive_summary || '');
     const [heroImageUrl, setHeroImageUrl] = useState(initialData?.hero_image_url || '');
-    const [projectType, setProjectType] = useState(initialData?.project_type || '');
-    const [industry, setIndustry] = useState(initialData?.industry || '');
+    const [projectType, setProjectType] = useState(cleanPType);
+    const [industry, setIndustry] = useState(cleanInd);
+    const [services, setServices] = useState<string[]>(initialData?.services || []);
     const [stackIds, setStackIds] = useState<string[]>(initialData?.stack_ids || []);
     const [problemText, setProblemText] = useState(initialData?.problem_text || '');
     const [solutionText, setSolutionText] = useState(initialData?.solution_text || '');
     const [resultText, setResultText] = useState(initialData?.result_text || '');
+
+    const toggleService = (srv: string) => {
+        setServices(prev => prev.includes(srv) ? prev.filter(s => s !== srv) : [...prev, srv]);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -165,6 +164,7 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
             const payload = {
                 title, client_company: clientCompany, executive_summary: executiveSummary,
                 hero_image_url: heroImageUrl, project_type: projectType, industry,
+                services,
                 stack_ids: stackIds, problem_text: problemText, solution_text: solutionText,
                 result_text: resultText,
             };
@@ -250,7 +250,7 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
                             <Label>Tipo de Proyecto</Label>
                             <select value={projectType} onChange={e => setProjectType(e.target.value)} className={inputCls}>
                                 <option value="">Seleccionar...</option>
-                                {PROJECT_TYPES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                                {CASE_PROJECT_TYPES.map(o => <option key={o} value={o}>{o}</option>)}
                             </select>
                         </div>
 
@@ -258,17 +258,58 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
                             <Label>Industria</Label>
                             <select value={industry} onChange={e => setIndustry(e.target.value)} className={inputCls}>
                                 <option value="">Seleccionar...</option>
-                                {INDUSTRIES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                                {CASE_INDUSTRIES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                             </select>
+                        </div>
+                    </div>
+
+                    {/* Services (NEW Section) */}
+                    <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-4">
+                        <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Servicios Prestados</h3>
+                        <div className="flex flex-wrap gap-2">
+                            {CASE_SERVICES.map(srv => {
+                                const active = services.includes(srv);
+                                const isSpecial = srv === 'Staff Augmentation' || srv === 'Outsourcing';
+                                return (
+                                    <button
+                                        key={srv}
+                                        type="button"
+                                        onClick={() => toggleService(srv)}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${active
+                                            ? isSpecial ? 'bg-[#a04c97] border-[#a04c97] text-white' : 'bg-primary border-primary text-white'
+                                            : 'bg-gray-50 text-gray-500 border-gray-200'
+                                            }`}
+                                    >
+                                        {isSpecial && '✺ '}{srv}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
                     {/* Tech Stacks */}
                     <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-4">
                         <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Tech Stack</h3>
-                        {stacks.length > 0
-                            ? <StackSelector stacks={stacks} selected={stackIds} onChange={setStackIds} />
-                            : <p className="text-xs text-gray-400 italic">No hay stacks disponibles.</p>}
+                        <div className="flex flex-wrap gap-2">
+                            {CASE_TECH_STACK.map(tech => {
+                                // Match by name instead of ID for standardization if needed
+                                // but for now let's use the local state if it contains names
+                                const active = stackIds.includes(tech);
+                                return (
+                                    <button
+                                        key={tech}
+                                        type="button"
+                                        onClick={() => setStackIds(prev => prev.includes(tech) ? prev.filter(t => t !== tech) : [...prev, tech])}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${active
+                                            ? 'bg-secondary border-secondary text-white'
+                                            : 'bg-gray-50 text-gray-500 border-gray-200 shadow-sm'
+                                            }`}
+                                    >
+                                        {tech}
+                                    </button>
+                                );
+                            })}
+                        </div>
                         {stackIds.length > 0 && (
                             <p className="text-xs text-gray-400">{stackIds.length} seleccionado{stackIds.length !== 1 ? 's' : ''}</p>
                         )}
