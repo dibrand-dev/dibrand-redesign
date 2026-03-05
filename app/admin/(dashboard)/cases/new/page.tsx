@@ -27,7 +27,30 @@ export default function NewCasePage() {
         image_url: '',
         is_published: true,
         tags: '',
+        project_type: '',
     });
+    const [services, setServices] = useState<string[]>([]);
+
+    const AVAILABLE_SERVICES = [
+        "Product Discovery & Strategy",
+        "UI/UX Design",
+        "Web Development",
+        "Mobile Development",
+        "Backend Engineering",
+        "Cloud & DevOps",
+        "QA & Testing",
+        "AI & Machine Learning Integration",
+        "Staff Augmentation",
+        "Outsourcing"
+    ];
+
+    const PROJECT_TYPES = [
+        "Web App",
+        "Mobile App",
+        "Full-Stack Platform",
+        "MVP",
+        "AI Solution"
+    ];
     const [metrics, setMetrics] = useState<Array<{ label: string, value: string }>>([
         { label: 'ROI', value: '' },
         { label: 'Velocity', value: '' }
@@ -61,6 +84,12 @@ export default function NewCasePage() {
         }
     };
 
+    const toggleService = (service: string) => {
+        setServices(prev =>
+            prev.includes(service) ? prev.filter(s => s !== service) : [...prev, service]
+        );
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -90,6 +119,7 @@ export default function NewCasePage() {
 
             const dataToInsert = {
                 ...formData,
+                services,
                 results_metrics: metrics.filter(m => m.label && m.value),
                 image_url: finalImageUrl,
                 tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean)
@@ -180,16 +210,51 @@ export default function NewCasePage() {
                                 <option value="SaaS / Enterprise Software">SaaS / Enterprise Software</option>
                             </select>
                         </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">Tags (comma separated)</label>
+                            <label className="text-sm font-semibold text-gray-700">Project Type</label>
+                            <select
+                                name="project_type"
+                                value={formData.project_type}
+                                onChange={handleChange as any}
+                                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm bg-white"
+                            >
+                                <option value="">Select a project type...</option>
+                                {PROJECT_TYPES.map(type => (
+                                    <option key={type} value={type}>{type}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Tech Stack (comma separated)</label>
                             <input
                                 type="text"
                                 name="tags"
                                 value={formData.tags}
                                 onChange={handleChange}
-                                placeholder="e.g. React, Next.js, AI"
+                                placeholder="e.g. React, Node.js, Python, AWS"
                                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all shadow-sm"
                             />
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                        <label className="text-sm font-semibold text-gray-700">Services Provided</label>
+                        <div className="flex flex-wrap gap-2">
+                            {AVAILABLE_SERVICES.map(service => {
+                                const isSelected = services.includes(service);
+                                return (
+                                    <button
+                                        type="button"
+                                        key={service}
+                                        onClick={() => toggleService(service)}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold font-outfit uppercase tracking-wider transition-all shadow-sm border ${isSelected ? 'bg-brand border-brand text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-brand/40 hover:bg-gray-50'}`}
+                                    >
+                                        {service}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 

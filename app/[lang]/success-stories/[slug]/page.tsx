@@ -182,14 +182,34 @@ export default async function CaseStudyDetailPage({ params }: Props) {
                                 <FolderKanban size={14} className="text-brand" />
                                 <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest font-outfit">Project Type</span>
                             </div>
-                            <span className="text-sm font-bold text-zinc-900 font-outfit truncate">{caseStudy.tags?.[0] || 'Software Development'}</span>
+                            <span className="text-sm font-bold text-zinc-900 font-outfit truncate">{caseStudy.project_type || 'Software Development'}</span>
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <div className="flex items-center gap-2 mb-1">
                                 <Wrench size={14} className="text-brand" />
                                 <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest font-outfit">Services</span>
                             </div>
-                            <span className="text-sm font-bold text-zinc-900 font-outfit truncate">{isEn ? 'Engineering Squad' : 'Desarrollo a Medida'}</span>
+                            <div className="flex flex-wrap gap-x-2 gap-y-1">
+                                {(caseStudy.services && Array.isArray(caseStudy.services) && caseStudy.services.length > 0) ? (
+                                    caseStudy.services.map((srv: string, i: number) => {
+                                        const isSpecial = srv === 'Staff Augmentation' || srv === 'Outsourcing';
+                                        return (
+                                            <span
+                                                key={i}
+                                                className={`text-sm font-bold font-outfit flex items-center gap-1 ${isSpecial ? 'text-brand' : 'text-zinc-900'}`}
+                                            >
+                                                {isSpecial && <span className="text-[10px]">✺</span>}
+                                                {srv}
+                                                {i < caseStudy.services.length - 1 && <span className="text-zinc-300 ml-1 font-normal">,</span>}
+                                            </span>
+                                        );
+                                    })
+                                ) : (
+                                    <span className="text-sm font-bold text-zinc-900 font-outfit truncate">
+                                        {isEn ? 'Engineering Squad' : 'Desarrollo a Medida'}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
 
