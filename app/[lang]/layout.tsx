@@ -9,10 +9,26 @@ const outfit = Outfit({
   weight: ['300', '400', '500', '600', '700', '800', '900']
 });
 
-export const metadata: Metadata = {
-  title: "Dibrand | Software Development & Staff Augmentation",
-  description: "Dibrand is a software development and staff augmentation company helping startups build digital products.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const isEs = lang === 'es';
+
+  return {
+    title: isEs
+      ? "Dibrand | Desarrollo de Software y Staff Augmentation"
+      : "Dibrand | Software Development & Staff Augmentation",
+    description: isEs
+      ? "Dibrand es una empresa de desarrollo de software y staff augmentation que ayuda a startups a construir productos digitales de alto impacto."
+      : "Dibrand is a software development and staff augmentation company helping startups build digital products.",
+    alternates: {
+      canonical: `https://dibrand.co/${lang}`,
+      languages: {
+        'en': 'https://dibrand.co/en',
+        'es': 'https://dibrand.co/es',
+      },
+    },
+  };
+}
 
 export async function generateStaticParams() {
   return [{ lang: 'en' }, { lang: 'es' }]

@@ -14,6 +14,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/en/success-stories',
         '/es/staff-augmentation',
         '/en/staff-augmentation',
+        '/es/about',
+        '/en/about',
+        '/es/comparativa/dibrand-vs-outsourcing-tradicional',
+        '/en/comparativa/dibrand-vs-outsourcing-tradicional',
+        '/es/pricing-models/costos-desarrollo-software-2026',
+        '/en/pricing-models/software-development-cost-2026',
+        '/es/ai-index',
+        '/en/ai-index',
     ];
 
     const sitemapEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({

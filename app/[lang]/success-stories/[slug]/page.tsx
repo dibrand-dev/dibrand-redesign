@@ -39,7 +39,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
         title: caseStudy ? `${caseStudy.title} | Dibrand Success Stories` : 'Success Story | Dibrand',
         description: caseStudy?.summary || 'Explore our high-impact engineering case studies.',
-        keywords: resolvedTags.join(', ')
+        keywords: resolvedTags.join(', '),
+        alternates: {
+            canonical: `https://dibrand.co/${lang}/success-stories/${slug}`,
+            languages: {
+                'en': `https://dibrand.co/en/success-stories/${slug}`,
+                'es': `https://dibrand.co/es/success-stories/${slug}`,
+            },
+        }
     };
 }
 

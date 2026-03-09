@@ -67,7 +67,9 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
     "name": "Dibrand",
     "url": "https://dibrand.co",
     "foundingDate": "2017",
-    "description": "Boutique de ingeniería de software y staff augmentation especializada en startups y productos digitales de alto rendimiento.",
+    "description": params.lang === 'es'
+      ? "Boutique de ingeniería de software y staff augmentation especializada en startups y productos digitales de alto rendimiento."
+      : "Software engineering boutique and staff augmentation specialized in startups and high-performance digital products.",
     "logo": "https://dibrand.co/logo.png",
     "sameAs": [
       "https://www.linkedin.com/company/dibrand/",

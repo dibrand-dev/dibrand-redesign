@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { CONTACT_CALENDAR_URL } from '@/lib/constants';
@@ -29,6 +30,21 @@ interface NavbarProps {
 export default function Navbar({ dict, lang }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const pathname = usePathname();
+    const router = useRouter();
+
+    const switchLanguage = (newLang: 'en' | 'es') => {
+        // 1. Set cookie for persistence
+        document.cookie = `NEXT_LOCALE=${newLang};path=/;max-age=31536000;SameSite=Lax`;
+
+        // 2. Redirect to the same path but with new language
+        const pathSegments = pathname.split('/');
+        pathSegments[1] = newLang;
+        const newPath = pathSegments.join('/') || `/${newLang}`;
+
+        router.push(newPath);
+        setIsOpen(false);
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -128,6 +144,28 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                                     {link.name}
                                 </Link>
                             ))}
+
+                            {/* Language Switcher */}
+                            <div className="flex gap-6 pt-12 border-t border-white/10 mt-6 md:mt-10">
+                                <button
+                                    onClick={() => switchLanguage('en')}
+                                    className={clsx(
+                                        "text-2xl font-bold transition-all",
+                                        lang === 'en' ? "text-brand" : "text-white/40 hover:text-white"
+                                    )}
+                                >
+                                    English
+                                </button>
+                                <button
+                                    onClick={() => switchLanguage('es')}
+                                    className={clsx(
+                                        "text-2xl font-bold transition-all",
+                                        lang === 'es' ? "text-brand" : "text-white/40 hover:text-white"
+                                    )}
+                                >
+                                    Español
+                                </button>
+                            </div>
                         </div>
 
                         {/* Right Column: B2B Conversion Panel */}

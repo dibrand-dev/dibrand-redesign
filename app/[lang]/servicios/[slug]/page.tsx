@@ -24,7 +24,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         description: service.definition[lang],
         keywords: service.keywords.join(', '),
         alternates: {
-            canonical: `/${lang}/servicios/${slug}`,
+            canonical: `https://dibrand.co/${lang}/servicios/${slug}`,
+            languages: {
+                'en': `https://dibrand.co/en/servicios/${slug}`,
+                'es': `https://dibrand.co/es/servicios/${slug}`,
+            },
         }
     };
 }
