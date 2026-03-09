@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { match } from '@formatjs/intl-localematcher'
+import { match as matchLocale } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 
@@ -8,29 +8,33 @@ const locales = ['en', 'es']
 const defaultLocale = 'en'
 
 function getLocale(request: NextRequest): string {
-    // 1. Obtener los idiomas preferidos del navegador
+    // 1. Preferencia por COOKIE (Persistencia manual)
+    const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value;
+    if (cookieLocale && locales.includes(cookieLocale)) {
+        return cookieLocale;
+    }
+
+    // 2. Detección por HEADERS (Preferencia del navegador)
     const negotiatorHeaders: Record<string, string> = {}
     request.headers.forEach((value, key) => (negotiatorHeaders[key] = value))
 
     const languages = new Negotiator({ headers: negotiatorHeaders }).languages()
 
-    // 2. REGLA DE ORO: Si alguno de los idiomas preferidos empieza con 'es', retornamos 'es'.
-    // Esto cubre es, es-AR, es-MX, es-ES, etc.
-    const isSpanish = languages.some(lang => lang.startsWith('es'));
+    // REGLA: Si algún idioma empieza por 'es', es Español.
+    const isSpanish = languages.some(lang => lang.toLowerCase().startsWith('es'));
 
     if (isSpanish) {
         return 'es';
     }
 
-    // 3. Para CUALQUIER otro caso (en, fr, pt, de, o sin headers), retornamos SIEMPRE 'en'.
-    return 'en';
+    // Fallback: Inglés para todo lo demás
+    return defaultLocale;
 }
 
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl
-    console.log(`[Proxy] Path: ${pathname}`);
 
-    // EXCLUDE STATIC ASSETS AND INTERNAL PATHS FROM ALL MIDDLEWARE
+    // EXCLUDE STATIC ASSETS AND INTERNAL PATHS
     if (
         pathname.startsWith('/_next') ||
         pathname.startsWith('/api') ||
@@ -58,52 +62,29 @@ export async function proxy(request: NextRequest) {
                         return request.cookies.get(name)?.value
                     },
                     set(name: string, value: string, options: CookieOptions) {
-                        request.cookies.set({
-                            name,
-                            value,
-                            ...options,
-                        })
+                        request.cookies.set({ name, value, ...options })
                         response = NextResponse.next({
-                            request: {
-                                headers: request.headers,
-                            },
+                            request: { headers: request.headers },
                         })
-                        response.cookies.set({
-                            name,
-                            value,
-                            ...options,
-                        })
+                        response.cookies.set({ name, value, ...options })
                     },
                     remove(name: string, options: CookieOptions) {
-                        request.cookies.set({
-                            name,
-                            value: '',
-                            ...options,
-                        })
+                        request.cookies.set({ name, value: '', ...options })
                         response = NextResponse.next({
-                            request: {
-                                headers: request.headers,
-                            },
+                            request: { headers: request.headers },
                         })
-                        response.cookies.set({
-                            name,
-                            value: '',
-                            ...options,
-                        })
+                        response.cookies.set({ name, value: '', ...options })
                     },
                 },
             }
         )
 
-        // Official strategy: getUser() is the only safe way to verify session in middleware
         const { data: { user } } = await supabase.auth.getUser()
 
-        // Redirect to login if not authenticated and not already on the login page
         if (!user && pathname !== '/admin/login') {
             return NextResponse.redirect(new URL('/admin/login', request.url))
         }
 
-        // Redirect to panel if already authenticated and trying to access the login page
         if (user && pathname === '/admin/login') {
             return NextResponse.redirect(new URL('/admin/candidates', request.url))
         }
@@ -112,29 +93,20 @@ export async function proxy(request: NextRequest) {
     }
 
     // 2. LOCALE REDIRECTION (For non-admin routes)
-    const pathnameHasLocale = locales.some(
-        (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-    )
+    const pathnameIsMissingLocale = locales.every(
+        (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+    );
 
-    if (pathnameHasLocale) return response
+    if (pathnameIsMissingLocale) {
+        const locale = getLocale(request);
+        const url = request.nextUrl.clone();
+        url.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
+        return NextResponse.redirect(url);
+    }
 
-    // Redirect if there is no locale
-    const locale = getLocale(request)
-    const url = request.nextUrl.clone()
-    url.pathname = `/${locale}${pathname}`
-    return NextResponse.redirect(url)
+    return response;
 }
 
 export const config = {
-    matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * - logo.png
-         * - api
-         */
-        '/((?!_next/static|_next/image|favicon.ico|logo.png|api).*)',
-    ],
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico|oficina-dibrand.png|logo_dibrand.svg|logo.png|.*\\.png|.*\\.svg).*)'],
 }
