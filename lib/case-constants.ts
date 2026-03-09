@@ -29,6 +29,7 @@ export const CASE_PROJECT_TYPES = [
     "Full-Stack Platform",
     "Mobile App",
     "MVP",
+    "Staff Augmentation",
     "Web App"
 ];
 

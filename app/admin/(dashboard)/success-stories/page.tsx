@@ -16,7 +16,8 @@ const TYPE_LABELS: Record<string, string> = {
     migracion: 'Migración', otro: 'Otro',
     'Branding & Identity': 'Branding & Identity',
     'E-commerce Platform': 'E-commerce Platform',
-    '3D Animation & Motion Graphics': '3D Animation & Motion Graphics'
+    '3D Animation & Motion Graphics': '3D Animation & Motion Graphics',
+    'Staff Augmentation': 'Staff Augmentation'
 };
 
 // Server actions for toggle/delete (inline form actions)
