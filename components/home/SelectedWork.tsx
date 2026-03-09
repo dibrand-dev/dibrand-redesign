@@ -33,7 +33,7 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8"
+                    className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8"
                 >
                     <div>
                         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black font-outfit text-zinc-900 tracking-tighter leading-none not-italic">
