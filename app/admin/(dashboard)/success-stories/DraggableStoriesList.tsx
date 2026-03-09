@@ -114,8 +114,8 @@ export default function DraggableStoriesList({
                                     {typeLabels[story.project_type] ?? story.project_type ?? '—'}
                                 </span>
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-400">
-                                {new Date(story.created_at).toLocaleDateString()}
+                            <td className="px-6 py-4 text-sm text-gray-400" suppressHydrationWarning>
+                                {new Date(story.created_at).toLocaleDateString('en-GB')}
                             </td>
                             <td className="px-6 py-4 text-right">
                                 <div className="flex justify-end items-center gap-1">
