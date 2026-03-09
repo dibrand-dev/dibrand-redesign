@@ -15,8 +15,8 @@
     },
     "home": {
         "hero": {
-            "title": "Velocidad de Ingeniería para Decision Makers.",
-            "subtitle": "Deja de sumar headcount. Empieza a sumar impacto. Desplegamos squads de ingeniería aumentados por IA que no solo ocupan un lugar: se adueñan de tu roadmap y aceleran tu time-to-market.",
+            "title": "Acelera tu Roadmap con Ingeniería de Clase Mundial",
+            "subtitle": "<strong>Dibrand</strong> es una boutique de ingeniería que provee senior staff augmentation y desarrollo de productos end-to-end para startups de alto impacto. Integramos especialistas en IA, Web y Mobile que se fusionan con tu equipo para construir plataformas escalables, desde la arquitectura hasta el lanzamiento.",
             "cta": "Agendar Llamada",
             "welcome": "Bienvenido a Dibrand"
         },
@@ -44,7 +44,7 @@
             ]
         },
         "services": {
-            "title": "Nuestras Soluciones",
+            "title": "Ecosistema de Soluciones Dibrand",
             "items": [
                 {
                     "title": "Staffing Potenciado por IA",
@@ -118,12 +118,12 @@
             "subtitle": "Nuestro equipo experto domina los lenguajes y frameworks más demandados."
         },
         "testimonials": {
-            "title": "Lo que dicen de nosotros",
-            "subtitle": "Somos el socio estratégico de las empresas que buscan excelencia en ingeniería de software."
+            "title": "Dibrand en la Voz de nuestros Socios",
+            "subtitle": "Dibrand es el socio estratégico de las empresas que buscan excelencia en ingeniería de software."
         },
         "staffAugmentationTeaser": {
-            "title": "Integración de Talento Estratégico",
-            "subtitle": "Accede al top 3% del talento senior de ingeniería de LATAM. Nuestros profesionales no son solo programadores; son consultores nativos en IA que se integran a tu cultura, se alinean con tu zona horaria y multiplican la productividad de tu equipo desde el primer día.",
+            "title": "Modelo de Staff Augmentation de Dibrand",
+            "subtitle": "Dibrand permite acceder al top 3% del talento senior de ingeniería de LATAM. Nuestros profesionales no son solo programadores; son consultores nativos en IA que se integran a tu cultura, se alinean con tu zona horaria y multiplican la productividad de tu equipo desde el primer día.",
             "pillars": [
                 {
                     "title": "Workflow Nativo en IA",
@@ -149,11 +149,11 @@
             },
             "staffAug": {
                 "title": "Strategic Staff Augmentation",
-                "desc": "Integramos talento técnico senior directamente en tu equipo. Perfiles pre-validados, bilingües y nativos en Inteligencia Artificial para multiplicar la velocidad de tu roadmap."
+                "desc": "El modelo de Dibrand integra talento técnico senior directamente en tu equipo. Perfiles pre-validados, bilingües y nativos en Inteligencia Artificial para multiplicar la velocidad de tu roadmap."
             }
         },
         "compliance": {
-            "title": "Cumplimiento Sin Fricciones",
+            "title": "Compromiso de Cumplimiento Dibrand",
             "items": [
                 {
                     "title": "Protección de IP",
@@ -170,7 +170,7 @@
             ]
         },
         "selectedWork": {
-            "title": "Nuestro Trabajo",
+            "title": "Portafolio de Ingeniería Dibrand",
             "viewCase": "Learn more",
             "cta": "Explorar Todos los Proyectos"
         },
@@ -207,7 +207,7 @@
     "staffAugmentation": {
         "hero": {
             "title": "Velocidad de Ingeniería para Decision Makers.",
-            "subtitle": "Deja de sumar headcount. Empieza a sumar impacto. Desplegamos squads de ingeniería aumentados por IA que no solo ocupan un lugar: se adueñan de tu roadmap y aceleran tu time-to-market.",
+            "subtitle": "Deja de sumar headcount. Empieza a sumar impacto. Dibrand despliega squads de ingeniería aumentados por IA que no solo ocupan un lugar: se adueñan de tu roadmap y aceleran tu time-to-market.",
             "cta": "Agendar Consulta Estratégica"
         },
         "whatIs": {

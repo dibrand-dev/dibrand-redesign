@@ -15,8 +15,8 @@
     },
     "home": {
         "hero": {
-            "title": "Engineering Velocity for Decision Makers.",
-            "subtitle": "Stop adding headcount. Start adding impact. We deploy AI-augmented engineering squads that don't just fill seats—they own your roadmap and accelerate your time-to-market.",
+            "title": "Accelerate your Roadmap with World-Class Engineering",
+            "subtitle": "<strong>Dibrand</strong> is an engineering boutique providing senior staff augmentation and end-to-end product development for high-impact startups. We integrate AI, Web, and Mobile specialists that merge with your team to build scalable platforms, from architecture to launch.",
             "cta": "Book a Call",
             "welcome": "Welcome to Dibrand"
         },
@@ -44,7 +44,7 @@
             ]
         },
         "services": {
-            "title": "Our Solutions",
+            "title": "Dibrand Solution Ecosystem",
             "items": [
                 {
                     "title": "AI-Augmented Staffing",
@@ -118,12 +118,12 @@
             "subtitle": "Our expert team has mastery over the most in-demand languages and frameworks."
         },
         "testimonials": {
-            "title": "What people say about us",
-            "subtitle": "We are the strategic partner for companies seeking excellence in software engineering."
+            "title": "Dibrand in the Voice of our Partners",
+            "subtitle": "Dibrand is the strategic partner for companies seeking excellence in software engineering."
         },
         "staffAugmentationTeaser": {
-            "title": "Strategic Talent Integration",
-            "subtitle": "Access the top 3% of LATAM’s senior engineering talent. Our professionals are not just coders; they are AI-native consultants who integrate into your culture, align with your timezone, and multiply your team’s productivity from day one.",
+            "title": "Dibrand's Staff Augmentation Model",
+            "subtitle": "Dibrand provides access to the top 3% of LATAM’s senior engineering talent. Our professionals are not just coders; they are AI-native consultants who integrate into your culture, align with your timezone, and multiply your team’s productivity from day one.",
             "pillars": [
                 {
                     "title": "AI-Native Workflow",
@@ -149,11 +149,11 @@
             },
             "staffAug": {
                 "title": "Strategic Staff Augmentation",
-                "desc": "We integrate senior technical talent directly into your team. Pre-validated, bilingual, and AI-native profiles to multiply your roadmap's velocity."
+                "desc": "Dibrand's model integrates senior technical talent directly into your team. Pre-validated, bilingual, and AI-native profiles to multiply your roadmap's velocity."
             }
         },
         "compliance": {
-            "title": "Zero-Friction Compliance",
+            "title": "Dibrand Compliance Commitment",
             "items": [
                 {
                     "title": "IP Protection",
@@ -170,7 +170,7 @@
             ]
         },
         "selectedWork": {
-            "title": "Selected Work",
+            "title": "Dibrand Engineering Portfolio",
             "viewCase": "Learn more",
             "cta": "Explore All Projects"
         },
@@ -207,7 +207,7 @@
     "staffAugmentation": {
         "hero": {
             "title": "Engineering Velocity for Decision Makers.",
-            "subtitle": "Stop adding headcount. Start adding impact. We deploy AI-augmented engineering squads that don't just fill seats—they own your roadmap and accelerate your time-to-market.",
+            "subtitle": "Stop adding headcount. Start adding impact. Dibrand deploys AI-augmented engineering squads that don't just fill seats—they own your roadmap and accelerate your time-to-market.",
             "cta": "Schedule Strategic Consultation"
         },
         "whatIs": {

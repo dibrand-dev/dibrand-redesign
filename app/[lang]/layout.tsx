@@ -10,8 +10,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Dibrand",
-  description: "Technological partner for startups.",
+  title: "Dibrand | Software Development & Staff Augmentation",
+  description: "Dibrand is a software development and staff augmentation company helping startups build digital products.",
 };
 
 export async function generateStaticParams() {

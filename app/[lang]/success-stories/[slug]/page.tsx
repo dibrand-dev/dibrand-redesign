@@ -180,13 +180,16 @@ export default async function CaseStudyDetailPage({ params }: Props) {
             "@type": "CaseStudy",
             "name": caseStudy.title,
             "description": summary,
-            "image": caseStudy.image_url,
+            "image": heroImage,
             "about": resolvedTags.join(', '),
             "identifier": shareUrl,
             "author": {
                 "@type": "Organization",
                 "name": "Dibrand"
-            }
+            },
+            "client": caseStudy.client_name,
+            "industry": industryDisplay,
+            "techStack": resolvedTags
         };
 
         return (

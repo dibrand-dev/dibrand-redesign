@@ -37,13 +37,14 @@ export default function HeroSection({ dict }: HeroSectionProps) {
 
             {/* Capa 3: Contenido de Texto */}
             <div className="relative z-20 container mx-auto px-4 h-full flex flex-col items-center justify-center text-center">
-                <h1 className="font-outfit text-4xl font-black tracking-tighter text-white sm:text-6xl md:text-7xl lg:text-8xl leading-[1.1] max-w-5xl">
+                <h1 className="font-outfit text-3xl font-black tracking-tighter text-white sm:text-4xl md:text-5xl lg:text-6xl leading-[1.1] max-w-4xl">
                     {dict.hero.title}
                 </h1>
 
-                <p className="mt-8 text-lg md:text-xl leading-relaxed text-white/90 max-w-2xl font-outfit">
-                    {dict.hero.subtitle}
-                </p>
+                <p
+                    className="mt-8 text-lg md:text-xl leading-relaxed text-white/90 max-w-3xl font-outfit"
+                    dangerouslySetInnerHTML={{ __html: dict.hero.subtitle }}
+                />
 
                 <div className="mt-12 flex flex-col items-center gap-10">
                     <ScheduleButton text={dict.hero.cta} />

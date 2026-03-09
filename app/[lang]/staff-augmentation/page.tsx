@@ -32,9 +32,37 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
 
 
     const wayIcons = [Clock, UserCheck, Heart];
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": content.hero.title,
+        "provider": {
+            "@type": "Organization",
+            "name": "Dibrand",
+            "url": "https://dibrand.co"
+        },
+        "description": content.hero.subtitle,
+        "areaServed": "Global",
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Staff Augmentation Services",
+            "itemListElement": content.benefits.items.map((b: any) => ({
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Service",
+                    "name": b.title,
+                    "description": b.desc
+                }
+            }))
+        }
+    };
 
     return (
         <div className="bg-white overflow-x-hidden">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             {/* Hero Section - Compact & Consistent */}
             <section className="relative min-h-[50vh] w-full flex items-center py-16 bg-slate-50 overflow-hidden">
                 <div className="container mx-auto px-6 relative z-10 text-center lg:text-left">

@@ -55,7 +55,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
         { name: dict.navigation.staffAugmentation, href: `/${lang}/staff-augmentation` },
         { name: dict.navigation.portfolio, href: `/${lang}/success-stories` },
         { name: dict.navigation.careers, href: `/${lang}/join-us` },
-        { name: dict.navigation.aboutUs, href: `/${lang}#about` },
+        { name: dict.navigation.aboutUs, href: `/${lang}/about` },
     ];
 
     return (

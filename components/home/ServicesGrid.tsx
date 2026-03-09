@@ -9,6 +9,7 @@ interface ServicesGridProps {
             items: { title: string; desc: string }[];
         };
     };
+    lang: string;
 }
 
 const iconMap = [
@@ -26,7 +27,7 @@ const iconMap = [
     Lock                 // Cybersecurity
 ];
 
-export default function ServicesGrid({ dict }: ServicesGridProps) {
+export default function ServicesGrid({ dict, lang }: ServicesGridProps) {
     return (
         <section className="bg-zinc-800 flex flex-col justify-start pt-24 pb-32" id="services">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,13 +41,21 @@ export default function ServicesGrid({ dict }: ServicesGridProps) {
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {dict.services.items.map((item, index) => {
                         const Icon = iconMap[index] || Rocket;
+
+                        // Mapping to conceptual URLs for AEO
+                        let href = "/services";
+                        if (item.title.includes("Staffing")) href = `/${lang}/servicios/it-staff-augmentation-ingenieria`;
+                        if (item.title.includes("Software Dev")) href = `/${lang}/servicios/desarrollo-mvp-startups-escalables`;
+                        if (item.title.includes("AI Agents")) href = `/${lang}/servicios/agentes-ia-automatizacion-cognitiva`;
+                        if (item.title.includes("Product Strategy")) href = `/${lang}/servicios/estrategia-producto-descubrimiento-tecnico`;
+
                         return (
                             <Link
                                 key={index}
-                                href="/services"
+                                href={href}
                                 className="group flex flex-col justify-between rounded-xl bg-white/5 backdrop-blur-sm p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border border-white/10 hover:border-brand/30"
                             >
-                                <div>
+                                <article>
                                     <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/5 text-brand group-hover:bg-brand group-hover:text-white transition-all duration-300">
                                         <Icon className="h-6 w-6" />
                                     </div>
@@ -56,7 +65,7 @@ export default function ServicesGrid({ dict }: ServicesGridProps) {
                                     <p className="text-sm leading-relaxed text-gray-400 font-outfit">
                                         {item.desc}
                                     </p>
-                                </div>
+                                </article>
 
                                 <div className="mt-6 flex items-center text-xs font-bold uppercase tracking-wider text-gray-400 group-hover:text-brand transition-colors">
                                     <span>Learn More</span>

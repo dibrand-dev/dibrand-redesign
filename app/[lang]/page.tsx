@@ -59,32 +59,68 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
     ? [...rawCases].sort(() => Math.random() - 0.5).slice(0, 4)
     : [];
 
+  // 4. JSON-LD Organization
+  // 4. JSON-LD Organization (Extended Authority)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Dibrand",
+    "url": "https://dibrand.co",
+    "foundingDate": "2017",
+    "description": "Boutique de ingeniería de software y staff augmentation especializada en startups y productos digitales de alto rendimiento.",
+    "logo": "https://dibrand.co/logo.png",
+    "sameAs": [
+      "https://www.linkedin.com/company/dibrand/",
+      "https://github.com/dibrand",
+      "https://twitter.com/dibrand",
+      "https://clutch.co/profile/dibrand"
+    ],
+    "knowsAbout": [
+      "Software Engineering",
+      "IT Staff Augmentation",
+      "MVP Development",
+      "Web & Mobile Applications",
+      "Fintech & Web3 Solutions"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "sales",
+      "email": "hola@dibrand.co"
+    }
+  };
+
   return (
     <>
-      {/* 1. Hero Section (Reinvención del Valor) */}
-      <HeroSection dict={dict.home} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <main>
+        {/* 1. Hero Section (Reinvención del Valor) */}
+        <HeroSection dict={dict.home} />
 
-      {/* 2. Sección Staffing (Strategic Talent Integration) */}
-      <StaffAugmentationTeaser dict={dict.home} />
+        {/* 2. Sección Staffing (Strategic Talent Integration) */}
+        <StaffAugmentationTeaser dict={dict.home} />
 
-      {/* 3. Engineering Excellence (Dual Focus) */}
-      <EngineeringExcellence dict={dict.home} lang={params.lang} />
+        {/* 3. Engineering Excellence (Dual Focus) */}
+        <EngineeringExcellence dict={dict.home} lang={params.lang} />
 
-      {/* 4. Selected Work (Dynamic Portfolio Engine) */}
-      <SelectedWork dict={dict.home} lang={params.lang} cases={topCases} />
+        {/* 4. Selected Work (Dynamic Portfolio Engine) */}
+        <SelectedWork dict={dict.home} lang={params.lang} cases={topCases} />
 
-      {/* 5. Solutions / Services Grid */}
-      <ServicesGrid dict={dict.home} />
+        {/* 5. Solutions / Services Grid */}
+        <ServicesGrid dict={dict.home} lang={params.lang} />
 
-      {/* 6. Compliance (Zero-Friction) */}
-      <ComplianceSection dict={dict.home} />
+        {/* 6. Compliance (Zero-Friction) */}
+        <ComplianceSection dict={dict.home} />
 
-      {/* 7. Brands & Tech Stack */}
-      <TrustedBySection brands={brands || []} dict={dict.home} />
-      <TechStack dict={dict.home} />
+        {/* 7. Brands & Tech Stack */}
+        <TrustedBySection brands={brands || []} dict={dict.home} />
+        <TechStack dict={dict.home} />
 
-      {/* 8. Testimonials (Individual Social Proof) */}
-      <TestimonialsSection testimonials={testimonials || []} dict={dict.home} lang={params.lang} />
+        {/* 8. Testimonials (Individual Social Proof) */}
+        <TestimonialsSection testimonials={testimonials || []} dict={dict.home} lang={params.lang} />
+      </main>
 
       {/* Footer */}
       <Footer dict={dict} lang={params.lang} />
