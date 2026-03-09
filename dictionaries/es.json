@@ -171,12 +171,12 @@
         },
         "selectedWork": {
             "title": "Nuestro Trabajo",
-            "viewCase": "Ver Caso de Estudio →",
+            "viewCase": "Learn more",
             "cta": "Explorar Todos los Proyectos"
         },
         "caseDetail": {
             "challenge": "El Desafío",
-            "solution": "Solución Aumentada por IA",
+            "solution": "Solución",
             "impact": "Resultados e Impacto",
             "resultsDescription": "Impacto de Negocio",
             "metrics": "Métricas Clave",

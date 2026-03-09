@@ -1,9 +1,10 @@
 'use server'
 
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 export async function getStacks() {
+    noStore();
     const { data, error } = await supabase
         .from('tech_stacks')
         .select('*')
@@ -15,14 +16,30 @@ export async function getStacks() {
 
 export async function createStack(formData: FormData) {
     const name = formData.get('name') as string;
-    const icon_url = formData.get('icon_url') as string;
+    const rawIconUrl = formData.get('icon_url') as string;
 
-    const { error } = await supabase
-        .from('tech_stacks')
-        .insert([{ name, icon_url }]);
+    if (!name) throw new Error('El nombre es obligatorio');
 
-    if (error) throw error;
-    revalidatePath('/admin/stacks');
+    try {
+        const insertData: any = { name: name.trim() };
+        if (rawIconUrl?.trim()) {
+            insertData.icon_url = rawIconUrl.trim();
+        }
+
+        const { error } = await supabase
+            .from('tech_stacks')
+            .insert([insertData]);
+
+        if (error) {
+            console.error('Database error creating stack:', error);
+            throw new Error(`Error de base de datos: ${error.message}`);
+        }
+    } catch (err: any) {
+        console.error('Server action error creating stack:', err);
+        throw err;
+    }
+
+    revalidatePath('/admin', 'layout');
 }
 
 export async function deleteStack(id: string) {
@@ -32,5 +49,5 @@ export async function deleteStack(id: string) {
         .eq('id', id);
 
     if (error) throw error;
-    revalidatePath('/admin/stacks');
+    revalidatePath('/admin', 'layout');
 }

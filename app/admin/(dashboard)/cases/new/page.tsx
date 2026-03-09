@@ -8,7 +8,8 @@ import Link from 'next/link';
 import { createCaseStudy } from '@/app/actions/cases';
 import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
-import { CASE_SERVICES, CASE_TECH_STACK, CASE_PROJECT_TYPES, CASE_INDUSTRIES, cleanOldServiceName } from '@/lib/case-constants';
+import { CASE_SERVICES, CASE_PROJECT_TYPES, CASE_INDUSTRIES, cleanOldServiceName } from '@/lib/case-constants';
+import { getTechStacks } from '../../success-stories/actions';
 
 export default function NewCasePage() {
     const router = useRouter();
@@ -41,6 +42,11 @@ export default function NewCasePage() {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
+    const [dbStacks, setDbStacks] = useState<any[]>([]);
+
+    React.useEffect(() => {
+        getTechStacks().then(setDbStacks).catch(console.error);
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target as any;
@@ -230,19 +236,22 @@ export default function NewCasePage() {
                         <div className="space-y-3 col-span-full">
                             <label className="text-sm font-semibold text-gray-700">Tech Stack (Tags)</label>
                             <div className="flex flex-wrap gap-2 p-4 border border-gray-100 rounded-2xl bg-gray-50/30">
-                                {CASE_TECH_STACK.map(tech => {
-                                    const isSelected = selectedTech.includes(tech);
+                                {(dbStacks.length > 0 ? dbStacks : []).map(stack => {
+                                    const tech = typeof stack === 'string' ? stack : stack.name;
+                                    const techId = typeof stack === 'string' ? stack : stack.id;
+                                    const isSelected = selectedTech.includes(techId) || selectedTech.includes(tech);
                                     return (
                                         <button
                                             type="button"
-                                            key={tech}
-                                            onClick={() => toggleTech(tech)}
+                                            key={techId}
+                                            onClick={() => toggleTech(techId)}
                                             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isSelected ? 'bg-zinc-900 border-zinc-900 text-white shadow-md' : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'}`}
                                         >
                                             {tech}
                                         </button>
                                     );
                                 })}
+                                {dbStacks.length === 0 && <p className="text-xs text-gray-400 italic">Cargando tecnologías...</p>}
                             </div>
                         </div>
                     </div>

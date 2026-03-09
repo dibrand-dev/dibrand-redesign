@@ -1,3 +1,7 @@
+// 0. Force dynamic rendering for randomness and real-time updates
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { getDictionary } from "@/lib/dictionaries";
 import HeroSection from "@/components/home/HeroSection";
 import ServicesGrid from "@/components/home/ServicesGrid";
@@ -15,6 +19,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
   const params = await props.params;
   const dict = await getDictionary(params.lang);
 
+  // 1. Fetch Testimonials
   const { data: rawTestimonials } = await supabase
     .from('testimonials')
     .select('*')
@@ -31,6 +36,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
     avatar_url: t.client_logo_url
   }));
 
+  // 2. Fetch Brands
   const { data: rawBrands } = await supabase
     .from('brands')
     .select('id, name, logo_url')
@@ -42,12 +48,16 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
     logo_url: b.logo_url
   }));
 
+  // 3. Dynamic Random Case Studies Engine (RESTORED REAL DATA)
   const { data: rawCases } = await supabase
     .from('case_studies')
-    .select('id, slug, title, summary, image_url')
-    .limit(4);
+    .select('id, slug, title, summary, main_image_url:image_url, client_name')
+    .eq('is_published', true);
 
-  const topCases = rawCases || [];
+  // Perform absolute random shuffle on the server and take top 4
+  const topCases = rawCases && rawCases.length > 0
+    ? [...rawCases].sort(() => Math.random() - 0.5).slice(0, 4)
+    : [];
 
   return (
     <>
@@ -60,7 +70,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
       {/* 3. Engineering Excellence (Dual Focus) */}
       <EngineeringExcellence dict={dict.home} lang={params.lang} />
 
-      {/* 4. Selected Work (Mini-Portfolio) */}
+      {/* 4. Selected Work (Dynamic Portfolio Engine) */}
       <SelectedWork dict={dict.home} lang={params.lang} cases={topCases} />
 
       {/* 5. Solutions / Services Grid */}
@@ -70,7 +80,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
       <ComplianceSection dict={dict.home} />
 
       {/* 7. Brands & Tech Stack */}
-      <TrustedBySection brands={brands} dict={dict.home} />
+      <TrustedBySection brands={brands || []} dict={dict.home} />
       <TechStack dict={dict.home} />
 
       {/* 8. Testimonials (Individual Social Proof) */}

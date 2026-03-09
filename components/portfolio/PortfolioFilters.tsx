@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, Filter, X, ArrowRight } from 'lucide-react';
 import { CASE_INDUSTRIES, CASE_SERVICES } from '@/lib/case-constants';
 
 interface CaseStudy {
@@ -114,42 +114,55 @@ export default function PortfolioFilters({ initialCases, lang, dict }: Props) {
                     {lang === 'en' ? 'No projects match your current filters.' : 'No hay proyectos que coincidan con tus filtros.'}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filteredCases.map((caseStudy) => (
                         <Link
                             key={caseStudy.id}
                             href={`/${lang}/success-stories/${caseStudy.slug || caseStudy.id}`}
-                            className="group flex flex-col h-full bg-white rounded-[2.5rem] border border-zinc-100 overflow-hidden hover:border-brand/30 transition-all duration-500"
+                            className="group flex flex-col h-full bg-[#FAFAFA] rounded-[1.25rem] border border-zinc-100/50 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-700 hover:-translate-y-1"
                         >
-                            <div className="relative aspect-[16/10] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
+                            {/* Inner Content - TOP */}
+                            <div className="p-10 pb-8 flex-1 flex flex-col">
+                                <h3 className="text-[22px] font-bold text-zinc-900 mb-2 group-hover:text-brand transition-colors leading-tight font-outfit tracking-tight not-italic border-none">
+                                    {caseStudy.title}
+                                </h3>
+                                <span className="text-[#9B87F5] font-black tracking-widest uppercase text-[10px] mb-5 font-outfit">
+                                    {caseStudy.client_name}
+                                </span>
+                                <p className="text-zinc-500 font-outfit font-light leading-relaxed line-clamp-3 text-[14px]">
+                                    {caseStudy.summary}
+                                </p>
+                            </div>
+
+                            {/* Image Container - BOTTOM: Edge-to-edge */}
+                            <div className="relative aspect-[16/11] overflow-hidden w-full">
                                 <Image
                                     src={caseStudy.image_url || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop'}
                                     alt={caseStudy.title}
                                     fill
-                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 />
-                            </div>
 
-                            <div className="p-10 flex-1 flex flex-col">
-                                <span className="text-brand font-black tracking-widest uppercase text-[10px] mb-4 font-outfit">
-                                    {caseStudy.client_name}
-                                </span>
-                                <h3 className="text-2xl font-black text-zinc-900 mb-6 group-hover:text-brand transition-colors leading-tight font-outfit tracking-tight">
-                                    {caseStudy.title}
-                                </h3>
-                                <p className="text-zinc-500 font-outfit font-light leading-relaxed mb-10 flex-1 line-clamp-3">
-                                    {caseStudy.summary}
-                                </p>
+                                {/* Overlay gradient */}
+                                <div className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors duration-500" />
 
-                                <div className="flex flex-wrap gap-2 pt-6 border-t border-zinc-50">
-                                    {caseStudy.tags && caseStudy.tags.slice(0, 3).map((tag, index) => (
-                                        <span
-                                            key={index}
-                                            className="px-4 py-1.5 bg-zinc-50 text-zinc-400 text-[10px] font-bold rounded-full border border-zinc-100 font-outfit"
-                                        >
-                                            {tag}
-                                        </span>
-                                    ))}
+                                {/* Centered 'Learn more' button - Centered per reference instruction */}
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 scale-95 group-hover:scale-100">
+                                    <div className="flex items-center gap-3 px-8 py-3 bg-white/10 backdrop-blur-md border border-white/40 text-white rounded-full text-[12px] font-bold font-outfit uppercase tracking-widest shadow-2xl">
+                                        <span>{lang === 'en' ? 'Learn more' : 'Ver más'}</span>
+                                        <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
+                                            <ArrowRight size={12} className="text-white" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Persistent button indicator (Subtle) */}
+                                <div className="absolute bottom-6 right-8 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
+                                    <div className="flex items-center gap-2 px-5 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-full text-[10px] font-bold font-outfit uppercase tracking-widest">
+                                        <span className="opacity-80">{lang === 'en' ? 'Learn more' : 'Ver más'}</span>
+                                        <ArrowRight size={10} className="opacity-80" />
+                                    </div>
                                 </div>
                             </div>
                         </Link>

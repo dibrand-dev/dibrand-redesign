@@ -1,7 +1,7 @@
 'use server';
 
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function getSuccessStories() {
@@ -52,40 +52,34 @@ async function syncToCaseStudies(payload: {
     const slug = payload.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const tags = await resolveStackNames(payload.stack_ids);
 
-    const caseData: any = {
+    const metadata = JSON.stringify({
+        project_type: payload.project_type,
+        services: payload.services
+    });
+
+    // Construimos el objeto base que siempre existe
+    const baseData = {
         title: payload.title,
         client_name: payload.client_company,
         summary: payload.executive_summary,
         image_url: payload.hero_image_url,
         industry: payload.industry,
-        project_type: payload.project_type,
-        services: payload.services,
         slug,
         challenge: payload.problem_text,
         solution: payload.solution_text,
         outcome_impact: payload.result_text,
         tags,
         is_published: true,
-        // Almacenar metadata extra para retrocompatibilidad
-        results_metrics: [
-            {
-                label: '__METADATA__', value: JSON.stringify({
-                    project_type: payload.project_type,
-                    services: payload.services
-                })
-            }
-        ]
+        results_metrics: [{ label: '__METADATA__', value: metadata }]
     };
 
-    // Try to upsert:
-    // 1. Try by Slug (legacy/standard)
+    // Buscamos si ya existe el registro (por slug o por cliente para evitar duplicados)
     let { data: existing } = await supabase
         .from('case_studies')
         .select('id')
         .ilike('slug', slug)
         .maybeSingle();
 
-    // 2. If not found, try by client_name (to avoid duplicates when title changes)
     if (!existing) {
         const { data: byClient } = await supabase
             .from('case_studies')
@@ -95,15 +89,25 @@ async function syncToCaseStudies(payload: {
         existing = byClient;
     }
 
-    if (existing) {
-        await supabase
-            .from('case_studies')
-            .update(caseData)
-            .eq('id', existing.id);
-    } else {
-        await supabase
-            .from('case_studies')
-            .insert([caseData]);
+    try {
+        // Intento 1: Con las columnas nuevas (project_type, services)
+        const fullData = { ...baseData, project_type: payload.project_type, services: payload.services };
+        if (existing) {
+            const { error } = await supabase.from('case_studies').update(fullData).eq('id', existing.id);
+            if (error) throw error;
+        } else {
+            const { error } = await supabase.from('case_studies').insert([fullData]);
+            if (error) throw error;
+        }
+    } catch (err: any) {
+        // Fallback: Si falló (probablemente por columnas faltantes), intentamos solo con el baseData
+        // que guarda la info en results_metrics
+        if (existing) {
+            await supabase.from('case_studies').update(baseData).eq('id', existing.id);
+        } else {
+            await supabase.from('case_studies').insert([baseData]);
+        }
+        console.warn('Sync fallback used: new columns might be missing in DB.');
     }
 
     // Revalidate frontend routes
@@ -192,6 +196,7 @@ export async function deleteSuccessStory(id: string) {
 }
 
 export async function getTechStacks() {
+    noStore();
     const { data, error } = await supabase
         .from('tech_stacks')
         .select('id, name')

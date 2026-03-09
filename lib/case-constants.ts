@@ -1,14 +1,17 @@
 export const CASE_SERVICES = [
-    "Product Discovery & Strategy",
-    "UI/UX Design",
-    "Web Development",
-    "Mobile Development",
+    "3D Design & Modeling",
+    "AI & Machine Learning Integration",
+    "Art Direction",
     "Backend Engineering",
     "Cloud & DevOps",
+    "Mobile Development",
+    "Motion Graphics",
+    "Outsourcing",
+    "Product Discovery & Strategy",
     "QA & Testing",
-    "AI & Machine Learning Integration",
     "Staff Augmentation",
-    "Outsourcing"
+    "UI/UX Design",
+    "Web Development"
 ];
 
 export const CASE_TECH_STACK = [
@@ -18,23 +21,28 @@ export const CASE_TECH_STACK = [
 ];
 
 export const CASE_PROJECT_TYPES = [
-    "Web App",
-    "Mobile App",
+    "3D Animation & Motion Graphics",
+    "AI Solution",
+    "Branding & Identity",
+    "E-commerce Platform",
     "Full-Stack Platform",
+    "Mobile App",
     "MVP",
-    "AI Solution"
+    "Web App"
 ];
 
 export const CASE_INDUSTRIES = [
-    { value: 'Media', label: 'Media & Entertainment' },
-    { value: 'Fintech', label: 'Fintech' },
     { value: 'Ecommerce', label: 'E-commerce & Retail' },
-    { value: 'Healthcare', label: 'Healthcare' },
     { value: 'EdTech', label: 'EdTech' },
+    { value: 'Fintech', label: 'Fintech' },
+    { value: 'FoodBeverage', label: 'Food & Beverage' },
+    { value: 'Gov', label: 'Gov' },
+    { value: 'Healthcare', label: 'Healthcare' },
     { value: 'Logistics', label: 'Logistics & Supply Chain' },
+    { value: 'Media', label: 'Media & Entertainment' },
     { value: 'Real Estate', label: 'Real Estate' },
     { value: 'SaaS', label: 'SaaS / Enterprise Software' },
-    { value: 'Gov', label: 'Gov' }
+    { value: 'SportsRetail', label: 'Sports & Retail' }
 ];
 
 export const MAP_OLD_INDUSTRY: Record<string, string> = {

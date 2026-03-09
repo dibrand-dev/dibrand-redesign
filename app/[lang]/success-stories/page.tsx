@@ -7,6 +7,8 @@ import { TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import PortfolioFilters from '@/components/portfolio/PortfolioFilters';
 import { MAP_OLD_INDUSTRY } from '@/lib/case-constants';
+import { Calendar } from 'lucide-react';
+import ScheduleButton from '@/components/ui/ScheduleButton';
 
 interface CaseStudy {
     id: string;
@@ -29,11 +31,21 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
     const supabase = createAdminClient();
     const isEn = params.lang === 'en';
 
-    const { data: rawCases, error } = await supabase
-        .from('case_studies')
-        .select('*')
-        .eq('is_published', true)
-        .order('created_at', { ascending: false });
+    const [{ data: rawCases }, { data: stacks }] = await Promise.all([
+        supabase
+            .from('case_studies')
+            .select('*')
+            .eq('is_published', true)
+            .order('created_at', { ascending: false }),
+        supabase
+            .from('tech_stacks')
+            .select('id, name')
+    ]);
+
+    const stackMap: Record<string, string> = {};
+    (stacks || []).forEach(s => {
+        stackMap[s.id] = s.name;
+    });
 
 
 
@@ -54,7 +66,10 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
         const rawIndustry = c.industry || '';
         const industry = MAP_OLD_INDUSTRY[rawIndustry] || rawIndustry;
 
-        return { ...c, services, industry };
+        // Resolve tag IDs to names
+        const resolvedTags = (c.tags || []).map((tag: string) => stackMap[tag] || tag);
+
+        return { ...c, services, industry, tags: resolvedTags };
     });
 
     return (
@@ -84,24 +99,34 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
 
                     {/* Global CTA Section */}
                     <footer className="mt-32">
-                        <div className="bg-zinc-900 rounded-[4rem] p-12 lg:p-24 text-center relative overflow-hidden text-white border border-white/5">
-                            <div className="absolute top-0 right-0 w-96 h-96 bg-brand/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-                            <div className="relative z-10 space-y-8">
-                                <h2 className="text-4xl lg:text-7xl font-black font-outfit tracking-tighter leading-none">
-                                    {isEn ? 'Ready to Scale?' : '¿Listo para Escalar?'}
+                        <div className="relative rounded-[3rem] overflow-hidden min-h-[600px] flex items-center p-8 md:p-24 group">
+                            {/* Background Image with Overlay */}
+                            <div className="absolute inset-0 z-0">
+                                <Image
+                                    src="/consultation_cta_bg.png"
+                                    alt="Consultation Background"
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-[2s]"
+                                />
+                                {/* Brand Overlay - #a04c97 at 20% + Dark Base */}
+                                <div className="absolute inset-0 bg-zinc-950/40" />
+                                <div className="absolute inset-0 bg-[#a04c97]/15" />
+                            </div>
+
+                            <div className="relative z-10 max-w-3xl space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
+                                <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold font-outfit tracking-tighter leading-[1.1] text-white">
+                                    {isEn ? 'Ready to build your own success story?' : '¿Listo para construir tu propia historia de éxito?'}
                                 </h2>
-                                <p className="text-zinc-400 text-xl lg:text-2xl font-outfit font-light max-w-2xl mx-auto leading-relaxed">
+                                <p className="text-zinc-200 text-lg md:text-2xl font-outfit font-light leading-relaxed max-w-2xl">
                                     {isEn
-                                        ? 'Integrate an AI-augmented squad and transform your roadmap into velocity.'
-                                        : 'Integra un squad aumentado por IA y transforma tu roadmap en velocidad.'}
+                                        ? "Let's transform your technical challenges into a competitive advantage with our senior engineering team."
+                                        : 'Transformemos tus desafíos técnicos en una ventaja competitiva con nuestro equipo de ingeniería senior.'}
                                 </p>
                                 <div className="pt-8">
-                                    <Link
-                                        href={`/${params.lang}/contact`}
-                                        className="inline-block px-12 py-6 bg-brand text-white rounded-2xl font-black font-outfit tracking-tight hover:scale-105 transition-all uppercase text-sm not-italic shadow-xl shadow-brand/20"
-                                    >
-                                        {isEn ? 'Start Your Project' : 'Iniciar tu Proyecto'}
-                                    </Link>
+                                    <ScheduleButton
+                                        text={isEn ? 'Book an Appointment' : 'Agendar una Cita'}
+                                        className="!bg-white/10 !backdrop-blur-md !border !border-white/30 !text-white hover:!bg-[#a04c97] hover:!border-transparent hover:!scale-105 transition-all duration-300 shadow-2xl px-12 py-6 text-lg"
+                                    />
                                 </div>
                             </div>
                         </div>

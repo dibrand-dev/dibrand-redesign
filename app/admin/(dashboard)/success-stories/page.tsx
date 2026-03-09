@@ -7,10 +7,15 @@ import { revalidatePath } from 'next/cache';
 const INDUSTRY_LABELS: Record<string, string> = {
     media: 'Media', fintech: 'Fintech', ecommerce: 'E-commerce',
     gov: 'Gov', saas: 'SaaS', healthcare: 'Healthcare',
+    FoodBeverage: 'Food & Beverage', 'Food & Beverage': 'Food & Beverage',
+    SportsRetail: 'Sports & Retail', 'Sports & Retail': 'Sports & Retail'
 };
 const TYPE_LABELS: Record<string, string> = {
     webapp: 'Web App', mobileapp: 'Mobile App', plataforma: 'Plataforma',
     migracion: 'Migración', otro: 'Otro',
+    'Branding & Identity': 'Branding & Identity',
+    'E-commerce Platform': 'E-commerce Platform',
+    '3D Animation & Motion Graphics': '3D Animation & Motion Graphics'
 };
 
 // Server actions for toggle/delete (inline form actions)

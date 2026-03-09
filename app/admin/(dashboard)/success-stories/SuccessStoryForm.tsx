@@ -7,7 +7,7 @@ import { ArrowLeft, UploadCloud, X, Loader2, Save } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
 import { createSuccessStory, updateSuccessStory } from './actions';
 
-import { CASE_SERVICES, CASE_TECH_STACK, CASE_PROJECT_TYPES, CASE_INDUSTRIES, MAP_OLD_PROJECT_TYPE, MAP_OLD_INDUSTRY } from '@/lib/case-constants';
+import { CASE_SERVICES, CASE_PROJECT_TYPES, CASE_INDUSTRIES, MAP_OLD_PROJECT_TYPE, MAP_OLD_INDUSTRY } from '@/lib/case-constants';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Stack { id: string; name: string; }
@@ -291,26 +291,36 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
                     <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-4">
                         <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Tech Stack</h3>
                         <div className="flex flex-wrap gap-2">
-                            {CASE_TECH_STACK.map(tech => {
-                                // Buscamos si existe un ID para este nombre en la lista de stacks del servidor
-                                const stackObj = stacks.find(s => s.name.toLowerCase() === tech.toLowerCase());
-                                const identifier = stackObj ? stackObj.id : tech;
-
-                                const active = stackIds.includes(identifier);
-                                return (
-                                    <button
-                                        key={tech}
-                                        type="button"
-                                        onClick={() => setStackIds(prev => prev.includes(identifier) ? prev.filter(t => t !== identifier) : [...prev, identifier])}
-                                        className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${active
-                                            ? 'bg-brand border-brand text-white shadow-md'
-                                            : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-brand/30'
-                                            }`}
-                                    >
-                                        {tech}
-                                    </button>
-                                );
-                            })}
+                            {stacks.length > 0 ? (
+                                stacks.map(stack => {
+                                    const isActive = stackIds.includes(stack.id) || stackIds.includes(stack.name);
+                                    return (
+                                        <button
+                                            key={stack.id}
+                                            type="button"
+                                            onClick={() => {
+                                                const currentId = stack.id;
+                                                setStackIds(prev => {
+                                                    // Buscamos si ya está por ID o por Nombre
+                                                    const exists = prev.includes(currentId) || prev.includes(stack.name);
+                                                    if (exists) {
+                                                        return prev.filter(id => id !== currentId && id !== stack.name);
+                                                    }
+                                                    return [...prev, currentId];
+                                                });
+                                            }}
+                                            className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${isActive
+                                                ? 'bg-brand border-brand text-white shadow-md'
+                                                : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-brand/30'
+                                                }`}
+                                        >
+                                            {stack.name}
+                                        </button>
+                                    );
+                                })
+                            ) : (
+                                <p className="text-xs text-gray-400 italic">No hay tecnologías registradas. Podés agregarlas en la sección de Tech Stacks.</p>
+                            )}
                         </div>
                         {stackIds.length > 0 && (
                             <p className="text-xs text-gray-400">{stackIds.length} seleccionado{stackIds.length !== 1 ? 's' : ''}</p>

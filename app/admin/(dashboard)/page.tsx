@@ -37,7 +37,7 @@ export default function AdminDashboard() {
                     <h3 className="text-lg font-bold text-corporate-grey">Quick Actions</h3>
                     <div className="grid grid-cols-2 gap-4">
                         <Link
-                            href="/admin/cases/new"
+                            href="/admin/success-stories/new"
                             className="p-4 border border-gray-100 rounded-lg hover:border-primary/30 hover:bg-primary/5 transition-all group"
                         >
                             <FileText className="text-gray-400 group-hover:text-primary mb-2" size={20} />

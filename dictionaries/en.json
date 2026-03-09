@@ -171,12 +171,12 @@
         },
         "selectedWork": {
             "title": "Selected Work",
-            "viewCase": "View Case Study →",
+            "viewCase": "Learn more",
             "cta": "Explore All Projects"
         },
         "caseDetail": {
             "challenge": "The Challenge",
-            "solution": "AI-Augmented Solution",
+            "solution": "Solution",
             "impact": "Outcome & Impact",
             "resultsDescription": "Business Results",
             "metrics": "Key Metrics",
