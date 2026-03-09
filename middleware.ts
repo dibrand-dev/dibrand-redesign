@@ -34,6 +34,14 @@ function getLocale(request: NextRequest): string {
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
 
+    // 0. LIMPIEZA: El panel de admin (/admin) NO debe tener prefijo de idioma.
+    // Si alguien entra a /es/admin o /en/admin, lo redirigimos al path limpio.
+    const localePrefix = locales.find(l => pathname.startsWith(`/${l}/admin`));
+    if (localePrefix) {
+        const cleanPath = pathname.replace(`/${localePrefix}`, '');
+        return NextResponse.redirect(new URL(cleanPath, request.url));
+    }
+
     // EXCLUDE STATIC ASSETS AND INTERNAL PATHS
     if (
         pathname.startsWith('/_next') ||

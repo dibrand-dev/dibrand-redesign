@@ -5,13 +5,26 @@ import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function getSuccessStories() {
-    const { data, error } = await supabase
-        .from('success_stories')
-        .select('id, title, client_company, industry, project_type, created_at, sort_order')
-        .order('sort_order', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('success_stories')
+            .select('id, title, client_company, industry, project_type, created_at, sort_order')
+            .order('sort_order', { ascending: true });
 
-    if (error) throw error;
-    return data || [];
+        if (error) {
+            console.warn('Sort order not found, falling back to date:', error.message);
+            const { data: fallback, error: err2 } = await supabase
+                .from('success_stories')
+                .select('id, title, client_company, industry, project_type, created_at')
+                .order('created_at', { ascending: false });
+            if (err2) throw err2;
+            return fallback || [];
+        }
+        return data || [];
+    } catch (error) {
+        console.error('Error fetching stories:', error);
+        return [];
+    }
 }
 
 export async function getSuccessStory(id: string) {
