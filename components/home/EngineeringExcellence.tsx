@@ -10,11 +10,11 @@ export default function EngineeringExcellence({ dict, lang }: EngineeringExcelle
     return (
         <section className="bg-white py-24 md:py-32">
             <div className="container mx-auto px-4 max-w-7xl">
-                <div className="text-center mb-20">
-                    <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 not-italic tracking-tight">
+                <div className="text-center mb-24">
+                    <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 not-italic tracking-tight leading-[1.2]">
                         {dict.engineeringExcellence.title}
                     </h2>
-                    <div className="mt-6 h-1 w-24 bg-brand mx-auto" />
+                    <div className="mt-8 h-1 w-24 bg-brand mx-auto" />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
