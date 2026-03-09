@@ -10,6 +10,7 @@ export const CASE_SERVICES = [
     "Product Discovery & Strategy",
     "QA & Testing",
     "Staff Augmentation",
+    "Technical Recruitment & Vetting",
     "UI/UX Design",
     "Web Development"
 ];
@@ -42,7 +43,8 @@ export const CASE_INDUSTRIES = [
     { value: 'Media', label: 'Media & Entertainment' },
     { value: 'Real Estate', label: 'Real Estate' },
     { value: 'SaaS', label: 'SaaS / Enterprise Software' },
-    { value: 'SportsRetail', label: 'Sports & Retail' }
+    { value: 'SportsRetail', label: 'Sports & Retail' },
+    { value: 'Web3NFT', label: 'Web3 & NFT' }
 ];
 
 export const MAP_OLD_INDUSTRY: Record<string, string> = {

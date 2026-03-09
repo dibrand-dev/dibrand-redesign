@@ -8,7 +8,8 @@ const INDUSTRY_LABELS: Record<string, string> = {
     media: 'Media', fintech: 'Fintech', ecommerce: 'E-commerce',
     gov: 'Gov', saas: 'SaaS', healthcare: 'Healthcare',
     FoodBeverage: 'Food & Beverage', 'Food & Beverage': 'Food & Beverage',
-    SportsRetail: 'Sports & Retail', 'Sports & Retail': 'Sports & Retail'
+    SportsRetail: 'Sports & Retail', 'Sports & Retail': 'Sports & Retail',
+    Web3NFT: 'Web3 & NFT', 'Web3 & NFT': 'Web3 & NFT'
 };
 const TYPE_LABELS: Record<string, string> = {
     webapp: 'Web App', mobileapp: 'Mobile App', plataforma: 'Plataforma',

@@ -2,7 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, Building2, FolderKanban, Wrench, UserSquare2, Search, Layout, Code, Cloud, CheckCircle2, Globe, Cpu, Rocket, Sparkles, Box, Play, Palette } from 'lucide-react';
+import { ArrowLeft, Building2, FolderKanban, Wrench, UserSquare2, Search, Layout, Code, Cloud, CheckCircle2, Globe, Cpu, Rocket, Sparkles, Box, Play, Palette, UserSearch } from 'lucide-react';
 import { FaLinkedinIn } from 'react-icons/fa6';
 import { createAdminClient } from "@/lib/supabase-server";
 import { getDictionary } from "@/lib/dictionaries";
@@ -169,7 +169,8 @@ export default async function CaseStudyDetailPage({ params }: Props) {
             'Desarrollo a Medida': Code,
             '3D Design & Modeling': Box,
             'Motion Graphics': Play,
-            'Art Direction': Palette
+            'Art Direction': Palette,
+            'Technical Recruitment & Vetting': UserSearch
         };
 
         const industryDisplay = industryObj ? industryObj.label : (cleanIndustry || '-');
