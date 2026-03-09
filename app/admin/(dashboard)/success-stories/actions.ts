@@ -7,8 +7,8 @@ import { redirect } from 'next/navigation';
 export async function getSuccessStories() {
     const { data, error } = await supabase
         .from('success_stories')
-        .select('id, title, client_company, industry, project_type, created_at')
-        .order('created_at', { ascending: false });
+        .select('id, title, client_company, industry, project_type, created_at, sort_order')
+        .order('sort_order', { ascending: true });
 
     if (error) throw error;
     return data || [];
@@ -48,6 +48,7 @@ async function syncToCaseStudies(payload: {
     problem_text: string;
     solution_text: string;
     result_text: string;
+    sort_order?: number;
 }) {
     const slug = payload.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const tags = await resolveStackNames(payload.stack_ids);
@@ -68,8 +69,9 @@ async function syncToCaseStudies(payload: {
         challenge: payload.problem_text,
         solution: payload.solution_text,
         outcome_impact: payload.result_text,
-        tags,
+        tags: tags,
         is_published: true,
+        sort_order: payload.sort_order || 0,
         results_metrics: [{ label: '__METADATA__', value: metadata }]
     };
 
@@ -132,7 +134,8 @@ export async function createSuccessStory(payload: {
     if (error) throw new Error(error.message);
 
     // Sync to case_studies for frontend
-    await syncToCaseStudies(payload);
+    const { data: newRow } = await supabase.from('success_stories').select('sort_order').eq('title', payload.title).single();
+    await syncToCaseStudies({ ...payload, sort_order: newRow?.sort_order || 0 });
 
     revalidatePath('/admin/success-stories');
     redirect('/admin/success-stories');
@@ -177,6 +180,7 @@ export async function updateSuccessStory(id: string, payload: Partial<{
             problem_text: fullRow.problem_text,
             solution_text: fullRow.solution_text,
             result_text: fullRow.result_text,
+            sort_order: fullRow.sort_order
         });
     }
 
@@ -204,3 +208,39 @@ export async function getTechStacks() {
     if (error) throw error;
     return data || [];
 }
+
+export async function updateSuccessStoriesOrder(orders: { id: string; sort_order: number }[]) {
+    // 1. Update success_stories
+    for (const item of orders) {
+        const { error: ssError } = await supabase
+            .from('success_stories')
+            .update({ sort_order: item.sort_order })
+            .eq('id', item.id);
+
+        if (ssError) {
+            console.error(`Error updating success_story ${item.id}:`, ssError);
+            continue;
+        }
+
+        // 2. Sync sort_order to case_studies
+        // We sync by finding the case study with the same client_name or similar match
+        const { data: story } = await supabase
+            .from('success_stories')
+            .select('client_company, title')
+            .eq('id', item.id)
+            .single();
+
+        if (story) {
+            const slug = story.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+            await supabase
+                .from('case_studies')
+                .update({ sort_order: item.sort_order })
+                .or(`slug.ilike.${slug},client_name.eq."${story.client_company}"`);
+        }
+    }
+
+    revalidatePath('/admin/success-stories');
+    revalidatePath('/[lang]/success-stories', 'layout');
+}
+

@@ -36,7 +36,7 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
             .from('case_studies')
             .select('*')
             .eq('is_published', true)
-            .order('created_at', { ascending: false }),
+            .order('sort_order', { ascending: true }),
         supabase
             .from('tech_stacks')
             .select('id, name')

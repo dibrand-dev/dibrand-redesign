@@ -48,7 +48,8 @@ export default async function ServiceHubPage({ params }: Props) {
     let query = supabase
         .from('case_studies')
         .select('id, title, slug, client_name, summary, image_url, project_type, services')
-        .eq('is_published', true);
+        .eq('is_published', true)
+        .order('sort_order', { ascending: true });
 
     if (slug === 'desarrollo-mvp-startups-escalables') {
         query = query.or('title.ilike.%Hello Really%,title.ilike.%Decoupling NFT%');
