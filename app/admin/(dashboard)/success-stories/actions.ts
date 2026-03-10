@@ -7,56 +7,57 @@ import { redirect } from 'next/navigation';
 export async function getSuccessStories() {
     try {
         noStore();
-        // Intentamos obtener con sort_order y las nuevas columnas
+
+        // --- Intento 1: Todo el nuevo esquema ---
         let result: any = await supabase
             .from('success_stories')
             .select('id, title, title_es, client_company, industry, project_type, created_at, sort_order, is_published')
             .order('sort_order', { ascending: true });
 
-        // Si falla por columnas inexistentes, probamos solo con las columnas base
-        if (result.error && result.error.message.includes('title_es')) {
-            console.warn('title_es missing, falling back to base columns');
+        // --- Intento 2: Sin title_es ---
+        if (result.error) {
             result = await supabase
                 .from('success_stories')
                 .select('id, title, client_company, industry, project_type, created_at, sort_order, is_published')
                 .order('sort_order', { ascending: true });
         }
 
+        // --- Intento 3: Sin is_published ---
+        if (result.error) {
+            result = await supabase
+                .from('success_stories')
+                .select('id, title, client_company, industry, project_type, created_at, sort_order')
+                .order('sort_order', { ascending: true });
+        }
+
+        // --- Intento 4: Sin sort_order ---
+        if (result.error) {
+            result = await supabase
+                .from('success_stories')
+                .select('id, title, client_company, industry, project_type, created_at')
+                .order('created_at', { ascending: false });
+        }
+
         const { data, error } = result;
 
-        // Si hay error (ej: columnas faltantes), intentamos fallback sin sort_order ni title_es
+        // Si falló todo success_stories (ej: tabla renombrada), probamos case_studies
         if (error) {
-            console.warn('Sort order or title_es error, falling back:', error.message);
-            const { data: fallback, error: err2 } = await supabase
-                .from('success_stories')
-                .select('id, title, client_company, industry, project_type, created_at, is_published')
-                .order('created_at', { ascending: false });
+            console.warn('success_stories completely failed, trying case_studies fallback');
+            const { data: csFallback, error: err3 } = await supabase
+                .from('case_studies')
+                .select('id, title, client_name, industry, created_at, sort_order, is_published')
+                .order('sort_order', { ascending: true });
 
-            if (err2 || !fallback) {
-                // Si también falla success_stories, probamos case_studies por si hubo una migración
-                const { data: csFallback, error: err3 } = await supabase
-                    .from('case_studies')
-                    .select('id, title, title_es, client_name, industry, created_at, sort_order, is_published')
-                    .order('sort_order', { ascending: true });
+            if (err3 || !csFallback) return [];
 
-                if (err3 || !csFallback) return [];
-
-                return csFallback.map((item: any) => ({
-                    id: item.id,
-                    title: item.title_es || item.title || 'Untitled',
-                    client_company: item.client_name || 'Generic Client',
-                    industry: item.industry || 'otro',
-                    project_type: 'plataforma',
-                    created_at: item.created_at,
-                    sort_order: item.sort_order || 0,
-                    is_published: item.is_published !== false
-                }));
-            }
-
-            return fallback.map((item: any) => ({
-                ...item,
-                title: item.title || 'Untitled',
-                sort_order: 0,
+            return csFallback.map((item: any) => ({
+                id: item.id,
+                title: item.title_es || item.title || 'Untitled',
+                client_company: item.client_name || 'Generic Client',
+                industry: item.industry || 'otro',
+                project_type: 'plataforma',
+                created_at: item.created_at,
+                sort_order: item.sort_order || 0,
                 is_published: item.is_published !== false
             }));
         }
@@ -65,11 +66,11 @@ export async function getSuccessStories() {
             ...item,
             title: item.title_es || item.title || 'Untitled',
             sort_order: item.sort_order || 0,
-            is_published: item.is_published !== false
+            is_published: item.is_published !== false // Default true if missing
         }));
 
     } catch (error) {
-        console.error('Error fetching stories:', error);
+        console.error('Final catching error fetching stories:', error);
         return [];
     }
 }
@@ -125,34 +126,40 @@ async function syncToCaseStudies(payload: {
         services: payload.services
     });
 
-    // Construimos el objeto base que siempre existe
-    const baseData = {
-        title: payload.title_es, // Fallback for old code
-        title_es: payload.title_es,
-        title_en: payload.title_en,
+    // Construimos el objeto base con solo las columnas que sabemos que existen
+    const baseData: any = {
+        title: payload.title_es,
         client_name: payload.client_company,
-        summary: payload.summary_es, // Fallback
-        summary_es: payload.summary_es,
-        summary_en: payload.summary_en,
+        summary: payload.summary_es,
         image_url: payload.hero_image_url,
         industry: payload.industry,
         slug,
-        challenge: payload.problem_es, // Fallback
-        challenge_es: payload.problem_es,
-        challenge_en: payload.problem_en,
-        solution: payload.solution_es, // Fallback
-        solution_es: payload.solution_es,
-        solution_en: payload.solution_en,
-        outcome_impact: payload.result_es, // Fallback
-        outcome_impact_es: payload.result_es,
-        outcome_impact_en: payload.result_en,
+        challenge: payload.problem_es,
+        solution: payload.solution_es,
+        outcome_impact: payload.result_es,
         tags: tags,
         is_published: true,
         sort_order: payload.sort_order || 0,
         results_metrics: [{ label: '__METADATA__', value: metadata }]
     };
 
-    // Buscamos si ya existe el registro (por slug o por cliente para evitar duplicados)
+    // Intentamos añadir columnas nuevas opcionalmente
+    const extraData: any = {
+        title_es: payload.title_es,
+        title_en: payload.title_en,
+        summary_es: payload.summary_es,
+        summary_en: payload.summary_en,
+        challenge_es: payload.problem_es,
+        challenge_en: payload.problem_en,
+        solution_es: payload.solution_es,
+        solution_en: payload.solution_en,
+        outcome_impact_es: payload.result_es,
+        outcome_impact_en: payload.result_en,
+        project_type: payload.project_type,
+        services: payload.services
+    };
+
+    // Buscamos si ya existe
     let { data: existing } = await supabase
         .from('case_studies')
         .select('id')
@@ -168,25 +175,21 @@ async function syncToCaseStudies(payload: {
         existing = byClient;
     }
 
-    try {
-        // Intento 1: Con las columnas nuevas (project_type, services)
-        const fullData = { ...baseData, project_type: payload.project_type, services: payload.services };
+    const performWrite = async (dataToWrite: any) => {
         if (existing) {
-            const { error } = await supabase.from('case_studies').update(fullData).eq('id', existing.id);
-            if (error) throw error;
+            return await supabase.from('case_studies').update(dataToWrite).eq('id', existing.id);
         } else {
-            const { error } = await supabase.from('case_studies').insert([fullData]);
-            if (error) throw error;
+            return await supabase.from('case_studies').insert([dataToWrite]);
         }
-    } catch (err: any) {
-        // Fallback: Si falló (probablemente por columnas faltantes), intentamos solo con el baseData
-        // que guarda la info en results_metrics
-        if (existing) {
-            await supabase.from('case_studies').update(baseData).eq('id', existing.id);
-        } else {
-            await supabase.from('case_studies').insert([baseData]);
-        }
-        console.warn('Sync fallback used: new columns might be missing in DB.');
+    };
+
+    // Intento 1: Todo
+    let writeResult = await performWrite({ ...baseData, ...extraData });
+
+    // Intento 2: Si falla, solo baseData (que tiene las columnas legacy garantizadas)
+    if (writeResult.error) {
+        console.warn('Sync attempt 1 failed, trying base columns only:', writeResult.error.message);
+        writeResult = await performWrite(baseData);
     }
 
     // Revalidate frontend routes
@@ -401,22 +404,22 @@ export async function fixAllDataConsistency() {
                 const { data: full } = await supabase.from('success_stories').select('*').eq('id', item.id).single();
                 if (full) {
                     await syncToCaseStudies({
-                        title_es: full.title_es || full.title,
-                        title_en: full.title_en || full.title,
+                        title_es: (full as any).title_es || full.title,
+                        title_en: (full as any).title_en || full.title,
                         client_company: full.client_company,
-                        summary_es: full.summary_es || full.executive_summary,
-                        summary_en: full.summary_en || full.executive_summary,
+                        summary_es: (full as any).summary_es || full.executive_summary,
+                        summary_en: (full as any).summary_en || full.executive_summary,
                         hero_image_url: full.hero_image_url,
                         industry: full.industry,
                         project_type: full.project_type,
                         services: full.services || [],
                         stack_ids: full.stack_ids || [],
-                        problem_es: full.problem_es || full.problem_text,
-                        problem_en: full.problem_en || full.problem_text,
-                        solution_es: full.solution_es || full.solution_text,
-                        solution_en: full.solution_en || full.solution_text,
-                        result_es: full.result_es || full.result_text,
-                        result_en: full.result_en || full.result_text,
+                        problem_es: (full as any).problem_es || full.problem_text,
+                        problem_en: (full as any).problem_en || full.problem_text,
+                        solution_es: (full as any).solution_es || full.solution_text,
+                        solution_en: (full as any).solution_en || full.solution_text,
+                        result_es: (full as any).result_es || full.result_text,
+                        result_en: (full as any).result_en || full.result_text,
                         sort_order: full.sort_order || 0
                     });
                 }
@@ -428,7 +431,8 @@ export async function fixAllDataConsistency() {
                 // Try to recreate in success_stories
                 const { data: fullCS } = await supabase.from('case_studies').select('*').eq('id', item.id).single();
                 if (fullCS) {
-                    await supabase.from('success_stories').insert([{
+                    // Intento 1: Todo
+                    const payload: any = {
                         title: fullCS.title,
                         title_es: fullCS.title_es || fullCS.title,
                         title_en: fullCS.title_en || fullCS.title,
@@ -436,7 +440,20 @@ export async function fixAllDataConsistency() {
                         industry: fullCS.industry,
                         is_published: fullCS.is_published !== false,
                         sort_order: fullCS.sort_order || 0
-                    }]);
+                    };
+
+                    let res = await supabase.from('success_stories').insert([payload]);
+
+                    // Intento 2: Si falló, quitamos columnas problemáticas detectadas
+                    if (res.error) {
+                        const safePayload = {
+                            title: fullCS.title,
+                            client_company: fullCS.client_name,
+                            industry: fullCS.industry,
+                            sort_order: fullCS.sort_order || 0
+                        };
+                        await supabase.from('success_stories').insert([safePayload]);
+                    }
                 }
             }
         }

@@ -46,8 +46,8 @@ export default function DraggableStoriesList({
     const router = useRouter();
 
     const filteredStories = stories.filter((s: Story) => {
-        const matchesSearch = s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            s.client_company.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = (s.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (s.client_company || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchesIndustry = filterIndustry === 'all' || s.industry === filterIndustry;
         return matchesSearch && matchesIndustry;
     });
