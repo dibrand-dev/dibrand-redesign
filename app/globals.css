@@ -136,3 +136,7 @@ h5,
 h6 {
   font-family: var(--font-heading);
 }
+/* Admin Docs Scroll Margin */
+.admin-docs-content :is(h1, h2, h3) {
+  scroll-margin-top: 100px;
+}

@@ -1,5 +1,8 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import rehypeSlug from 'rehype-slug';
 import { BookOpen, ChevronRight, Info, CheckCircle2, Layout, Image as ImageIcon, Search } from 'lucide-react';
 
 const DOCS_CONTENT = `
@@ -53,6 +56,53 @@ Antes de marcar un contenido como "Publicado", verificar:
 `;
 
 export default function DocsPage() {
+    const [activeId, setActiveId] = useState('');
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setActiveId(entry.target.id);
+                    }
+                });
+            },
+            { rootMargin: '-100px 0px -70% 0px' }
+        );
+
+        document.querySelectorAll('h2[id], h3[id]').forEach((section) => {
+            observer.observe(section);
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
+    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        e.preventDefault();
+        const id = href.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+            const offset = 100;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = element.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+            window.history.replaceState(null, '', href);
+        }
+    };
+
+    const navItems = [
+        { id: '1-tono-y-voz-de-marca', label: 'Voz de Marca', icon: Info },
+        { id: '2-estructura-de-nuestros-casos-de-estudio', label: 'Casos de Estudio', icon: Layout },
+        { id: '3-estandares-visuales-multimedia', label: 'Visuales', icon: ImageIcon },
+        { id: '4-checklist-de-optimizacion-para-ia-aeo', label: 'Checklist IA', icon: CheckCircle2 },
+    ];
+
     return (
         <div className="max-w-5xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
             {/* Page Header */}
@@ -76,32 +126,35 @@ export default function DocsPage() {
 
             <div className="grid lg:grid-cols-4 gap-12">
                 {/* Navigation Sidebar (Table of Contents) */}
-                <aside className="lg:col-span-1 border-r border-admin-border pr-8 hidden lg:block h-fit sticky top-8">
+                <aside className="lg:col-span-1 border-r border-admin-border pr-8 hidden lg:block h-fit sticky top-12">
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Contenidos</p>
-                    <nav className="space-y-4">
-                        {[
-                            { label: 'Voz de Marca', icon: Info, href: '#1-tono-y-voz-de-marca' },
-                            { label: 'Casos de Estudio', icon: Layout, href: '#2-estructura-de-nuestros-casos-de-estudio' },
-                            { label: 'Visuales', icon: ImageIcon, href: '#3-estandares-visuales-multimedia' },
-                            { label: 'Checklist IA', icon: CheckCircle2, href: '#4-checklist-de-optimizacion-para-ia-aeo' },
-                        ].map((item) => (
-                            <a
-                                key={item.label}
-                                href={item.href}
-                                className="flex items-center gap-3 text-sm font-bold text-admin-text-secondary hover:text-admin-accent transition-colors group"
-                            >
-                                <item.icon size={16} className="text-gray-300 group-hover:text-admin-accent transition-colors" />
-                                {item.label}
-                                <ChevronRight size={12} className="ml-auto opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
-                            </a>
-                        ))}
+                    <nav className="space-y-2">
+                        {navItems.map((item) => {
+                            const isActive = activeId === item.id;
+                            return (
+                                <a
+                                    key={item.id}
+                                    href={`#${item.id}`}
+                                    onClick={(e) => scrollToSection(e, `#${item.id}`)}
+                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all group ${isActive
+                                            ? 'bg-admin-accent/5 text-admin-accent shadow-sm translate-x-1'
+                                            : 'text-admin-text-secondary hover:text-admin-accent hover:bg-admin-bg'
+                                        }`}
+                                >
+                                    <item.icon size={16} className={`${isActive ? 'text-admin-accent' : 'text-gray-300 group-hover:text-admin-accent'} transition-colors`} />
+                                    {item.label}
+                                    {isActive && <div className="w-1 h-1 rounded-full bg-admin-accent ml-auto" />}
+                                    <ChevronRight size={12} className={`ml-auto transition-all ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-2'}`} />
+                                </a>
+                            );
+                        })}
                     </nav>
                 </aside>
 
                 {/* Main Content */}
                 <div className="lg:col-span-3 space-y-8">
                     <div className="bg-admin-card-bg rounded-3xl border border-admin-border shadow-sm overflow-hidden p-8 md:p-12">
-                        <article className="prose prose-slate max-w-none dark:prose-invert 
+                        <article className="prose prose-slate max-w-none dark:prose-invert admin-docs-content
                             prose-headings:text-admin-text-primary prose-headings:font-black prose-headings:tracking-tight
                             prose-h1:text-4xl prose-h1:mb-12
                             prose-h2:text-2xl prose-h2:mt-16 prose-h2:mb-6 prose-h2:pb-4 prose-h2:border-b prose-h2:border-admin-border/50
@@ -111,7 +164,7 @@ export default function DocsPage() {
                             prose-strong:text-admin-text-primary prose-strong:font-bold
                             prose-hr:border-admin-border/50 prose-hr:my-12
                             ">
-                            <ReactMarkdown>{DOCS_CONTENT}</ReactMarkdown>
+                            <ReactMarkdown rehypePlugins={[rehypeSlug]}>{DOCS_CONTENT}</ReactMarkdown>
                         </article>
                     </div>
 

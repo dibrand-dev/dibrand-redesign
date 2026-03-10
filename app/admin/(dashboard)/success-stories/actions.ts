@@ -6,22 +6,55 @@ import { redirect } from 'next/navigation';
 
 export async function getSuccessStories() {
     try {
+        noStore();
+        // Intentamos obtener con sort_order y las nuevas columnas
         const { data, error } = await supabase
             .from('success_stories')
-            .select('id, title, client_company, industry, project_type, created_at, sort_order')
+            .select('id, title, title_es, client_company, industry, project_type, created_at, sort_order')
             .order('sort_order', { ascending: true });
 
+        // Si hay error (ej: columnas faltantes), intentamos fallback sin sort_order ni title_es
         if (error) {
-            console.warn('Sort order not found, falling back to date:', error.message);
+            console.warn('Sort order or title_es error, falling back:', error.message);
             const { data: fallback, error: err2 } = await supabase
                 .from('success_stories')
                 .select('id, title, client_company, industry, project_type, created_at')
                 .order('created_at', { ascending: false });
-            if (err2) throw err2;
-            // Add a default sort_order to fallback items to satisfy TypeScript
-            return (fallback || []).map(item => ({ ...item, sort_order: 0 }));
+
+            if (err2 || !fallback) {
+                // Si también falla success_stories, probamos case_studies por si hubo una migración
+                const { data: csFallback, error: err3 } = await supabase
+                    .from('case_studies')
+                    .select('id, title, title_es, client_name, industry, created_at, sort_order')
+                    .order('sort_order', { ascending: true });
+
+                if (err3 || !csFallback) return [];
+
+                return csFallback.map(item => ({
+                    id: item.id,
+                    title: item.title_es || item.title || 'Untitled',
+                    client_company: item.client_name || 'Generic Client',
+                    industry: item.industry || 'otro',
+                    project_type: 'plataforma',
+                    created_at: item.created_at,
+                    sort_order: item.sort_order || 0
+                }));
+            }
+
+            return fallback.map(item => ({
+                ...item,
+                title: item.title || 'Untitled',
+                sort_order: 0
+            }));
         }
-        return data || [];
+
+        // Si funcionó bien, aseguramos que title no sea null
+        return (data || []).map(item => ({
+            ...item,
+            title: item.title_es || item.title || 'Untitled',
+            sort_order: item.sort_order || 0
+        }));
+
     } catch (error) {
         console.error('Error fetching stories:', error);
         return [];
