@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { getDictionary } from '@/lib/dictionaries';
 import { createAdminClient } from '@/lib/supabase-server';
+import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import Footer from '@/components/layout/Footer';
 import { TrendingUp } from 'lucide-react';
 import Link from 'next/link';
@@ -26,17 +27,31 @@ interface CaseStudy {
 }
 
 export default async function SuccessStoriesPage(props: { params: Promise<{ lang: "en" | "es" }> }) {
+    noStore();
     const params = await props.params;
     const dict = await getDictionary(params.lang);
     const supabase = createAdminClient();
     const isEn = params.lang === 'en';
 
-    const [{ data: rawCases }, { data: stacks }] = await Promise.all([
-        supabase
-            .from('case_studies')
-            .select('*, title_es, title_en, summary_es, summary_en')
-            .eq('is_published', true)
-            .order('sort_order', { ascending: true }),
+    const [{ data: rawCases, error: caseError }, { data: stacks }] = await Promise.all([
+        (async () => {
+            try {
+                const res = await supabase
+                    .from('case_studies')
+                    .select('*, title_es, title_en, summary_es, summary_en')
+                    .eq('is_published', true)
+                    .order('sort_order', { ascending: true });
+                if (res.error) throw res.error;
+                return res;
+            } catch (e) {
+                console.warn('Frontend sort_order error, falling back to created_at');
+                return await supabase
+                    .from('case_studies')
+                    .select('*, title_es, title_en, summary_es, summary_en')
+                    .eq('is_published', true)
+                    .order('created_at', { ascending: false });
+            }
+        })(),
         supabase
             .from('tech_stacks')
             .select('id, name')

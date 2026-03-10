@@ -10,7 +10,7 @@ export async function getSuccessStories() {
         // Intentamos obtener con sort_order y las nuevas columnas
         const { data, error } = await supabase
             .from('success_stories')
-            .select('id, title, title_es, client_company, industry, project_type, created_at, sort_order')
+            .select('id, title, title_es, client_company, industry, project_type, created_at, sort_order, is_published')
             .order('sort_order', { ascending: true });
 
         // Si hay error (ej: columnas faltantes), intentamos fallback sin sort_order ni title_es
@@ -18,14 +18,14 @@ export async function getSuccessStories() {
             console.warn('Sort order or title_es error, falling back:', error.message);
             const { data: fallback, error: err2 } = await supabase
                 .from('success_stories')
-                .select('id, title, client_company, industry, project_type, created_at')
+                .select('id, title, client_company, industry, project_type, created_at, is_published')
                 .order('created_at', { ascending: false });
 
             if (err2 || !fallback) {
                 // Si también falla success_stories, probamos case_studies por si hubo una migración
                 const { data: csFallback, error: err3 } = await supabase
                     .from('case_studies')
-                    .select('id, title, title_es, client_name, industry, created_at, sort_order')
+                    .select('id, title, title_es, client_name, industry, created_at, sort_order, is_published')
                     .order('sort_order', { ascending: true });
 
                 if (err3 || !csFallback) return [];
@@ -37,22 +37,24 @@ export async function getSuccessStories() {
                     industry: item.industry || 'otro',
                     project_type: 'plataforma',
                     created_at: item.created_at,
-                    sort_order: item.sort_order || 0
+                    sort_order: item.sort_order || 0,
+                    is_published: item.is_published !== false
                 }));
             }
 
             return fallback.map(item => ({
                 ...item,
                 title: item.title || 'Untitled',
-                sort_order: 0
+                sort_order: 0,
+                is_published: item.is_published !== false
             }));
         }
 
-        // Si funcionó bien, aseguramos que title no sea null
         return (data || []).map(item => ({
             ...item,
             title: item.title_es || item.title || 'Untitled',
-            sort_order: item.sort_order || 0
+            sort_order: item.sort_order || 0,
+            is_published: item.is_published !== false
         }));
 
     } catch (error) {
@@ -352,3 +354,51 @@ export async function updateSuccessStoriesOrder(orders: { id: string; sort_order
     revalidatePath('/en/success-stories');
 }
 
+
+export async function fixAllDataConsistency() {
+    try {
+        // 1. Fetch all from success_stories
+        const { data: ss } = await supabase.from('success_stories').select('*');
+        if (!ss) return;
+
+        for (let i = 0; i < ss.length; i++) {
+            const item = ss[i];
+            const updates: any = {};
+
+            if (item.sort_order === null) updates.sort_order = i;
+            if (!item.title_es && item.title) updates.title_es = item.title;
+            if (!item.title_en && item.title) updates.title_en = item.title;
+            if (item.is_published === null) updates.is_published = true;
+
+            if (Object.keys(updates).length > 0) {
+                await supabase.from('success_stories').update(updates).eq('id', item.id);
+            }
+
+            // Sync to case_studies
+            await syncToCaseStudies({
+                title_es: updates.title_es || item.title_es || item.title,
+                title_en: updates.title_en || item.title_en || item.title,
+                client_company: item.client_company,
+                summary_es: item.summary_es || item.executive_summary,
+                summary_en: item.summary_en || item.executive_summary,
+                hero_image_url: item.hero_image_url,
+                industry: item.industry,
+                project_type: item.project_type,
+                services: item.services || [],
+                stack_ids: item.stack_ids || [],
+                problem_es: item.problem_es || item.problem_text,
+                problem_en: item.problem_en || item.problem_text,
+                solution_es: item.solution_es || item.solution_text,
+                solution_en: item.solution_en || item.solution_text,
+                result_es: item.result_es || item.result_text,
+                result_en: item.result_en || item.result_text,
+                sort_order: updates.sort_order !== undefined ? updates.sort_order : item.sort_order
+            });
+        }
+        revalidatePath('/admin/success-stories');
+        return { success: true };
+    } catch (e) {
+        console.error('Repair failed:', e);
+        return { success: false };
+    }
+}

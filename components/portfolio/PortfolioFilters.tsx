@@ -33,9 +33,9 @@ export default function PortfolioFilters({ initialCases, lang, dict }: Props) {
 
     const filteredCases = useMemo(() => {
         return initialCases.filter(c => {
-            const matchesSearch = c.title.toLowerCase().includes(search.toLowerCase()) ||
-                c.client_name.toLowerCase().includes(search.toLowerCase()) ||
-                c.summary.toLowerCase().includes(search.toLowerCase());
+            const matchesSearch = (c.title || '').toLowerCase().includes(search.toLowerCase()) ||
+                (c.client_name || '').toLowerCase().includes(search.toLowerCase()) ||
+                (c.summary || '').toLowerCase().includes(search.toLowerCase());
 
             const matchesIndustry = selectedIndustry === 'all' || c.industry === selectedIndustry;
 

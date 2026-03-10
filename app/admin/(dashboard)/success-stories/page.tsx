@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
-import { getSuccessStories, deleteSuccessStory } from './actions';
+import { getSuccessStories, deleteSuccessStory, fixAllDataConsistency } from './actions';
 import { revalidatePath } from 'next/cache';
 
 const INDUSTRY_LABELS: Record<string, string> = {
@@ -23,6 +23,7 @@ const TYPE_LABELS: Record<string, string> = {
 // Server actions for toggle/delete (inline form actions)
 
 import DraggableStoriesList from './DraggableStoriesList';
+import RepairButton from './RepairButton';
 
 async function handleDelete(id: string) {
     'use server';
@@ -41,12 +42,15 @@ export default async function SuccessStoriesPage() {
                     <h2 className="text-3xl font-bold text-admin-text-primary tracking-tight">Success Stories</h2>
                     <p className="text-admin-text-secondary text-sm mt-1 font-medium italic">Gestioná los casos de éxito del portfolio con Drag & Drop.</p>
                 </div>
-                <Link
-                    href="/admin/success-stories/new"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-admin-accent text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-admin-accent/25 hover:-translate-y-0.5"
-                >
-                    <Plus size={18} /> Crear Nuevo Caso
-                </Link>
+                <div className="flex items-center gap-3">
+                    <RepairButton />
+                    <Link
+                        href="/admin/success-stories/new"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-admin-accent text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-admin-accent/25 hover:-translate-y-0.5"
+                    >
+                        <Plus size={18} /> Crear Nuevo Caso
+                    </Link>
+                </div>
             </div>
 
             {/* Table */}
