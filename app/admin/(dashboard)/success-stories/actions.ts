@@ -368,45 +368,82 @@ export async function updateSuccessStoriesOrder(orders: { id: string; sort_order
 
 export async function fixAllDataConsistency() {
     try {
-        // 1. Fetch all from success_stories
-        const { data: ss } = await supabase.from('success_stories').select('*');
-        if (!ss) return;
+        noStore();
+        // 1. Fetch from success_stories (only base columns to be safe)
+        let { data: ss } = await supabase.from('success_stories').select('id, title, client_company, industry, project_type, is_published, sort_order');
 
-        for (let i = 0; i < ss.length; i++) {
-            const item = ss[i];
-            const updates: any = {};
+        // 2. Fetch from case_studies
+        let { data: cs } = await supabase.from('case_studies').select('id, title, client_name, industry, is_published, sort_order, slug');
 
-            if (item.sort_order === null) updates.sort_order = i;
-            if (!item.title_es && item.title) updates.title_es = item.title;
-            if (!item.title_en && item.title) updates.title_en = item.title;
-            if (item.is_published === null) updates.is_published = true;
+        console.log(`Repairing: SS count: ${ss?.length || 0}, CS count: ${cs?.length || 0}`);
 
-            if (Object.keys(updates).length > 0) {
-                await supabase.from('success_stories').update(updates).eq('id', item.id);
+        // Case A: success_stories has data
+        if (ss && ss.length > 0) {
+            for (let i = 0; i < ss.length; i++) {
+                const item = ss[i];
+                const updates: any = {};
+                if (item.sort_order === null) updates.sort_order = i;
+                if (item.is_published === null) updates.is_published = true;
+
+                // Try to set title_es/en if they exist (will ignore if fail)
+                try {
+                    await supabase.from('success_stories').update({
+                        ...updates,
+                        title_es: item.title,
+                        title_en: item.title
+                    }).eq('id', item.id);
+                } catch (e) {
+                    await supabase.from('success_stories').update(updates).eq('id', item.id);
+                }
+
+                // Sync to case_studies
+                // We fetch the full row again to be sure we have everything for sync
+                const { data: full } = await supabase.from('success_stories').select('*').eq('id', item.id).single();
+                if (full) {
+                    await syncToCaseStudies({
+                        title_es: full.title_es || full.title,
+                        title_en: full.title_en || full.title,
+                        client_company: full.client_company,
+                        summary_es: full.summary_es || full.executive_summary,
+                        summary_en: full.summary_en || full.executive_summary,
+                        hero_image_url: full.hero_image_url,
+                        industry: full.industry,
+                        project_type: full.project_type,
+                        services: full.services || [],
+                        stack_ids: full.stack_ids || [],
+                        problem_es: full.problem_es || full.problem_text,
+                        problem_en: full.problem_en || full.problem_text,
+                        solution_es: full.solution_es || full.solution_text,
+                        solution_en: full.solution_en || full.solution_text,
+                        result_es: full.result_es || full.result_text,
+                        result_en: full.result_en || full.result_text,
+                        sort_order: full.sort_order || 0
+                    });
+                }
             }
-
-            // Sync to case_studies
-            await syncToCaseStudies({
-                title_es: updates.title_es || item.title_es || item.title,
-                title_en: updates.title_en || item.title_en || item.title,
-                client_company: item.client_company,
-                summary_es: item.summary_es || item.executive_summary,
-                summary_en: item.summary_en || item.executive_summary,
-                hero_image_url: item.hero_image_url,
-                industry: item.industry,
-                project_type: item.project_type,
-                services: item.services || [],
-                stack_ids: item.stack_ids || [],
-                problem_es: item.problem_es || item.problem_text,
-                problem_en: item.problem_en || item.problem_text,
-                solution_es: item.solution_es || item.solution_text,
-                solution_en: item.solution_en || item.solution_text,
-                result_es: item.result_es || item.result_text,
-                result_en: item.result_en || item.result_text,
-                sort_order: updates.sort_order !== undefined ? updates.sort_order : item.sort_order
-            });
         }
+        // Case B: success_stories is empty but case_studies has data
+        else if (cs && cs.length > 0) {
+            for (const item of cs) {
+                // Try to recreate in success_stories
+                const { data: fullCS } = await supabase.from('case_studies').select('*').eq('id', item.id).single();
+                if (fullCS) {
+                    await supabase.from('success_stories').insert([{
+                        title: fullCS.title,
+                        title_es: fullCS.title_es || fullCS.title,
+                        title_en: fullCS.title_en || fullCS.title,
+                        client_company: fullCS.client_name,
+                        industry: fullCS.industry,
+                        is_published: fullCS.is_published !== false,
+                        sort_order: fullCS.sort_order || 0
+                    }]);
+                }
+            }
+        }
+
         revalidatePath('/admin/success-stories');
+        revalidatePath('/es/success-stories');
+        revalidatePath('/en/success-stories');
         return { success: true };
     } catch (e) {
         console.error('Repair failed:', e);

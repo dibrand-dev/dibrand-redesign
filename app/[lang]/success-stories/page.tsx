@@ -36,6 +36,7 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
     const [{ data: rawCases, error: caseError }, { data: stacks }] = await Promise.all([
         (async () => {
             try {
+                // Try full select first
                 const res = await supabase
                     .from('case_studies')
                     .select('*, title_es, title_en, summary_es, summary_en')
@@ -43,13 +44,18 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
                     .order('sort_order', { ascending: true });
                 if (res.error) throw res.error;
                 return res;
-            } catch (e) {
-                console.warn('Frontend sort_order error, falling back to created_at');
-                return await supabase
+            } catch (e: any) {
+                console.warn('Frontend query error, trying safe fallback:', e.message);
+                // Fallback 1: Try without sort_order if it failed on that
+                // Fallback 2: Try without multilingual columns if it failed on those
+                const columns = ['id', 'title', 'client_name', 'summary', 'image_url', 'is_published', 'slug', 'industry', 'services', 'tags', 'results_metrics', 'created_at'];
+
+                const res = await supabase
                     .from('case_studies')
-                    .select('*, title_es, title_en, summary_es, summary_en')
-                    .eq('is_published', true)
-                    .order('created_at', { ascending: false });
+                    .select(columns.join(','))
+                    .eq('is_published', true);
+
+                return res;
             }
         })(),
         supabase
