@@ -8,10 +8,21 @@ export async function getSuccessStories() {
     try {
         noStore();
         // Intentamos obtener con sort_order y las nuevas columnas
-        const { data, error } = await supabase
+        let result: any = await supabase
             .from('success_stories')
             .select('id, title, title_es, client_company, industry, project_type, created_at, sort_order, is_published')
             .order('sort_order', { ascending: true });
+
+        // Si falla por columnas inexistentes, probamos solo con las columnas base
+        if (result.error && result.error.message.includes('title_es')) {
+            console.warn('title_es missing, falling back to base columns');
+            result = await supabase
+                .from('success_stories')
+                .select('id, title, client_company, industry, project_type, created_at, sort_order, is_published')
+                .order('sort_order', { ascending: true });
+        }
+
+        const { data, error } = result;
 
         // Si hay error (ej: columnas faltantes), intentamos fallback sin sort_order ni title_es
         if (error) {
