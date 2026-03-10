@@ -41,7 +41,7 @@ export async function getSuccessStories() {
 
                 if (err3 || !csFallback) return [];
 
-                return csFallback.map(item => ({
+                return csFallback.map((item: any) => ({
                     id: item.id,
                     title: item.title_es || item.title || 'Untitled',
                     client_company: item.client_name || 'Generic Client',
@@ -53,7 +53,7 @@ export async function getSuccessStories() {
                 }));
             }
 
-            return fallback.map(item => ({
+            return fallback.map((item: any) => ({
                 ...item,
                 title: item.title || 'Untitled',
                 sort_order: 0,
@@ -61,7 +61,7 @@ export async function getSuccessStories() {
             }));
         }
 
-        return (data || []).map(item => ({
+        return (data || []).map((item: any) => ({
             ...item,
             title: item.title_es || item.title || 'Untitled',
             sort_order: item.sort_order || 0,
