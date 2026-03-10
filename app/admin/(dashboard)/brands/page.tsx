@@ -61,23 +61,23 @@ export default function BrandsAdminPage() {
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-corporate-grey tracking-tight">Clientes / Marcas</h1>
-                    <p className="text-gray-500 mt-1 text-sm">Gestiona los logos de las empresas que confían en Dibrand.</p>
+                    <h1 className="text-3xl font-black text-admin-text-primary tracking-tight">Clientes / Marcas</h1>
+                    <p className="text-admin-text-secondary mt-1 text-sm font-medium italic">Gestiona los logos de las empresas que confían en Dibrand.</p>
                 </div>
                 <button
                     onClick={openNew}
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand to-brand text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20"
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-admin-accent text-white font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-admin-accent/20 active:scale-95"
                 >
                     <Plus size={20} />
                     Nuevo Cliente
                 </button>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-admin-card-bg rounded-2xl shadow-sm border border-admin-border overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-gray-50/50 border-b border-gray-100">
+                            <tr className="bg-admin-bg/50 border-b border-admin-border">
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Empresa</th>
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Logo</th>
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-center">Visible</th>
@@ -95,12 +95,12 @@ export default function BrandsAdminPage() {
                                 </tr>
                             ) : (
                                 brands.map((b) => (
-                                    <tr key={b.id} className="hover:bg-gray-50/50 transition-colors group">
+                                    <tr key={b.id} className="hover:bg-admin-bg/30 transition-colors group">
                                         <td className="px-6 py-5">
-                                            <div className="font-bold text-corporate-grey">{b.name}</div>
+                                            <div className="font-bold text-admin-text-primary group-hover:text-admin-accent transition-colors">{b.name}</div>
                                         </td>
                                         <td className="px-6 py-5">
-                                            <div className="relative h-12 w-24 bg-gray-50 rounded-lg overflow-hidden border border-gray-100 p-2 flex items-center justify-center">
+                                            <div className="relative h-12 w-24 bg-admin-bg rounded-lg overflow-hidden border border-admin-border p-2 flex items-center justify-center">
                                                 <Image src={b.logo_url} alt={b.name} fill className="object-contain p-2" />
                                             </div>
                                         </td>
@@ -117,18 +117,18 @@ export default function BrandsAdminPage() {
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-5">
+                                        <td className="px-6 py-5 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => openEdit(b)}
-                                                    className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+                                                    className="p-2 text-gray-400 hover:text-admin-accent hover:bg-admin-accent/5 rounded-xl transition-all"
                                                     title="Editar"
                                                 >
                                                     <Edit2 size={18} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(b.id)}
-                                                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                                                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
                                                     title="Eliminar"
                                                 >
                                                     <Trash2 size={18} />

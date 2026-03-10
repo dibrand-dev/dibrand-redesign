@@ -10,43 +10,43 @@ export default async function UsersPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h2 className="text-2xl font-bold text-corporate-grey font-heading">Administradores</h2>
-                    <p className="text-corporate-grey/60">Gestiona los usuarios con acceso al panel</p>
+                    <h2 className="text-3xl font-black text-admin-text-primary tracking-tight">Administradores</h2>
+                    <p className="text-admin-text-secondary text-sm mt-1 font-medium italic">Gestiona los usuarios con acceso al panel</p>
                 </div>
                 <Link
                     href="/admin/users/new"
-                    className="bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity"
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-admin-accent text-white font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-admin-accent/20 active:scale-95"
                 >
                     <Plus size={20} />
                     Nuevo Administrador
                 </Link>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+            <div className="bg-admin-card-bg rounded-xl shadow-sm border border-admin-border overflow-hidden">
                 <table className="w-full text-left">
-                    <thead className="bg-corporate-grey/5 border-b">
+                    <thead className="bg-admin-bg/50 border-b border-admin-border">
                         <tr>
-                            <th className="px-6 py-4 font-semibold text-corporate-grey">Nombre</th>
-                            <th className="px-6 py-4 font-semibold text-corporate-grey">Email</th>
-                            <th className="px-6 py-4 font-semibold text-corporate-grey text-right">Acciones</th>
+                            <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Nombre</th>
+                            <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Email</th>
+                            <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest text-right">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y">
+                    <tbody className="divide-y divide-admin-border">
                         {users.map((user) => (
-                            <tr key={user.id} className="hover:bg-corporate-grey/5 transition-colors">
+                            <tr key={user.id} className="hover:bg-admin-bg/30 transition-colors group">
                                 <td className="px-6 py-4">
-                                    <div className="font-medium text-corporate-grey">
+                                    <div className="font-bold text-admin-text-primary group-hover:text-admin-accent transition-colors">
                                         {user.user_metadata?.firstName} {user.user_metadata?.lastName}
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 text-corporate-grey/70">
+                                <td className="px-6 py-4 text-admin-text-secondary font-medium italic">
                                     {user.email}
                                 </td>
                                 <td className="px-6 py-4 text-right">
-                                    <div className="flex justify-end gap-2">
+                                    <div className="flex justify-end gap-2 text-right">
                                         <Link
                                             href={`/admin/users/${user.id}/edit`}
-                                            className="p-2 text-corporate-grey/60 hover:text-primary transition-colors"
+                                            className="p-2 text-gray-400 hover:text-admin-accent hover:bg-admin-accent/5 rounded-xl transition-all"
                                         >
                                             <Edit size={18} />
                                         </Link>
@@ -57,7 +57,7 @@ export default async function UsersPage() {
                         ))}
                         {users.length === 0 && (
                             <tr>
-                                <td colSpan={3} className="px-6 py-10 text-center text-corporate-grey/50">
+                                <td colSpan={3} className="px-6 py-10 text-center text-admin-text-secondary italic font-medium">
                                     No hay administradores registrados
                                 </td>
                             </tr>

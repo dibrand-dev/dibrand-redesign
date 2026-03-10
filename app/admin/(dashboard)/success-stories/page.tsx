@@ -34,25 +34,25 @@ export default async function SuccessStoriesPage() {
     const stories = await getSuccessStories();
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header */}
-            <div className="flex justify-between items-start">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold text-corporate-grey">Success Stories</h2>
-                    <p className="text-gray-500 mt-1">Gestioná los casos de éxito del portfolio con Drag & Drop.</p>
+                    <h2 className="text-3xl font-bold text-admin-text-primary tracking-tight">Success Stories</h2>
+                    <p className="text-admin-text-secondary text-sm mt-1 font-medium italic">Gestioná los casos de éxito del portfolio con Drag & Drop.</p>
                 </div>
                 <Link
                     href="/admin/success-stories/new"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all shadow-sm"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-admin-accent text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-admin-accent/25 hover:-translate-y-0.5"
                 >
-                    <Plus size={16} /> Crear Nuevo Caso
+                    <Plus size={18} /> Crear Nuevo Caso
                 </Link>
             </div>
 
             {/* Table */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-admin-card-bg rounded-2xl shadow-sm border border-admin-border overflow-hidden">
                 {stories.length === 0 ? (
-                    <div className="py-20 text-center text-gray-400 text-sm italic">
+                    <div className="py-20 text-center text-admin-text-secondary text-sm italic font-medium">
                         No hay casos de éxito aún. ¡Crea el primero!
                     </div>
                 ) : (

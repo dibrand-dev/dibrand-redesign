@@ -77,7 +77,7 @@ export default function AvatarUpload({ userId, currentAvatarUrl, displayName }: 
         <div className="flex flex-col items-center gap-5">
             {/* Avatar circle */}
             <div className="relative group">
-                <div className="w-28 h-28 rounded-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 border-4 border-white shadow-lg flex items-center justify-center">
+                <div className="w-28 h-28 rounded-full overflow-hidden bg-admin-bg border-4 border-admin-card-bg shadow-xl flex items-center justify-center">
                     {preview ? (
                         <Image
                             src={preview}
@@ -88,7 +88,7 @@ export default function AvatarUpload({ userId, currentAvatarUrl, displayName }: 
                             unoptimized={preview.startsWith('blob:')}
                         />
                     ) : (
-                        <span className="text-3xl font-bold text-gray-400">{initials}</span>
+                        <span className="text-3xl font-black text-admin-text-secondary opacity-30 tracking-widest">{initials}</span>
                     )}
                 </div>
 
@@ -127,14 +127,14 @@ export default function AvatarUpload({ userId, currentAvatarUrl, displayName }: 
                 type="button"
                 onClick={() => inputRef.current?.click()}
                 disabled={isLoading}
-                className="px-5 py-2 text-sm font-semibold rounded-xl border border-gray-200 text-gray-600 hover:border-primary hover:text-primary disabled:opacity-40 transition-all"
+                className="px-5 py-2 text-[11px] uppercase tracking-widest font-black rounded-xl border border-admin-border text-admin-text-secondary hover:border-admin-accent hover:text-admin-accent disabled:opacity-40 transition-all bg-admin-card-bg shadow-sm"
             >
                 {isLoading ? 'Subiendo...' : 'Cambiar Foto'}
             </button>
 
             {/* Error message */}
             {error && (
-                <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">
+                <p className="text-[10px] uppercase font-bold tracking-widest text-red-500 bg-red-500/10 px-3 py-2 rounded-lg border border-red-500/20">
                     {error}
                 </p>
             )}

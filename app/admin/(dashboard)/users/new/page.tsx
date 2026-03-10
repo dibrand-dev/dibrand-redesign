@@ -26,65 +26,65 @@ export default function NewUserPage() {
     return (
         <div className="max-w-2xl mx-auto space-y-6">
             <div className="flex items-center gap-4">
-                <Link href="/admin/users" className="p-2 hover:bg-corporate-grey/5 rounded-full transition-colors">
-                    <ArrowLeft size={24} />
+                <Link href="/admin/users" className="p-2 hover:bg-admin-card-bg rounded-full transition-colors text-admin-text-secondary">
+                    <ArrowLeft size={20} />
                 </Link>
                 <div>
-                    <h2 className="text-2xl font-bold text-corporate-grey font-heading">Nuevo Administrador</h2>
-                    <p className="text-corporate-grey/60">Crea un nuevo usuario para el equipo</p>
+                    <h2 className="text-3xl font-black text-admin-text-primary tracking-tight uppercase">Nuevo Administrador</h2>
+                    <p className="text-admin-text-secondary text-sm font-medium italic">Crea un nuevo usuario para el equipo</p>
                 </div>
             </div>
 
-            <div className="bg-white p-8 rounded-xl shadow-sm border">
-                <form action={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+            <div className="bg-admin-card-bg p-8 rounded-2xl shadow-sm border border-admin-border">
+                <form action={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-corporate-grey">Nombre</label>
+                            <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Nombre</label>
                             <input
                                 name="firstName"
                                 type="text"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                className="w-full px-4 py-3 bg-admin-bg border border-admin-border rounded-xl focus:ring-2 focus:ring-admin-accent/20 focus:border-admin-accent outline-none transition-all text-admin-text-primary font-medium"
                                 placeholder="Ej. Juan"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-corporate-grey">Apellido</label>
+                            <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Apellido</label>
                             <input
                                 name="lastName"
                                 type="text"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                className="w-full px-4 py-3 bg-admin-bg border border-admin-border rounded-xl focus:ring-2 focus:ring-admin-accent/20 focus:border-admin-accent outline-none transition-all text-admin-text-primary font-medium"
                                 placeholder="Ej. Pérez"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-corporate-grey">Email</label>
+                        <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Email</label>
                         <input
                             name="email"
                             type="email"
                             required
-                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                            className="w-full px-4 py-3 bg-admin-bg border border-admin-border rounded-xl focus:ring-2 focus:ring-admin-accent/20 focus:border-admin-accent outline-none transition-all text-admin-text-primary font-medium"
                             placeholder="email@dibrand.co"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-corporate-grey">Contraseña</label>
+                        <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Contraseña</label>
                         <input
                             name="password"
                             type="password"
                             required
                             minLength={6}
-                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                            className="w-full px-4 py-3 bg-admin-bg border border-admin-border rounded-xl focus:ring-2 focus:ring-admin-accent/20 focus:border-admin-accent outline-none transition-all text-admin-text-primary font-medium"
                             placeholder="••••••••"
                         />
                     </div>
 
                     {error && (
-                        <div className="p-4 bg-red-50 text-red-600 rounded-lg text-sm">
+                        <div className="p-4 bg-red-500/10 text-red-500 rounded-xl text-[11px] font-bold uppercase tracking-widest border border-red-500/20">
                             {error}
                         </div>
                     )}
@@ -93,7 +93,7 @@ export default function NewUserPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 rounded-lg font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+                            className="w-full bg-admin-accent text-white py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:opacity-90 transition-all disabled:opacity-50 shadow-lg shadow-admin-accent/20"
                         >
                             {loading ? 'Creando...' : 'Crear Administrador'}
                         </button>

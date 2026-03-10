@@ -62,13 +62,13 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-200 flex flex-col max-h-[90vh]">
-                <div className="flex items-center justify-between p-6 border-b border-gray-100">
-                    <h3 className="text-xl font-bold text-corporate-grey">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-admin-card-bg rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-200 flex flex-col max-h-[90vh] border border-admin-border">
+                <div className="flex items-center justify-between p-6 border-b border-admin-border/50">
+                    <h3 className="text-xl font-bold text-admin-text-primary">
                         {formData.id ? 'Editar Testimonio' : 'Nuevo Testimonio'}
                     </h3>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <button onClick={onClose} className="p-2 hover:bg-admin-bg rounded-full transition-colors">
                         <X size={20} className="text-gray-400" />
                     </button>
                 </div>
@@ -95,18 +95,18 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
                                     required
                                     value={formData.role_es}
                                     onChange={(e) => setFormData({ ...formData, role_es: e.target.value })}
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                                    className="w-full px-4 py-3 rounded-xl border border-admin-border focus:ring-2 focus:ring-admin-accent/20 focus:border-admin-accent transition-all outline-none bg-admin-bg/50"
                                     placeholder="Ej: CEO"
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Cargo (EN)</label>
+                                <label className="text-xs font-bold text-admin-text-secondary uppercase tracking-widest">Cargo (EN)</label>
                                 <input
                                     type="text"
                                     value={formData.role_en}
                                     onChange={(e) => setFormData({ ...formData, role_en: e.target.value })}
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                                    className="w-full px-4 py-3 rounded-xl border border-admin-border focus:ring-2 focus:ring-admin-accent/20 focus:border-admin-accent transition-all outline-none bg-admin-bg/50"
                                     placeholder="Ej: CEO"
                                 />
                             </div>
@@ -126,7 +126,7 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
                             <div className="space-y-4 md:col-span-2">
                                 <label className="text-xs font-bold text-gray-400 uppercase tracking-widest block">Avatar del Cliente</label>
                                 <div className="flex items-center gap-6">
-                                    <div className="relative h-20 w-20 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border-2 border-gray-100">
+                                    <div className="relative h-20 w-20 rounded-full overflow-hidden bg-admin-bg flex-shrink-0 border-2 border-admin-border">
                                         {previewUrl ? (
                                             <Image
                                                 src={previewUrl}
@@ -136,7 +136,7 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
                                                 className="object-cover"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                            <div className="w-full h-full flex items-center justify-center text-gray-400">
                                                 <ImageIcon size={32} />
                                             </div>
                                         )}
@@ -152,7 +152,7 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
                                             />
                                             <label
                                                 htmlFor="avatar-upload"
-                                                className="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors text-sm font-medium text-gray-600"
+                                                className="flex items-center gap-2 px-4 py-2 bg-admin-bg border border-dashed border-admin-border rounded-xl cursor-pointer hover:bg-admin-bg transition-colors text-sm font-medium text-admin-text-secondary"
                                             >
                                                 <Upload size={16} />
                                                 {selectedFile ? 'Cambiar imagen' : 'Subir foto de perfil'}
@@ -203,18 +203,18 @@ export default function TestimonialForm({ testimonial, onClose }: TestimonialFor
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-3 p-6 border-t border-gray-100 bg-gray-50/50 flex-shrink-0 sticky bottom-0">
+                    <div className="flex justify-end gap-3 p-6 border-t border-admin-border/50 bg-admin-bg/30 flex-shrink-0 sticky bottom-0">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100 transition-colors"
+                            className="px-6 py-3 rounded-xl font-bold text-admin-text-secondary hover:bg-admin-bg transition-colors"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-brand to-brand text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
+                            className="flex items-center gap-2 px-8 py-3 rounded-xl bg-admin-accent text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-admin-accent/20 disabled:opacity-50"
                         >
                             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                             {formData.id ? 'Guardar Cambios' : 'Crear Testimonio'}

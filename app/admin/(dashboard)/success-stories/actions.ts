@@ -18,7 +18,8 @@ export async function getSuccessStories() {
                 .select('id, title, client_company, industry, project_type, created_at')
                 .order('created_at', { ascending: false });
             if (err2) throw err2;
-            return fallback || [];
+            // Add a default sort_order to fallback items to satisfy TypeScript
+            return (fallback || []).map(item => ({ ...item, sort_order: 0 }));
         }
         return data || [];
     } catch (error) {
@@ -50,20 +51,27 @@ async function resolveStackNames(stackIds: string[]): Promise<string[]> {
 
 // ─── Helper: sync data to case_studies (frontend table) ─────────────────────
 async function syncToCaseStudies(payload: {
-    title: string;
+    title_es: string;
+    title_en: string;
     client_company: string;
-    executive_summary: string;
+    summary_es: string;
+    summary_en: string;
     hero_image_url: string;
     industry: string;
     project_type?: string;
     services?: string[];
     stack_ids: string[];
-    problem_text: string;
-    solution_text: string;
-    result_text: string;
+    problem_es: string;
+    problem_en: string;
+    solution_es: string;
+    solution_en: string;
+    result_es: string;
+    result_en: string;
     sort_order?: number;
 }) {
-    const slug = payload.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    // Note: We still use title_en or title_es for the slug. Let's prefer title_en for the slug if available.
+    const titleForSlug = payload.title_en || payload.title_es;
+    const slug = titleForSlug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const tags = await resolveStackNames(payload.stack_ids);
 
     const metadata = JSON.stringify({
@@ -73,15 +81,25 @@ async function syncToCaseStudies(payload: {
 
     // Construimos el objeto base que siempre existe
     const baseData = {
-        title: payload.title,
+        title: payload.title_es, // Fallback for old code
+        title_es: payload.title_es,
+        title_en: payload.title_en,
         client_name: payload.client_company,
-        summary: payload.executive_summary,
+        summary: payload.summary_es, // Fallback
+        summary_es: payload.summary_es,
+        summary_en: payload.summary_en,
         image_url: payload.hero_image_url,
         industry: payload.industry,
         slug,
-        challenge: payload.problem_text,
-        solution: payload.solution_text,
-        outcome_impact: payload.result_text,
+        challenge: payload.problem_es, // Fallback
+        challenge_es: payload.problem_es,
+        challenge_en: payload.problem_en,
+        solution: payload.solution_es, // Fallback
+        solution_es: payload.solution_es,
+        solution_en: payload.solution_en,
+        outcome_impact: payload.result_es, // Fallback
+        outcome_impact_es: payload.result_es,
+        outcome_impact_en: payload.result_en,
         tags: tags,
         is_published: true,
         sort_order: payload.sort_order || 0,
@@ -131,23 +149,38 @@ async function syncToCaseStudies(payload: {
 }
 
 export async function createSuccessStory(payload: {
-    title: string;
+    title_es: string;
+    title_en: string;
     client_company: string;
-    executive_summary: string;
+    summary_es: string;
+    summary_en: string;
     hero_image_url: string;
     project_type: string;
     industry: string;
     services: string[];
     stack_ids: string[];
-    problem_text: string;
-    solution_text: string;
-    result_text: string;
+    problem_es: string;
+    problem_en: string;
+    solution_es: string;
+    solution_en: string;
+    result_es: string;
+    result_en: string;
 }) {
-    const { error } = await supabase.from('success_stories').insert([payload]);
+    // Add legacy fields for compatibility
+    const fullPayload = {
+        ...payload,
+        title: payload.title_es,
+        executive_summary: payload.summary_es,
+        problem_text: payload.problem_es,
+        solution_text: payload.solution_es,
+        result_text: payload.result_es
+    };
+
+    const { error } = await supabase.from('success_stories').insert([fullPayload]);
     if (error) throw new Error(error.message);
 
     // Sync to case_studies for frontend
-    const { data: newRow } = await supabase.from('success_stories').select('sort_order').eq('title', payload.title).single();
+    const { data: newRow } = await supabase.from('success_stories').select('sort_order').eq('title_es', payload.title_es).single();
     await syncToCaseStudies({ ...payload, sort_order: newRow?.sort_order || 0 });
 
     revalidatePath('/admin/success-stories');
@@ -155,21 +188,36 @@ export async function createSuccessStory(payload: {
 }
 
 export async function updateSuccessStory(id: string, payload: Partial<{
-    title: string;
+    title_es: string;
+    title_en: string;
     client_company: string;
-    executive_summary: string;
+    summary_es: string;
+    summary_en: string;
     hero_image_url: string;
     project_type: string;
     industry: string;
     services: string[];
     stack_ids: string[];
-    problem_text: string;
-    solution_text: string;
-    result_text: string;
+    problem_es: string;
+    problem_en: string;
+    solution_es: string;
+    solution_en: string;
+    result_es: string;
+    result_en: string;
 }>) {
+    // Add legacy fields updates for compatibility
+    const updatePayload = {
+        ...payload,
+        ...(payload.title_es && { title: payload.title_es }),
+        ...(payload.summary_es && { executive_summary: payload.summary_es }),
+        ...(payload.problem_es && { problem_text: payload.problem_es }),
+        ...(payload.solution_es && { solution_text: payload.solution_es }),
+        ...(payload.result_es && { result_text: payload.result_es })
+    };
+
     const { error } = await supabase
         .from('success_stories')
-        .update(payload)
+        .update(updatePayload)
         .eq('id', id);
     if (error) throw new Error(error.message);
 
@@ -182,17 +230,22 @@ export async function updateSuccessStory(id: string, payload: Partial<{
 
     if (fullRow) {
         await syncToCaseStudies({
-            title: fullRow.title,
+            title_es: fullRow.title_es || fullRow.title,
+            title_en: fullRow.title_en || fullRow.title,
             client_company: fullRow.client_company,
-            executive_summary: fullRow.executive_summary,
+            summary_es: fullRow.summary_es || fullRow.executive_summary,
+            summary_en: fullRow.summary_en || fullRow.executive_summary,
             hero_image_url: fullRow.hero_image_url,
             industry: fullRow.industry,
             project_type: fullRow.project_type,
             services: fullRow.services || [],
             stack_ids: fullRow.stack_ids || [],
-            problem_text: fullRow.problem_text,
-            solution_text: fullRow.solution_text,
-            result_text: fullRow.result_text,
+            problem_es: fullRow.problem_es || fullRow.problem_text,
+            problem_en: fullRow.problem_en || fullRow.problem_text,
+            solution_es: fullRow.solution_es || fullRow.solution_text,
+            solution_en: fullRow.solution_en || fullRow.solution_text,
+            result_es: fullRow.result_es || fullRow.result_text,
+            result_en: fullRow.result_en || fullRow.result_text,
             sort_order: fullRow.sort_order
         });
     }
@@ -236,7 +289,6 @@ export async function updateSuccessStoriesOrder(orders: { id: string; sort_order
         }
 
         // 2. Sync sort_order to case_studies
-        // We sync by finding the case study with the same client_name or similar match
         const { data: story } = await supabase
             .from('success_stories')
             .select('client_company, title')
@@ -246,14 +298,24 @@ export async function updateSuccessStoriesOrder(orders: { id: string; sort_order
         if (story) {
             const slug = story.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-            await supabase
+            // Use a safer search for the case study
+            const { data: existing } = await supabase
                 .from('case_studies')
-                .update({ sort_order: item.sort_order })
-                .or(`slug.ilike.${slug},client_name.eq."${story.client_company}"`);
+                .select('id')
+                .or(`slug.eq.${slug},client_name.eq."${story.client_company.replace(/"/g, '\"')}"`)
+                .maybeSingle();
+
+            if (existing) {
+                await supabase
+                    .from('case_studies')
+                    .update({ sort_order: item.sort_order })
+                    .eq('id', existing.id);
+            }
         }
     }
 
     revalidatePath('/admin/success-stories');
-    revalidatePath('/[lang]/success-stories', 'layout');
+    revalidatePath('/es/success-stories');
+    revalidatePath('/en/success-stories');
 }
 

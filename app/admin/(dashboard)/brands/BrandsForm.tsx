@@ -68,34 +68,34 @@ export default function BrandsForm({ brand, onClose }: BrandsFormProps) {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in zoom-in duration-200">
-                <div className="flex items-center justify-between p-6 border-b border-gray-100">
-                    <h3 className="text-xl font-bold text-corporate-grey">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-admin-card-bg rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in zoom-in duration-200 border border-admin-border">
+                <div className="flex items-center justify-between p-6 border-b border-admin-border/50">
+                    <h3 className="text-xl font-bold text-admin-text-primary">
                         {formData.id ? 'Editar Cliente' : 'Nuevo Cliente'}
                     </h3>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <button onClick={onClose} className="p-2 hover:bg-admin-bg rounded-full transition-colors font-medium">
                         <X size={20} className="text-gray-400" />
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-8 space-y-6">
                     <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Nombre de la Empresa</label>
+                        <label className="text-xs font-bold text-admin-text-secondary uppercase tracking-widest">Nombre de la Empresa</label>
                         <input
                             type="text"
                             required
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                            className="w-full px-4 py-3 rounded-xl border border-admin-border focus:ring-2 focus:ring-admin-accent/20 focus:border-admin-accent transition-all outline-none bg-admin-bg/50"
                             placeholder="Ej: Google"
                         />
                     </div>
 
                     <div className="space-y-4">
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest block">Logo de la Marca</label>
+                        <label className="text-xs font-bold text-admin-text-secondary uppercase tracking-widest block">Logo de la Marca</label>
                         <div className="flex items-center gap-6">
-                            <div className="relative h-20 w-32 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0 border-2 border-gray-100 flex items-center justify-center p-2">
+                            <div className="relative h-20 w-32 rounded-xl overflow-hidden bg-admin-bg flex-shrink-0 border-2 border-admin-border flex items-center justify-center p-2">
                                 {previewUrl ? (
                                     <div className="relative w-full h-full">
                                         <Image
@@ -107,7 +107,7 @@ export default function BrandsForm({ brand, onClose }: BrandsFormProps) {
                                         />
                                     </div>
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400">
                                         <ImageIcon size={32} />
                                     </div>
                                 )}
@@ -123,7 +123,7 @@ export default function BrandsForm({ brand, onClose }: BrandsFormProps) {
                                     />
                                     <label
                                         htmlFor="logo-upload"
-                                        className="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors text-sm font-medium text-gray-600"
+                                        className="flex items-center gap-2 px-4 py-2 bg-admin-bg border border-dashed border-admin-border rounded-xl cursor-pointer hover:bg-admin-bg transition-colors text-sm font-medium text-admin-text-secondary"
                                     >
                                         <Upload size={16} />
                                         {selectedFile ? 'Cambiar logo' : 'Subir logo'}
@@ -149,18 +149,18 @@ export default function BrandsForm({ brand, onClose }: BrandsFormProps) {
                         </label>
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-6 border-t border-gray-100">
+                    <div className="flex justify-end gap-3 pt-6 border-t border-admin-border/50">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100 transition-colors"
+                            className="px-6 py-3 rounded-xl font-bold text-admin-text-secondary hover:bg-admin-bg transition-colors"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-brand to-brand text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
+                            className="flex items-center gap-2 px-8 py-3 rounded-xl bg-admin-accent text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-admin-accent/20 active:scale-95 disabled:opacity-50"
                         >
                             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                             {formData.id ? 'Guardar Cambios' : 'Agregar Cliente'}

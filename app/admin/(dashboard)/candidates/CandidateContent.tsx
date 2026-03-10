@@ -64,11 +64,11 @@ function NoteMenu({ noteId, applicationId, onEdit }: {
                 <MoreHorizontal size={14} />
             </button>
             {open && (
-                <div className="absolute right-0 top-8 z-50 w-36 bg-white border border-gray-100 rounded-xl shadow-lg py-1 text-sm">
-                    <button onClick={() => { setOpen(false); onEdit(); }} className="flex items-center gap-2 w-full px-3 py-2 text-gray-700 hover:bg-gray-50">
+                <div className="absolute right-0 top-8 z-50 w-36 bg-admin-card-bg border border-admin-border rounded-xl shadow-lg py-1 text-sm">
+                    <button onClick={() => { setOpen(false); onEdit(); }} className="flex items-center gap-2 w-full px-3 py-2 text-admin-text-primary hover:bg-admin-bg/50">
                         <Pencil size={12} className="text-gray-400" /> Edit
                     </button>
-                    <button onClick={handleDelete} className="flex items-center gap-2 w-full px-3 py-2 text-red-500 hover:bg-red-50">
+                    <button onClick={handleDelete} className="flex items-center gap-2 w-full px-3 py-2 text-red-500 hover:bg-red-500/10">
                         <Trash2 size={12} /> Remove
                     </button>
                 </div>
@@ -109,7 +109,7 @@ function TimelineNote({ note, applicationId }: { note: Note; applicationId: stri
             </div>
 
             {/* Note card */}
-            <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-4 ml-2">
+            <div className="bg-admin-card-bg border border-admin-border rounded-xl shadow-sm p-4 ml-2">
                 <div className="flex items-start justify-between gap-2 mb-2">
                     <div>
                         <span className="text-sm font-bold text-corporate-grey">{note.author_name}</span>
@@ -131,19 +131,19 @@ function TimelineNote({ note, applicationId }: { note: Note; applicationId: stri
                             onChange={e => setEditText(e.target.value)}
                             autoFocus
                             rows={3}
-                            className="w-full p-3 text-sm bg-gray-50 border border-primary/40 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none resize-none transition-all"
+                            className="w-full p-3 text-sm bg-admin-bg/50 border border-admin-accent/40 rounded-lg focus:ring-2 focus:ring-admin-accent/20 focus:border-admin-accent outline-none font-medium italic resize-none transition-all text-admin-text-primary"
                         />
                         <div className="flex items-center gap-2 justify-end">
-                            <button onClick={() => { setEditText(note.note_text); setEditing(false); }} className="flex items-center gap-1 px-3 py-1.5 text-xs text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
+                            <button onClick={() => { setEditText(note.note_text); setEditing(false); }} className="flex items-center gap-1 px-3 py-1.5 text-xs text-admin-text-secondary hover:text-admin-text-primary rounded-lg hover:bg-admin-bg transition-colors">
                                 <X size={11} /> Cancel
                             </button>
-                            <button onClick={handleSave} disabled={saving || !editText.trim()} className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-primary to-secondary rounded-lg hover:opacity-90 disabled:opacity-40 transition-all">
+                            <button onClick={handleSave} disabled={saving || !editText.trim()} className="flex items-center gap-1 px-4 py-1.5 text-xs font-bold text-white bg-admin-accent rounded-lg hover:opacity-90 disabled:opacity-40 transition-all uppercase tracking-widest">
                                 <Check size={11} /> {saving ? 'Saving...' : 'Save'}
                             </button>
                         </div>
                     </div>
                 ) : (
-                    <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{note.note_text}</p>
+                    <p className="text-sm text-admin-text-secondary leading-relaxed whitespace-pre-wrap font-medium italic">{note.note_text}</p>
                 )}
             </div>
         </div>
@@ -172,13 +172,13 @@ function NotesTab({ applicationId, notes }: { applicationId: string; notes: Note
                     value={noteText}
                     onChange={e => setNoteText(e.target.value)}
                     placeholder="Añade una nota interna..."
-                    className="w-full h-24 p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-corporate-grey resize-none transition-all"
+                    className="w-full h-24 p-4 bg-admin-bg/50 border border-admin-border rounded-xl focus:ring-2 focus:ring-admin-accent/20 focus:border-admin-accent outline-none text-admin-text-primary placeholder:text-admin-text-secondary/50 font-medium italic resize-none transition-all"
                 />
                 <div className="flex justify-end">
                     <button
                         type="submit"
                         disabled={sending || !noteText.trim()}
-                        className="px-6 py-2 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-lg text-sm hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
+                        className="px-6 py-2 bg-admin-accent text-white font-bold rounded-lg text-sm hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                         {sending ? 'Enviando...' : <><Send size={14} />Send</>}
                     </button>
@@ -187,13 +187,13 @@ function NotesTab({ applicationId, notes }: { applicationId: string; notes: Note
 
             {/* Timeline */}
             {notes.length > 0 ? (
-                <div className="relative border-l-2 border-gray-100 ml-4">
+                <div className="relative border-l-2 border-admin-border/50 ml-4">
                     {notes.map(note => (
                         <TimelineNote key={note.id} note={note} applicationId={applicationId} />
                     ))}
                 </div>
             ) : (
-                <div className="text-center py-16 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200 text-gray-400 text-sm italic">
+                <div className="text-center py-16 bg-admin-bg/30 rounded-2xl border border-dashed border-admin-border text-admin-text-secondary text-sm italic font-medium">
                     No hay notas internas aún. Usa el campo de arriba para iniciar el hilo.
                 </div>
             )}
@@ -225,19 +225,19 @@ export default function CandidateContent({ candidate }: { candidate: Candidate }
                 </Link>
 
                 <div className="flex items-center gap-8">
-                    <div className="w-24 h-24 rounded-full bg-gray-50 border flex items-center justify-center text-gray-300">
+                    <div className="w-24 h-24 rounded-full bg-admin-bg border border-admin-border flex items-center justify-center text-gray-400">
                         <User size={48} />
                     </div>
                     <div>
-                        <h1 className="text-5xl font-bold text-corporate-grey font-heading tracking-tight">
+                        <h1 className="text-5xl font-black text-admin-text-primary tracking-tight">
                             {candidate.full_name}
                         </h1>
                         <div className="flex items-center gap-4 mt-2">
-                            <a href={`mailto:${candidate.email}`} className="text-primary hover:underline text-sm font-medium flex items-center gap-1.5">
+                            <a href={`mailto:${candidate.email}`} className="text-admin-accent hover:underline text-sm font-bold italic flex items-center gap-1.5">
                                 <Mail size={14} /> {candidate.email}
                             </a>
                             {candidate.phone && (
-                                <span className="text-gray-400 text-sm flex items-center gap-1.5">
+                                <span className="text-admin-text-secondary text-sm font-medium italic flex items-center gap-1.5">
                                     <Phone size={14} /> {candidate.phone}
                                 </span>
                             )}
@@ -247,14 +247,14 @@ export default function CandidateContent({ candidate }: { candidate: Candidate }
             </div>
 
             {/* ── Tab Bar ── */}
-            <div className="flex items-center gap-0 border-b border-gray-100">
+            <div className="flex items-center gap-0 border-b border-admin-border">
                 {tabs.map(tab => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`px-5 py-4 text-sm font-bold transition-all border-b-2 -mb-px ${activeTab === tab.id
-                            ? 'text-primary border-primary'
-                            : 'text-gray-400 border-transparent hover:text-corporate-grey'
+                        className={`px-5 py-4 text-sm font-black transition-all border-b-2 -mb-px uppercase tracking-widest ${activeTab === tab.id
+                            ? 'text-admin-accent border-admin-accent'
+                            : 'text-gray-400 border-transparent hover:text-admin-text-primary'
                             }`}
                     >
                         {tab.label}
@@ -297,10 +297,10 @@ export default function CandidateContent({ candidate }: { candidate: Candidate }
 
                         {/* Tech Stacks */}
                         <div className="space-y-4">
-                            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Tech Stacks</h3>
+                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Tech Stacks</h3>
                             <div className="flex flex-wrap gap-2">
                                 {candidate.stack_names?.map((name: string) => (
-                                    <span key={name} className="px-2.5 py-1 bg-gray-50 text-gray-500 rounded text-xs font-bold border uppercase tracking-wide">
+                                    <span key={name} className="px-3 py-1 bg-admin-bg text-admin-text-secondary rounded-lg text-[10px] font-bold border border-admin-border uppercase tracking-widest">
                                         {name}
                                     </span>
                                 ))}
@@ -321,13 +321,13 @@ export default function CandidateContent({ candidate }: { candidate: Candidate }
                     {candidate.resume_url ? (
                         <iframe
                             src={candidate.resume_url}
-                            className="w-full h-[800px] rounded-xl border border-gray-200 shadow-sm"
+                            className="w-full h-[800px] rounded-2xl border border-admin-border shadow-2xl bg-white"
                             title="Candidate Resume"
                         />
                     ) : (
-                        <div className="flex flex-col items-center justify-center py-24 text-gray-400 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                        <div className="flex flex-col items-center justify-center py-24 text-admin-text-secondary bg-admin-bg/30 rounded-2xl border border-dashed border-admin-border">
                             <BsFiletypePdf size={40} className="mb-3 opacity-30" />
-                            <p className="text-sm italic">No se adjuntó ningún CV a esta aplicación.</p>
+                            <p className="text-sm font-medium italic">No se adjuntó ningún CV a esta aplicación.</p>
                         </div>
                     )}
                 </div>

@@ -81,7 +81,7 @@ export default function EditUserForm({ user }: { user: any }) {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 rounded-lg font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+                    className="w-full bg-admin-accent text-white py-3 rounded-lg font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
                 >
                     {loading ? 'Actualizando...' : 'Guardar Cambios'}
                 </button>

@@ -34,7 +34,7 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
     const [{ data: rawCases }, { data: stacks }] = await Promise.all([
         supabase
             .from('case_studies')
-            .select('*')
+            .select('*, title_es, title_en, summary_es, summary_en')
             .eq('is_published', true)
             .order('sort_order', { ascending: true }),
         supabase
@@ -69,7 +69,10 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
         // Resolve tag IDs to names
         const resolvedTags = (c.tags || []).map((tag: string) => stackMap[tag] || tag);
 
-        return { ...c, services, industry, tags: resolvedTags };
+        const title = isEn ? (c.title_en || c.title) : (c.title_es || c.title);
+        const summary = isEn ? (c.summary_en || c.summary) : (c.summary_es || c.summary);
+
+        return { ...c, title, summary, services, industry, tags: resolvedTags };
     });
 
     return (

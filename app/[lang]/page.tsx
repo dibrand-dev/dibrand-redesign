@@ -51,12 +51,19 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
   // 3. Dynamic Random Case Studies Engine (RESTORED REAL DATA)
   const { data: rawCases } = await supabase
     .from('case_studies')
-    .select('id, slug, title, summary, main_image_url:image_url, client_name')
+    .select('id, slug, title, title_es, title_en, summary, summary_es, summary_en, main_image_url:image_url, client_name')
     .eq('is_published', true);
 
   // Perform absolute random shuffle on the server and take top 4
   const topCases = rawCases && rawCases.length > 0
-    ? [...rawCases].sort(() => Math.random() - 0.5).slice(0, 4)
+    ? [...rawCases]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 4)
+      .map((c: any) => ({
+        ...c,
+        title: params.lang === 'en' ? (c.title_en || c.title) : (c.title_es || c.title),
+        summary: params.lang === 'en' ? (c.summary_en || c.summary) : (c.summary_es || c.summary)
+      }))
     : [];
 
   // 4. JSON-LD Organization

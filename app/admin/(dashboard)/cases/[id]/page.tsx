@@ -552,7 +552,7 @@ export default function EditCasePage({ params }: { params: Promise<{ id: string 
                     <button
                         disabled={saving}
                         type="submit"
-                        className="inline-flex items-center gap-2 px-8 py-2.5 bg-gradient-to-r from-brand to-brand text-white rounded-lg font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md transform active:scale-95"
+                        className="inline-flex items-center gap-2 px-8 py-2.5 bg-admin-accent text-white rounded-lg font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md transform active:scale-95"
                     >
                         {saving ? (
                             <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

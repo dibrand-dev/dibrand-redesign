@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     const { data: caseStudy } = await supabase
         .from('case_studies')
-        .select('title, summary, tags')
+        .select('title, title_es, title_en, summary, summary_es, summary_en, tags')
         .ilike('slug', slug)
         .single();
 
@@ -36,9 +36,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     const resolvedTags = (caseStudy?.tags || []).map((t: string) => stackMap[t] || t);
 
+    const displayTitle = lang === 'en' ? (caseStudy?.title_en || caseStudy?.title) : (caseStudy?.title_es || caseStudy?.title);
+    const displaySummary = lang === 'en' ? (caseStudy?.summary_en || caseStudy?.summary) : (caseStudy?.summary_es || caseStudy?.summary);
+
     return {
-        title: caseStudy ? `${caseStudy.title} | Dibrand Success Stories` : 'Success Story | Dibrand',
-        description: caseStudy?.summary || 'Explore our high-impact engineering case studies.',
+        title: caseStudy ? `${displayTitle} | Dibrand Success Stories` : 'Success Story | Dibrand',
+        description: displaySummary || 'Explore our high-impact engineering case studies.',
         keywords: resolvedTags.join(', '),
         alternates: {
             canonical: `https://dibrand.co/${lang}/success-stories/${slug}`,
@@ -103,10 +106,11 @@ export default async function CaseStudyDetailPage({ params }: Props) {
         }
 
         const shareUrl = `https://dibrand.co/${lang}/success-stories/${caseStudy.slug}`;
-        const challenge = caseStudy.challenge;
-        const solution = caseStudy.solution;
-        const outcomeImpact = caseStudy.outcome_impact;
-        const summary = caseStudy.summary;
+        const challenge = isEn ? (caseStudy.challenge_en || caseStudy.challenge) : (caseStudy.challenge_es || caseStudy.challenge);
+        const solution = isEn ? (caseStudy.solution_en || caseStudy.solution) : (caseStudy.solution_es || caseStudy.solution);
+        const outcomeImpact = isEn ? (caseStudy.outcome_impact_en || caseStudy.outcome_impact) : (caseStudy.outcome_impact_es || caseStudy.outcome_impact);
+        const summary = isEn ? (caseStudy.summary_en || caseStudy.summary) : (caseStudy.summary_es || caseStudy.summary);
+        const title = isEn ? (caseStudy.title_en || caseStudy.title) : (caseStudy.title_es || caseStudy.title);
         const metrics = caseStudy.results_metrics || [];
         const hasMetrics = Array.isArray(metrics) && metrics.length > 0;
         const heroImage = caseStudy.image_url || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop';
@@ -152,9 +156,9 @@ export default async function CaseStudyDetailPage({ params }: Props) {
                 .trim();
         };
 
-        const cleanedChallenge = cleanContent(caseStudy.challenge);
-        const cleanedSolution = cleanContent(caseStudy.solution);
-        const cleanedOutcomeImpact = cleanContent(caseStudy.outcome_impact);
+        const cleanedChallenge = cleanContent(challenge);
+        const cleanedSolution = cleanContent(solution);
+        const cleanedOutcomeImpact = cleanContent(outcomeImpact);
 
         const pTypeDisplay = MAP_OLD_PROJECT_TYPE[pTypeRaw] || pTypeRaw;
         const rawIndustry = caseStudy.industry || '';
@@ -185,7 +189,7 @@ export default async function CaseStudyDetailPage({ params }: Props) {
         const jsonLd = {
             "@context": "https://schema.org",
             "@type": "CaseStudy",
-            "name": caseStudy.title,
+            "name": title,
             "description": summary,
             "image": heroImage,
             "about": resolvedTags.join(', '),
@@ -238,7 +242,7 @@ export default async function CaseStudyDetailPage({ params }: Props) {
                         {/* Level 1: Full-Width Title */}
                         <div className="mb-8">
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-zinc-900 font-outfit tracking-tighter leading-tight not-italic">
-                                {caseStudy.title}
+                                {title}
                             </h1>
                         </div>
 
@@ -287,7 +291,7 @@ export default async function CaseStudyDetailPage({ params }: Props) {
                                 <div className="relative w-full aspect-[16/10] md:aspect-[21/10] overflow-hidden rounded-3xl border border-zinc-100 shadow-2xl shadow-zinc-200/50 group">
                                     <Image
                                         src={heroImage}
-                                        alt={caseStudy.title}
+                                        alt={title}
                                         fill
                                         priority
                                         className="object-cover group-hover:scale-105 transition-transform duration-[3s] ease-out"

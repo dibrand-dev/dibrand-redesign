@@ -1,9 +1,9 @@
-import React from 'react';
-import Link from 'next/link';
+import Sidebar from './Sidebar';
 import Image from 'next/image';
-import { LayoutDashboard, FileText, Settings, Briefcase, Users, Code, Trophy, MessageSquare, Building2 } from 'lucide-react';
-import LogoutButton from './LogoutButton';
+import { Search, Bell, Calendar, User, ChevronDown, LayoutGrid } from 'lucide-react';
 import { createClient } from '@/lib/supabase-server-client';
+import ThemeToggle from './ThemeToggle';
+import UserMenu from './UserMenu';
 
 export default async function DashboardLayout({
     children,
@@ -15,88 +15,69 @@ export default async function DashboardLayout({
 
     const meta = user?.user_metadata || {};
     const avatarUrl = meta.avatar_url || null;
+    const name = meta.first_name ? `${meta.first_name} ${meta.last_name || ''}` : user?.email?.split('@')[0] || 'Admin';
+    const role = meta.role || 'Administrator';
     const initials = (
         (meta.first_name?.[0] || '') + (meta.last_name?.[0] || '')
     ).toUpperCase() || user?.email?.[0].toUpperCase() || 'A';
+
+    const today = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+
     return (
-        <div className="min-h-screen bg-background-alt flex">
-            {/* Sidebar */}
-            <aside className="w-64 bg-corporate-grey text-white hidden md:flex flex-col shadow-xl">
-                <div className="p-6">
-                    <Link href="/admin" className="text-2xl font-bold font-heading bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                        Dibrand Admin
-                    </Link>
-                </div>
-
-
-                <nav className="flex-1 px-4 py-4 space-y-2">
-                    <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-                        <LayoutDashboard size={20} />
-                        <span>Dashboard</span>
-                    </Link>
-                    <Link href="/admin/brands" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-                        <Building2 size={20} />
-                        <span>Clientes</span>
-                    </Link>
-                    <Link href="/admin/success-stories" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-                        <Trophy size={20} />
-                        <span>Success Stories</span>
-                    </Link>
-                    <Link href="/admin/testimonials" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-                        <MessageSquare size={20} />
-                        <span>Testimonials</span>
-                    </Link>
-                    <Link href="/admin/jobs" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-                        <Briefcase size={20} />
-                        <span>Job Openings</span>
-                    </Link>
-                    <Link href="/admin/candidates" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-                        <Users size={20} />
-                        <span>Candidates</span>
-                    </Link>
-                    <Link href="/admin/stacks" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-                        <Code size={20} />
-                        <span>Tech Stacks</span>
-                    </Link>
-                    <Link href="/admin/users" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-                        <Settings size={20} />
-                        <span>Administradores</span>
-                    </Link>
-                    <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-                        <Settings size={20} />
-                        <span>Settings</span>
-                    </Link>
-                </nav>
-
-                <div className="p-4 border-t border-white/10">
-                    <LogoutButton />
-                </div>
-            </aside>
+        <div className="min-h-screen bg-admin-bg flex font-sans text-admin-text-primary antialiased">
+            {/* Sidebar component */}
+            <Sidebar />
 
             {/* Main Content */}
-            <main className="flex-1 flex flex-col min-w-0">
-                <header className="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm">
-                    <h1 className="text-xl font-semibold text-corporate-grey">Control Panel</h1>
-                    <div className="flex items-center gap-4">
-                        <Link href="/admin/settings" title="Mi Perfil">
-                            <div className="w-9 h-9 rounded-full overflow-hidden bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm ring-2 ring-white shadow hover:ring-primary/40 transition-all">
-                                {avatarUrl ? (
-                                    <Image
-                                        src={avatarUrl}
-                                        alt={initials}
-                                        width={36}
-                                        height={36}
-                                        className="object-cover w-full h-full"
-                                    />
-                                ) : (
-                                    <span>{initials}</span>
-                                )}
-                            </div>
-                        </Link>
+            <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+                {/* Refined Header */}
+                <header className="h-20 bg-admin-card-bg border-b border-admin-border flex items-center justify-between px-8 shrink-0 z-20 transition-colors duration-300">
+                    <div className="flex items-center gap-8 flex-1">
+                        {/* Search Bar */}
+                        <div className="relative w-full max-w-md group">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-admin-accent transition-colors" size={18} />
+                            <input
+                                type="text"
+                                placeholder="Search anything's..."
+                                className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl text-sm focus:outline-none focus:bg-white focus:border-admin-accent/30 focus:ring-4 focus:ring-admin-accent/5 transition-all"
+                            />
+                        </div>
+
+                        {/* Leads Placeholder Badge from ref */}
+                        <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-full border border-gray-100">
+                            <span className="text-[11px] font-bold text-admin-text-secondary uppercase tracking-wider">Today New Leads</span>
+                            <span className="w-6 h-6 flex items-center justify-center bg-admin-accent/10 text-admin-accent rounded-full text-xs font-bold">27</span>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-6 pl-6">
+                        {/* Working Theme Toggle */}
+                        <ThemeToggle />
+
+                        <div className="flex items-center gap-3 border-x border-admin-border/50 px-6">
+                            <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-50 transition-colors text-gray-500 relative">
+                                <div className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 border-2 border-white rounded-full"></div>
+                                <LayoutGrid size={20} />
+                            </button>
+                            <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-50 transition-colors text-gray-500">
+                                <Bell size={20} />
+                            </button>
+                            <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-50 transition-colors text-gray-500">
+                                <Calendar size={20} />
+                            </button>
+                        </div>
+
+                        {/* User Profile */}
+                        <UserMenu
+                            name={name}
+                            role={role}
+                            initials={initials}
+                            avatarUrl={avatarUrl}
+                        />
                     </div>
                 </header>
 
-                <div className="p-8 overflow-auto">
+                <div className="flex-1 overflow-auto bg-admin-bg p-8 custom-scrollbar">
                     {children}
                 </div>
             </main>

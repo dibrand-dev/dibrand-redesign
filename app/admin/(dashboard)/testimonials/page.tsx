@@ -54,23 +54,23 @@ export default function TestimonialsAdminPage() {
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-corporate-grey tracking-tight">Testimonios</h1>
-                    <p className="text-gray-500 mt-1 text-sm">Gestiona lo que los clientes dicen sobre Dibrand.</p>
+                    <h1 className="text-3xl font-bold text-admin-text-primary tracking-tight">Testimonios</h1>
+                    <p className="text-admin-text-secondary mt-1 text-sm font-medium italic">Gestiona lo que los clientes dicen sobre Dibrand.</p>
                 </div>
                 <button
                     onClick={openNew}
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20"
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-admin-accent text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-admin-accent/20"
                 >
                     <Plus size={20} />
                     Nuevo Testimonio
                 </button>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-admin-card-bg rounded-2xl shadow-sm border border-admin-border overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-gray-50/50 border-b border-gray-100">
+                            <tr className="bg-admin-bg/50 border-b border-admin-border">
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Cliente</th>
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Empresa</th>
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Contenido</th>
@@ -108,7 +108,7 @@ export default function TestimonialsAdminPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-5">
-                                            <span className="text-xs font-bold text-primary bg-primary/5 px-2 py-1 rounded uppercase tracking-wider">
+                                            <span className="text-xs font-bold text-admin-accent bg-admin-accent/5 px-2 py-1 rounded uppercase tracking-wider">
                                                 {t.company}
                                             </span>
                                         </td>
@@ -132,7 +132,7 @@ export default function TestimonialsAdminPage() {
                                             <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => openEdit(t)}
-                                                    className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+                                                    className="p-2 text-gray-400 hover:text-admin-accent hover:bg-admin-accent/5 rounded-lg transition-all"
                                                     title="Editar"
                                                 >
                                                     <Edit2 size={18} />
