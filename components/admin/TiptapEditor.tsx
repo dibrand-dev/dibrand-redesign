@@ -172,9 +172,10 @@ export default function TiptapEditor({ value, onChange, placeholder }: TiptapEdi
     // Ensure value updates from outside work correctly (like translations)
     editorProps: {
       attributes: {
-        class: 'prose prose-zinc prose-sm sm:prose lg:prose-lg xl:prose-2xl m-5 focus:outline-none min-h-[200px] max-w-none prose-ul:list-disc prose-ol:list-decimal',
+        class: 'job-content m-5 focus:outline-none min-h-[200px]',
       },
     },
+    immediatelyRender: false,
   });
 
   // Watch for external value changes (translation, clear, initial load)

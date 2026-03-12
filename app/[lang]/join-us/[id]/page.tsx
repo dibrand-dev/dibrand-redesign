@@ -142,29 +142,15 @@ export default async function JobDetailPage({ params }: Props) {
                         <div className="lg:col-span-8">
                                 {/* Role Description */}
                                 <div 
-                                    className="prose prose-zinc max-w-none
-                                        prose-headings:font-outfit prose-headings:font-bold prose-headings:text-zinc-900 prose-headings:mb-8 prose-headings:mt-16 first:prose-headings:mt-0
-                                        prose-p:text-zinc-600 prose-p:leading-[1.8] prose-p:text-justify prose-p:font-light prose-p:mb-10
-                                        prose-strong:text-zinc-900 prose-strong:font-bold
-                                        prose-ul:list-disc prose-ul:pl-5 prose-ul:mt-4 prose-ul:mb-8
-                                        prose-ol:list-decimal prose-ol:pl-5 prose-ol:mt-4 prose-ol:mb-8
-                                        prose-li:marker:text-brand prose-li:text-zinc-600 prose-li:font-light prose-li:mb-3
-                                    "
+                                    className="job-content"
                                     dangerouslySetInnerHTML={{ __html: jobDescription || '' }}
                                 />
 
                                 {jobRequirements && (
-                                    <div className="mt-20 pt-12 border-t border-zinc-100">
-                                        <h2 className="text-4xl mb-8 font-outfit font-bold">{isEn ? 'Requirements' : 'Requisitos'}</h2>
+                                    <div className="mt-6 pt-6 border-t border-zinc-100">
+                                        <h2 className="text-2xl font-bold text-zinc-900 mt-0 mb-4 font-heading uppercase tracking-tight">{isEn ? 'Requirements' : 'Requisitos'}</h2>
                                         <div 
-                                            className="prose prose-zinc max-w-none
-                                                prose-headings:font-outfit prose-headings:font-bold prose-headings:text-zinc-900 prose-headings:mb-8 prose-headings:mt-16 first:prose-headings:mt-0
-                                                prose-p:text-zinc-600 prose-p:leading-[1.8] prose-p:text-justify prose-p:font-light prose-p:mb-10
-                                                prose-strong:text-zinc-900 prose-strong:font-bold
-                                                prose-ul:list-disc prose-ul:pl-5 prose-ul:mt-4 prose-ul:mb-8
-                                                prose-ol:list-decimal prose-ol:pl-5 prose-ol:mt-4 prose-ol:mb-8
-                                                prose-li:marker:text-brand prose-li:text-zinc-600 prose-li:font-light prose-li:mb-3
-                                            "
+                                            className="job-content"
                                             dangerouslySetInnerHTML={{ __html: jobRequirements }}
                                         />
                                     </div>

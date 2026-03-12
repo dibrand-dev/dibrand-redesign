@@ -54,6 +54,7 @@
   --color-admin-text-primary: var(--admin-text-primary);
   --color-admin-text-secondary: var(--admin-text-secondary);
 
+  --font-outfit: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-inter), var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
 }
@@ -139,4 +140,45 @@ h6 {
 /* Admin Docs Scroll Margin */
 .admin-docs-content :is(h1, h2, h3) {
   scroll-margin-top: 100px;
+}
+
+/* Job Detail Typography Refinements */
+.job-content {
+  @apply prose prose-zinc max-w-none;
+}
+
+.job-content h2 {
+  @apply text-2xl font-bold text-zinc-900 mt-4 mb-4 font-heading uppercase tracking-tight;
+}
+
+.job-content h3 {
+  @apply text-xl font-bold text-zinc-900 mt-4 mb-3 font-heading;
+}
+
+.job-content p {
+  @apply text-zinc-600 leading-relaxed mb-4 font-light text-justify;
+}
+
+.job-content ul {
+  @apply list-disc pl-5 mb-6;
+}
+
+.job-content ol {
+  @apply list-decimal pl-5 mb-6;
+}
+
+.job-content li {
+  @apply text-zinc-600 mb-1 font-light;
+}
+
+.job-content li::marker {
+  @apply text-brand font-bold;
+}
+
+.job-content li p {
+  @apply my-0 inline;
+}
+
+.job-content strong {
+  @apply font-bold text-zinc-900;
 }

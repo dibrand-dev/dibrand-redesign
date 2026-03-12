@@ -185,6 +185,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                 <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">{dict.country} *</label>
                     <Select
+                        instanceId="country-select"
                         options={countries}
                         value={selectedCountry}
                         onChange={handleCountryChange}
@@ -195,6 +196,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                 <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">{dict.stateProvince} *</label>
                     <Select
+                        instanceId="state-select"
                         options={states}
                         value={selectedState}
                         onChange={(s) => setSelectedState(s)}
@@ -208,6 +210,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
             <div className="space-y-1.5">
                 <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">{dict.techStacks} *</label>
                 <Select
+                    instanceId="tech-stacks-select"
                     isMulti
                     options={stacks}
                     value={selectedStacks}

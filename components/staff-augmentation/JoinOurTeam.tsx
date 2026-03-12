@@ -112,63 +112,52 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                     </div>
 
                                     {/* Content */}
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <Link href={`/${lang}/join-us/${job.id}`} className="min-w-0">
-                                                <h3 className="text-xl font-bold text-[#101828] font-inter truncate pr-2 group-hover:text-brand transition-colors leading-snug">
-                                                    {jobTitle}
-                                                </h3>
-                                            </Link>
-                                            <button 
-                                                onClick={(e) => toggleBookmark(job.id, e)}
-                                                className={`transition-all p-1.5 rounded-lg ${isBookmarked ? 'text-brand bg-brand/5' : 'text-[#667085] hover:text-brand hover:bg-zinc-50'}`}
-                                            >
-                                                <Bookmark size={22} fill={isBookmarked ? "currentColor" : "none"} strokeWidth={isBookmarked ? 1.5 : 2} />
-                                            </button>
-                                        </div>
+                                     <div className="flex-1 min-w-0">
+                                         <div className="flex justify-between items-start mb-2">
+                                             <Link href={`/${lang}/join-us/${job.id}`} className="min-w-0">
+                                                 <h3 className="text-xl font-bold text-[#101828] font-inter truncate pr-2 group-hover:text-brand transition-colors leading-snug uppercase">
+                                                     {jobTitle}
+                                                 </h3>
+                                             </Link>
+                                             <button 
+                                                 onClick={(e) => toggleBookmark(job.id, e)}
+                                                 className={`transition-all p-1.5 rounded-lg ${isBookmarked ? 'text-brand bg-brand/5' : 'text-[#667085] hover:text-brand hover:bg-zinc-50'}`}
+                                             >
+                                                 <Bookmark size={22} fill={isBookmarked ? "currentColor" : "none"} strokeWidth={1.5} />
+                                             </button>
+                                         </div>
 
-                                        {/* Meta Row (Icons) - More compact and gray */}
-                                        <div className="flex flex-wrap items-center gap-x-5 gap-y-3 mb-6 opacity-70">
-                                            <div className="flex items-center gap-2 text-sm text-[#344054] font-medium">
-                                                <Building2 size={16} strokeWidth={2} />
-                                                <span className="truncate max-w-[140px]">{job.industry}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm text-[#344054] font-medium">
-                                                <MapPin size={16} strokeWidth={2} />
-                                                <span className="truncate max-w-[140px]">{jobLocation}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm text-[#344054] font-medium">
-                                                <Clock size={16} strokeWidth={2} />
-                                                <span>{getRelativeTime(job.created_at)}</span>
-                                            </div>
-                                            {job.salary_range && (
-                                                <div className="flex items-center gap-2 text-sm text-[#344054] font-medium">
-                                                    <DollarSign size={16} strokeWidth={2} />
-                                                    <span>{job.salary_range}</span>
-                                                </div>
-                                            )}
-                                        </div>
+                                         {/* Meta Row (Icons) - Whitelisted 5 keys */}
+                                         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-6">
+                                             {/* Industry */}
+                                             <div className="flex items-center gap-2 text-sm text-[#475467] font-medium">
+                                                 <Building2 size={16} className="text-zinc-400" />
+                                                 <span className="truncate">{job.industry}</span>
+                                             </div>
+                                             {/* Location */}
+                                             <div className="flex items-center gap-2 text-sm text-[#475467] font-medium">
+                                                 <MapPin size={16} className="text-zinc-400" />
+                                                 <span className="truncate">{jobLocation}</span>
+                                             </div>
+                                             {/* Seniority - CRITICAL VISIBILITY */}
+                                             <div className="flex items-center gap-2 text-sm text-brand font-bold bg-brand/5 px-2 py-0.5 rounded-md">
+                                                 <Clock size={16} />
+                                                 <span className="uppercase tracking-wider text-[10px]">{job.seniority || 'Senior'}</span>
+                                             </div>
+                                         </div>
 
-                                        {/* Badges Row - Clean SaaS pills */}
-                                        <div className="flex flex-wrap gap-2.5">
-                                            {/* Contract Badge - Blue */}
-                                            <span className="px-3.5 py-1.5 bg-[#EFF8FF] text-[#175CD3] text-[11px] font-bold rounded-full border border-[#B2DDFF] uppercase tracking-wider">
-                                                {job.employment_type?.replace('_', ' ') || 'Full Time'}
-                                            </span>
-                                            
-                                            {/* Visibility Badge - Green */}
-                                            <span className="px-3.5 py-1.5 bg-[#ECFDF3] text-[#027A48] text-[11px] font-bold rounded-full border border-[#ABEFC6] uppercase tracking-wider">
-                                                {isEn ? 'Public' : 'Público'}
-                                            </span>
-
-                                            {/* Urgency Badge - Orange (Conditional) */}
-                                            {(isUrgent || job.id.length % 2 === 0) && (
-                                                <span className="px-3.5 py-1.5 bg-[#FFFAEB] text-[#B54708] text-[11px] font-bold rounded-full border border-[#FEDF89] uppercase tracking-wider">
-                                                    {isEn ? 'Urgent' : 'Urgente'}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
+                                         {/* Badges Row - Restricted to Modality & Contract */}
+                                         <div className="flex flex-wrap gap-2.5">
+                                             {job.modality && (
+                                                 <span className="px-3.5 py-1.5 bg-[#F9F5FF] text-brand text-[10px] font-black rounded-full border border-brand/20 uppercase tracking-widest">
+                                                     {job.modality}
+                                                 </span>
+                                             )}
+                                             <span className="px-3.5 py-1.5 bg-zinc-100 text-zinc-600 text-[10px] font-black rounded-full border border-zinc-200 uppercase tracking-widest">
+                                                 {job.employment_type?.replace('_', ' ') || 'Full Time'}
+                                             </span>
+                                         </div>
+                                     </div>
                                 </div>
                             </motion.div>
                         );

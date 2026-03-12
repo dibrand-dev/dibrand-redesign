@@ -54,6 +54,8 @@ export async function createJob(formData: any) {
 
     if (error) throw error;
     revalidatePath('/admin/jobs');
+    revalidatePath('/en/join-us');
+    revalidatePath('/es/join-us');
     return { success: true };
 }
 
@@ -85,7 +87,10 @@ export async function updateJob(id: string, formData: any) {
 
     if (error) throw error;
     revalidatePath('/admin/jobs');
-    revalidatePath(`/admin/jobs/${id}`);
+    revalidatePath(`/en/join-us/${id}`);
+    revalidatePath(`/es/join-us/${id}`);
+    revalidatePath('/en/join-us');
+    revalidatePath('/es/join-us');
     return { success: true };
 }
 

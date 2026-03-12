@@ -22,7 +22,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ dict }: HeroSectionProps) {
     return (
-        <section className="relative min-h-[750px] md:h-[800px] lg:h-[900px] w-full overflow-hidden flex items-center py-24 md:py-0">
+        <section className="relative h-screen min-h-[700px] w-full overflow-hidden flex flex-col">
             {/* Capa 1: Imagen de Fondo */}
             <Image
                 src="/oficina-dibrand.png"
@@ -36,21 +36,21 @@ export default function HeroSection({ dict }: HeroSectionProps) {
             <div className="absolute inset-0 z-10 bg-zinc-950/80 md:bg-zinc-950/60" />
 
             {/* Capa 3: Contenido de Texto */}
-            <div className="relative z-20 container mx-auto px-6 h-full flex flex-col items-center justify-center text-center">
-                <h1 className="font-outfit text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white leading-[0.9] max-w-5xl uppercase">
+            <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-20 pb-10">
+                <h1 className="font-outfit text-[32px] sm:text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter text-white leading-[1.05] md:leading-[1.1] max-w-5xl uppercase">
                     {dict.hero.title}
                 </h1>
 
                 <p
-                    className="mt-10 text-lg md:text-2xl leading-relaxed text-zinc-100 max-w-3xl font-outfit font-light"
+                    className="mt-4 md:mt-6 text-base md:text-xl leading-relaxed text-zinc-100 max-w-2xl font-outfit font-light"
                     dangerouslySetInnerHTML={{ __html: dict.hero.subtitle }}
                 />
 
-                <div className="mt-16 md:mt-24 flex flex-col items-center gap-12 md:gap-20">
+                <div className="mt-8 md:mt-10 flex flex-col items-center w-full max-w-4xl">
                     <ScheduleButton text={dict.hero.cta} />
 
-                    {/* Stats - Improved spacing for mobile accessibility */}
-                    <div className="flex flex-wrap justify-center gap-10 md:gap-24 items-center pt-8 border-t border-white/10 w-full max-w-4xl">
+                    {/* Stats - Compact Row */}
+                    <div className="mt-12 md:mt-16 flex flex-wrap justify-center gap-6 md:gap-16 items-center pt-8 border-t border-white/10 w-full">
                         {dict.stats.items.map((stat, index) => (
                             <StatCounter key={index} value={stat.value} label={stat.label} />
                         ))}

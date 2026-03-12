@@ -271,6 +271,24 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                             </select>
                         </div>
                     </div>
+
+                    {/* Internal Only Fields */}
+                    <div className="pt-4 border-t border-admin-border/30">
+                        <div className="max-w-xs space-y-2">
+                            <label className="text-[11px] font-black text-brand uppercase tracking-widest flex items-center gap-2">
+                                Tarifa Interna / Rate (Privado)
+                            </label>
+                            <input
+                                type="text"
+                                name="salary_range"
+                                value={formData.salary_range}
+                                onChange={handleChange}
+                                placeholder="Ej: $3500 - $4500 USD"
+                                className="w-full px-5 py-3.5 bg-brand/[0.03] border border-brand/20 rounded-xl focus:ring-4 focus:ring-brand/5 focus:border-brand outline-none text-brand font-bold transition-all"
+                            />
+                            <p className="text-[9px] text-gray-400 uppercase tracking-widest font-bold">DATO CONFIDENCIAL: Nunca se muestra en el sitio público.</p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Section: Content */}

@@ -21,8 +21,8 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
     const params = await props.params;
     const dict = await getDictionary(params.lang);
 
-    // Fetch active job openings with bilingual support
-    let jobs = null;
+    // Fetch active job openings with bilingual support - STRICT WHITELIST FOR PUBLIC VIEW
+    let jobs: any[] | null = null;
     try {
         const { data, error } = await supabase
             .from('job_openings')
@@ -30,15 +30,10 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
                 id, 
                 title, title_es, title_en,
                 location, location_es, location_en,
-                employment_type, 
-                is_active, 
-                description, description_es, description_en,
-                requirements, requirements_es, requirements_en, 
                 industry, 
                 seniority, 
                 modality,
-                created_at,
-                salary_range
+                employment_type
             `)
             .eq('is_active', true)
             .order('created_at', { ascending: false });
@@ -46,14 +41,8 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
         if (error) throw error;
         jobs = data;
     } catch (e) {
-        console.warn('Bilingual or column query failed, falling back to minimal schema:', e);
-        // Extreme fallback: only grab columns we are 100% sure exist
-        const { data } = await supabase
-            .from('job_openings')
-            .select('id, title, location, employment_type, is_active, description, requirements, industry, created_at')
-            .eq('is_active', true)
-            .order('created_at', { ascending: false });
-        jobs = data;
+        console.warn('Job query failed:', e);
+        jobs = [];
     }
 
     return (
