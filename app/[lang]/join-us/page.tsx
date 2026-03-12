@@ -22,22 +22,38 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
     const dict = await getDictionary(params.lang);
 
     // Fetch active job openings with bilingual support
-    const { data: jobs } = await supabase
-        .from('job_openings')
-        .select(`
-            id, 
-            title, title_es, title_en,
-            location, location_es, location_en,
-            employment_type, 
-            is_active, 
-            description, description_es, description_en,
-            requirements, requirements_es, requirements_en, 
-            industry, 
-            seniority, 
-            modality
-        `)
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
+    let jobs = null;
+    try {
+        const { data, error } = await supabase
+            .from('job_openings')
+            .select(`
+                id, 
+                title, title_es, title_en,
+                location, location_es, location_en,
+                employment_type, 
+                is_active, 
+                description, description_es, description_en,
+                requirements, requirements_es, requirements_en, 
+                industry, 
+                seniority, 
+                modality,
+                created_at
+            `)
+            .eq('is_active', true)
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        jobs = data;
+    } catch (e) {
+        console.warn('Bilingual query failed, falling back to legacy schema:', e);
+        // Fallback to legacy columns to keep site running while migration is pending
+        const { data } = await supabase
+            .from('job_openings')
+            .select('id, title, location, employment_type, is_active, description, requirements, industry, seniority, modality, created_at')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false });
+        jobs = data;
+    }
 
     return (
         <div className="flex min-h-screen flex-col bg-white pt-20">

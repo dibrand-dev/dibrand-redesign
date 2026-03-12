@@ -44,11 +44,18 @@ export default async function JobDetailPage({ params }: Props) {
     const dict = await getDictionary(lang);
     const isEn = lang === 'en';
 
-    const { data: job } = await supabase
-        .from('job_openings')
-        .select('*')
-        .eq('id', id)
-        .single();
+    let job = null;
+    try {
+        const { data, error } = await supabase
+            .from('job_openings')
+            .select('*')
+            .eq('id', id)
+            .single();
+        if (error) throw error;
+        job = data;
+    } catch (e) {
+        console.error('Job query error:', e);
+    }
 
     if (!job) {
         return (
