@@ -23,8 +23,8 @@ interface JobOpening {
     requirements: string;
     requirements_es?: string;
     requirements_en?: string;
-    seniority: string;
-    modality: string;
+    seniority?: string;
+    modality?: string;
 }
 
 interface JoinOurTeamProps {

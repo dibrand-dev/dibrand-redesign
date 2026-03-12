@@ -45,11 +45,11 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
         if (error) throw error;
         jobs = data;
     } catch (e) {
-        console.warn('Bilingual query failed, falling back to legacy schema:', e);
-        // Fallback to legacy columns to keep site running while migration is pending
+        console.warn('Bilingual or column query failed, falling back to minimal schema:', e);
+        // Extreme fallback: only grab columns we are 100% sure exist
         const { data } = await supabase
             .from('job_openings')
-            .select('id, title, location, employment_type, is_active, description, requirements, industry, seniority, modality, created_at')
+            .select('id, title, location, employment_type, is_active, description, requirements, industry, created_at')
             .eq('is_active', true)
             .order('created_at', { ascending: false });
         jobs = data;
