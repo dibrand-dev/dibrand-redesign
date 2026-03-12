@@ -37,7 +37,8 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
                 industry, 
                 seniority, 
                 modality,
-                created_at
+                created_at,
+                salary_range
             `)
             .eq('is_active', true)
             .order('created_at', { ascending: false });
