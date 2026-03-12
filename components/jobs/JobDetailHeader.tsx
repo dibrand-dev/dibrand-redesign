@@ -21,74 +21,76 @@ export default function JobDetailHeader({ job, jobTitle, jobLocation, isEn }: Jo
     };
 
     return (
-        <header className="mb-12 bg-zinc-50 border border-zinc-200 rounded-[24px] p-8 md:p-12 shadow-sm">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10">
+        <header className="mb-12 bg-white border border-zinc-100 rounded-[24px] p-8 md:p-10 shadow-sm">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 md:gap-10">
                 
                 {/* Left Content Block */}
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-8 flex-1">
-                    {/* Logo Slot */}
-                    <div className="shrink-0 w-20 h-20 bg-[#101828] rounded-[18px] flex items-center justify-center text-white shadow-lg shadow-zinc-200">
-                        <div className="font-black text-3xl italic tracking-tighter opacity-90">di</div>
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8 flex-1">
+                    {/* Logo Slot - Now Black per reference */}
+                    <div className="shrink-0 w-16 h-16 md:w-20 md:h-20 bg-[#101828] rounded-[18px] flex items-center justify-center text-white shadow-xl shadow-zinc-200">
+                        <div className="font-black text-2xl md:text-3xl italic tracking-tighter opacity-90">di</div>
                     </div>
 
                     {/* Info Block */}
                     <div className="flex-1 text-center md:text-left min-w-0">
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-900 font-inter tracking-tight leading-tight mb-4 truncate">
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-900 font-inter tracking-tight leading-tight mb-4 pr-4">
                             {jobTitle}
                         </h1>
 
-                        {/* Meta Icons Row */}
-                        <div className="flex flex-wrap justify-center md:justify-start items-center gap-x-6 gap-y-3 mb-6 opacity-70">
-                            <div className="flex items-center gap-2 text-sm text-zinc-700 font-medium">
-                                <Building2 size={18} strokeWidth={2} />
-                                <span>{job.industry}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-zinc-700 font-medium">
-                                <MapPin size={18} strokeWidth={2} />
-                                <span>{jobLocation}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-zinc-700 font-medium">
-                                <Clock size={18} strokeWidth={2} />
-                                <span>{isEn ? 'Posted recently' : 'Publicado recientemente'}</span>
-                            </div>
-                            {job.salary_range && (
-                                <div className="flex items-center gap-2 text-sm text-zinc-700 font-medium">
-                                    <DollarSign size={18} strokeWidth={2} />
-                                    <span>{job.salary_range}</span>
+                        {/* Meta Icons Row (Only showing requested 5 keys) */}
+                        <div className="flex flex-wrap justify-center md:justify-start items-center gap-x-6 gap-y-3 mb-6">
+                            {job.industry && (
+                                <div className="flex items-center gap-2 text-sm text-[#667085] font-medium">
+                                    <Building2 size={18} className="opacity-70" />
+                                    <span>{job.industry}</span>
+                                </div>
+                            )}
+                            {jobLocation && (
+                                <div className="flex items-center gap-2 text-sm text-[#667085] font-medium">
+                                    <MapPin size={18} className="opacity-70" />
+                                    <span>{jobLocation}</span>
+                                </div>
+                            )}
+                            {job.seniority && (
+                                <div className="flex items-center gap-2 text-sm text-[#667085] font-medium">
+                                    <Clock size={18} className="opacity-70" />
+                                    <span>{job.seniority}</span>
                                 </div>
                             )}
                         </div>
 
-                        {/* Badges Row */}
+                        {/* Badges Row - Restricted to requested types (Contract/Modality) */}
                         <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                            <span className="px-4 py-1.5 bg-[#EFF8FF] text-[#175CD3] text-xs font-bold rounded-full border border-[#B2DDFF] uppercase tracking-wider">
-                                {job.employment_type?.replace('_', ' ') || 'Full Time'}
-                            </span>
-                            <span className="px-4 py-1.5 bg-[#ECFDF3] text-[#027A48] text-xs font-bold rounded-full border border-[#ABEFC6] uppercase tracking-wider">
-                                {isEn ? 'Public' : 'Público'}
-                            </span>
-                            <span className="px-4 py-1.5 bg-[#FFFAEB] text-[#B54708] text-xs font-bold rounded-full border border-[#FEDF89] uppercase tracking-wider">
-                                {isEn ? 'Urgent' : 'Urgente'}
-                            </span>
+                            {job.employment_type && (
+                                <span className="px-4 py-1.5 bg-[#EFF8FF] text-[#175CD3] text-[11px] font-bold rounded-full border border-[#B2DDFF] uppercase tracking-wider">
+                                    {job.employment_type.replace('_', ' ')}
+                                </span>
+                            )}
+                            {job.modality && (
+                                <span className="px-4 py-1.5 bg-[#ECFDF3] text-[#027A48] text-[11px] font-bold rounded-full border border-[#ABEFC6] uppercase tracking-wider">
+                                    {job.modality}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
 
                 {/* Right Action Block */}
-                <div className="flex items-center justify-center lg:justify-end gap-4 shrink-0">
+                <div className="flex items-center justify-center lg:justify-end gap-4 shrink-0 w-full lg:w-auto">
                     <button 
                         onClick={handleApplyClick}
-                        className="px-10 py-5 bg-brand text-white font-bold rounded-[14px] hover:bg-brand/90 hover:scale-[1.02] transition-all shadow-xl shadow-brand/20 active:scale-95 font-inter text-base flex-1 md:flex-none text-center"
+                        className="px-8 md:px-10 py-4 md:py-5 bg-brand text-white font-bold rounded-[14px] hover:bg-brand/90 hover:scale-[1.02] transition-all shadow-lg md:shadow-xl shadow-brand/30 active:scale-95 font-inter text-base flex-1 md:flex-none text-center"
                     >
-                        {isEn ? 'Apply For Job' : 'Postularme Ahora'}
+                        {isEn ? 'Apply Now' : 'Postularme Ahora'}
                     </button>
                     <button 
                         onClick={() => setIsBookmarked(!isBookmarked)}
-                        className={`w-16 h-16 flex items-center justify-center border rounded-[14px] transition-all shadow-sm ${
+                        className={`w-14 h-14 md:w-16 md:h-16 flex items-center justify-center border rounded-[14px] transition-all shadow-sm ${
                             isBookmarked 
                             ? 'bg-brand/5 border-brand text-brand' 
                             : 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50 hover:border-zinc-300'
                         }`}
+                        aria-label="Bookmark job"
                     >
                         <Bookmark size={24} fill={isBookmarked ? "currentColor" : "none"} strokeWidth={isBookmarked ? 1.5 : 2} />
                     </button>

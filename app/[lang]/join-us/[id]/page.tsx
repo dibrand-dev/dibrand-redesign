@@ -49,7 +49,15 @@ export default async function JobDetailPage({ params }: Props) {
     try {
         const { data, error } = await supabase
             .from('job_openings')
-            .select('*')
+            .select(`
+                id,
+                title, title_es, title_en,
+                location, location_es, location_en,
+                description, description_es, description_en,
+                requirements, requirements_es, requirements_en,
+                industry, seniority, modality, employment_type,
+                is_active, created_at
+            `)
             .eq('id', id)
             .single();
         if (error) throw error;
