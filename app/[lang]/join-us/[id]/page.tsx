@@ -16,17 +16,27 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id, lang } = await params;
-    const { data: job } = await supabase
-        .from('job_openings')
-        .select('title, title_es, title_en')
-        .eq('id', id)
-        .single();
+    
+    try {
+        const { data: job, error } = await supabase
+            .from('job_openings')
+            .select('title, title_es, title_en')
+            .eq('id', id)
+            .single();
 
-    const title = job ? (lang === 'en' ? (job.title_en || job.title) : (job.title_es || job.title)) : 'Job Detail';
+        if (error) throw error;
 
-    return {
-        title: `${title} | Dibrand Careers`,
-    };
+        const title = job ? (lang === 'en' ? (job.title_en || job.title) : (job.title_es || job.title)) : 'Job Detail';
+
+        return {
+            title: `${title} | Dibrand Careers`,
+        };
+    } catch (e) {
+        console.error('Metadata error:', e);
+        return {
+            title: `Job Opening | Dibrand Careers`,
+        };
+    }
 }
 
 export default async function JobDetailPage({ params }: Props) {

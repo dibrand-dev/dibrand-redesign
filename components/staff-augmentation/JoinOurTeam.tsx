@@ -139,7 +139,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
 
                                         {/* Snippet */}
                                         <div className="text-zinc-500 mb-12 line-clamp-3 font-outfit font-light leading-relaxed text-base italic">
-                                            "{jobDesc?.replace(/[#*`]/g, '').slice(0, 180)}..."
+                                            "{jobDesc?.replace(/[#*`]/g, '')?.slice(0, 180)}..."
                                         </div>
 
                                         {/* Actions */}
