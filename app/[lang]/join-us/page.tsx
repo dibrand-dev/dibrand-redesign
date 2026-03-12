@@ -21,10 +21,21 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
     const params = await props.params;
     const dict = await getDictionary(params.lang);
 
-    // Fetch active job openings
+    // Fetch active job openings with bilingual support
     const { data: jobs } = await supabase
         .from('job_openings')
-        .select('id, title, location, employment_type, is_active, description, requirements, industry, seniority, modality')
+        .select(`
+            id, 
+            title, title_es, title_en,
+            location, location_es, location_en,
+            employment_type, 
+            is_active, 
+            description, description_es, description_en,
+            requirements, requirements_es, requirements_en, 
+            industry, 
+            seniority, 
+            modality
+        `)
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 

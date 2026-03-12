@@ -6,7 +6,7 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
 
 export async function POST(req: Request) {
   try {
-    const { text, targetLang } = await req.json();
+    const { text, targetLang, context } = await req.json();
 
     if (!text) {
       return NextResponse.json({ error: 'No text provided' }, { status: 400 });
@@ -18,10 +18,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Translation service not configured (Missing API Key)' }, { status: 500 });
     }
 
-    console.log(`Translating text (len: ${text.length}) to ${targetLang}. Key starts with: ${apiKey.substring(0, 4)}...`);
+    console.log(`Translating text (len: ${text.length}) to ${targetLang} with context: ${context || 'default'}.`);
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    // These names come from our emergency discovery in the user's account
+    
+    // Determine the system prompt based on context
+    let systemInstruction = `Sos un experto traductor de ingeniería de software para una boutique de tecnología de clase mundial. Traducí del español al inglés americano. No busqués una traducción literal; refiná el estilo para que suene aspiracional, profesional y senior. Usá terminología precisa como 'Staff Augmentation', 'Roadmap', 'Scalability' y 'Impact-driven development'. El resultado debe estar a la altura de agencias como Rootstrap o Thoughtbot. Retorná ÚNICAMENTE el texto traducido, sin explicaciones ni comillas.`;
+    
+    if (context === 'hr') {
+        systemInstruction = `Actúa como un reclutador tech senior. Traduce la descripción del puesto al inglés manteniendo un tono profesional, atractivo y claro. Usa terminología de la industria (ej. 'Remote-first', 'Perks', 'Technical Stack'). No busques una traducción literal; refina el estilo para atraer talento de clase mundial. Retorná ÚNICAMENTE el texto traducido, sin explicaciones ni comillas.`;
+    }
+
     const modelsToTry = [
         "gemini-2.0-flash-lite", 
         "gemini-2.5-flash-lite", 
@@ -34,7 +41,7 @@ export async function POST(req: Request) {
         try {
             console.log(`[TRANSLATE] Attempting with: ${modelName}`);
             const model = genAI.getGenerativeModel({ model: modelName });
-            const prompt = `System Instruction: Sos un experto traductor de ingeniería de software para una boutique de tecnología de clase mundial. Traducí del español al inglés americano. No busqués una traducción literal; refiná el estilo para que suene aspiracional, profesional y senior. Usá terminología precisa como 'Staff Augmentation', 'Roadmap', 'Scalability' y 'Impact-driven development'. El resultado debe estar a la altura de agencias como Rootstrap o Thoughtbot. Retorná ÚNICAMENTE el texto traducido, sin explicaciones ni comillas.
+            const prompt = `System Instruction: ${systemInstruction}
             
             Traducí el siguiente texto al ${targetLang === 'en' ? 'Inglés Americano' : 'Español'}: \n\n${text}`;
             

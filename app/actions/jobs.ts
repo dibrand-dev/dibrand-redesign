@@ -31,7 +31,26 @@ export async function createJob(formData: any) {
     const supabase = createAdminClient();
     const { error } = await supabase
         .from('job_openings')
-        .insert([formData]);
+        .insert([{
+            title: formData.title,
+            title_es: formData.title_es,
+            title_en: formData.title_en,
+            industry: formData.industry,
+            location: formData.location,
+            location_es: formData.location_es,
+            location_en: formData.location_en,
+            employment_type: formData.employment_type,
+            description: formData.description,
+            description_es: formData.description_es,
+            description_en: formData.description_en,
+            requirements: formData.requirements,
+            requirements_es: formData.requirements_es,
+            requirements_en: formData.requirements_en,
+            seniority: formData.seniority,
+            modality: formData.modality,
+            salary_range: formData.salary_range,
+            is_active: formData.is_active,
+        }]);
 
     if (error) throw error;
     revalidatePath('/admin/jobs');
@@ -42,7 +61,26 @@ export async function updateJob(id: string, formData: any) {
     const supabase = createAdminClient();
     const { error } = await supabase
         .from('job_openings')
-        .update(formData)
+        .update({
+            title: formData.title,
+            title_es: formData.title_es,
+            title_en: formData.title_en,
+            industry: formData.industry,
+            location: formData.location,
+            location_es: formData.location_es,
+            location_en: formData.location_en,
+            employment_type: formData.employment_type,
+            description: formData.description,
+            description_es: formData.description_es,
+            description_en: formData.description_en,
+            requirements: formData.requirements,
+            requirements_es: formData.requirements_es,
+            requirements_en: formData.requirements_en,
+            seniority: formData.seniority,
+            modality: formData.modality,
+            salary_range: formData.salary_range,
+            is_active: formData.is_active,
+        })
         .eq('id', id);
 
     if (error) throw error;

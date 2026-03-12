@@ -18,12 +18,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id, lang } = await params;
     const { data: job } = await supabase
         .from('job_openings')
-        .select('title')
+        .select('title, title_es, title_en')
         .eq('id', id)
         .single();
 
+    const title = job ? (lang === 'en' ? (job.title_en || job.title) : (job.title_es || job.title)) : 'Job Detail';
+
     return {
-        title: job ? `${job.title} | Dibrand Careers` : 'Job Detail | Dibrand',
+        title: `${title} | Dibrand Careers`,
     };
 }
 
@@ -49,10 +51,15 @@ export default async function JobDetailPage({ params }: Props) {
         );
     }
 
+    const jobTitle = isEn ? (job.title_en || job.title) : (job.title_es || job.title);
+    const jobDescription = isEn ? (job.description_en || job.description) : (job.description_es || job.description);
+    const jobRequirements = isEn ? (job.requirements_en || job.requirements) : (job.requirements_es || job.requirements);
+    const jobLocation = isEn ? (job.location_en || job.location) : (job.location_es || job.location);
+
     const shareUrl = `https://dibrand.co/${lang}/join-us/${id}`;
     const shareText = isEn
-        ? `Check out this opening at Dibrand: ${job.title}`
-        : `Mira esta vacante en Dibrand: ${job.title}`;
+        ? `Check out this opening at Dibrand: ${jobTitle}`
+        : `Mira esta vacante en Dibrand: ${jobTitle}`;
 
     return (
         <div className="flex min-h-screen flex-col bg-white">
@@ -98,7 +105,7 @@ export default async function JobDetailPage({ params }: Props) {
                     {/* Main Job Title Header (Full Width) */}
                     <header className="mb-16 border-b border-zinc-100 pb-12">
                         <h1 className="text-5xl md:text-7xl font-bold text-brand mb-8 font-outfit tracking-tight leading-[1.1] lg:max-w-5xl">
-                            {job.title}
+                            {jobTitle}
                         </h1>
 
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] md:text-xs font-bold text-zinc-400 uppercase tracking-[0.2em] font-outfit">
@@ -106,7 +113,7 @@ export default async function JobDetailPage({ params }: Props) {
                             <span className="text-zinc-200">|</span>
                             <span>{job.industry}</span>
                             <span className="text-zinc-200">|</span>
-                            <span>{job.location}</span>
+                            <span>{jobLocation}</span>
                             <span className="text-zinc-200">|</span>
                             <span>{job.employment_type}</span>
                             <span className="text-zinc-200">|</span>
@@ -126,14 +133,14 @@ export default async function JobDetailPage({ params }: Props) {
                                 prose-ul:mt-4 prose-ul:mb-8
                             ">
                                 <ReactMarkdown rehypePlugins={[rehypeRaw]}>
-                                    {job.description}
+                                    {jobDescription || ''}
                                 </ReactMarkdown>
 
-                                {job.requirements && (
+                                {jobRequirements && (
                                     <div className="mt-20 pt-12 border-t border-zinc-100">
-                                        <h2 className="text-4xl mb-8 font-outfit font-bold">Requirements</h2>
+                                        <h2 className="text-4xl mb-8 font-outfit font-bold">{isEn ? 'Requirements' : 'Requisitos'}</h2>
                                         <ReactMarkdown rehypePlugins={[rehypeRaw]}>
-                                            {job.requirements}
+                                            {jobRequirements}
                                         </ReactMarkdown>
                                     </div>
                                 )}
