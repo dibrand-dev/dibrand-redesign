@@ -4,7 +4,7 @@
         "services": "Servicios",
         "successCases": "Casos de Éxito",
         "softwareDevelopment": "Desarrollo de Software",
-        "staffAugmentation": "Ingeniería Estratégica",
+        "staffAugmentation": "Staff Augmentation",
         "portfolio": "Portfolio",
         "aboutUs": "Nosotros",
         "careers": "Join Us",
@@ -138,7 +138,7 @@
                     "desc": "Nosotros gestionamos el back-office, beneficios y retención; tú conservas el 100% de la propiedad intelectual y el control."
                 }
             ],
-            "cta": "Explorar Ingeniería Estratégica"
+            "cta": "Explorar Staff Augmentation"
         },
         "trustedByTitle": "Empresas que confían en nosotros",
         "engineeringExcellence": {
@@ -148,7 +148,7 @@
                 "desc": "Construimos aplicaciones web y móviles escalables desde cero. Nos encargamos del diseño arquitectónico, experiencia de usuario (UX/UI), desarrollo de alto rendimiento y despliegue hacia la nube."
             },
             "staffAug": {
-                "title": "Strategic Staff Augmentation",
+                "title": "Staff Augmentation",
                 "desc": "El modelo de Dibrand integra talento técnico senior directamente en tu equipo. Perfiles pre-validados, bilingües y nativos en Inteligencia Artificial para multiplicar la velocidad de tu roadmap."
             }
         },

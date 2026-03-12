@@ -4,7 +4,7 @@
         "services": "Services",
         "successCases": "Success Stories",
         "softwareDevelopment": "Software Development",
-        "staffAugmentation": "Strategic Engineering",
+        "staffAugmentation": "Staff Augmentation",
         "portfolio": "Portfolio",
         "aboutUs": "About Us",
         "careers": "Join Us",
@@ -138,7 +138,7 @@
                     "desc": "We handle the back-office, benefits, and retention; you keep 100% of the IP and control."
                 }
             ],
-            "cta": "Explore Strategic Engineering"
+            "cta": "Explore Staff Augmentation"
         },
         "trustedByTitle": "Some companies that trust us",
         "engineeringExcellence": {
@@ -148,7 +148,7 @@
                 "desc": "We build scalable web and mobile applications from scratch. We handle the architectural design, user experience (UX/UI), high-performance development, and cloud deployment."
             },
             "staffAug": {
-                "title": "Strategic Staff Augmentation",
+                "title": "Staff Augmentation",
                 "desc": "Dibrand's model integrates senior technical talent directly into your team. Pre-validated, bilingual, and AI-native profiles to multiply your roadmap's velocity."
             }
         },
