@@ -15,6 +15,7 @@ interface NavbarProps {
             successCases: string;
             softwareDevelopment: string;
             staffAugmentation: string;
+            softwareOutsourcing: string;
             portfolio: string;
             aboutUs: string;
             careers: string;
@@ -69,6 +70,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
     const navLinks = [
         { name: dict.navigation.softwareDevelopment, href: `/${lang}#services` },
         { name: dict.navigation.staffAugmentation, href: `/${lang}/staff-augmentation` },
+        { name: dict.navigation.softwareOutsourcing, href: `/${lang}/software-outsourcing` },
         { name: dict.navigation.portfolio, href: `/${lang}/success-stories` },
         { name: dict.navigation.careers, href: `/${lang}/join-us` },
         { name: dict.navigation.aboutUs, href: `/${lang}/about` },

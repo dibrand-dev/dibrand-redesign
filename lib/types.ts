@@ -6,6 +6,7 @@ export interface Dictionary {
         successCases: string;
         softwareDevelopment: string;
         staffAugmentation: string;
+        softwareOutsourcing: string;
         portfolio: string;
         aboutUs: string;
         careers: string;
@@ -75,6 +76,17 @@ export interface Dictionary {
         theDibrandWay: {
             title: string;
             items: Array<{ title: string; desc: string }>;
+        };
+    };
+    softwareOutsourcing: {
+        hero: {
+            title: string;
+            subtitle: string;
+            cta: string;
+        };
+        pillars: {
+            items: Array<{ title: string; desc: string }>;
+            lema: string;
         };
     };
 }

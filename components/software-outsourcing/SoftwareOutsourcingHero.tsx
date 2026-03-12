@@ -1,0 +1,46 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
+
+interface SoftwareOutsourcingHeroProps {
+    dict: {
+        hero: {
+            title: string;
+            subtitle: string;
+            cta: string;
+        };
+    };
+    lang: string;
+}
+
+export default function SoftwareOutsourcingHero({ dict, lang }: SoftwareOutsourcingHeroProps) {
+    return (
+        <section className="relative h-[80vh] min-h-[600px] w-full overflow-hidden flex flex-col">
+            <Image
+                src="/images/outsourcing.png"
+                alt="Dibrand Software Outsourcing - End-to-End Product Development"
+                fill
+                priority
+                className="object-cover z-0"
+            />
+            <div className="absolute inset-0 z-10 bg-zinc-950/80 md:bg-zinc-950/60" />
+            <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-32 pb-16">
+                <h1 className="font-outfit text-[32px] sm:text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter text-white leading-[1.05] md:leading-[1.1] max-w-5xl uppercase">
+                    {dict.hero.title}
+                </h1>
+                <p className="mt-4 md:mt-6 text-base md:text-xl leading-relaxed text-zinc-100 max-w-2xl font-outfit font-light">
+                    {dict.hero.subtitle}
+                </p>
+                <div className="mt-10 flex flex-col items-center w-full max-w-4xl">
+                    <Link
+                        href={`/${lang}/contact?subject=Software Outsourcing Inquiry`}
+                        className="inline-flex items-center gap-3 px-10 py-5 bg-brand text-white font-bold rounded-full hover:bg-brand/90 hover:scale-[1.02] transition-all group font-outfit"
+                    >
+                        {dict.hero.cta}
+                        <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </Link>
+                </div>
+            </div>
+        </section>
+    );
+}

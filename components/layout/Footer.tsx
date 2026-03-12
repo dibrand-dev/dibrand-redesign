@@ -51,30 +51,39 @@ export default function Footer({ dict, lang }: FooterProps) {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-12">
+                        <div className="flex flex-col gap-2">
+                            <span className="text-white font-medium">Services</span>
+                            <a href={`/${lang}/staff-augmentation`} className="text-gray-400 hover:text-brand transition-colors">
+                                {dict.navigation.staffAugmentation}
+                            </a>
+                            <a href={`/${lang}/software-outsourcing`} className="text-gray-400 hover:text-brand transition-colors">
+                                {dict.navigation.softwareOutsourcing}
+                            </a>
+                        </div>
                         <div className="flex flex-col gap-2">
                             <span className="text-white font-medium">Join Us</span>
-                            <a href={`/${lang}/join-us`} className="text-gray-400 hover:text-brand transition-colors text-lg">
+                            <a href={`/${lang}/join-us`} className="text-gray-400 hover:text-brand transition-colors">
                                 {dict.navigation.careers}
                             </a>
                         </div>
+                    </div>
 
-                        <div className="flex flex-col gap-2">
-                            <span className="text-white font-medium">Follow us</span>
-                            <div className="flex items-center gap-4 mt-2">
-                                <a href="https://www.linkedin.com/company/dibrand/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                                    <FaLinkedin size={28} />
-                                </a>
-                                <a href="https://www.facebook.com/dibrand.ok" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                                    <FaFacebook size={28} />
-                                </a>
-                                <a href="https://www.instagram.com/dibrand.ok/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                                    <FaInstagram size={28} />
-                                </a>
-                                <a href="https://x.com/Dibrand_ok" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                                    <FaXTwitter size={28} />
-                                </a>
-                            </div>
+                    <div className="flex flex-col gap-2">
+                        <span className="text-white font-medium">Follow us</span>
+                        <div className="flex items-center gap-4 mt-2">
+                            <a href="https://www.linkedin.com/company/dibrand/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                                <FaLinkedin size={28} />
+                            </a>
+                            <a href="https://www.facebook.com/dibrand.ok" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                                <FaFacebook size={28} />
+                            </a>
+                            <a href="https://www.instagram.com/dibrand.ok/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                                <FaInstagram size={28} />
+                            </a>
+                            <a href="https://x.com/Dibrand_ok" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                                <FaXTwitter size={28} />
+                            </a>
                         </div>
                     </div>
                 </div>

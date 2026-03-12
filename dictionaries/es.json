@@ -5,6 +5,7 @@
         "successCases": "Casos de Éxito",
         "softwareDevelopment": "Desarrollo de Software",
         "staffAugmentation": "Staff Augmentation",
+        "softwareOutsourcing": "Software Outsourcing",
         "portfolio": "Portfolio",
         "aboutUs": "Nosotros",
         "careers": "Join Us",
@@ -349,6 +350,34 @@
                     "desc": "No solo escribimos código; entendemos el negocio y proponemos soluciones que suman valor."
                 }
             ]
+        }
+    },
+    "softwareOutsourcing": {
+        "hero": {
+            "title": "Construimos tu producto de punta a punta.",
+            "subtitle": "Tomamos la responsabilidad total del desarrollo para que puedas enfocarte en escalar tu negocio. Ingeniería autónoma con entrega garantizada.",
+            "cta": "Agendar Consulta de Outsourcing"
+        },
+        "pillars": {
+            "items": [
+                {
+                    "title": "End-to-End Delivery",
+                    "desc": "Desde la concepción hasta el lanzamiento. Gestionamos el ciclo de vida completo del producto con metodologías ágiles."
+                },
+                {
+                    "title": "Autonomous Execution",
+                    "desc": "Equipos auto-gestionados que requieren mínima supervisión, permitiéndote foco estratégico total."
+                },
+                {
+                    "title": "Tailored Architecture",
+                    "desc": "Diseñamos soluciones tecnológicas escalables y seguras, adaptadas específicamente a tus objetivos de negocio."
+                },
+                {
+                    "title": "Turnkey Results",
+                    "desc": "Entregables listos para operar. No entregamos código suelto, entregamos soluciones de valor real."
+                }
+            ],
+            "lema": "Delegá el desarrollo, tomá el resultado."
         }
     },
     "joinOurTeam": {

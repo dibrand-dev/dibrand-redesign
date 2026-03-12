@@ -5,6 +5,7 @@
         "successCases": "Success Stories",
         "softwareDevelopment": "Software Development",
         "staffAugmentation": "Staff Augmentation",
+        "softwareOutsourcing": "Software Outsourcing",
         "portfolio": "Portfolio",
         "aboutUs": "About Us",
         "careers": "Join Us",
@@ -349,6 +350,34 @@
                     "desc": "We don’t just write code; we understand the business and propose value-adding solutions."
                 }
             ]
+        }
+    },
+    "softwareOutsourcing": {
+        "hero": {
+            "title": "We build your product from end to end.",
+            "subtitle": "We take full responsibility for development so you can focus on scaling your business. Autonomous engineering with guaranteed delivery.",
+            "cta": "Schedule Outsourcing Consultation"
+        },
+        "pillars": {
+            "items": [
+                {
+                    "title": "End-to-End Delivery",
+                    "desc": "From conception to launch. We manage the full product lifecycle with agile methodologies."
+                },
+                {
+                    "title": "Autonomous Execution",
+                    "desc": "Self-managed teams that require minimal supervision, allowing you total strategic focus."
+                },
+                {
+                    "title": "Tailored Architecture",
+                    "desc": "We design scalable and secure technological solutions, specifically adapted to your business goals."
+                },
+                {
+                    "title": "Turnkey Results",
+                    "desc": "Ready-to-operate deliverables. We don't deliver loose code; we deliver real value solutions."
+                }
+            ],
+            "lema": "Delegate the development, own the results."
         }
     },
     "joinOurTeam": {
