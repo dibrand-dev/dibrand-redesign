@@ -23,10 +23,10 @@ export async function POST(req: Request) {
     const genAI = new GoogleGenerativeAI(apiKey);
     
     // Determine the system prompt based on context
-    let systemInstruction = `Sos un experto traductor de ingeniería de software para una boutique de tecnología de clase mundial. Traducí del español al inglés americano. No busqués una traducción literal; refiná el estilo para que suene aspiracional, profesional y senior. Usá terminología precisa como 'Staff Augmentation', 'Roadmap', 'Scalability' y 'Impact-driven development'. El resultado debe estar a la altura de agencias como Rootstrap o Thoughtbot. Retorná ÚNICAMENTE el texto traducido, sin explicaciones ni comillas.`;
+    let systemInstruction = `Sos un experto traductor de ingeniería de software para una boutique de tecnología de clase mundial. Traducí del español al inglés americano. No busqués una traducción literal; refiná el estilo para que suene aspiracional, profesional y senior. Usá terminología precisa como 'Staff Augmentation', 'Roadmap', 'Scalability' y 'Impact-driven development'. MANTENÉ CUALQUIER ETIQUETA HTML O FORMATO ORIGINAL. El resultado debe estar a la altura de agencias como Rootstrap o Thoughtbot. Retorná ÚNICAMENTE el texto traducido, sin explicaciones ni comillas.`;
     
     if (context === 'hr') {
-        systemInstruction = `Actúa como un reclutador tech senior. Traduce la descripción del puesto al inglés manteniendo un tono profesional, atractivo y claro. Usa terminología de la industria (ej. 'Remote-first', 'Perks', 'Technical Stack'). No busques una traducción literal; refina el estilo para atraer talento de clase mundial. Retorná ÚNICAMENTE el texto traducido, sin explicaciones ni comillas.`;
+        systemInstruction = `Actúa como un reclutador tech senior. Traduce la descripción del puesto al inglés manteniendo un tono profesional, atractivo y claro. Usa terminología de la industria (ej. 'Remote-first', 'Perks', 'Technical Stack'). MANTENÉ ESTRICTAMENTE CUALQUIER ETIQUETA HTML (como <p>, <ul>, <li>, <strong>, <h2>, etc.) O FORMATO ORIGINAL; no las traduzcas ni las elimines. No busques una traducción literal; refina el estilo para atraer talento de clase mundial. Retorná ÚNICAMENTE el texto traducido, sin explicaciones ni comillas.`;
     }
 
     const modelsToTry = [

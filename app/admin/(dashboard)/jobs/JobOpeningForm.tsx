@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Sparkles, Loader2, Trash2, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { createJob, updateJob, deleteJob } from '@/app/actions/jobs';
-import RichMarkdownEditor from '@/components/admin/RichMarkdownEditor';
+import TiptapEditor from '@/components/admin/TiptapEditor';
 
 interface JobOpeningFormProps {
     initialData?: any;
@@ -280,10 +280,9 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                             <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Contenido de la Búsqueda ({lang.toUpperCase()})</h3>
                             <TranslateBtn field="description" />
                         </div>
-                        <RichMarkdownEditor
-                            label={`Descripción del Puesto (${lang === 'es' ? 'Español' : 'Inglés'})`}
+                        <TiptapEditor
                             value={lang === 'es' ? formData.description_es : formData.description_en}
-                            onChange={(val) => setFormData(prev => ({ ...prev, [lang === 'es' ? 'description_es' : 'description_en']: val }))}
+                            onChange={(val: string) => setFormData(prev => ({ ...prev, [lang === 'es' ? 'description_es' : 'description_en']: val }))}
                             placeholder="Describe el rol, el impacto y las responsabilidades..."
                         />
                     </div>
@@ -293,10 +292,9 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                             <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Requisitos Técnicos ({lang.toUpperCase()})</h3>
                             <TranslateBtn field="requirements" />
                         </div>
-                        <RichMarkdownEditor
-                            label={`Requisitos y Stack (${lang === 'es' ? 'Español' : 'Inglés'})`}
+                        <TiptapEditor
                             value={lang === 'es' ? formData.requirements_es : formData.requirements_en}
-                            onChange={(val) => setFormData(prev => ({ ...prev, [lang === 'es' ? 'requirements_es' : 'requirements_en']: val }))}
+                            onChange={(val: string) => setFormData(prev => ({ ...prev, [lang === 'es' ? 'requirements_es' : 'requirements_en']: val }))}
                             placeholder="Stack tecnológico, experiencia mínima y habilidades blandas..."
                         />
                     </div>

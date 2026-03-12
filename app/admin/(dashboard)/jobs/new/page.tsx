@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 import { createJob } from '@/app/actions/jobs';
-import RichMarkdownEditor from '@/components/admin/RichMarkdownEditor';
-
 import JobOpeningForm from '../JobOpeningForm';
 
 export default function NewJobPage() {

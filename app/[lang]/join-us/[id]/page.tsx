@@ -140,26 +140,35 @@ export default async function JobDetailPage({ params }: Props) {
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
                         {/* Columna Izquierda: Descripción (65% aprox) */}
                         <div className="lg:col-span-8">
-                            <article className="prose prose-zinc max-w-none
-                                prose-headings:font-outfit prose-headings:font-bold prose-headings:text-zinc-900 prose-headings:mb-8 prose-headings:mt-16 first:prose-headings:mt-0
-                                prose-p:text-zinc-600 prose-p:leading-[1.8] prose-p:text-justify prose-p:font-light prose-p:mb-10
-                                prose-strong:text-zinc-900 prose-strong:font-bold
-                                prose-li:marker:text-brand prose-li:text-zinc-600 prose-li:font-light prose-li:mb-3
-                                prose-ul:mt-4 prose-ul:mb-8
-                            ">
-                                <ReactMarkdown rehypePlugins={[rehypeRaw]}>
-                                    {jobDescription || ''}
-                                </ReactMarkdown>
+                                {/* Role Description */}
+                                <div 
+                                    className="prose prose-zinc max-w-none
+                                        prose-headings:font-outfit prose-headings:font-bold prose-headings:text-zinc-900 prose-headings:mb-8 prose-headings:mt-16 first:prose-headings:mt-0
+                                        prose-p:text-zinc-600 prose-p:leading-[1.8] prose-p:text-justify prose-p:font-light prose-p:mb-10
+                                        prose-strong:text-zinc-900 prose-strong:font-bold
+                                        prose-ul:list-disc prose-ul:pl-5 prose-ul:mt-4 prose-ul:mb-8
+                                        prose-ol:list-decimal prose-ol:pl-5 prose-ol:mt-4 prose-ol:mb-8
+                                        prose-li:marker:text-brand prose-li:text-zinc-600 prose-li:font-light prose-li:mb-3
+                                    "
+                                    dangerouslySetInnerHTML={{ __html: jobDescription || '' }}
+                                />
 
                                 {jobRequirements && (
                                     <div className="mt-20 pt-12 border-t border-zinc-100">
                                         <h2 className="text-4xl mb-8 font-outfit font-bold">{isEn ? 'Requirements' : 'Requisitos'}</h2>
-                                        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
-                                            {jobRequirements}
-                                        </ReactMarkdown>
+                                        <div 
+                                            className="prose prose-zinc max-w-none
+                                                prose-headings:font-outfit prose-headings:font-bold prose-headings:text-zinc-900 prose-headings:mb-8 prose-headings:mt-16 first:prose-headings:mt-0
+                                                prose-p:text-zinc-600 prose-p:leading-[1.8] prose-p:text-justify prose-p:font-light prose-p:mb-10
+                                                prose-strong:text-zinc-900 prose-strong:font-bold
+                                                prose-ul:list-disc prose-ul:pl-5 prose-ul:mt-4 prose-ul:mb-8
+                                                prose-ol:list-decimal prose-ol:pl-5 prose-ol:mt-4 prose-ol:mb-8
+                                                prose-li:marker:text-brand prose-li:text-zinc-600 prose-li:font-light prose-li:mb-3
+                                            "
+                                            dangerouslySetInnerHTML={{ __html: jobRequirements }}
+                                        />
                                     </div>
                                 )}
-                            </article>
                         </div>
 
                         {/* Columna Derecha: Formulario Sticky (35% aprox) */}
