@@ -10,7 +10,7 @@
         "aboutUs": "Nosotros",
         "careers": "Join Us",
         "contact": "Contacto",
-        "scheduleCall": "Agendar Llamada",
+        "scheduleCall": "Agendar Consulta",
         "conversionHook": "Hablemos de tu próximo producto digital.",
         "conversionCta": "[ Agendá una Discovery Call de 30 min ]"
     },
@@ -18,7 +18,7 @@
         "hero": {
             "title": "Acelera tu Roadmap con Ingeniería de Clase Mundial",
             "subtitle": "<strong>Dibrand</strong> es una boutique de ingeniería que provee senior staff augmentation y desarrollo de productos end-to-end para startups de alto impacto. Integramos especialistas en IA, Web y Mobile que se fusionan con tu equipo para construir plataformas escalables, desde la arquitectura hasta el lanzamiento.",
-            "cta": "Agendar Llamada",
+            "cta": "Agendar Consulta",
             "welcome": "Bienvenido a Dibrand"
         },
         "whatWeDo": {
@@ -182,7 +182,7 @@
             "resultsDescription": "Impacto de Negocio",
             "metrics": "Métricas Clave",
             "techStack": "Tech Stack",
-            "cta": "Agendar una llamada",
+            "cta": "Agendar Consulta",
             "backLink": "Volver a todas las historias",
             "share": "Compartir caso de éxito"
         },
@@ -251,7 +251,7 @@
                     "desc": "Onboarding guiado y escalamiento continuo según la demanda del proyecto."
                 }
             ],
-            "cta": "Agendar una llamada"
+            "cta": "Agendar Consulta"
         },
         "roles": {
             "title": "Perfiles que potenciamos",

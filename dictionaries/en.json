@@ -10,7 +10,7 @@
         "aboutUs": "About Us",
         "careers": "Join Us",
         "contact": "Contact",
-        "scheduleCall": "Schedule a Call",
+        "scheduleCall": "Schedule a Consultation",
         "conversionHook": "Let's talk about your next digital product.",
         "conversionCta": "[ Book a 30-min Discovery Call ]"
     },
@@ -18,7 +18,7 @@
         "hero": {
             "title": "Accelerate your Roadmap with World-Class Engineering",
             "subtitle": "<strong>Dibrand</strong> is an engineering boutique providing senior staff augmentation and end-to-end product development for high-impact startups. We integrate AI, Web, and Mobile specialists that merge with your team to build scalable platforms, from architecture to launch.",
-            "cta": "Book a Call",
+            "cta": "Schedule a Consultation",
             "welcome": "Welcome to Dibrand"
         },
         "whatWeDo": {
@@ -182,7 +182,7 @@
             "resultsDescription": "Business Results",
             "metrics": "Key Metrics",
             "techStack": "Tech Stack",
-            "cta": "Book a Call",
+            "cta": "Schedule a Consultation",
             "backLink": "Back to all stories",
             "share": "Share success story"
         },
@@ -251,7 +251,7 @@
                     "desc": "Guided onboarding and continuous scaling according to project demand."
                 }
             ],
-            "cta": "Schedule a Call"
+            "cta": "Schedule a Consultation"
         },
         "roles": {
             "title": "Profiles we provide",

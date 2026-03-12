@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
+import { CONTACT_CALENDAR_URL } from '@/lib/constants';
 
 interface StaffAugHeroProps {
     dict: {
@@ -39,13 +39,15 @@ export default function StaffAugHero({ dict, lang }: StaffAugHeroProps) {
                 </p>
 
                 <div className="mt-10 flex flex-col items-center w-full max-w-4xl">
-                    <Link
-                        href={`/${lang}/contact?subject=Staff Augmentation Inquiry`}
+                    <a
+                        href={CONTACT_CALENDAR_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-3 px-10 py-5 bg-brand text-white font-bold rounded-full hover:bg-brand/90 hover:scale-[1.02] transition-all group font-outfit"
                     >
                         {dict.hero.cta}
                         <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                    </Link>
+                    </a>
                 </div>
             </div>
         </section>

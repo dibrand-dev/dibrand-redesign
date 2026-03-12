@@ -508,7 +508,7 @@ export default async function CaseStudyDetailPage({ params }: Props) {
                                         </p>
                                         <div className="pt-8">
                                             <ScheduleButton
-                                                text={isEn ? 'Book an Appointment' : 'Agendar una Cita'}
+                                                text={isEn ? 'Schedule a Consultation' : 'Agendar Consulta'}
                                                 className="!bg-white/10 !backdrop-blur-md !border !border-white/30 !text-white hover:!bg-[#a04c97] hover:!border-transparent hover:!scale-105 transition-all duration-300 shadow-2xl px-12 py-6 text-lg"
                                             />
                                         </div>
