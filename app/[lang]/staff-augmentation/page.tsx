@@ -11,7 +11,26 @@ import ScheduleButton from "@/components/ui/ScheduleButton";
 import TrustedBySection from "@/components/home/TrustedBySection";
 import { supabase } from "@/lib/supabase";
 
+import { Metadata } from 'next';
 import StaffingServices from "@/components/staff-augmentation/StaffingServices";
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+    const { lang } = await params;
+    const isEs = lang === 'es';
+    
+    return {
+        title: isEs ? "Senior Staff Augmentation | Dibrand" : "Senior Staff Augmentation | Dibrand",
+        description: isEs 
+            ? "Escala tu equipo con talento senior pre-validado y bilingüe. Nuestra solución de Staff Augmentation integra ingenieros expertos en tu equipo en semanas."
+            : "Scale your team with pre-vetted, bilingual senior talent. Our Staff Augmentation solution integrates expert engineers into your team in weeks.",
+        openGraph: {
+            title: "Senior Staff Augmentation | Dibrand",
+            description: isEs 
+                ? "Integración de talento técnico senior y nativo en IA para acelerar tu roadmap."
+                : "Integration of senior, AI-native technical talent to accelerate your roadmap.",
+        }
+    };
+}
 
 export default async function StaffAugmentationPage(props: { params: Promise<{ lang: "en" | "es" }> }) {
     const params = await props.params;
