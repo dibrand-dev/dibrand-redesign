@@ -4,6 +4,10 @@ import {
     Clock,
     UserCheck,
     Heart,
+    Shield,
+    Zap,
+    Users,
+    Target,
 } from 'lucide-react';
 import { getDictionary } from "@/lib/dictionaries";
 import Footer from "@/components/layout/Footer";
@@ -13,6 +17,7 @@ import { supabase } from "@/lib/supabase";
 
 import { Metadata } from 'next';
 import StaffingServices from "@/components/staff-augmentation/StaffingServices";
+import StaffAugHero from "@/components/staff-augmentation/StaffAugHero";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
     const { lang } = await params;
@@ -51,6 +56,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
 
 
     const wayIcons = [Clock, UserCheck, Heart];
+    const pillarIcons = [Shield, Users, Zap, Target];
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Service",
@@ -65,7 +71,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "Staff Augmentation Services",
-            "itemListElement": content.benefits.items.map((b: any) => ({
+            "itemListElement": content.pillars.items.map((b: any) => ({
                 "@type": "Offer",
                 "itemOffered": {
                     "@type": "Service",
@@ -82,22 +88,8 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            {/* Hero Section - Compact & Consistent */}
-            <section className="relative min-h-[50vh] w-full flex items-center py-16 bg-slate-50 overflow-hidden">
-                <div className="container mx-auto px-6 relative z-10 text-center lg:text-left">
-                    <div className="max-w-4xl mx-auto lg:mx-0">
-                        <h1 className="text-3xl md:text-5xl font-bold text-zinc-900 mb-6 font-outfit tracking-tight leading-tight">
-                            {content.hero.title}
-                        </h1>
-                        <p className="text-lg md:text-xl text-zinc-500 font-outfit font-light leading-relaxed max-w-2xl mb-8 lg:mx-0 mx-auto">
-                            {content.hero.subtitle}
-                        </p>
-                        <div className="flex justify-center lg:justify-start">
-                            <ScheduleButton text={content.hero.cta} />
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {/* Hero Section - Elevated with Background Image */}
+            <StaffAugHero dict={content} lang={params.lang} />
 
             {/* Detailed Section (The "What is") - Compact & Unified */}
             <section className="bg-white pt-12 pb-2">
@@ -154,21 +146,35 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                 </div>
             </section>
 
-            {/* Benefits Section - Selection Top 3% - Flat & Clean */}
-            <section className="py-16 bg-white">
+            {/* 4 Pillars Grid - Pure Seniority, Tech Alignment, Speed to Value, Boutique Quality */}
+            <section className="py-24 bg-white">
                 <div className="container mx-auto px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                        {content.benefits.items.map((benefit, idx) => (
-                            <div key={idx} className="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 transition-all duration-300">
-                                <span className="inline-block text-brand font-black text-6xl opacity-10 mb-4 font-outfit">0{idx + 1}</span>
-                                <h3 className="text-2xl font-bold text-zinc-900 mb-6 font-outfit">
-                                    {benefit.title}
-                                </h3>
-                                <p className="text-zinc-500 font-outfit font-light leading-relaxed">
-                                    {benefit.desc}
-                                </p>
-                            </div>
-                        ))}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {content.pillars.items.map((pillar: any, idx: number) => {
+                            const Icon = pillarIcons[idx] || Shield;
+                            return (
+                                <div key={idx} className="flex flex-col p-8 rounded-[2rem] bg-slate-50 border border-slate-100 hover:shadow-xl hover:shadow-purple-500/5 transition-all duration-500 group">
+                                    <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mb-6 shadow-sm group-hover:bg-brand transition-colors duration-500">
+                                        <Icon size={28} className="text-brand group-hover:text-white transition-colors duration-500" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-zinc-900 mb-4 font-outfit uppercase tracking-tight">
+                                        {pillar.title}
+                                    </h3>
+                                    <p className="text-zinc-500 font-outfit font-light leading-relaxed text-sm">
+                                        {pillar.desc}
+                                    </p>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* High Impact Closing Phrase */}
+                    <div className="mt-24 text-center max-w-4xl mx-auto pb-8">
+                        <div className="inline-block h-px w-24 bg-gradient-to-r from-transparent via-brand to-transparent mb-12 opacity-30" />
+                        <p className="text-2xl md:text-3xl text-zinc-900 font-outfit font-medium italic leading-tight tracking-tight px-4">
+                            &ldquo;{content.pillars.lema}&rdquo;
+                        </p>
+                        <div className="mt-12 h-px w-24 bg-gradient-to-r from-transparent via-brand to-transparent mx-auto opacity-30" />
                     </div>
                 </div>
             </section>

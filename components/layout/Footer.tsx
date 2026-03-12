@@ -81,7 +81,7 @@ export default function Footer({ dict, lang }: FooterProps) {
 
                 {/* Columna Derecha (Formulario) */}
                 <div className="col-span-1 w-full">
-                    <ContactForm dict={dict} />
+                    <ContactForm dict={dict} isDark={true} />
                 </div>
             </div>
         </section>

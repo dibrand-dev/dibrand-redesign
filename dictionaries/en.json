@@ -214,21 +214,26 @@
             "title": "Staff Augmentation Talent Integration",
             "content": "Access the top 3% of LATAM’s senior engineering talent. Our professionals are not just coders; they are AI-native consultants who integrate into your culture, align with your timezone, and multiply your team’s productivity from day one."
         },
-        "benefits": {
+        "pillars": {
             "items": [
                 {
-                    "title": "Rigorous Selection (Top 3%)",
-                    "desc": "We evaluate technical skills, critical thinking, and cultural fit. We only present profiles that have already passed our Live Coding tests."
+                    "title": "Pure Seniority",
+                    "desc": "Exclusive access to the top 3% of LATAM’s engineering talent. Experts who don’t just write code, but design solutions."
                 },
                 {
-                    "title": "Fast Onboarding",
-                    "desc": "Don't wait months. We integrate specialists into your team within 2 to 4 weeks, ready to deliver value from the first sprint."
+                    "title": "Tech Alignment",
+                    "desc": "Full integration with your processes, culture, and time zone. Real-time collaboration without communication barriers."
                 },
                 {
-                    "title": "Total Alignment",
-                    "desc": "Real-time collaboration. Our developers work in your time zone, are proficient in English, and join your dailies as one more member of the house."
+                    "title": "Speed to Value",
+                    "desc": "We reduce hiring time to weeks. Our engineers deliver measurable impact from the very first sprint."
+                },
+                {
+                    "title": "Boutique Quality",
+                    "desc": "Personalized and handcrafted approach. We maintain the highest standard of technical quality in every line of code."
                 }
-            ]
+            ],
+            "lema": "We don't sell hours, we solve challenges."
         },
         "process": {
             "steps": [

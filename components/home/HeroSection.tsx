@@ -36,7 +36,7 @@ export default function HeroSection({ dict }: HeroSectionProps) {
             <div className="absolute inset-0 z-10 bg-zinc-950/80 md:bg-zinc-950/60" />
 
             {/* Capa 3: Contenido de Texto */}
-            <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-20 pb-10">
+            <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-32 pb-16">
                 <h1 className="font-outfit text-[32px] sm:text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter text-white leading-[1.05] md:leading-[1.1] max-w-5xl uppercase">
                     {dict.hero.title}
                 </h1>

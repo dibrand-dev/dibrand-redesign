@@ -214,21 +214,26 @@
             "title": "Integración de Staff Augmentation",
             "content": "Accede al top 3% del talento senior de ingeniería de LATAM. Nuestros profesionales no son solo programadores; son consultores nativos en IA que se integran a tu cultura, se alinean con tu zona horaria y multiplican la productividad de tu equipo desde el primer día."
         },
-        "benefits": {
+        "pillars": {
             "items": [
                 {
-                    "title": "Selección Rigurosa (Top 3%)",
-                    "desc": "Evaluamos habilidades técnicas, pensamiento crítico y fit cultural. Solo te presentamos perfiles que ya han superado nuestras pruebas de Live Coding."
+                    "title": "Pure Seniority",
+                    "desc": "Acceso exclusivo al top 3% de talento de ingeniería en LATAM. Expertos que no solo escriben código, sino que diseñan soluciones."
                 },
                 {
-                    "title": "Onboarding Rápido",
-                    "desc": "No esperes meses. Integramos especialistas en tu equipo en un plazo de 2 a 4 semanas, listos para entregar valor desde el primer sprint."
+                    "title": "Tech Alignment",
+                    "desc": "Integración total con tus procesos, cultura y zona horaria. Colaboración en tiempo real sin barreras de comunicación."
                 },
                 {
-                    "title": "Alineación Total",
-                    "desc": "Colaboración en tiempo real. Nuestros desarrolladores trabajan en tu franja horaria, dominan el inglés y se suman a tus dailies como un miembro más de la casa."
+                    "title": "Speed to Value",
+                    "desc": "Reducimos el tiempo de contratación a semanas. Nuestros ingenieros entregan impacto medible desde el primer sprint."
+                },
+                {
+                    "title": "Boutique Quality",
+                    "desc": "Enfoque personalizado y artesanal. Mantenemos el estándar más alto de calidad técnica en cada línea de código."
                 }
-            ]
+            ],
+            "lema": "No vendemos horas, resolvemos desafíos."
         },
         "process": {
             "steps": [
@@ -310,7 +315,7 @@
                     ]
                 },
                 {
-                    "title": "Ingeniería e IA",
+                    "title": "Ingeniería & IA",
                     "roles": [
                         {
                             "name": "FE/BE Developers",

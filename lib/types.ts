@@ -60,8 +60,9 @@ export interface Dictionary {
             title: string;
             content: string;
         };
-        benefits: {
+        pillars: {
             items: Array<{ title: string; desc: string }>;
+            lema: string;
         };
         process: {
             steps: Array<{ title: string; desc: string }>;
