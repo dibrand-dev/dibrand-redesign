@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, UploadCloud, X, Loader2, Save } from 'lucide-react';
+import { ArrowLeft, UploadCloud, X, Loader2, Save, Sparkles } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
 import { createSuccessStory, updateSuccessStory } from './actions';
 
@@ -144,38 +144,88 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
     const initialInd = initialData?.industry || '';
     const cleanInd = MAP_OLD_INDUSTRY[initialInd] || initialInd;
 
-    // Normalize stack_ids (legacy might contain names instead of IDs)
-    const normalizedStackIds = (initialData?.stack_ids || []).map((idOrName: string) => {
-        const found = stacks.find(s => s.id === idOrName || s.name === idOrName);
-        return found ? found.id : idOrName;
-    });
+    // Normalize stack_ids (legacy might contain names instead of IDs, or use 'tags' column)
+    const rawStacks = initialData?.stack_ids || initialData?.tags || [];
+    const normalizedStackIds = rawStacks
+        .map((idOrName: string) => {
+            const found = stacks.find(s => s.id === idOrName || s.name === idOrName);
+            return found ? found.id : null;
+        })
+        .filter(Boolean) as string[];
 
     const [lang, setLang] = useState<'es' | 'en'>('es');
     const [titleEs, setTitleEs] = useState(initialData?.title_es || initialData?.title || '');
     const [titleEn, setTitleEn] = useState(initialData?.title_en || initialData?.title || '');
-    const [clientCompany, setClientCompany] = useState(initialData?.client_company || '');
-    const [summaryEs, setSummaryEs] = useState(initialData?.summary_es || initialData?.executive_summary || '');
-    const [summaryEn, setSummaryEn] = useState(initialData?.summary_en || initialData?.executive_summary || '');
-    const [heroImageUrl, setHeroImageUrl] = useState(initialData?.hero_image_url || '');
+    const [clientName, setClientName] = useState(initialData?.client_name || initialData?.client_company || '');
+    const [descriptionEs, setDescriptionEs] = useState(initialData?.description_es || initialData?.executive_summary || '');
+    const [descriptionEn, setDescriptionEn] = useState(initialData?.description_en || initialData?.executive_summary || '');
+    const [heroImageUrl, setHeroImageUrl] = useState(initialData?.hero_image_url || initialData?.image_url || '');
     const [projectType, setProjectType] = useState(cleanPType);
     const [industry, setIndustry] = useState(cleanInd);
     const [services, setServices] = useState<string[]>(initialData?.services || []);
     const [stackIds, setStackIds] = useState<string[]>(normalizedStackIds);
-    const [problemEs, setProblemEs] = useState(initialData?.problem_es || initialData?.problem_text || '');
-    const [problemEn, setProblemEn] = useState(initialData?.problem_en || initialData?.problem_text || '');
+    const [challengeEs, setChallengeEs] = useState(initialData?.challenge_es || initialData?.problem_text || '');
+    const [challengeEn, setChallengeEn] = useState(initialData?.challenge_en || initialData?.problem_text || '');
     const [solutionEs, setSolutionEs] = useState(initialData?.solution_es || initialData?.solution_text || '');
     const [solutionEn, setSolutionEn] = useState(initialData?.solution_en || initialData?.solution_text || '');
-    const [resultEs, setResultEs] = useState(initialData?.result_es || initialData?.result_text || '');
-    const [resultEn, setResultEn] = useState(initialData?.result_en || initialData?.result_text || '');
+    const [impactEs, setImpactEs] = useState(initialData?.impact_es || initialData?.result_text || '');
+    const [impactEn, setImpactEn] = useState(initialData?.impact_en || initialData?.result_text || '');
+
+    const [translating, setTranslating] = useState<string | null>(null);
+
+    const handleTranslate = async (field: 'title' | 'description' | 'challenge' | 'solution' | 'impact') => {
+        const sourceText = {
+            title: titleEs,
+            description: descriptionEs,
+            challenge: challengeEs,
+            solution: solutionEs,
+            impact: impactEs
+        }[field];
+
+        if (!sourceText) {
+            alert('Escribe el texto en español primero para poder traducirlo.');
+            return;
+        }
+
+        setTranslating(field);
+        try {
+            const res = await fetch('/api/translate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: sourceText, targetLang: 'en' })
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Error en el servidor de traducción');
+            }
+
+            const data = await res.json();
+            if (data.translatedText) {
+                if (field === 'title') setTitleEn(data.translatedText);
+                if (field === 'description') setDescriptionEn(data.translatedText);
+                if (field === 'challenge') setChallengeEn(data.translatedText);
+                if (field === 'solution') setSolutionEn(data.translatedText);
+                if (field === 'impact') setImpactEn(data.translatedText);
+            }
+        } catch (e: any) {
+            console.error('Translation error:', e);
+            alert(`No se pudo traducir: ${e.message}`);
+        } finally {
+            setTranslating(null);
+        }
+    };
 
     const toggleService = (srv: string) => {
         setServices(prev => prev.includes(srv) ? prev.filter(s => s !== srv) : [...prev, srv]);
     };
 
+    const isIncomplete = !titleEs || !titleEn || !descriptionEs || !descriptionEn || !challengeEs || !challengeEn;
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!titleEs || !titleEn || !clientCompany || !summaryEs || !summaryEn) {
-            setError('Por favor completá los campos requeridos en ambos idiomas.');
+        if (!titleEs || !clientName) {
+            setError('El título (ES) y el cliente son obligatorios.');
             return;
         }
         setSaving(true);
@@ -183,57 +233,87 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
         try {
             const payload = {
                 title_es: titleEs, title_en: titleEn,
-                client_company: clientCompany,
-                summary_es: summaryEs, summary_en: summaryEn,
+                client_name: clientName,
+                description_es: descriptionEs, description_en: descriptionEn,
                 hero_image_url: heroImageUrl, project_type: projectType, industry,
                 services,
                 stack_ids: stackIds,
-                problem_es: problemEs, problem_en: problemEn,
+                challenge_es: challengeEs, challenge_en: challengeEn,
                 solution_es: solutionEs, solution_en: solutionEn,
-                result_es: resultEs, result_en: resultEn,
+                impact_es: impactEs, impact_en: impactEn,
             };
+
+
             if (initialData?.id) {
                 await updateSuccessStory(initialData.id, payload);
             } else {
                 await createSuccessStory(payload);
             }
         } catch (err: any) {
+            // If it's a redirect error from a Server Action, don't catch it
+            if (err.message === 'NEXT_REDIRECT') throw err;
+            
+            console.error('Save error:', err);
             setError(err.message || 'Error al guardar.');
             setSaving(false);
         }
     };
 
+    const LangButton = ({ target, label, icon }: { target: 'es' | 'en', label: string, icon: string }) => (
+        <button
+            type="button"
+            onClick={() => setLang(target)}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[11px] font-black tracking-widest transition-all ${lang === target ? 'bg-admin-accent text-white shadow-lg shadow-admin-accent/20 active:scale-95' : 'text-gray-400 hover:text-gray-600'}`}
+        >
+            <span>{icon}</span> {label}
+        </button>
+    );
+
+    const TranslateBtn = ({ field }: { field: 'title' | 'description' | 'challenge' | 'solution' | 'impact' }) => (
+        lang === 'en' && (
+            <button
+                type="button"
+                onClick={() => handleTranslate(field)}
+                disabled={translating === field}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-admin-accent/10 text-admin-accent text-[10px] font-bold hover:bg-admin-accent hover:text-white transition-all disabled:opacity-50"
+            >
+                {translating === field ? (
+                    <Loader2 size={12} className="animate-spin" />
+                ) : (
+                    <Sparkles size={12} />
+                )}
+                TRADUCIR CON IA
+            </button>
+        )
+    );
+
     return (
         <form onSubmit={handleSubmit} className="space-y-10 pb-20 animate-in fade-in slide-in-from-bottom-6 duration-700">
             {/* Navigation & Language Selector */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                <Link
-                    href="/admin/success-stories"
-                    className="flex items-center gap-2 text-[11px] font-bold text-gray-400 hover:text-admin-accent transition-colors uppercase tracking-widest"
-                >
-                    <ArrowLeft size={16} /> Volver al listado
-                </Link>
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div className="flex items-center gap-6">
+                    <Link
+                        href="/admin/success-stories"
+                        className="flex items-center gap-2 text-[11px] font-bold text-gray-400 hover:text-admin-accent transition-colors uppercase tracking-widest"
+                    >
+                        <ArrowLeft size={16} /> Listado
+                    </Link>
 
-                <div className="flex bg-admin-bg dark:bg-admin-bg/50 p-1.5 rounded-2xl w-fit shadow-inner border border-admin-border/50">
-                    <button
-                        type="button"
-                        onClick={() => setLang('es')}
-                        className={`px-8 py-2.5 rounded-xl text-[11px] font-bold tracking-widest transition-all ${lang === 'es' ? 'bg-admin-card-bg text-admin-accent shadow-lg shadow-black/5 active:scale-95' : 'text-gray-400 hover:text-gray-600'}`}
-                    >
-                        🇪🇸 ESPAÑOL
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setLang('en')}
-                        className={`px-8 py-2.5 rounded-xl text-[11px] font-bold tracking-widest transition-all ${lang === 'en' ? 'bg-admin-card-bg text-admin-accent shadow-lg shadow-black/5 active:scale-95' : 'text-gray-400 hover:text-gray-600'}`}
-                    >
-                        🇺🇸 ENGLISH
-                    </button>
+                    <div className="flex bg-admin-card-bg p-1.5 rounded-2xl shadow-sm border border-admin-border/50">
+                        <LangButton target="es" label="ESPAÑOL" icon="🇪🇸" />
+                        <LangButton target="en" label="ENGLISH" icon="🇺🇸" />
+                    </div>
                 </div>
+
+                {isIncomplete && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-100 rounded-xl text-amber-700 text-[10px] font-bold uppercase tracking-wider animate-pulse">
+                        <Sparkles size={14} /> Contenido Incompleto (Ambos idiomas recomendados)
+                    </div>
+                )}
             </div>
 
             {error && (
-                <div className="bg-red-50 border border-red-100 text-red-600 text-sm px-4 py-3 rounded-xl">
+                <div className="bg-red-50 border border-red-100 text-red-600 text-sm px-4 py-3 rounded-xl font-bold">
                     {error}
                 </div>
             )}
@@ -246,14 +326,17 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
 
                     {/* Basic Info */}
                     <div className={cardCls}>
-                        <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-8 pb-4 border-b border-admin-border/50 flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-admin-accent"></div>
-                            Información General
-                        </h3>
+                        <div className="flex items-center justify-between mb-8 pb-4 border-b border-admin-border/50">
+                            <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-admin-accent"></div>
+                                Información General
+                            </h3>
+                            <TranslateBtn field="title" />
+                        </div>
 
                         <div className="grid md:grid-cols-2 gap-6">
                             <div className="space-y-1">
-                                <Label required>Título del Proyecto ({lang.toUpperCase()})</Label>
+                                <Label required>Título ({lang.toUpperCase()})</Label>
                                 {lang === 'es' ? (
                                     <input value={titleEs} onChange={e => setTitleEs(e.target.value)} required placeholder="e.g. Plataforma de Salud con IA" className={inputCls} />
                                 ) : (
@@ -261,17 +344,20 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
                                 )}
                             </div>
                             <div className="space-y-1">
-                                <Label required>Cliente / Empresa</Label>
-                                <input value={clientCompany} onChange={e => setClientCompany(e.target.value)} required placeholder="e.g. HealthTech Global" className={inputCls} />
+                                <Label required>Cliente / Empresa (Único)</Label>
+                                <input value={clientName} onChange={e => setClientName(e.target.value)} required placeholder="e.g. HealthTech Global" className={inputCls} />
                             </div>
                         </div>
 
-                        <div className="pt-4 space-y-1">
-                            <Label required>Resumen Ejecutivo ({lang.toUpperCase()})</Label>
+                        <div className="pt-6 space-y-1">
+                            <div className="flex items-center justify-between mb-2">
+                                <Label required>Descripción / Resumen ({lang.toUpperCase()})</Label>
+                                <TranslateBtn field="description" />
+                            </div>
                             {lang === 'es' ? (
-                                <textarea value={summaryEs} onChange={e => setSummaryEs(e.target.value)} required placeholder="Resumen breve para la card..." className={textareaCls} />
+                                <textarea value={descriptionEs} onChange={e => setDescriptionEs(e.target.value)} required placeholder="Resumen breve para la card..." className={textareaCls} />
                             ) : (
-                                <textarea value={summaryEn} onChange={e => setSummaryEn(e.target.value)} required placeholder="Brief summary for the card..." className={textareaCls} />
+                                <textarea value={descriptionEn} onChange={e => setDescriptionEn(e.target.value)} required placeholder="Brief summary for the card..." className={textareaCls} />
                             )}
                         </div>
                     </div>
@@ -283,29 +369,38 @@ export default function SuccessStoryForm({ stacks, initialData }: { stacks: Stac
                             Narrativa del Caso
                         </h3>
 
-                        <div className="space-y-6">
+                        <div className="space-y-8">
                             <div className="space-y-1">
-                                <Label>El Problema ({lang.toUpperCase()})</Label>
+                                <div className="flex items-center justify-between mb-2">
+                                    <Label>El Desafío / Challenge ({lang.toUpperCase()})</Label>
+                                    <TranslateBtn field="challenge" />
+                                </div>
                                 {lang === 'es' ? (
-                                    <textarea value={problemEs} onChange={e => setProblemEs(e.target.value)} placeholder="¿Cuál era el desafío?" className={textareaCls} />
+                                    <textarea value={challengeEs} onChange={e => setChallengeEs(e.target.value)} placeholder="¿Cuál era el desafío?" className={`${textareaCls} min-h-[160px]`} />
                                 ) : (
-                                    <textarea value={problemEn} onChange={e => setProblemEn(e.target.value)} placeholder="What was the challenge?" className={textareaCls} />
+                                    <textarea value={challengeEn} onChange={e => setChallengeEn(e.target.value)} placeholder="What was the challenge?" className={`${textareaCls} min-h-[160px]`} />
                                 )}
                             </div>
                             <div className="space-y-1">
-                                <Label>La Solución ({lang.toUpperCase()})</Label>
+                                <div className="flex items-center justify-between mb-2">
+                                    <Label>La Solución ({lang.toUpperCase()})</Label>
+                                    <TranslateBtn field="solution" />
+                                </div>
                                 {lang === 'es' ? (
-                                    <textarea value={solutionEs} onChange={e => setSolutionEs(e.target.value)} placeholder="¿Cómo lo abordamos?" className={textareaCls} />
+                                    <textarea value={solutionEs} onChange={e => setSolutionEs(e.target.value)} placeholder="¿Cómo lo abordamos?" className={`${textareaCls} min-h-[160px]`} />
                                 ) : (
-                                    <textarea value={solutionEn} onChange={e => setSolutionEn(e.target.value)} placeholder="How did we solve it?" className={textareaCls} />
+                                    <textarea value={solutionEn} onChange={e => setSolutionEn(e.target.value)} placeholder="How did we solve it?" className={`${textareaCls} min-h-[160px]`} />
                                 )}
                             </div>
                             <div className="space-y-1">
-                                <Label>Los Resultados ({lang.toUpperCase()})</Label>
+                                <div className="flex items-center justify-between mb-2">
+                                    <Label>Impacto / Resultados ({lang.toUpperCase()})</Label>
+                                    <TranslateBtn field="impact" />
+                                </div>
                                 {lang === 'es' ? (
-                                    <textarea value={resultEs} onChange={e => setResultEs(e.target.value)} placeholder="Métricas e impacto..." className={textareaCls} />
+                                    <textarea value={impactEs} onChange={e => setImpactEs(e.target.value)} placeholder="Métricas e impacto..." className={`${textareaCls} min-h-[160px]`} />
                                 ) : (
-                                    <textarea value={resultEn} onChange={e => setResultEn(e.target.value)} placeholder="Metrics and impact..." className={textareaCls} />
+                                    <textarea value={impactEn} onChange={e => setImpactEn(e.target.value)} placeholder="Metrics and impact..." className={`${textareaCls} min-h-[160px]`} />
                                 )}
                             </div>
                         </div>

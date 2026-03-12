@@ -4,8 +4,15 @@ import { ArrowLeft } from 'lucide-react';
 import { getTechStacks, getSuccessStory } from '../actions';
 import SuccessStoryForm from '../SuccessStoryForm';
 
-export default async function EditSuccessStoryPage({ params }: { params: { id: string } }) {
-    const { id } = await params;
+export default async function EditSuccessStoryPage({ params }: { params: Promise<{ id: string }> }) {
+    const resolvedParams = await params;
+    const id = resolvedParams.id;
+    
+    // Explicit safety check: if ID is null or missing, don't even try to fetch
+    if (!id) {
+        return <div className="p-20 text-center font-bold">ID de caso no proporcionado.</div>;
+    }
+
     const [stacks, story] = await Promise.all([
         getTechStacks(),
         getSuccessStory(id)

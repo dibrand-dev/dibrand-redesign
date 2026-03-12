@@ -81,7 +81,6 @@ export default async function CaseStudyDetailPage({ params }: Props) {
             `)
             .ilike('slug', slug)
             .single();
-
         // Graceful fallback if testimonial_id join fails
         if (error && (error.message.includes('testimonial_id') || error.code === 'PGRST204')) {
             const { data: retryData, error: retryError } = await supabase
@@ -93,6 +92,8 @@ export default async function CaseStudyDetailPage({ params }: Props) {
             caseStudy = retryData;
             error = retryError;
         }
+
+
 
         if (error || !caseStudy) {
             return (
@@ -106,11 +107,28 @@ export default async function CaseStudyDetailPage({ params }: Props) {
         }
 
         const shareUrl = `https://dibrand.co/${lang}/success-stories/${caseStudy.slug}`;
-        const challenge = isEn ? (caseStudy.challenge_en || caseStudy.challenge) : (caseStudy.challenge_es || caseStudy.challenge);
-        const solution = isEn ? (caseStudy.solution_en || caseStudy.solution) : (caseStudy.solution_es || caseStudy.solution);
-        const outcomeImpact = isEn ? (caseStudy.outcome_impact_en || caseStudy.outcome_impact) : (caseStudy.outcome_impact_es || caseStudy.outcome_impact);
-        const summary = isEn ? (caseStudy.summary_en || caseStudy.summary) : (caseStudy.summary_es || caseStudy.summary);
-        const title = isEn ? (caseStudy.title_en || caseStudy.title) : (caseStudy.title_es || caseStudy.title);
+        
+        // Triple Fallback Logic: Detect Lang -> Opposite Lang -> Legacy Columns
+        const challenge = isEn 
+            ? (caseStudy.challenge_en || caseStudy.challenge_es || caseStudy.challenge || caseStudy.problem_es || caseStudy.problem_text || "") 
+            : (caseStudy.challenge_es || caseStudy.challenge_en || caseStudy.challenge || caseStudy.problem_es || caseStudy.problem_text || "");
+        
+        const solution = isEn 
+            ? (caseStudy.solution_en || caseStudy.solution_es || caseStudy.solution || "") 
+            : (caseStudy.solution_es || caseStudy.solution_en || caseStudy.solution || "");
+        
+        const outcomeImpact = isEn 
+            ? (caseStudy.impact_en || caseStudy.impact_es || caseStudy.outcome_impact || caseStudy.result_en || caseStudy.result_text || "") 
+            : (caseStudy.impact_es || caseStudy.impact_en || caseStudy.outcome_impact || caseStudy.result_es || caseStudy.result_text || "");
+        
+        const summary = isEn 
+            ? (caseStudy.description_en || caseStudy.description_es || caseStudy.summary || caseStudy.summary_en || caseStudy.executive_summary || "") 
+            : (caseStudy.description_es || caseStudy.description_en || caseStudy.summary || caseStudy.summary_es || caseStudy.executive_summary || "");
+        
+        const title = isEn 
+            ? (caseStudy.title_en || caseStudy.title_es || caseStudy.title || "Untitled Project") 
+            : (caseStudy.title_es || caseStudy.title_en || caseStudy.title || "Proyecto sin título");
+        
         const metrics = caseStudy.results_metrics || [];
         const hasMetrics = Array.isArray(metrics) && metrics.length > 0;
         const heroImage = caseStudy.image_url || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop';

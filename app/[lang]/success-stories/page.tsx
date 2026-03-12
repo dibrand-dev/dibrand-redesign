@@ -50,8 +50,10 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
                 // Fallback 2: Try without multilingual columns if it failed on those
                 const res = await supabase
                     .from('case_studies')
-                    .select('id, title, client_name, summary, image_url, is_published, slug, industry, services, tags, results_metrics, created_at')
-                    .eq('is_published', true);
+                    .select('id, title, client_name, summary, image_url, is_published, slug, industry, services, tags, results_metrics, created_at, sort_order')
+                    .eq('is_published', true)
+                    .order('sort_order', { ascending: true })
+                    .order('created_at', { ascending: false });
 
                 return res;
             }
