@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 import { submitToZoho } from '@/app/actions/submitToZoho';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 
 interface ContactFormProps {
   dict: {
@@ -35,7 +35,7 @@ interface FormData {
   Description: string;
 }
 
-export default function ContactForm({ dict, isDark = false }: ContactFormProps) {
+function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const searchParams = useSearchParams();
   const subject = searchParams.get('subject');
@@ -199,5 +199,13 @@ export default function ContactForm({ dict, isDark = false }: ContactFormProps) 
         </form>
       )}
     </div>
+  );
+}
+
+export default function ContactForm(props: ContactFormProps) {
+  return (
+    <Suspense fallback={<div className="w-full h-64 animate-pulse bg-zinc-100 rounded-lg" />}>
+      <ContactFormFields {...props} />
+    </Suspense>
   );
 }
