@@ -378,6 +378,24 @@
                 }
             ],
             "lema": "Delegá el desarrollo, tomá el resultado."
+        },
+        "process": {
+            "title": "Nuestra Metodología",
+            "subtitle": "Cómo construimos tu producto de punta a punta.",
+            "steps": [
+                {
+                    "title": "Discovery & Roadmap",
+                    "desc": "Analizamos tus objetivos de negocio, definimos la arquitectura técnica y trazamos un roadmap de ejecución claro."
+                },
+                {
+                    "title": "Autonomous Execution",
+                    "desc": "Nuestros equipos senior ejecutan de forma autónoma con metodologías ágiles, asegurando transparencia y calidad técnica constante."
+                },
+                {
+                    "title": "Turnkey Delivery",
+                    "desc": "Entregamos un producto robusto, escalable y listo para operar, con documentación completa y transferencia total de propiedad."
+                }
+            ]
         }
     },
     "joinOurTeam": {

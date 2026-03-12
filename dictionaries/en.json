@@ -378,6 +378,24 @@
                 }
             ],
             "lema": "Delegate the development, own the results."
+        },
+        "process": {
+            "title": "Our Methodology",
+            "subtitle": "How we build your product from end to end.",
+            "steps": [
+                {
+                    "title": "Discovery & Roadmap",
+                    "desc": "We analyze your business goals, define the technical architecture, and draft a clear execution roadmap."
+                },
+                {
+                    "title": "Autonomous Execution",
+                    "desc": "Our senior teams execute autonomously with agile methodologies, ensuring transparency and constant technical quality."
+                },
+                {
+                    "title": "Turnkey Delivery",
+                    "desc": "We deliver a robust, scalable, and market-ready product, with complete documentation and full IP transfer."
+                }
+            ]
         }
     },
     "joinOurTeam": {

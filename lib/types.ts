@@ -88,5 +88,10 @@ export interface Dictionary {
             items: Array<{ title: string; desc: string }>;
             lema: string;
         };
+        process: {
+            title: string;
+            subtitle: string;
+            steps: Array<{ title: string; desc: string }>;
+        };
     };
 }
