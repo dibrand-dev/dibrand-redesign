@@ -6,14 +6,14 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
-import { 
-  Bold, 
-  Italic, 
-  List, 
-  ListOrdered, 
-  Type, 
-  Heading1, 
-  Heading2, 
+import {
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Type,
+  Heading1,
+  Heading2,
   Heading3,
   Link as LinkIcon,
   RotateCcw,
@@ -79,7 +79,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       >
         <UnderlineIcon size={16} />
       </button>
-      
+
       <div className="w-px h-6 bg-gray-300 mx-1" />
 
       <button
