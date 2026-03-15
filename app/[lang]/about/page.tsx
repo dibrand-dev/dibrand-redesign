@@ -6,6 +6,7 @@ import AboutHero from '@/components/about/AboutHero';
 import EliteTalent from '@/components/about/EliteTalent';
 import AiNativeCulture from '@/components/about/AiNativeCulture';
 import MinimalStats from '@/components/about/MinimalStats';
+import BrandValues from '@/components/about/BrandValues';
 
 interface Props {
     params: Promise<{ lang: 'en' | 'es' }>;
@@ -45,25 +46,27 @@ export default async function AboutPage({ params }: Props) {
                 {/* 3. The Elite 3% Selection Process */}
                 <EliteTalent 
                     dict={content.eliteTalent} 
-                    imagePath="/images/elite-talent.png" 
+                    imagePath="/images/talent.png" 
                 />
 
-                {/* 4. AI-Native Culture Section */}
+                {/* 4. AI-Native DNA Section */}
                 <AiNativeCulture 
                     dict={content.aiNative} 
                     imagePath="/images/ai-culture.png" 
                 />
 
-                {/* Closing CTA Section (Brief) */}
-                <section className="py-24 bg-white text-center">
-                    <div className="container mx-auto px-6 max-w-2xl">
-                        <div className="h-px w-24 bg-brand mx-auto mb-10" />
-                        <h3 className="text-2xl md:text-3xl font-outfit font-medium text-zinc-900 leading-tight mb-8 italic">
+                {/* 5. Values in Action (Impact Pillars) */}
+                <BrandValues dict={content.values} />
+
+                {/* Closing Phrase (Refined) */}
+                <section className="py-24 bg-zinc-50 border-t border-zinc-100">
+                    <div className="container mx-auto px-6 text-center max-w-3xl">
+                        <div className="h-0.5 w-12 bg-zinc-300 mx-auto mb-10" />
+                        <h3 className="text-2xl md:text-3xl font-outfit font-light text-zinc-900 leading-tight italic">
                             {lang === 'es' 
-                                ? '"No construimos software para el hoy, diseñamos arquitecturas para el impacto del mañana."'
-                                : '"We don\'t build software for today, we design architectures for tomorrow\'s impact."'}
+                                ? "No construimos software para el hoy, diseñamos arquitecturas para el impacto del mañana."
+                                : "We don't build software for today, we design architectures for tomorrow's impact."}
                         </h3>
-                        <div className="h-px w-24 bg-brand mx-auto" />
                     </div>
                 </section>
             </main>

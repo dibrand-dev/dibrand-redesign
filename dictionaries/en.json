@@ -506,16 +506,33 @@
     },
     "about": {
         "hero": {
-            "title": "Engineering excellence for the next generation of global impact.",
-            "subtitle": "We are a boutique engineering firm dedicated to high-performance software and architectural resilience."
+            "title": "Engineering excellence for those who build the future.",
+            "subtitle": "We aren't just a software provider; we are the engineering engine that allows high-growth startups to scale without friction."
         },
         "eliteTalent": {
-            "title": "The Elite 3% Selection Process",
-            "desc": "Our strength lies in our people. We go beyond traditional hiring to identify and integrate the top 3% of technical talent in LATAM. Our engineers aren't just coders; they are strategic thinkers who understand the nuance of elite product development."
+            "title": "Curated Seniority: The Elite 3%",
+            "desc": "We don't look for volume, we look for precision. Only 3% of senior engineers in LATAM pass our technical and strategic validation process. We handpick experts who don't just code, they design success."
         },
         "aiNative": {
-            "title": "Built for the Future: AI-Native Culture",
-            "desc": "At Dibrand, AI is integrated into every stage of our workflow. By leveraging advanced AI-augemented engineering, we multiply our precision and speed, delivering superior code and innovative solutions that keep our partners ahead of the curve."
+            "title": "AI-Native DNA: Your Competitive Advantage",
+            "desc": "We were born in the era of Artificial Intelligence. All our development processes are optimized with AI-native workflows, guaranteeing more robust code in record time and unprecedented efficiency."
+        },
+        "values": {
+            "title": "Values in Action",
+            "items": [
+                {
+                    "title": "Partnership, not Outsourcing",
+                    "desc": "We merge with your team as a single engine. We are not an external entity, we are your execution partner."
+                },
+                {
+                    "title": "Obsession with Quality",
+                    "desc": "If it's not scalable, we don't build it. We maintain the elite boutique standard in every line of code."
+                },
+                {
+                    "title": "Radical Transparency",
+                    "desc": "Direct and honest communication. No unnecessary management layers, just engineers solving problems."
+                }
+            ]
         }
     }
 }

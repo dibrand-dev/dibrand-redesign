@@ -506,16 +506,33 @@
     },
     "about": {
         "hero": {
-            "title": "Excelencia en ingeniería para la próxima generación de impacto global.",
-            "subtitle": "Somos una firma boutique de ingeniería dedicada al software de alto rendimiento y la resiliencia arquitectónica."
+            "title": "Excelencia en ingeniería para quienes construyen el futuro.",
+            "subtitle": "No somos solo un proveedor de software; somos el motor de ingeniería que permite a las startups de alto crecimiento escalar sin fricciones."
         },
         "eliteTalent": {
-            "title": "Proceso de Selección: El Elite 3%",
-            "desc": "Nuestra fuerza reside en nuestro equipo. Vamos más allá de la contratación tradicional para identificar e integrar al top 3% del talento técnico en LATAM. Nuestros ingenieros no solo programan; son pensadores estratégicos que dominan los matices del desarrollo de productos de élite."
+            "title": "Curated Seniority: El Elite 3%",
+            "desc": "No buscamos volumen, buscamos precisión. Solo el 3% de los ingenieros senior en LATAM superan nuestro proceso de validación técnica y estratégica. Seleccionamos cuidadosamente a expertos que no solo programan, sino que diseñan el éxito."
         },
         "aiNative": {
-            "title": "Nativos en IA: Una Cultura para el Futuro",
-            "desc": "En Dibrand, la Inteligencia Artificial está integrada en cada etapa de nuestro flujo de trabajo. Al potenciar nuestra ingeniería con IA, multiplicamos nuestra precisión y velocidad, entregando código superior y soluciones innovadoras que mantienen a nuestros socios a la vanguardia."
+            "title": "ADN AI-Native: Tu Ventaja Competitiva",
+            "desc": "Nacimos en la era de la Inteligencia Artificial. Todos nuestros procesos de desarrollo están optimizados con flujos de trabajo AI-native, garantizando código más robusto en tiempos récord y una eficiencia sin precedentes."
+        },
+        "values": {
+            "title": "Valores en Acción",
+            "items": [
+                {
+                    "title": "Partnership, no Outsourcing",
+                    "desc": "Nos fusionamos con tu equipo como un solo motor. No somos un ente externo, somos tu socio de ejecución."
+                },
+                {
+                    "title": "Obsesión por la Calidad",
+                    "desc": "Si no es escalable, no lo construimos. Mantenemos el estándar de boutique de élite en cada línea de código."
+                },
+                {
+                    "title": "Transparencia Radical",
+                    "desc": "Comunicación directa y honesta. Sin capas de gestión innecesarias, solo ingenieros resolviendo problemas."
+                }
+            ]
         }
     }
 }
