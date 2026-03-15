@@ -225,24 +225,10 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                                 href={CONTACT_CALENDAR_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block w-full text-center bg-white text-black px-6 py-4 rounded-xl text-sm font-bold hover:bg-gray-200 transition-all mb-8 hover:scale-[1.02]"
+                                className="block w-full text-center bg-white text-black px-6 py-4 rounded-xl text-sm font-bold hover:bg-gray-200 transition-all hover:scale-[1.02]"
                             >
                                 {dict.navigation.conversionCta}
                             </a>
-
-                            <div className="space-y-6 pt-6 border-t border-white/10">
-                                <div>
-                                    <a href="mailto:hello@dibrand.co" className="text-gray-300 hover:text-white transition-colors text-lg">
-                                        hello@dibrand.co
-                                    </a>
-                                </div>
-
-                                <div>
-                                    <p className="text-gray-500 text-sm mt-4 tracking-widest uppercase font-medium">
-                                        REACT · NODE.JS · AWS · WORDPRESS · BUBBLE
-                                    </p>
-                                </div>
-                            </div>
                         </div>
 
                     </div>
