@@ -22,21 +22,21 @@ interface HeroSectionProps {
 
 export default function HeroSection({ dict }: HeroSectionProps) {
     return (
-        <section className="relative h-screen min-h-[700px] w-full overflow-hidden flex flex-col">
+        <section className="relative w-full overflow-hidden flex flex-col" style={{ minHeight: '100svh' }}>
             {/* Capa 1: Imagen de Fondo */}
             <Image
                 src="/oficina-dibrand.png"
                 alt="Equipo de Dibrand trabajando en oficinas modernas"
                 fill
                 priority
-                className="object-cover z-0"
+                className="object-cover object-center z-0"
             />
 
-            {/* Capa 2: Overlay de Marca - Darker on mobile for readability */}
-            <div className="absolute inset-0 z-10 bg-zinc-950/80 md:bg-zinc-950/60" />
+            {/* Capa 2: Overlay de Marca - gradient from top to bottom, covers full height */}
+            <div className="absolute inset-0 z-10 bg-gradient-to-b from-zinc-950/85 via-zinc-950/70 to-zinc-950/90" />
 
             {/* Capa 3: Contenido de Texto */}
-            <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-32 pb-16">
+            <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-28 pb-20 md:pb-28">
                 <h1 className="font-outfit text-[32px] sm:text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter text-white leading-[1.05] md:leading-[1.1] max-w-5xl uppercase">
                     {dict.hero.title}
                 </h1>
@@ -49,8 +49,8 @@ export default function HeroSection({ dict }: HeroSectionProps) {
                 <div className="mt-8 md:mt-10 flex flex-col items-center w-full max-w-4xl">
                     <ScheduleButton text={dict.hero.cta} />
 
-                    {/* Stats - Compact Row */}
-                    <div className="mt-12 md:mt-16 flex flex-wrap justify-center gap-6 md:gap-16 items-center pt-8 border-t border-white/10 w-full">
+                    {/* Stats - Compact Row — pinned with safe bottom margin */}
+                    <div className="mt-14 md:mt-20 flex flex-wrap justify-center gap-8 md:gap-20 items-end pt-8 border-t border-white/15 w-full pb-2">
                         {dict.stats.items.map((stat, index) => (
                             <StatCounter key={index} value={stat.value} label={stat.label} />
                         ))}
