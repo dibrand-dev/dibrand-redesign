@@ -42,6 +42,27 @@ const nextConfig: NextConfig = {
       }
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/terms-of-service',
+        destination: '/en/terms',
+      },
+      {
+        source: '/es/terminos-del-servicio',
+        destination: '/es/terms',
+      },
+      {
+        source: '/privacy-policy',
+        destination: '/en/privacy',
+      },
+      {
+        source: '/es/politica-de-privacidad',
+        destination: '/es/privacy',
+      }
+    ];
+  },
+
 };
 
 export default nextConfig;
