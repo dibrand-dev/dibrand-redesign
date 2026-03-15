@@ -16,6 +16,11 @@
         "conversionHook": "Let's talk about your next digital product.",
         "conversionCta": "[ Book a 30-min Discovery Call ]"
     },
+    "footer": {
+        "title1": "LET'S TALK",
+        "title2": "about your next project.",
+        "subtitle": "Tell us how we can help you."
+    },
     "home": {
         "hero": {
             "title": "Accelerate your Roadmap with World-Class Engineering",
@@ -409,7 +414,7 @@
         "hero": {
             "title": "Data Intelligence & AI Workflows",
             "subtitle": "Drive your decision making and automate key processes with customized artificial intelligence. We deploy cognitive agents and data flows that transform your business.",
-            "cta": "Explore AI Solutions"
+            "cta": "Book an Appointment"
         },
         "pillars": {
             "items": [
@@ -455,7 +460,7 @@
         "hero": {
             "title": "Strategic Software Architecture",
             "subtitle": "We don't build for today, we design to scale tomorrow. We provide enterprise-grade software blueprints built to support high traffic and sustained growth.",
-            "cta": "Consult with our Experts"
+            "cta": "Book an Appointment"
         },
         "pillars": {
             "items": [

@@ -25,15 +25,15 @@ export default function Footer({ dict, lang }: FooterProps) {
                             className="block text-5xl lg:text-6xl font-black text-gray-900 tracking-wide mb-2 leading-none"
                             style={{ textShadow: '-1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}
                         >
-                            LET&apos;S TALK
+                            {dict.footer.title1}
                         </span>
                         <span className="block text-4xl lg:text-5xl font-black text-white leading-tight mb-8">
-                            about your next project.
+                            {dict.footer.title2}
                         </span>
                     </h2>
 
                     <p className="text-xl text-gray-400 mb-8">
-                        Tell us how we can help you.
+                        {dict.footer.subtitle}
                     </p>
 
                     <p className="text-gray-300 mb-8">

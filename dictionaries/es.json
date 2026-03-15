@@ -16,6 +16,11 @@
         "conversionHook": "Hablemos de tu próximo producto digital.",
         "conversionCta": "[ Agendá una Discovery Call de 30 min ]"
     },
+    "footer": {
+        "title1": "HABLEMOS",
+        "title2": "sobre tu próximo proyecto.",
+        "subtitle": "Cuéntanos cómo te podemos ayudar."
+    },
     "home": {
         "hero": {
             "title": "Acelera tu Roadmap con Ingeniería de Clase Mundial",
@@ -409,7 +414,7 @@
         "hero": {
             "title": "Data Intelligence & AI Workflows",
             "subtitle": "Impulsa tu toma de decisiones y automatiza procesos clave con inteligencia artificial a medida. Desplegamos agentes cognitivos y flujos de datos que transforman tu negocio.",
-            "cta": "Explorar Soluciones de IA"
+            "cta": "Agendar una Cita"
         },
         "pillars": {
             "items": [
@@ -455,7 +460,7 @@
         "hero": {
             "title": "Arquitectura de Software Estratégica",
             "subtitle": "No construimos para hoy, diseñamos para escalar mañana. Proveemos planos arquitectónicos de software de nivel empresarial capaces de soportar alto tráfico y crecimiento sostenido.",
-            "cta": "Consultar a nuestros Expertos"
+            "cta": "Agendar una Cita"
         },
         "pillars": {
             "items": [

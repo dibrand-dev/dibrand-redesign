@@ -16,6 +16,11 @@ export interface Dictionary {
         conversionHook: string;
         conversionCta: string;
     };
+    footer: {
+        title1: string;
+        title2: string;
+        subtitle: string;
+    };
     home: {
         hero: {
             title: string;
