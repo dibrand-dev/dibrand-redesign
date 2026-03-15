@@ -59,7 +59,7 @@ export default function ServicesGrid({ dict, lang }: ServicesGridProps) {
                                 </article>
 
                                 <div className="mt-6 flex items-center text-xs font-bold uppercase tracking-wider text-gray-400 group-hover:text-brand transition-colors">
-                                    <span>Learn More</span>
+                                    <span>{lang === 'es' ? 'Saber más' : 'Learn More'}</span>
                                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                                 </div>
                             </Link>

@@ -17,6 +17,8 @@ interface ContactFormProps {
         email: string;
         company: string;
         message: string;
+        emailPlaceholder?: string;
+        messagePlaceholder?: string;
         submit: string;
         sending: string;
         success: string;
@@ -130,7 +132,7 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
                   ? "bg-white/5 border-zinc-700 text-white placeholder-zinc-500" 
                   : "bg-zinc-50 border-zinc-200 text-zinc-900 placeholder-zinc-400"
               )}
-              placeholder="john@example.com"
+              placeholder={dict.contact.form.emailPlaceholder || "john@example.com"}
             />
             {errors['Email'] && <span className="text-red-400 text-xs">Required</span>}
           </div>
@@ -167,7 +169,7 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
                   ? "bg-white/5 border-zinc-700 text-white placeholder-zinc-500" 
                   : "bg-zinc-50 border-zinc-200 text-zinc-900 placeholder-zinc-400"
               )}
-              placeholder={dict.contact.form.message}
+              placeholder={dict.contact.form.messagePlaceholder || dict.contact.form.message}
             />
           </div>
 

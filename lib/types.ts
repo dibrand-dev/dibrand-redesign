@@ -51,6 +51,8 @@ export interface Dictionary {
             email: string;
             company: string;
             message: string;
+            emailPlaceholder: string;
+            messagePlaceholder: string;
             submit: string;
             sending: string;
             success: string;

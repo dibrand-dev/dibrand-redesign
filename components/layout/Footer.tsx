@@ -99,6 +99,19 @@ export default function Footer({ dict, lang }: FooterProps) {
                     <ContactForm dict={dict} isDark={true} />
                 </div>
             </div>
+
+            {/* Copyright & Legal Links */}
+            <div className="max-w-7xl mx-auto px-6 relative z-10 mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-400">
+                <p>© {new Date().getFullYear()} Dibrand. {lang === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
+                <div className="flex items-center gap-6">
+                    <a href={`/${lang}/terms`} className="hover:text-white transition-colors">
+                        {lang === 'es' ? 'Términos y Condiciones' : 'Terms of Service'}
+                    </a>
+                    <a href={`/${lang}/privacy`} className="hover:text-white transition-colors">
+                        {lang === 'es' ? 'Política de Privacidad' : 'Privacy Policy'}
+                    </a>
+                </div>
+            </div>
         </section>
     );
 }

@@ -6,26 +6,25 @@
         "softwareDevelopment": "Desarrollo de Software",
         "staffAugmentation": "Staff Augmentation",
         "softwareOutsourcing": "Software Outsourcing",
-        "portfolio": "Portfolio",
         "aboutUs": "Nosotros",
-        "careers": "Join Us",
+        "careers": "Trabaja con nosotros",
         "contact": "Contacto",
         "aiWorkflows": "AI & Custom Workflows",
         "strategicArchitecture": "Strategic Architecture",
-        "scheduleCall": "Agendar Consulta",
+        "scheduleCall": "Agendar una Cita",
         "conversionHook": "Hablemos de tu próximo producto digital.",
         "conversionCta": "[ Agendá una Discovery Call de 30 min ]"
     },
     "footer": {
         "title1": "HABLEMOS",
-        "title2": "sobre tu próximo proyecto.",
+        "title2": "sobre tu próximo desafío.",
         "subtitle": "Cuéntanos cómo te podemos ayudar."
     },
     "home": {
         "hero": {
             "title": "Acelera tu Roadmap con Ingeniería de Clase Mundial",
             "subtitle": "<strong>Dibrand</strong> es una boutique de ingeniería que provee senior staff augmentation y desarrollo de productos end-to-end para startups de alto impacto. Integramos especialistas en IA, Web y Mobile que se fusionan con tu equipo para construir plataformas escalables, desde la arquitectura hasta el lanzamiento.",
-            "cta": "Agendar Consulta",
+            "cta": "Agendar una Cita",
             "welcome": "Bienvenido a Dibrand"
         },
         "whatWeDo": {
@@ -157,7 +156,7 @@
             "resultsDescription": "Impacto de Negocio",
             "metrics": "Métricas Clave",
             "techStack": "Tech Stack",
-            "cta": "Agendar Consulta",
+            "cta": "Agendar una Cita",
             "backLink": "Volver a todas las historias",
             "share": "Compartir caso de éxito"
         },
@@ -174,6 +173,8 @@
             "email": "Email",
             "company": "Empresa",
             "message": "Mensaje",
+            "emailPlaceholder": "tucorreo@email.com",
+            "messagePlaceholder": "Escribe tu mensaje...",
             "submit": "Enviar Mensaje",
             "sending": "Enviando...",
             "success": "¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.",
@@ -184,7 +185,7 @@
         "hero": {
             "title": "Senior Staff Augmentation",
             "subtitle": "Deja de sumar headcount. Empieza a sumar impacto. Dibrand despliega squads de ingeniería aumentados por IA que no solo ocupan un lugar: se adueñan de tu roadmap y aceleran tu time-to-market.",
-            "cta": "Agendar Consulta de Staff Augmentation"
+            "cta": "Agendar una Cita"
         },
         "whatIs": {
             "title": "Integración de Staff Augmentation",
@@ -226,7 +227,7 @@
                     "desc": "Onboarding guiado y escalamiento continuo según la demanda del proyecto."
                 }
             ],
-            "cta": "Agendar Consulta"
+            "cta": "Agendar una Cita"
         },
         "roles": {
             "title": "Perfiles que potenciamos",
@@ -331,7 +332,7 @@
         "hero": {
             "title": "Construimos tu producto de punta a punta.",
             "subtitle": "Tomamos la responsabilidad total del desarrollo para que puedas enfocarte en escalar tu negocio. Ingeniería autónoma con entrega garantizada.",
-            "cta": "Agendar Consulta de Outsourcing"
+            "cta": "Agendar una Cita"
         },
         "pillars": {
             "items": [
@@ -402,7 +403,7 @@
         "stateProvince": "Provincia / Estado",
         "techStacks": "Tech Stacks (Skills)",
         "linkedin": "Perfil de LinkedIn / URL de Portfolio",
-        "attachResume": "Adjuntar CV (Sólamente PDF)",
+        "attachResume": "Subir CV (Sólamente PDF)",
         "clickToUpload": "Haz clic para subir o arrastra el archivo",
         "pdfOnly": "Solo PDF (Máx 5MB)",
         "sendApplication": "Enviar Postulación",
