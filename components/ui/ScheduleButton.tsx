@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
 import { CONTACT_CALENDAR_URL } from '@/lib/constants';
 import { ArrowUpRight } from 'lucide-react';
 import clsx from 'clsx';
+import { trackAppointmentClick } from '@/lib/gtm';
 
 interface ScheduleButtonProps {
     text: string;
@@ -15,6 +18,7 @@ export default function ScheduleButton({ text, className, showIcon = true }: Sch
             href={CONTACT_CALENDAR_URL}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackAppointmentClick(text)}
             className={clsx(
                 "inline-flex items-center gap-3 px-10 py-5 bg-brand text-white font-bold rounded-full hover:bg-brand/90 hover:scale-[1.02] transition-all group font-outfit",
                 className
@@ -25,3 +29,4 @@ export default function ScheduleButton({ text, className, showIcon = true }: Sch
         </a>
     );
 }
+

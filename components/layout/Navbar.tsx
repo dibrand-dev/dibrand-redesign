@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { CONTACT_CALENDAR_URL } from '@/lib/constants';
+import { trackAppointmentClick } from '@/lib/gtm';
 
 interface NavbarProps {
     dict: {
@@ -225,6 +226,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                                 href={CONTACT_CALENDAR_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={() => trackAppointmentClick(dict.navigation.conversionCta)}
                                 className="block w-full text-center bg-white text-black px-6 py-4 rounded-xl text-sm font-bold hover:bg-gray-200 transition-all hover:scale-[1.02]"
                             >
                                 {dict.navigation.conversionCta}
