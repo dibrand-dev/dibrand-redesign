@@ -1,12 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { Loader2 } from 'lucide-react';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 import { submitToZoho } from '@/app/actions/submitToZoho';
-import { useEffect, Suspense } from 'react';
 import { trackContactFormSuccess } from '@/lib/gtm';
 
 interface ContactFormProps {
@@ -40,12 +39,14 @@ interface FormData {
 
 function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
   const subject = searchParams.get('subject');
 
   const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormData>();
 
   useEffect(() => {
+    setMounted(true);
     if (subject) {
       setValue('Description', subject);
     }
@@ -69,6 +70,10 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
       setSubmitStatus('error');
     }
   };
+
+  // Safe placeholders to avoid hydration mismatch while server might have older dictionary versions
+  const emailPlaceholder = mounted ? (dict.contact.form.emailPlaceholder || "yourname@email.com") : "";
+  const messagePlaceholder = mounted ? (dict.contact.form.messagePlaceholder || dict.contact.form.message) : "";
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -134,7 +139,7 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
                   ? "bg-white/5 border-zinc-700 text-white placeholder-zinc-500" 
                   : "bg-zinc-50 border-zinc-200 text-zinc-900 placeholder-zinc-400"
               )}
-              placeholder={dict.contact.form.emailPlaceholder || "john@example.com"}
+              placeholder={emailPlaceholder}
             />
             {errors['Email'] && <span className="text-red-400 text-xs">Required</span>}
           </div>
@@ -171,7 +176,7 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
                   ? "bg-white/5 border-zinc-700 text-white placeholder-zinc-500" 
                   : "bg-zinc-50 border-zinc-200 text-zinc-900 placeholder-zinc-400"
               )}
-              placeholder={dict.contact.form.messagePlaceholder || dict.contact.form.message}
+              placeholder={messagePlaceholder}
             />
           </div>
 
