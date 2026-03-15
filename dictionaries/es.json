@@ -479,7 +479,7 @@
                     "desc": "Maximizamos el flujo de información en tiempo real a través de brokers confiables para reacciones inmediatas."
                 },
                 {
-                    "title": "Seguridad Enterpise-Grade",
+                    "title": "Seguridad de Nivel Empresarial",
                     "desc": "Implantamos protocolos y medidas de mitigación desde la fase de diseño (Security by Design)."
                 }
             ],
@@ -490,16 +490,16 @@
             "subtitle": "Nuestra manera de blindar el crecimiento y resiliencia tecnológica.",
             "steps": [
                 {
-                    "title": "Discovery Arquitectónico",
+                    "title": "Descubrimiento Arquitectónico",
                     "desc": "Diagnosticamos la infraestructura actual e identificamos cuellos de botella y riesgos de deuda técnica inminente."
                 },
                 {
-                    "title": "Blueprint Definition",
+                    "title": "Definición de Blueprints Técnicos",
                     "desc": "Traemos a la vida los diagramas C4 y documentos de diseño que guiarán la construcción o modernización de la plataforma."
                 },
                 {
-                    "title": "Refactoring Seguro",
-                    "desc": "Acompañamos a tu equipo (o al nuestro) en la transición progresiva con Zero Downtime garantizado."
+                    "title": "Refactorización Segura",
+                    "desc": "Acompañamos a tu equipo (o al nuestro) en la transición progresiva con cero tiempo de inactividad (Zero Downtime) garantizado."
                 }
             ]
         }
