@@ -83,7 +83,7 @@ export default async function SoftwareOutsourcingPage(props: { params: Promise<{
             <SoftwareOutsourcingHero dict={content} lang={params.lang} />
 
             {/* Social Proof Section */}
-            <TrustedBySection brands={brands} />
+            <TrustedBySection brands={brands} dict={dict} />
 
             {/* 4 Pillars Grid - Pure Seniority, Tech Alignment, Speed to Value, Boutique Quality */}
             <section className="py-24 bg-white">

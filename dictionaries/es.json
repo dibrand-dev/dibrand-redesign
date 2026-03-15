@@ -338,19 +338,19 @@
         "pillars": {
             "items": [
                 {
-                    "title": "End-to-End Delivery",
+                    "title": "Entrega Integral (End-to-End)",
                     "desc": "Desde la concepción hasta el lanzamiento. Gestionamos el ciclo de vida completo del producto con metodologías ágiles."
                 },
                 {
-                    "title": "Autonomous Execution",
+                    "title": "Ejecución Autónoma",
                     "desc": "Equipos auto-gestionados que requieren mínima supervisión, permitiéndote foco estratégico total."
                 },
                 {
-                    "title": "Tailored Architecture",
+                    "title": "Arquitectura a Medida",
                     "desc": "Diseñamos soluciones tecnológicas escalables y seguras, adaptadas específicamente a tus objetivos de negocio."
                 },
                 {
-                    "title": "Turnkey Results",
+                    "title": "Resultados Llave en Mano",
                     "desc": "Entregables listos para operar. No entregamos código suelto, entregamos soluciones de valor real."
                 }
             ],
@@ -361,15 +361,15 @@
             "subtitle": "Cómo construimos tu producto de punta a punta.",
             "steps": [
                 {
-                    "title": "Discovery & Roadmap",
+                    "title": "Discovery y Roadmap Estratégico",
                     "desc": "Analizamos tus objetivos de negocio, definimos la arquitectura técnica y trazamos un roadmap de ejecución claro."
                 },
                 {
-                    "title": "Autonomous Execution",
+                    "title": "Ejecución Autónoma",
                     "desc": "Nuestros equipos senior ejecutan de forma autónoma con metodologías ágiles, asegurando transparencia y calidad técnica constante."
                 },
                 {
-                    "title": "Turnkey Delivery",
+                    "title": "Entrega Llave en Mano",
                     "desc": "Entregamos un producto robusto, escalable y listo para operar, con documentación completa y transferencia total de propiedad."
                 }
             ]

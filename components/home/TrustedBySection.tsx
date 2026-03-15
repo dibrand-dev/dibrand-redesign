@@ -10,9 +10,7 @@ interface Brand {
 
 interface TrustedBySectionProps {
     brands: Brand[];
-    dict?: {
-        trustedByTitle: string;
-    }
+    dict?: any;
 }
 
 export default function TrustedBySection({ brands, dict }: TrustedBySectionProps) {
