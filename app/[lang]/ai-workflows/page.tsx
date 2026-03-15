@@ -55,7 +55,7 @@ export default async function AiWorkflowsPage(props: { params: Promise<{ lang: "
             <AiWorkflowsHero dict={content} lang={params.lang} />
 
             {/* Social Proof Section */}
-            <TrustedBySection brands={brands} />
+            <TrustedBySection brands={brands} dict={dict} />
 
             {/* 4 Pillars Grid */}
             <section className="py-24 bg-white">

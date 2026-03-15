@@ -55,7 +55,7 @@ export default async function StrategicArchitecturePage(props: { params: Promise
             <StrategicArchitectureHero dict={content} lang={params.lang} />
 
             {/* Social Proof Section */}
-            <TrustedBySection brands={brands} />
+            <TrustedBySection brands={brands} dict={dict} />
 
             {/* 4 Pillars Grid */}
             <section className="py-24 bg-white">

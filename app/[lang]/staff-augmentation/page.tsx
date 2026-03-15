@@ -108,8 +108,8 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
             {/* New Staffing Services Section */}
             <StaffingServices dict={content.services} />
 
-            {/* Social Proof Section - More Compact & No Borders */}
-            <TrustedBySection brands={brands} />
+            {/* Client Trust Section */}
+            <TrustedBySection brands={brands} dict={dict} />
 
             {/* The Dibrand Way - Confidence Block - Compact */}
             <section className="py-16 bg-slate-900 relative overflow-hidden">
