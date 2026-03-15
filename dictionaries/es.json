@@ -195,19 +195,19 @@
         "pillars": {
             "items": [
                 {
-                    "title": "Pure Seniority",
+                    "title": "Seniority de Élite",
                     "desc": "Acceso exclusivo al top 3% de talento de ingeniería en LATAM. Expertos que no solo escriben código, sino que diseñan soluciones."
                 },
                 {
-                    "title": "Tech Alignment",
+                    "title": "Alineación Técnica",
                     "desc": "Integración total con tus procesos, cultura y zona horaria. Colaboración en tiempo real sin barreras de comunicación."
                 },
                 {
-                    "title": "Speed to Value",
+                    "title": "Valor a Máxima Velocidad",
                     "desc": "Reducimos el tiempo de contratación a semanas. Nuestros ingenieros entregan impacto medible desde el primer sprint."
                 },
                 {
-                    "title": "Boutique Quality",
+                    "title": "Calidad Boutique",
                     "desc": "Enfoque personalizado y artesanal. Mantenemos el estándar más alto de calidad técnica en cada línea de código."
                 }
             ],
@@ -280,7 +280,7 @@
                     "roles": [
                         {
                             "name": "UX Designers",
-                            "desc": "Investigación de usuarios, customer journeys y flujos intuitivos."
+                            "desc": "Investigación de usuarios, viajes del usuario (customer journeys) y flujos intuitivos."
                         },
                         {
                             "name": "UI Designers",
@@ -296,7 +296,7 @@
                     "title": "Ingeniería & IA",
                     "roles": [
                         {
-                            "name": "FE/BE Developers",
+                            "name": "Desarrolladores Frontend y Backend",
                             "desc": "Expertos en React, Node.js, Python y Java."
                         },
                         {
@@ -312,10 +312,10 @@
             ]
         },
         "theDibrandWay": {
-            "title": "The Dibrand Way",
+            "title": "El ADN Dibrand",
             "items": [
                 {
-                    "title": "Timezone match",
+                    "title": "Sincronía Horaria",
                     "desc": "Trabajamos en tu misma zona horaria para una colaboración fluida y en tiempo real."
                 },
                 {
