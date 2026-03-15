@@ -45,6 +45,7 @@ export const CASE_INDUSTRIES = [
     { value: 'Real Estate', label: 'Real Estate' },
     { value: 'SaaS', label: 'SaaS / Enterprise Software' },
     { value: 'SportsRetail', label: 'Sports & Retail' },
+    { value: 'TechCorporate', label: 'Tech & Corporate' },
     { value: 'Web3NFT', label: 'Web3 & NFT' }
 ];
 
