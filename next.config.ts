@@ -44,16 +44,26 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return [
+      // Terms of Service
       {
         source: '/terms-of-service',
+        destination: '/en/terms',
+      },
+      {
+        source: '/en/terms-of-service',
         destination: '/en/terms',
       },
       {
         source: '/es/terminos-del-servicio',
         destination: '/es/terms',
       },
+      // Privacy Policy
       {
         source: '/privacy-policy',
+        destination: '/en/privacy',
+      },
+      {
+        source: '/en/privacy-policy',
         destination: '/en/privacy',
       },
       {
