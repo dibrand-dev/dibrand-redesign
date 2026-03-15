@@ -1,9 +1,11 @@
 'use client'
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { saveBrand, uploadBrandLogo } from './actions';
-import { Loader2, X, Upload, ImageIcon } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, Upload, ImageIcon, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface Brand {
     id: string | null;
@@ -14,10 +16,10 @@ interface Brand {
 
 interface BrandsFormProps {
     brand?: Brand | null;
-    onClose: () => void;
 }
 
-export default function BrandsForm({ brand, onClose }: BrandsFormProps) {
+export default function BrandsForm({ brand }: BrandsFormProps) {
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string>(brand?.logo_url || '');
@@ -57,7 +59,8 @@ export default function BrandsForm({ brand, onClose }: BrandsFormProps) {
                 ...formData,
                 logo_url: finalLogoUrl
             });
-            onClose();
+            router.push('/admin/brands');
+            router.refresh();
         } catch (error) {
             console.error('Error saving brand:', error);
             const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
@@ -68,106 +71,154 @@ export default function BrandsForm({ brand, onClose }: BrandsFormProps) {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-admin-card-bg rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in zoom-in duration-200 border border-admin-border">
-                <div className="flex items-center justify-between p-6 border-b border-admin-border/50">
-                    <h3 className="text-xl font-bold text-admin-text-primary">
-                        {formData.id ? 'Editar Cliente' : 'Nuevo Cliente'}
-                    </h3>
-                    <button onClick={onClose} className="p-2 hover:bg-admin-bg rounded-full transition-colors font-medium">
-                        <X size={20} className="text-gray-400" />
-                    </button>
-                </div>
-
-                <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold text-admin-text-secondary uppercase tracking-widest">Nombre de la Empresa</label>
-                        <input
-                            type="text"
-                            required
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-admin-border focus:ring-2 focus:ring-admin-accent/20 focus:border-admin-accent transition-all outline-none bg-admin-bg/50"
-                            placeholder="Ej: Google"
-                        />
+        <form onSubmit={handleSubmit} className="space-y-8 pb-20 font-inter animate-in fade-in duration-500">
+            {/* Header / Nav */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-center gap-6">
+                    <Link 
+                        href="/admin/brands" 
+                        className="p-3 hover:bg-admin-card-bg rounded-2xl transition-all text-admin-text-secondary border border-transparent hover:border-admin-border group"
+                    >
+                        <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+                    </Link>
+                    <div>
+                        <h2 className="text-3xl font-black text-admin-text-primary tracking-tight uppercase">
+                            {formData.id ? 'Editar Cliente' : 'Nuevo Cliente'}
+                        </h2>
+                        <p className="text-admin-text-secondary text-sm font-medium italic">
+                            Gestión de partners y marcas.
+                        </p>
                     </div>
+                </div>
+            </div>
 
-                    <div className="space-y-4">
-                        <label className="text-xs font-bold text-admin-text-secondary uppercase tracking-widest block">Logo de la Marca</label>
-                        <div className="flex items-center gap-6">
-                            <div className="relative h-20 w-32 rounded-xl overflow-hidden bg-admin-bg flex-shrink-0 border-2 border-admin-border flex items-center justify-center p-2">
-                                {previewUrl ? (
-                                    <div className="relative w-full h-full">
-                                        <Image
-                                            src={previewUrl}
-                                            alt="Preview"
-                                            fill
-                                            unoptimized
-                                            className="object-contain"
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                        <ImageIcon size={32} />
-                                    </div>
-                                )}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Main Content Card */}
+                <div className="lg:col-span-2 space-y-8">
+                    <div className="bg-admin-card-bg rounded-3xl border border-admin-border p-8 shadow-sm space-y-8">
+                        <div className="flex items-center gap-3 border-b border-admin-border pb-4">
+                            <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Información de la Empresa</h3>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest block">Nombre Comercial</label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    className="w-full px-5 py-4 bg-admin-bg/50 border border-admin-border rounded-2xl focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none text-admin-text-primary text-base font-bold transition-all"
+                                    placeholder="Ej: Google, Amazon, Tech Solutions"
+                                />
                             </div>
-                            <div className="flex-1">
-                                <div className="relative">
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleFileChange}
-                                        className="hidden"
-                                        id="logo-upload"
-                                    />
-                                    <label
-                                        htmlFor="logo-upload"
-                                        className="flex items-center gap-2 px-4 py-2 bg-admin-bg border border-dashed border-admin-border rounded-xl cursor-pointer hover:bg-admin-bg transition-colors text-sm font-medium text-admin-text-secondary"
-                                    >
-                                        <Upload size={16} />
-                                        {selectedFile ? 'Cambiar logo' : 'Subir logo'}
-                                    </label>
-                                    <p className="mt-1 text-[10px] text-gray-400">
-                                        Recomendado: Archivo SVG o PNG con fondo transparente. Altura ideal: 60px.
-                                    </p>
+                        </div>
+
+                        <div className="pt-6">
+                             <div className="flex items-center gap-3 border-b border-admin-border pb-4 mb-6">
+                                <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Logo / Identidad Visual</h3>
+                            </div>
+                            <div className="flex flex-col md:flex-row items-center gap-8">
+                                <div className="relative h-32 w-48 rounded-2xl overflow-hidden bg-admin-bg flex-shrink-0 border-2 border-admin-border shadow-inner p-4 flex items-center justify-center group">
+                                    {previewUrl ? (
+                                        <div className="relative w-full h-full">
+                                            <Image
+                                                src={previewUrl}
+                                                alt="Preview"
+                                                fill
+                                                unoptimized
+                                                className="object-contain transition-transform group-hover:scale-110"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                            <ImageIcon size={48} />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex-1 w-full">
+                                    <div className="relative">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
+                                            className="hidden"
+                                            id="logo-upload-full"
+                                        />
+                                        <label
+                                            htmlFor="logo-upload-full"
+                                            className="flex items-center justify-center gap-3 w-full px-6 py-4 bg-admin-bg border-2 border-dashed border-admin-border rounded-2xl cursor-pointer hover:bg-admin-card-bg hover:border-admin-accent/50 transition-all text-sm font-black text-admin-text-secondary uppercase tracking-widest group"
+                                        >
+                                            <Upload size={18} className="text-gray-400 group-hover:text-admin-accent transition-colors" />
+                                            <span>{selectedFile ? 'Cambiar logo' : 'Subir Logo Empresarial'}</span>
+                                        </label>
+                                        <p className="mt-4 text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center md:text-left">
+                                            Recomendado: SVG o PNG (fondo transparente). Max 2MB.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div className="flex items-center gap-3">
-                        <input
-                            type="checkbox"
-                            id="is_visible"
-                            checked={formData.is_visible}
-                            onChange={(e) => setFormData({ ...formData, is_visible: e.target.checked })}
-                            className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary"
-                        />
-                        <label htmlFor="is_visible" className="text-sm font-medium text-gray-700">
-                            Visible en el carrusel
-                        </label>
-                    </div>
+                {/* Sidebar / Options */}
+                <div className="space-y-8">
+                    {/* Visibility Card */}
+                    <div className="bg-admin-card-bg rounded-3xl border border-admin-border p-8 shadow-sm space-y-6">
+                        <div className="flex items-center gap-3 border-b border-admin-border pb-4">
+                            <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Configuración</h3>
+                        </div>
 
-                    <div className="flex justify-end gap-3 pt-6 border-t border-admin-border/50">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-6 py-3 rounded-xl font-bold text-admin-text-secondary hover:bg-admin-bg transition-colors"
-                        >
-                            Cancelar
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="flex items-center gap-2 px-8 py-3 rounded-xl bg-admin-accent text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-admin-accent/20 active:scale-95 disabled:opacity-50"
-                        >
-                            {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-                            {formData.id ? 'Guardar Cambios' : 'Agregar Cliente'}
-                        </button>
+                        <div className="flex items-center justify-between p-4 bg-admin-bg/40 rounded-2xl border border-admin-border hover:border-admin-accent/30 transition-colors group">
+                            <div className="flex items-center gap-3">
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${formData.is_visible ? 'bg-green-500/10 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
+                                    <CheckCircle2 size={20} className={formData.is_visible ? 'animate-pulse' : ''} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-black text-admin-text-primary uppercase tracking-tight">Activo</span>
+                                    <span className="text-[9px] text-admin-text-secondary font-bold uppercase tracking-widest">Visible en el home</span>
+                                </div>
+                            </div>
+                            <input
+                                type="checkbox"
+                                id="is_visible"
+                                checked={formData.is_visible}
+                                onChange={(e) => setFormData({ ...formData, is_visible: e.target.checked })}
+                                className="w-6 h-6 text-admin-accent border-admin-border rounded-lg focus:ring-admin-accent transition-all cursor-pointer accent-admin-accent"
+                            />
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+
+            {/* Floating Action Bar */}
+            <div className="sticky bottom-8 bg-admin-card-bg/80 backdrop-blur-md border border-admin-border rounded-3xl px-8 h-20 flex items-center justify-between shadow-2xl z-40">
+                <div className="hidden md:flex flex-col">
+                    <span className="text-xs font-black text-admin-text-primary uppercase tracking-tight">
+                        {formData.id ? 'Editando Cliente' : 'Nuevo Cliente'}
+                    </span>
+                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest italic">
+                        Logo cargado: {formData.name || 'Sin nombre'}
+                    </span>
+                </div>
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                    <Link 
+                        href="/admin/brands" 
+                        className="flex-1 md:flex-none text-center px-8 py-3.5 border border-admin-border text-admin-text-secondary rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-admin-bg transition-colors active:scale-95"
+                    >
+                        Descartar
+                    </Link>
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="flex-1 md:flex-none inline-flex items-center justify-center gap-3 px-12 py-3.5 bg-admin-accent text-white rounded-xl text-[11px] font-black uppercase tracking-widest hover:opacity-95 disabled:opacity-50 transition-all shadow-xl shadow-admin-accent/20 active:scale-95"
+                    >
+                        {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                        {isLoading ? 'Guardando...' : 'Confirmar y Guardar'}
+                    </button>
+                </div>
+            </div>
+        </form>
     );
 }

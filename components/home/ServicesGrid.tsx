@@ -1,4 +1,4 @@
-import { Users, Rocket, Brain, MousePointerClick, Shield, Cloud, PieChart, Boxes, ArrowRight, Database, ShoppingBag, Landmark, Lock } from 'lucide-react';
+import { Users, Rocket, Brain, Landmark, ArrowRight } from 'lucide-react';
 
 import Link from 'next/link';
 
@@ -13,41 +13,32 @@ interface ServicesGridProps {
 }
 
 const iconMap = [
-    Users,               // AI-Augmented Staffing
-    Rocket,              // Rapid Software Dev
-    Brain,               // AI Agents & Automation
-    MousePointerClick,   // Conversion-Driven UX
-    Shield,              // Blockchain Solutions
-    Cloud,               // Cloud & DevOps
-    PieChart,            // Data & BI
-    Boxes,               // Immersive Tech
-    Database,            // ERP & CRM
-    ShoppingBag,         // E-commerce
-    Landmark,            // Strategy & QA
-    Lock                 // Cybersecurity
+    Rocket,              // Software Outsourcing
+    Users,               // Staff Augmentation
+    Brain,               // AI & Custom Workflows
+    Landmark             // Strategic Architecture
 ];
 
 export default function ServicesGrid({ dict, lang }: ServicesGridProps) {
     return (
-        <section className="bg-zinc-800 flex flex-col justify-start pt-24 pb-32" id="services">
+        <section className="bg-zinc-800 flex flex-col justify-start pt-32 pb-40" id="services">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-16 text-center">
+                <div className="mb-24 text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl font-outfit">
                         {dict.services.title}
                     </h2>
                     <div className="mt-4 h-1 w-20 bg-gradient-to-r from-brand to-brand mx-auto" />
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                     {dict.services.items.map((item, index) => {
                         const Icon = iconMap[index] || Rocket;
 
-                        // Mapping to conceptual URLs for AEO
-                        let href = "/services";
-                        if (item.title.includes("Staffing")) href = `/${lang}/servicios/it-staff-augmentation-ingenieria`;
-                        if (item.title.includes("Software Dev")) href = `/${lang}/servicios/desarrollo-mvp-startups-escalables`;
-                        if (item.title.includes("AI Agents")) href = `/${lang}/servicios/agentes-ia-automatizacion-cognitiva`;
-                        if (item.title.includes("Product Strategy")) href = `/${lang}/servicios/estrategia-producto-descubrimiento-tecnico`;
+                        let href = `/${lang}`;
+                        if (item.title.includes("Outsourcing")) href = `/${lang}/software-outsourcing`;
+                        if (item.title.includes("Staff Augmentation")) href = `/${lang}/staff-augmentation`;
+                        if (item.title.includes("AI & Custom Workflows")) href = `/${lang}/ai-workflows`;
+                        if (item.title.includes("Strategic Architecture")) href = `/${lang}/strategic-architecture`;
 
                         return (
                             <Link

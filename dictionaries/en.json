@@ -10,6 +10,8 @@
         "aboutUs": "About Us",
         "careers": "Join Us",
         "contact": "Contact",
+        "aiWorkflows": "AI & Custom Workflows",
+        "strategicArchitecture": "Strategic Architecture",
         "scheduleCall": "Schedule a Consultation",
         "conversionHook": "Let's talk about your next digital product.",
         "conversionCta": "[ Book a 30-min Discovery Call ]"
@@ -48,52 +50,20 @@
             "title": "Dibrand Solution Ecosystem",
             "items": [
                 {
-                    "title": "AI-Augmented Staffing",
-                    "desc": "Scale your squad in 72 hours with Senior Developers equipped with AI tools."
+                    "title": "Software Outsourcing",
+                    "desc": "We build your product end-to-end. Delegate development and accelerate your go-to-market with our self-managed delivery squads."
                 },
                 {
-                    "title": "Rapid Software Dev",
-                    "desc": "High-performance Web & Mobile apps built with modern stacks. MVPs in weeks."
+                    "title": "Staff Augmentation",
+                    "desc": "Scale your team in 72 hours with top-tier senior engineering talent from LATAM, augmented by AI tools."
                 },
                 {
-                    "title": "AI Agents & Automation",
-                    "desc": "Optimize operations with custom LLMs, intelligent bots, and predictive algorithms."
+                    "title": "AI & Custom Workflows",
+                    "desc": "Optimize operations and scale your business with custom Artificial Intelligence solutions and cognitive agents."
                 },
                 {
-                    "title": "Conversion-Driven UX",
-                    "desc": "Interfaces designed to convert users and reduce friction."
-                },
-                {
-                    "title": "Blockchain Solutions",
-                    "desc": "Secure decentralized apps and audit-ready Smart Contracts."
-                },
-                {
-                    "title": "Cloud & DevOps",
-                    "desc": "Resilient architecture on AWS & Azure for maximum uptime."
-                },
-                {
-                    "title": "Data & BI",
-                    "desc": "Turn raw data into actionable insights."
-                },
-                {
-                    "title": "Immersive Tech",
-                    "desc": "High-impact 3D visuals and AR experiences."
-                },
-                {
-                    "title": "ERP & CRM Integrations",
-                    "desc": "Connecting your business logic with the best enterprise solutions on the market."
-                },
-                {
-                    "title": "High-Performance E-commerce",
-                    "desc": "Scalable online stores designed for speed and high conversion."
-                },
-                {
-                    "title": "Product Strategy & QA",
-                    "desc": "We ensure your product not only works, but dominates the market."
-                },
-                {
-                    "title": "Cybersecurity & Audit",
-                    "desc": "Protecting your digital assets with encrypted architectures and rigorous audits."
+                    "title": "Strategic Architecture",
+                    "desc": "We design solid, scalable technical foundations that support the accelerated growth of your platform or business model."
                 }
             ]
         },
@@ -396,6 +366,19 @@
                     "desc": "We deliver a robust, scalable, and market-ready product, with complete documentation and full IP transfer."
                 }
             ]
+        },
+        "specialties": {
+            "title": "Technical Specialties",
+            "items": [
+                "Blockchain & Web3",
+                "Cybersecurity",
+                "E-commerce Solutions",
+                "Cloud Infrastructure",
+                "Mobile App Dev",
+                "UI/UX Design",
+                "Data Engineering",
+                "SaaS Products"
+            ]
         }
     },
     "joinOurTeam": {
@@ -420,7 +403,98 @@
         "sendApplication": "Send Application",
         "sending": "Sending...",
         "success": "Application received! Thank you for wanting to join Dibrand. We already have your profile on our radar and, if there is a match, we will contact you shortly. Good luck!",
-        "fallbackText": "No open positions at the moment, but we are always looking for talent.",
         "fallbackLink": "Send us your CV!"
+    },
+    "aiWorkflows": {
+        "hero": {
+            "title": "Data Intelligence & AI Workflows",
+            "subtitle": "Drive your decision making and automate key processes with customized artificial intelligence. We deploy cognitive agents and data flows that transform your business.",
+            "cta": "Explore AI Solutions"
+        },
+        "pillars": {
+            "items": [
+                {
+                    "title": "Automated Cognitive Agents",
+                    "desc": "We implement LLMs and virtual assistants trained with your company's data operating 24/7."
+                },
+                {
+                    "title": "Data Orchestration",
+                    "desc": "We connect multiple structured and unstructured data sources to generate comprehensive insights."
+                },
+                {
+                    "title": "End-to-End Automation",
+                    "desc": "We replace slow, repetitive tasks with automated workflows, reducing operational costs."
+                },
+                {
+                    "title": "Predictive Scalability",
+                    "desc": "We generate Machine Learning models that anticipate future scenarios and evolve over time."
+                }
+            ],
+            "lema": "The future is not coded, it's trained."
+        },
+        "process": {
+            "title": "Our MLOps Methodology",
+            "subtitle": "How we audit, prepare and deploy AI in your operations.",
+            "steps": [
+                {
+                    "title": "Data Audit & Feasibility",
+                    "desc": "We evaluate the state of your current data to confirm the feasibility of implementing ML models."
+                },
+                {
+                    "title": "Algorithm Development",
+                    "desc": "We design and train secure algorithms using state-of-the-art architectures tailored to your niche."
+                },
+                {
+                    "title": "Deployment and MLOps",
+                    "desc": "We integrate trained models securely into production, ensuring continuous improvement and monitoring."
+                }
+            ]
+        }
+    },
+    "strategicArchitecture": {
+        "hero": {
+            "title": "Strategic Software Architecture",
+            "subtitle": "We don't build for today, we design to scale tomorrow. We provide enterprise-grade software blueprints built to support high traffic and sustained growth.",
+            "cta": "Consult with our Experts"
+        },
+        "pillars": {
+            "items": [
+                {
+                    "title": "Scalable Microservices",
+                    "desc": "We decouple monolithic architectures into agile distributed services for independent deployments."
+                },
+                {
+                    "title": "Cloud Resilience",
+                    "desc": "We design Serverless and Multi-Cloud infrastructures prepared to recover from any failure in record time."
+                },
+                {
+                    "title": "Event-Driven Design",
+                    "desc": "We maximize real-time information flow through reliable brokers for immediate reactions."
+                },
+                {
+                    "title": "Enterprise-Grade Security",
+                    "desc": "We implement protocols and mitigation measures from the design phase (Security by Design)."
+                }
+            ],
+            "lema": "A solid foundation is everything."
+        },
+        "process": {
+            "title": "Architectural Framework",
+            "subtitle": "Our way of bulletproofing growth and technological resilience.",
+            "steps": [
+                {
+                    "title": "Architectural Discovery",
+                    "desc": "We diagnose current infrastructure, identifying bottlenecks and impending technical debt risks."
+                },
+                {
+                    "title": "Blueprint Definition",
+                    "desc": "We bring to life C4 diagrams and design documents that will guide the platform's build or modernization."
+                },
+                {
+                    "title": "Secure Refactoring",
+                    "desc": "We accompany your team (or ours) through progressive transitions with guaranteed Zero Downtime."
+                }
+            ]
+        }
     }
 }

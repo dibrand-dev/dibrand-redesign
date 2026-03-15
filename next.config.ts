@@ -23,6 +23,25 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/software-development',
+        destination: '/software-outsourcing',
+        permanent: true,
+      },
+      {
+        source: '/en/software-development',
+        destination: '/en/software-outsourcing',
+        permanent: true,
+      },
+      {
+        source: '/es/software-development',
+        destination: '/es/software-outsourcing',
+        permanent: true,
+      }
+    ];
+  },
 };
 
 export default nextConfig;

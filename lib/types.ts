@@ -4,13 +4,14 @@ export interface Dictionary {
         home: string;
         services: string;
         successCases: string;
-        softwareDevelopment: string;
         staffAugmentation: string;
         softwareOutsourcing: string;
         portfolio: string;
         aboutUs: string;
         careers: string;
         contact: string;
+        aiWorkflows: string;
+        strategicArchitecture: string;
         scheduleCall: string;
         conversionHook: string;
         conversionCta: string;

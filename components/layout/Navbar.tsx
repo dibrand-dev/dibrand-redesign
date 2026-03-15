@@ -13,13 +13,14 @@ interface NavbarProps {
             home: string;
             services: string;
             successCases: string;
-            softwareDevelopment: string;
             staffAugmentation: string;
             softwareOutsourcing: string;
             portfolio: string;
             aboutUs: string;
             careers: string;
             contact: string;
+            aiWorkflows: string;
+            strategicArchitecture: string;
             scheduleCall: string;
             conversionHook: string;
             conversionCta: string;
@@ -30,6 +31,7 @@ interface NavbarProps {
 
 export default function Navbar({ dict, lang }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [isServicesOpen, setIsServicesOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
@@ -67,10 +69,24 @@ export default function Navbar({ dict, lang }: NavbarProps) {
         };
     }, [isOpen]);
 
-    const navLinks = [
-        { name: dict.navigation.softwareDevelopment, href: `/${lang}#services` },
-        { name: dict.navigation.staffAugmentation, href: `/${lang}/staff-augmentation` },
-        { name: dict.navigation.softwareOutsourcing, href: `/${lang}/software-outsourcing` },
+    type NavLinkType = {
+        name: string;
+        href?: string;
+        isDropdown?: boolean;
+        subLinks?: { name: string; href: string }[];
+    };
+    
+    const navLinks: NavLinkType[] = [
+        { 
+            name: dict.navigation.services, 
+            isDropdown: true, 
+            subLinks: [
+                { name: dict.navigation.softwareOutsourcing, href: `/${lang}/software-outsourcing` },
+                { name: dict.navigation.staffAugmentation, href: `/${lang}/staff-augmentation` },
+                { name: dict.navigation.aiWorkflows, href: `/${lang}/ai-workflows` },
+                { name: dict.navigation.strategicArchitecture, href: `/${lang}/strategic-architecture` },
+            ] 
+        },
         { name: dict.navigation.portfolio, href: `/${lang}/success-stories` },
         { name: dict.navigation.careers, href: `/${lang}/join-us` },
         { name: dict.navigation.aboutUs, href: `/${lang}/about` },
@@ -137,14 +153,43 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                         {/* Left Column: Navigation Main Links */}
                         <div className="flex flex-col space-y-6 lg:space-y-8">
                             {navLinks.map((link, idx) => (
-                                <Link
-                                    key={idx}
-                                    href={link.href}
-                                    onClick={() => setIsOpen(false)}
-                                    className="text-4xl lg:text-5xl font-bold text-white hover:text-gray-300 transition-colors w-fit"
-                                >
-                                    {link.name}
-                                </Link>
+                                link.isDropdown ? (
+                                    <div key={idx} className="flex flex-col">
+                                        <button 
+                                            onClick={() => setIsServicesOpen(!isServicesOpen)}
+                                            className="text-3xl lg:text-4xl font-bold text-white hover:text-gray-300 transition-colors w-fit text-left flex items-center justify-between gap-4"
+                                        >
+                                            {link.name}
+                                            <span className={clsx("transition-transform duration-300", isServicesOpen ? "rotate-180" : "rotate-0")}>
+                                                <svg className="w-6 h-6 lg:w-8 lg:h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
+                                            </span>
+                                        </button>
+                                        <div className={clsx(
+                                            "flex flex-col space-y-4 overflow-hidden transition-all duration-300 ease-in-out pl-4 lg:pl-6",
+                                            isServicesOpen ? "max-h-96 opacity-100 mt-6" : "max-h-0 opacity-0 mt-0"
+                                        )}>
+                                            {link.subLinks?.map((subLink, subIdx) => (
+                                                <Link
+                                                    key={subIdx}
+                                                    href={subLink.href}
+                                                    onClick={() => setIsOpen(false)}
+                                                    className="text-xl lg:text-2xl font-semibold text-gray-400 hover:text-brand transition-colors w-fit"
+                                                >
+                                                    {subLink.name}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <Link
+                                        key={idx}
+                                        href={link.href!}
+                                        onClick={() => setIsOpen(false)}
+                                        className="text-3xl lg:text-4xl font-bold text-white hover:text-gray-300 transition-colors w-fit"
+                                    >
+                                        {link.name}
+                                    </Link>
+                                )
                             ))}
 
                             {/* Language Switcher */}

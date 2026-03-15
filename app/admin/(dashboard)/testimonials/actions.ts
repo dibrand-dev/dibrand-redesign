@@ -24,6 +24,29 @@ export async function getTestimonials() {
     }));
 }
 
+export async function getTestimonialById(id: string) {
+    const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+    if (error) throw error;
+    if (!data) return null;
+
+    return {
+        id: data.id,
+        name: data.author_name,
+        role_es: data.role_es,
+        role_en: data.role_en,
+        company: data.client_name,
+        content_es: data.content_es,
+        content_en: data.content_en,
+        avatar_url: data.client_logo_url,
+        is_visible: data.is_visible ?? true
+    };
+}
+
 export async function saveTestimonial(testimonial: any) {
     const { id, name, role_es, role_en, company, content_es, content_en, avatar_url } = testimonial;
 

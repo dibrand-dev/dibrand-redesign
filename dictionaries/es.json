@@ -10,6 +10,8 @@
         "aboutUs": "Nosotros",
         "careers": "Join Us",
         "contact": "Contacto",
+        "aiWorkflows": "AI & Custom Workflows",
+        "strategicArchitecture": "Strategic Architecture",
         "scheduleCall": "Agendar Consulta",
         "conversionHook": "Hablemos de tu próximo producto digital.",
         "conversionCta": "[ Agendá una Discovery Call de 30 min ]"
@@ -48,52 +50,20 @@
             "title": "Ecosistema de Soluciones Dibrand",
             "items": [
                 {
-                    "title": "Staffing Potenciado por IA",
-                    "desc": "Escala tu equipo en 72 horas con desarrolladores Senior equipados con herramientas de IA."
+                    "title": "Software Outsourcing",
+                    "desc": "Construimos tu producto de punta a punta. Delegá el desarrollo y acelerá tu go-to-market con nuestros squads autogestionados."
                 },
                 {
-                    "title": "Desarrollo de Software Rápido",
-                    "desc": "Apps Web y Móviles de alto rendimiento construidas con stacks modernos. MVPs en semanas."
+                    "title": "Staff Augmentation",
+                    "desc": "Escala tu equipo en 72 horas con talento senior de ingeniería de LATAM, potenciado por IA."
                 },
                 {
-                    "title": "Agentes de IA y Automatización",
-                    "desc": "Optimiza operaciones con LLMs personalizados, bots inteligentes y algoritmos predictivos."
+                    "title": "AI & Custom Workflows",
+                    "desc": "Optimiza tus operaciones y escala tu negocio con soluciones de Inteligencia Artificial y agentes cognitivos a medida."
                 },
                 {
-                    "title": "UX Orientado a Conversión",
-                    "desc": "Interfaces diseñadas para convertir usuarios y reducir la fricción."
-                },
-                {
-                    "title": "Soluciones Blockchain",
-                    "desc": "Apps descentralizadas seguras y Smart Contracts listos para auditoría."
-                },
-                {
-                    "title": "Cloud y DevOps",
-                    "desc": "Arquitectura resiliente en AWS y Azure para un tiempo de actividad máximo."
-                },
-                {
-                    "title": "Datos y BI",
-                    "desc": "Convierte datos brutos en información accionable."
-                },
-                {
-                    "title": "Tecnologías Inmersivas",
-                    "desc": "Visuales 3D de alto impacto y experiencias de RA."
-                },
-                {
-                    "title": "Integraciones ERP y CRM",
-                    "desc": "Conectamos tu lógica de negocio con las mejores soluciones empresariales del mercado."
-                },
-                {
-                    "title": "E-commerce de Alto Rendimiento",
-                    "desc": "Tiendas online escalables diseñadas para velocidad y alta conversión."
-                },
-                {
-                    "title": "Estrategia de Producto y QA",
-                    "desc": "Aseguramos que tu producto no solo funcione, sino que domine el mercado."
-                },
-                {
-                    "title": "Ciberseguridad y Auditoría",
-                    "desc": "Protegemos tus activos digitales con arquitecturas cifradas y auditorías rigurosas."
+                    "title": "Strategic Architecture",
+                    "desc": "Diseñamos bases técnicas sólidas y escalables que soportan el crecimiento acelerado de tu plataforma o modelo de negocio."
                 }
             ]
         },
@@ -396,6 +366,19 @@
                     "desc": "Entregamos un producto robusto, escalable y listo para operar, con documentación completa y transferencia total de propiedad."
                 }
             ]
+        },
+        "specialties": {
+            "title": "Nuestras Especialidades",
+            "items": [
+                "Blockchain & Web3",
+                "Cybersecurity",
+                "E-commerce Solutions",
+                "Cloud Infrastructure",
+                "Mobile App Dev",
+                "UI/UX Design",
+                "Data Engineering",
+                "SaaS Products"
+            ]
         }
     },
     "joinOurTeam": {
@@ -420,7 +403,98 @@
         "sendApplication": "Enviar Postulación",
         "sending": "Enviando...",
         "success": "¡Postulación recibida! Gracias por querer sumarte a Dibrand. Ya tenemos tu perfil en nuestro radar y, si hay match, nos pondremos en contacto con vos a la brevedad. ¡Éxitos!",
-        "fallbackText": "No hay posiciones abiertas en este momento, pero siempre estamos buscando talento.",
         "fallbackLink": "¡Envíanos tu CV!"
+    },
+    "aiWorkflows": {
+        "hero": {
+            "title": "Data Intelligence & AI Workflows",
+            "subtitle": "Impulsa tu toma de decisiones y automatiza procesos clave con inteligencia artificial a medida. Desplegamos agentes cognitivos y flujos de datos que transforman tu negocio.",
+            "cta": "Explorar Soluciones de IA"
+        },
+        "pillars": {
+            "items": [
+                {
+                    "title": "Agentes Cognitivos Automáticos",
+                    "desc": "Implementamos LLMs y asistentes virtuales entrenados con los datos de tu empresa operando 24/7."
+                },
+                {
+                    "title": "Orquestación de Datos",
+                    "desc": "Conectamos múltiples fuentes de datos estructurados y desestructurados para generar insights integrales."
+                },
+                {
+                    "title": "Automatización End-to-End",
+                    "desc": "Reemplazamos tareas repetitivas y lentas con flujos automatizados, reduciendo costos operativos."
+                },
+                {
+                    "title": "Escalabilidad Predictiva",
+                    "desc": "Generamos modelos de Machine Learning que se anticipan a escenarios futuros y evolucionan con el tiempo."
+                }
+            ],
+            "lema": "El futuro no se codifica, se entrena."
+        },
+        "process": {
+            "title": "Nuestra Metodología de MLOps",
+            "subtitle": "Cómo auditamos, preparamos e implementamos la IA en tus operaciones.",
+            "steps": [
+                {
+                    "title": "Data Audit & Feasibility",
+                    "desc": "Evaluamos el estado de tus datos actuales para confirmar la viabilidad de implementar modelos de ML."
+                },
+                {
+                    "title": "Desarrollo de Algoritmos",
+                    "desc": "Diseñamos y entrenamos algoritmos seguros utilizando arquitecturas de vanguardia adaptadas a tu nicho."
+                },
+                {
+                    "title": "Despliegue y MLOps",
+                    "desc": "Integramos los modelos entrenados en producción de forma segura, garantizando mejora continua y monitoreo."
+                }
+            ]
+        }
+    },
+    "strategicArchitecture": {
+        "hero": {
+            "title": "Arquitectura de Software Estratégica",
+            "subtitle": "No construimos para hoy, diseñamos para escalar mañana. Proveemos planos arquitectónicos de software de nivel empresarial capaces de soportar alto tráfico y crecimiento sostenido.",
+            "cta": "Consultar a nuestros Expertos"
+        },
+        "pillars": {
+            "items": [
+                {
+                    "title": "Microservicios Escalables",
+                    "desc": "Desacoplamos arquitecturas monolíticas en servicios distribuidos ágiles para despliegues independientes."
+                },
+                {
+                    "title": "Resiliencia de Nube",
+                    "desc": "Diseñamos infraestructuras serverless y Multi-Cloud preparadas para recuperarse ante cualquier falla en tiempo récord."
+                },
+                {
+                    "title": "Diseño Orientado a Eventos",
+                    "desc": "Maximizamos el flujo de información en tiempo real a través de brokers confiables para reacciones inmediatas."
+                },
+                {
+                    "title": "Seguridad Enterpise-Grade",
+                    "desc": "Implantamos protocolos y medidas de mitigación desde la fase de diseño (Security by Design)."
+                }
+            ],
+            "lema": "Una base sólida lo es todo."
+        },
+        "process": {
+            "title": "Framework Arquitectónico",
+            "subtitle": "Nuestra manera de blindar el crecimiento y resiliencia tecnológica.",
+            "steps": [
+                {
+                    "title": "Discovery Arquitectónico",
+                    "desc": "Diagnosticamos la infraestructura actual e identificamos cuellos de botella y riesgos de deuda técnica inminente."
+                },
+                {
+                    "title": "Blueprint Definition",
+                    "desc": "Traemos a la vida los diagramas C4 y documentos de diseño que guiarán la construcción o modernización de la plataforma."
+                },
+                {
+                    "title": "Refactoring Seguro",
+                    "desc": "Acompañamos a tu equipo (o al nuestro) en la transición progresiva con Zero Downtime garantizado."
+                }
+            ]
+        }
     }
 }

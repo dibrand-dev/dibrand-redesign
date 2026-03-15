@@ -13,6 +13,17 @@ export async function getBrands() {
     return data || [];
 }
 
+export async function getBrandById(id: string) {
+    const { data, error } = await supabase
+        .from('brands')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
 export async function saveBrand(brand: any) {
     const { id, name, logo_url, is_visible } = brand;
 
