@@ -1,5 +1,6 @@
-import { getStacks, createStack, deleteStack } from './actions';
-import { Trash2, Plus, Code } from 'lucide-react';
+import { getStacks, deleteStack } from './actions';
+import { Trash2, Code } from 'lucide-react';
+import StackForm from './StackForm';
 
 export default async function StacksPage() {
     const stacks = await getStacks();
@@ -14,41 +15,9 @@ export default async function StacksPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Formulario de Creación */}
+                {/* Formulario de Creación (Client Component) */}
                 <div className="lg:col-span-1">
-                    <div className="bg-admin-card-bg p-6 rounded-2xl border border-admin-border shadow-sm sticky top-24">
-                        <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                            <Plus size={16} className="text-admin-accent" />
-                            Nueva Tecnología
-                        </h3>
-                        <form action={createStack} className="space-y-5">
-                            <div className="space-y-1.5">
-                                <label className="text-[11px] font-bold text-admin-text-secondary uppercase tracking-wider ml-1">Nombre</label>
-                                <input
-                                    name="name"
-                                    type="text"
-                                    required
-                                    className="w-full px-4 py-2.5 rounded-xl border border-admin-border focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none transition-all font-medium text-sm bg-admin-bg/50"
-                                    placeholder="Ej. React, Node.js, Python"
-                                />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[11px] font-bold text-admin-text-secondary uppercase tracking-wider ml-1">Icon URL (Opcional)</label>
-                                <input
-                                    name="icon_url"
-                                    type="text"
-                                    className="w-full px-4 py-2.5 rounded-xl border border-admin-border focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none transition-all font-medium text-sm bg-admin-bg/50"
-                                    placeholder="https://..."
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="w-full bg-admin-accent text-white py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-admin-accent/20 active:scale-95"
-                            >
-                                Agregar Stack
-                            </button>
-                        </form>
-                    </div>
+                    <StackForm />
                 </div>
 
                 {/* Listado */}

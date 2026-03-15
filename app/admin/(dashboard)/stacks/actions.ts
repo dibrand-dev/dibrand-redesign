@@ -32,6 +32,10 @@ export async function createStack(formData: FormData) {
 
         if (error) {
             console.error('Database error creating stack:', error);
+            // Handle unique constraint violation
+            if (error.code === '23505') {
+                throw new Error('Esta tecnología ya existe');
+            }
             throw new Error(`Error de base de datos: ${error.message}`);
         }
     } catch (err: any) {
