@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, Filter, X, ArrowRight } from 'lucide-react';
+import { Search, Filter, X, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { CASE_INDUSTRIES, CASE_SERVICES } from '@/lib/case-constants';
 
 interface CaseStudy {
@@ -30,6 +30,9 @@ export default function PortfolioFilters({ initialCases, lang, dict }: Props) {
     const [search, setSearch] = useState('');
     const [selectedIndustry, setSelectedIndustry] = useState<string>('all');
     const [selectedService, setSelectedService] = useState<string>('all');
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const itemsPerPage = 9; // 3x3 Grid for Desktop
 
     const filteredCases = useMemo(() => {
         return initialCases.filter(c => {
@@ -45,6 +48,38 @@ export default function PortfolioFilters({ initialCases, lang, dict }: Props) {
             return matchesSearch && matchesIndustry && matchesService;
         });
     }, [initialCases, search, selectedIndustry, selectedService]);
+
+    // Reset pagination when filters change
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [search, selectedIndustry, selectedService]);
+
+    const totalPages = Math.ceil(filteredCases.length / itemsPerPage);
+    const paginatedCases = useMemo(() => {
+        const start = (currentPage - 1) * itemsPerPage;
+        return filteredCases.slice(start, start + itemsPerPage);
+    }, [filteredCases, currentPage, itemsPerPage]);
+
+    const scrollToGrid = () => {
+        const gridElement = document.getElementById('portfolio-grid');
+        if (gridElement) {
+            const offset = 100;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = gridElement.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    };
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        scrollToGrid();
+    };
 
     return (
         <div className="space-y-12">
@@ -114,8 +149,9 @@ export default function PortfolioFilters({ initialCases, lang, dict }: Props) {
                     {lang === 'en' ? 'No projects match your current filters.' : 'No hay proyectos que coincidan con tus filtros.'}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredCases.map((caseStudy) => (
+                <div id="portfolio-grid" className="scroll-mt-24 space-y-16">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {paginatedCases.map((caseStudy) => (
                         <Link
                             key={caseStudy.id}
                             href={`/${lang}/success-stories/${caseStudy.slug || caseStudy.id}`}
@@ -168,6 +204,51 @@ export default function PortfolioFilters({ initialCases, lang, dict }: Props) {
                         </Link>
                     ))}
                 </div>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                    <div className="flex justify-center items-center gap-2 pt-8 border-t border-zinc-100">
+                        {/* Prev Button */}
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="p-3 rounded-2xl border border-zinc-200 text-zinc-400 hover:bg-zinc-50 hover:text-brand disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-zinc-400 transition-all group"
+                        >
+                            <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
+                        </button>
+
+                        {/* Page Numbers */}
+                        <div className="flex items-center gap-1.5 px-4">
+                            {Array.from({ length: totalPages }).map((_, i) => {
+                                const pageNum = i + 1;
+                                const isCurrent = currentPage === pageNum;
+                                return (
+                                    <button
+                                        key={pageNum}
+                                        onClick={() => handlePageChange(pageNum)}
+                                        className={`w-11 h-11 flex items-center justify-center rounded-2xl font-outfit text-sm font-bold transition-all ${
+                                            isCurrent
+                                                ? 'bg-brand text-white shadow-lg shadow-brand/20'
+                                                : 'text-zinc-500 hover:bg-zinc-50 hover:text-brand border border-transparent hover:border-zinc-100'
+                                        }`}
+                                    >
+                                        {pageNum}
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {/* Next Button */}
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="p-3 rounded-2xl border border-zinc-200 text-zinc-400 hover:bg-zinc-50 hover:text-brand disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-zinc-400 transition-all group"
+                        >
+                            <ChevronRight size={20} className="group-hover:translate-x-0.5 transition-transform" />
+                        </button>
+                    </div>
+                )}
+            </div>
             )}
         </div>
     );
