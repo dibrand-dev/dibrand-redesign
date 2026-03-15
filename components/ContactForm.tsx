@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 import { submitToZoho } from '@/app/actions/submitToZoho';
 import { useEffect, Suspense } from 'react';
+import { trackContactFormSuccess } from '@/lib/gtm';
 
 interface ContactFormProps {
   dict: {
@@ -62,6 +63,7 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
 
     if (result.success) {
       setSubmitStatus('success');
+      trackContactFormSuccess();
       reset();
     } else {
       setSubmitStatus('error');

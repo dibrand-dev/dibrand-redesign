@@ -5,6 +5,7 @@ import Select from 'react-select';
 import { Country, State } from 'country-state-city';
 import { getTechStacks, uploadResume, submitApplication } from '@/app/actions/applications';
 import { CheckCircle2, Loader2, UploadCloud, Send } from 'lucide-react';
+import { trackJoinUsFormSuccess } from '@/lib/gtm';
 
 interface JobApplicationFormProps {
     jobId: string;
@@ -78,6 +79,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
             };
 
             await submitApplication(data);
+            trackJoinUsFormSuccess();
             setSuccess(true);
         } catch (error: any) {
             console.error('SUBMISSION ERROR:', error);
