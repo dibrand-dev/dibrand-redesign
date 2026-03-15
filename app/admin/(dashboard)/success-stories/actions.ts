@@ -186,13 +186,14 @@ async function syncToCaseStudies(payload: {
     const baseData: any = {
         title: payload.title_es || payload.title_en,
         client_name: payload.client_name,
-        summary: payload.description_es || payload.description_en, // legacy col
+        summary: payload.description_es || payload.description_en || "", 
+        description: payload.description_es || payload.description_en || "", 
         image_url: payload.hero_image_url,
         industry: payload.industry,
         slug,
-        challenge: payload.challenge_es || payload.challenge_en, // legacy col
-        solution: payload.solution_es || payload.solution_en, // legacy col
-        outcome_impact: payload.impact_es || payload.impact_en, // legacy col
+        challenge: payload.challenge_es || payload.challenge_en || "", 
+        solution: payload.solution_es || payload.solution_en || "", 
+        outcome_impact: payload.impact_es || payload.impact_en || "", 
         tags: tags,
         is_published: true,
         sort_order: payload.sort_order || 0,
@@ -228,6 +229,8 @@ async function syncToCaseStudies(payload: {
     }
 
     Object.entries(extraMap).forEach(([col, val]) => {
+        // Do NOT overwrite stack_ids if it's already set as a real array
+        if (col === 'stack_ids' && extraData['stack_ids']) return;
         if (existingCsCols.includes(col)) extraData[col] = val;
     });
 
@@ -267,8 +270,12 @@ async function syncToCaseStudies(payload: {
         console.log(`[SYNC] Success for ${payload.client_name}`);
     }
 
-    revalidatePath('/[lang]/success-stories', 'layout');
-    revalidatePath(`/[lang]/success-stories/${slug}`, 'layout');
+    try {
+        revalidatePath('/[lang]/success-stories', 'layout');
+        revalidatePath(`/[lang]/success-stories/${slug}`, 'layout');
+    } catch (e) {
+        console.log('[SYNC] Cache revalidation skipped (non-web context)');
+    }
 }
 
 export async function createSuccessStory(payload: any) {
@@ -517,7 +524,11 @@ export async function fixAllDataConsistency() {
                 });
             }
         }
-        revalidatePath('/admin/success-stories');
+        try {
+            revalidatePath('/admin/success-stories');
+        } catch (e) {
+            console.log('[REPAIR] Cache revalidation skipped (non-web context)');
+        }
         return { success: true };
     } catch (e) {
         console.error('Repair failed:', e);
