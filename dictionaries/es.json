@@ -503,5 +503,19 @@
                 }
             ]
         }
+    },
+    "about": {
+        "hero": {
+            "title": "Excelencia en ingeniería para la próxima generación de impacto global.",
+            "subtitle": "Somos una firma boutique de ingeniería dedicada al software de alto rendimiento y la resiliencia arquitectónica."
+        },
+        "eliteTalent": {
+            "title": "Proceso de Selección: El Elite 3%",
+            "desc": "Nuestra fuerza reside en nuestro equipo. Vamos más allá de la contratación tradicional para identificar e integrar al top 3% del talento técnico en LATAM. Nuestros ingenieros no solo programan; son pensadores estratégicos que dominan los matices del desarrollo de productos de élite."
+        },
+        "aiNative": {
+            "title": "Nativos en IA: Una Cultura para el Futuro",
+            "desc": "En Dibrand, la Inteligencia Artificial está integrada en cada etapa de nuestro flujo de trabajo. Al potenciar nuestra ingeniería con IA, multiplicamos nuestra precisión y velocidad, entregando código superior y soluciones innovadoras que mantienen a nuestros socios a la vanguardia."
+        }
     }
 }

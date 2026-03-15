@@ -503,5 +503,19 @@
                 }
             ]
         }
+    },
+    "about": {
+        "hero": {
+            "title": "Engineering excellence for the next generation of global impact.",
+            "subtitle": "We are a boutique engineering firm dedicated to high-performance software and architectural resilience."
+        },
+        "eliteTalent": {
+            "title": "The Elite 3% Selection Process",
+            "desc": "Our strength lies in our people. We go beyond traditional hiring to identify and integrate the top 3% of technical talent in LATAM. Our engineers aren't just coders; they are strategic thinkers who understand the nuance of elite product development."
+        },
+        "aiNative": {
+            "title": "Built for the Future: AI-Native Culture",
+            "desc": "At Dibrand, AI is integrated into every stage of our workflow. By leveraging advanced AI-augemented engineering, we multiply our precision and speed, delivering superior code and innovative solutions that keep our partners ahead of the curve."
+        }
     }
 }
