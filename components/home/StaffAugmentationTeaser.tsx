@@ -20,15 +20,15 @@ interface StaffAugmentationTeaserProps {
 
 const teamRoles = [
     {
-        name: "PRODUCT",
+        name: "Senior Product Strategy",
         image: "/images/staff/Product.png"
     },
     {
-        name: "UX/UI DESIGN",
+        name: "Senior UX/UI Design",
         image: "/images/staff/UXUI.png"
     },
     {
-        name: "ENGINEERING & AI",
+        name: "Senior Engineering & AI",
         image: "/images/staff/Developer.png"
     }
 ];
@@ -75,12 +75,12 @@ export default function StaffAugmentationTeaser({ dict, lang }: StaffAugmentatio
                         {teamRoles.map((role, index) => (
                             <div key={index} className="flex flex-col items-center group">
                                 {/* Photo Avatar - Perfect Circle - Flat Design */}
-                                <div className="relative w-36 h-36 md:w-52 md:h-52 rounded-full border-2 border-zinc-100 overflow-hidden mb-4 transition-all duration-500 group-hover:scale-105">
+                                <div className="relative w-36 h-36 md:w-52 md:h-52 rounded-full border border-zinc-100 overflow-hidden mb-6 transition-all duration-500 group-hover:scale-105 group-hover:border-brand/20">
                                     <Image
                                         src={role.image}
                                         alt={role.name}
                                         fill
-                                        className="object-cover"
+                                        className="object-cover saturate-[0.8] group-hover:saturate-100 transition-all duration-700"
                                         sizes="(max-width: 768px) 144px, 208px"
                                         priority={index === 0}
                                     />
@@ -88,7 +88,7 @@ export default function StaffAugmentationTeaser({ dict, lang }: StaffAugmentatio
                                     <div className="absolute inset-0 bg-zinc-900/5 group-hover:bg-transparent transition-colors duration-300" />
                                 </div>
 
-                                <span className="text-[10px] md:text-[11px] font-black text-zinc-800 font-outfit tracking-[0.2em] uppercase text-center opacity-70 group-hover:opacity-100 transition-all duration-300">
+                                <span className="text-[9px] md:text-[10px] font-black text-zinc-400 font-outfit tracking-[0.3em] uppercase text-center group-hover:text-brand transition-all duration-500">
                                     {role.name}
                                 </span>
                             </div>
