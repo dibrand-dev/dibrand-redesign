@@ -10,11 +10,11 @@ interface TechStackProps {
 }
 
 const row1 = [
-    'React', 'Next.js', 'TypeScript', 'Node.js', 'Python', 'AWS', 'Docker', 'Kubernetes'
+    'OpenAI', 'LangChain', 'Python', 'Anthropic', 'Pinecone', 'Hugging Face', 'PyTorch', 'Next.js', 'TypeScript'
 ];
 
 const row2 = [
-    '.NET', 'Java', 'Go', 'Swift', 'Kotlin', 'Angular', 'Vue.js', 'PostgreSQL', 'MongoDB'
+    'React', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'PostgreSQL', 'Go', 'Swift', 'Kotlin'
 ];
 
 export default function TechStack({ dict }: TechStackProps) {
