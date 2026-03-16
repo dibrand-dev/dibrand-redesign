@@ -147,7 +147,7 @@ export default function BrandsAdminPage() {
                                                         {b.name}
                                                     </div>
                                                     <div className="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-widest">
-                                                        Logo ID: {b.id.substring(0, 8)}...
+                                                        Logo ID: {String(b.id).substring(0, 8)}...
                                                     </div>
                                                 </div>
                                             </div>
