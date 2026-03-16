@@ -19,7 +19,7 @@ const row2 = [
 
 export default function TechStack({ dict }: TechStackProps) {
     return (
-        <section className="bg-gray-50 py-24 overflow-hidden">
+        <section className="bg-gray-50 py-24 md:py-32 overflow-hidden">
             <div className="container mx-auto px-4 mb-16 text-center">
                 <h2 className="font-heading text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
                     {dict.techStack.title}

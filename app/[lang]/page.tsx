@@ -112,20 +112,22 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
         {/* 3. Elite Talent Only (Staff Augmentation Teaser) */}
         <StaffAugmentationTeaser dict={dict.home} lang={params.lang} />
 
-        {/* 4. Featured Cases (Dynamic Portfolio Engine) */}
-        <SelectedWork dict={dict.home} lang={params.lang} cases={topCases} />
-
-        {/* 5. Solutions / Services Grid */}
-        <ServicesGrid dict={dict.home} lang={params.lang} />
-
-        {/* 6. Compliance (Zero-Friction) */}
-        <ComplianceSection dict={dict.home} />
-
-        {/* 7. Brands & Tech Stack */}
-        <TrustedBySection brands={brands || []} dict={dict.home} />
+        {/* 4. Tech Stack (Yes. We cover your tech stack) */}
         <TechStack dict={dict.home} />
 
-        {/* 8. Testimonials (Individual Social Proof) */}
+        {/* 5. Featured Cases (Dynamic Portfolio Engine) */}
+        <SelectedWork dict={dict.home} lang={params.lang} cases={topCases} />
+
+        {/* 6. Solutions / Services Grid */}
+        <ServicesGrid dict={dict.home} lang={params.lang} />
+
+        {/* 7. Compliance (Zero-Friction) */}
+        <ComplianceSection dict={dict.home} />
+
+        {/* 8. Brands */}
+        <TrustedBySection brands={brands || []} dict={dict.home} />
+
+        {/* 9. Testimonials (Individual Social Proof) */}
         <TestimonialsSection testimonials={testimonials || []} dict={dict.home} lang={params.lang} />
       </main>
 
