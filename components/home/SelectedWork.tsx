@@ -150,8 +150,8 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
                                 ))}
                             </Swiper>
 
-                            {/* Custom Minimalist Navigation - Dots ONLY on the left */}
-                            <div className="flex items-center justify-start mt-12 px-4">
+                            {/* Custom Minimalist Navigation - Centered Dots */}
+                            <div className="flex items-center justify-center mt-12 px-4">
                                 <div className="custom-swiper-pagination flex gap-3 !static !w-auto"></div>
                             </div>
                         </>
