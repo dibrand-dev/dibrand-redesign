@@ -6,12 +6,13 @@ import Image from 'next/image';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import 'swiper/css/autoplay';
 
 interface CaseStudy {
     id: string;
@@ -65,23 +66,24 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
                 </motion.div>
 
                 {/* Carousel Container */}
-                <div className="relative group/carousel [&_.swiper-pagination-bullet]:w-2 [&_.swiper-pagination-bullet]:h-2 [&_.swiper-pagination-bullet]:bg-zinc-200 [&_.swiper-pagination-bullet]:opacity-100 [&_.swiper-pagination-bullet]:transition-all [&_.swiper-pagination-bullet-active]:bg-[#a04c97] [&_.swiper-pagination-bullet-active]:w-6 [&_.swiper-pagination-bullet]:rounded-full min-h-[400px]">
+                <div className="relative group/carousel [&_.swiper-pagination-bullet]:w-2 [&_.swiper-pagination-bullet]:h-2 [&_.swiper-pagination-bullet]:bg-zinc-200 [&_.swiper-pagination-bullet]:opacity-100 [&_.swiper-pagination-bullet]:transition-all [&_.swiper-pagination-bullet-active]:bg-[#a04c97] [&_.swiper-pagination-bullet-active]:w-8 [&_.swiper-pagination-bullet]:rounded-full min-h-[400px]">
                     {isMounted ? (
                         <>
                             <Swiper
-                                modules={[Navigation, Pagination]}
+                                modules={[Autoplay, Pagination]}
                                 spaceBetween={30}
-                                slidesPerView={1.2}
+                                slidesPerView={1.1}
                                 loop={true}
                                 centeredSlides={false}
                                 grabCursor={true}
+                                autoplay={{
+                                    delay: 5000,
+                                    disableOnInteraction: false,
+                                    pauseOnMouseEnter: true
+                                }}
                                 pagination={{
                                     clickable: true,
                                     el: '.custom-swiper-pagination',
-                                }}
-                                navigation={{
-                                    prevEl: '.custom-swiper-button-prev',
-                                    nextEl: '.custom-swiper-button-next',
                                 }}
                                 breakpoints={{
                                     640: {
@@ -99,7 +101,7 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
                                             initial={{ opacity: 0, scale: 0.95 }}
                                             whileInView={{ opacity: 1, scale: 1 }}
                                             viewport={{ once: true }}
-                                            className="group cursor-pointer h-full pb-4"
+                                            className="group cursor-pointer h-full pb-4 px-1"
                                         >
                                             <Link href={`/${lang}/success-stories/${project.slug}`} className="block h-full">
                                                 <div className="bg-zinc-50 border border-zinc-100 rounded-2xl overflow-hidden h-full flex flex-col shadow-sm hover:shadow-xl hover:shadow-[#a04c97]/5 transition-all duration-500">
@@ -148,20 +150,9 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
                                 ))}
                             </Swiper>
 
-                            {/* Custom Minimalist Navigation */}
-                            <div className="flex items-center justify-between mt-12 px-4">
-                                {/* Pagination Dots */}
-                                <div className="custom-swiper-pagination flex gap-2 !static !w-auto"></div>
-
-                                {/* Navigation Arrows */}
-                                <div className="flex gap-4">
-                                    <button className="custom-swiper-button-prev p-3 rounded-full border border-zinc-200 text-zinc-400 hover:border-[#a04c97] hover:text-[#a04c97] transition-all disabled:opacity-30 disabled:cursor-not-allowed">
-                                        <ChevronLeft size={20} />
-                                    </button>
-                                    <button className="custom-swiper-button-next p-3 rounded-full border border-zinc-200 text-zinc-400 hover:border-[#a04c97] hover:text-[#a04c97] transition-all disabled:opacity-30 disabled:cursor-not-allowed">
-                                        <ChevronRight size={20} />
-                                    </button>
-                                </div>
+                            {/* Custom Minimalist Navigation - Dots ONLY on the left */}
+                            <div className="flex items-center justify-start mt-12 px-4">
+                                <div className="custom-swiper-pagination flex gap-3 !static !w-auto"></div>
                             </div>
                         </>
                     ) : (
@@ -179,7 +170,6 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
                         </div>
                     )}
                 </div>
-
             </div>
         </section>
     );
