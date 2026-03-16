@@ -15,6 +15,7 @@ interface StaffAugmentationTeaserProps {
             cta: string;
         };
     };
+    lang: string;
 }
 
 const teamRoles = [
@@ -32,7 +33,7 @@ const teamRoles = [
     }
 ];
 
-export default function StaffAugmentationTeaser({ dict }: StaffAugmentationTeaserProps) {
+export default function StaffAugmentationTeaser({ dict, lang }: StaffAugmentationTeaserProps) {
     const { title, subtitle, pillars, cta } = dict.staffAugmentationTeaser;
 
     return (
@@ -98,7 +99,7 @@ export default function StaffAugmentationTeaser({ dict }: StaffAugmentationTease
                 {/* 4. Call to Action (CTA) - Closer to gallery */}
                 <div className="flex justify-center">
                     <Link
-                        href="/staff-augmentation"
+                        href={`/${lang}/staff-augmentation`}
                         className="inline-flex items-center gap-3 px-10 py-4 bg-zinc-900 text-white font-bold text-base rounded-full hover:bg-black hover:-translate-y-1 active:scale-95 transition-all duration-300 group"
                     >
                         <span>{cta}</span>

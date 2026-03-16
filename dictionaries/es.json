@@ -98,20 +98,20 @@
             "subtitle": "Dibrand es el socio estratégico de las empresas que buscan excelencia en ingeniería de software."
         },
         "staffAugmentationTeaser": {
-            "title": "Modelo de Staff Augmentation de Dibrand",
-            "subtitle": "Dibrand permite acceder al top 3% del talento senior de ingeniería de LATAM. Nuestros profesionales no son solo programadores; son consultores nativos en IA que se integran a tu cultura, se alinean con tu zona horaria y multiplican la productividad de tu equipo desde el primer día.",
+            "title": "Elite Talent Only",
+            "subtitle": "En Dibrand, solo trabajamos con el top 3% de talento técnico en Latinoamérica. Nuestro riguroso proceso de selección asegura que cada ingeniero en nuestro equipo tenga la capacidad técnica y comunicativa para liderar proyectos globales de alta complejidad.",
             "pillars": [
                 {
-                    "title": "Workflow Nativo en IA",
-                    "desc": "Cada desarrollador está equipado con un stack de IA avanzado para automatizar pruebas y documentación."
+                    "title": "Seniority de Alto Nivel",
+                    "desc": "Ingenieros expertos con mentalidad de producto, especializados en arquitecturas escalables y código de alto rendimiento."
                 },
                 {
-                    "title": "Despliegue en 72 Horas",
-                    "desc": "Capacidad escalable con seniors pre-validados listos para entregar código."
+                    "title": "Adaptabilidad Global",
+                    "desc": "Talento nativo remoto con experiencia integrándose en diversos husos horarios, culturas y flujos de trabajo complejos."
                 },
                 {
-                    "title": "Propiedad Directa",
-                    "desc": "Nosotros gestionamos el back-office, beneficios y retención; tú conservas el 100% de la propiedad intelectual y el control."
+                    "title": "Ingeniería Potenciada por IA",
+                    "desc": "Potenciamos el desarrollo con flujos de trabajo nativos de IA para acelerar ciclos de entrega y optimizar el QA, multiplicando el rendimiento."
                 }
             ],
             "cta": "Explorar Staff Augmentation"

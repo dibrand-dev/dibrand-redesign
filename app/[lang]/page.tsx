@@ -107,7 +107,7 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
         <HeroSection dict={dict.home} />
 
         {/* 2. Sección Staffing (Strategic Talent Integration) */}
-        <StaffAugmentationTeaser dict={dict.home} />
+        <StaffAugmentationTeaser dict={dict.home} lang={params.lang} />
 
         {/* 3. Engineering Excellence (Dual Focus) */}
         <EngineeringExcellence dict={dict.home} lang={params.lang} />

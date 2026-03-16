@@ -98,20 +98,20 @@
             "subtitle": "Dibrand is the strategic partner for companies seeking excellence in software engineering."
         },
         "staffAugmentationTeaser": {
-            "title": "Dibrand's Staff Augmentation Model",
-            "subtitle": "Dibrand provides access to the top 3% of LATAM’s senior engineering talent. Our professionals are not just coders; they are AI-native consultants who integrate into your culture, align with your timezone, and multiply your team’s productivity from day one.",
+            "title": "Elite Talent Only",
+            "subtitle": "At Dibrand, we only work with the top 3% of technical talent in Latin America. Our rigorous selection process ensures that every engineer on our team possesses the technical and communication skills required to lead highly complex global projects.",
             "pillars": [
                 {
-                    "title": "AI-Native Workflow",
-                    "desc": "Every developer is equipped with an advanced AI stack to automate testing and documentation."
+                    "title": "Seniority & Technical Excellence",
+                    "desc": "Top-Tier Seniority. Expert engineers with a product-driven mindset, specializing in scalable architectures and high-performance code."
                 },
                 {
-                    "title": "72-Hour Deployment",
-                    "desc": "Scalable capacity with pre-vetted seniors ready to ship code."
+                    "title": "Global Adaptability",
+                    "desc": "Global Adaptability. Remote-native talent experienced in integrating across diverse time zones, cultures, and complex workflows."
                 },
                 {
-                    "title": "Direct Ownership",
-                    "desc": "We handle the back-office, benefits, and retention; you keep 100% of the IP and control."
+                    "title": "AI-Augmented Engineering",
+                    "desc": "AI-Augmented Engineering. We leverage AI-native workflows to accelerate development cycles and optimize QA, multiplying our engineers' output."
                 }
             ],
             "cta": "Explore Staff Augmentation"
