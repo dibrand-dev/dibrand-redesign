@@ -69,34 +69,26 @@ export default function StaffAugmentationTeaser({ dict, lang }: StaffAugmentatio
                     ))}
                 </div>
 
-                {/* 3. Talent Gallery (3 Justified Circles) - Flat & Close */}
+                {/* 3. Talent Gallery (3 Justified Circles) - Photorealistic Style */}
                 <div className="mb-12">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto px-4">
                         {teamRoles.map((role, index) => (
                             <div key={index} className="flex flex-col items-center group">
-                                {/* Photo Avatar - Perfect Circle - Duotone Treatment */}
-                                <div className="relative w-36 h-36 md:w-52 md:h-52 rounded-full border border-zinc-100 overflow-hidden mb-6 transition-all duration-500 group-hover:scale-105 group-hover:border-brand/40 bg-[#1a1a1a]">
+                                {/* Photo Avatar - Perfect Circle - High Quality Restoration */}
+                                <div className="relative w-36 h-36 md:w-52 md:h-52 rounded-full border border-zinc-100 overflow-hidden mb-6 transition-all duration-500 group-hover:scale-105 group-hover:border-brand/40">
                                     <Image
                                         src={role.image}
                                         alt={role.name}
                                         fill
-                                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                        className="object-cover transition-all duration-700"
                                         sizes="(max-width: 768px) 144px, 208px"
                                         priority={index === 0}
                                     />
-                                    
-                                    {/* Duotone Layers */}
-                                    {/* 1. Shadows layer (Multiply) */}
-                                    <div className="absolute inset-0 bg-[#1a1a1a] mix-blend-multiply transition-opacity duration-700 group-hover:opacity-0" />
-                                    
-                                    {/* 2. Highlights layer (Screen) */}
-                                    <div className="absolute inset-0 bg-[#a04c97] mix-blend-screen transition-opacity duration-700 group-hover:opacity-0" />
-                                    
-                                    {/* Subtle Overlay to maintain brand presence even on hover */}
-                                    <div className="absolute inset-0 bg-brand/5 group-hover:bg-transparent transition-colors duration-300" />
+                                    {/* Subtle Overlay only for depth */}
+                                    <div className="absolute inset-0 bg-zinc-950/5 group-hover:bg-transparent transition-colors duration-300" />
                                 </div>
 
-                                <span className="text-[9px] md:text-[10px] font-black text-zinc-400 font-outfit tracking-[0.3em] uppercase text-center group-hover:text-brand transition-all duration-500">
+                                <span className="text-[9px] md:text-[10px] font-black text-zinc-800 font-outfit tracking-[0.3em] uppercase text-center group-hover:text-brand transition-all duration-500">
                                     {role.name}
                                 </span>
                             </div>
