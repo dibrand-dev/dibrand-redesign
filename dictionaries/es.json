@@ -118,15 +118,21 @@
         },
         "trustedByTitle": "Empresas que confían en nosotros",
         "engineeringExcellence": {
-            "title": "Nuestras áreas de experiencia",
-            "fullCycle": {
-                "title": "Desarrollo de Producto End-to-End",
-                "desc": "No solo escribimos código; materializamos visiones. Acompañamos todo el ciclo de vida de tu producto: desde la arquitectura estratégica y el diseño UX/UI hasta el desarrollo escalable, el despliegue y el soporte continuo. Somos el motor de ingeniería que tu producto necesita para dominar el mercado."
-            },
-            "staffAug": {
-                "title": "Staff Augmentation",
-                "desc": "El modelo de Dibrand integra talento técnico senior directamente en tu equipo. Perfiles pre-validados, bilingües y nativos en Inteligencia Artificial para multiplicar la velocidad de tu roadmap."
-            }
+            "title": "Servicios",
+            "items": [
+                {
+                    "title": "Software Development",
+                    "desc": "Construimos productos digitales robustos y escalables desde cero. Combinamos diseño estratégico con ingeniería de alto rendimiento para transformar ideas complejas en soluciones líderes en el mercado."
+                },
+                {
+                    "title": "Software Outsourcing",
+                    "desc": "Tu partner tecnológico dedicado. Asumimos la responsabilidad total de tu roadmap técnico, entregando soluciones de software integrales a través de células especializadas alineadas con tus objetivos."
+                },
+                {
+                    "title": "Staff Augmentation",
+                    "desc": "Escalá tu equipo con el top 3% del talento técnico de LATAM. Integrá ingenieros senior a tu flujo de trabajo actual de forma fluida para acelerar las entregas y cubrir brechas técnicas."
+                }
+            ]
         },
         "compliance": {
             "title": "Compromiso de Cumplimiento Dibrand",

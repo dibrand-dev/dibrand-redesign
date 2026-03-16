@@ -118,15 +118,21 @@
         },
         "trustedByTitle": "Some companies that trust us",
         "engineeringExcellence": {
-            "title": "Our Areas of Expertise",
-            "fullCycle": {
-                "title": "End-to-End Product Development",
-                "desc": "We don’t just write code; we bring visions to life. We handle the entire product lifecycle: from strategic architecture and UX/UI design to scalable development, deployment, and ongoing support. We are the engineering engine your product needs to lead the market."
-            },
-            "staffAug": {
-                "title": "Staff Augmentation",
-                "desc": "Dibrand's model integrates senior technical talent directly into your team. Pre-validated, bilingual, and AI-native profiles to multiply your roadmap's velocity."
-            }
+            "title": "Services",
+            "items": [
+                {
+                    "title": "Software Development",
+                    "desc": "We build robust, scalable digital products from the ground up. Combining strategic design with high-performance engineering to transform complex ideas into market-leading solutions."
+                },
+                {
+                    "title": "Software Outsourcing",
+                    "desc": "Your dedicated technology partner. We take full ownership of your technical roadmap, delivering end-to-end software solutions through specialized squads that align with your business goals."
+                },
+                {
+                    "title": "Staff Augmentation",
+                    "desc": "Scale your team with the top 3% of LATAM’s technical talent. Seamlessly integrate senior engineers into your existing workflow to accelerate delivery and close technical gaps."
+                }
+            ]
         },
         "compliance": {
             "title": "Dibrand Compliance Commitment",
