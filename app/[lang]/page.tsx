@@ -106,13 +106,13 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
         {/* 1. Hero Section (Reinvención del Valor) */}
         <HeroSection dict={dict.home} />
 
-        {/* 2. Sección Staffing (Strategic Talent Integration) */}
-        <StaffAugmentationTeaser dict={dict.home} lang={params.lang} />
-
-        {/* 3. Engineering Excellence (Dual Focus) */}
+        {/* 2. Services (Software Development, Outsourcing, Staff Augmentation) */}
         <EngineeringExcellence dict={dict.home} lang={params.lang} />
 
-        {/* 4. Selected Work (Dynamic Portfolio Engine) */}
+        {/* 3. Elite Talent Only (Staff Augmentation Teaser) */}
+        <StaffAugmentationTeaser dict={dict.home} lang={params.lang} />
+
+        {/* 4. Featured Cases (Dynamic Portfolio Engine) */}
         <SelectedWork dict={dict.home} lang={params.lang} cases={topCases} />
 
         {/* 5. Solutions / Services Grid */}
