@@ -120,25 +120,25 @@ export default function Navbar({ dict, lang }: NavbarProps) {
 
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="relative w-12 h-12 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[9999] lg:hidden group border-2 border-red-500"
+                    className="relative w-12 h-12 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[9999] lg:hidden group"
                     aria-label="Toggle Menu"
                 >
                     <span
                         className={clsx(
-                            "block w-8 h-[3px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "bg-white translate-y-[9px] rotate-45" : "bg-brand"
+                            "block w-8 h-[2.5px] rounded-full transition-all duration-300 ease-in-out",
+                            isOpen ? "bg-white translate-y-[8.5px] rotate-45" : "bg-zinc-900 group-hover:bg-brand"
                         )}
                     />
                     <span
                         className={clsx(
-                            "block w-8 h-[3px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "opacity-0 translate-x-3" : "bg-brand"
+                            "block w-8 h-[2.5px] rounded-full transition-all duration-300 ease-in-out",
+                            isOpen ? "opacity-0 translate-x-3" : "bg-zinc-900 group-hover:bg-brand"
                         )}
                     />
                     <span
                         className={clsx(
-                            "block w-8 h-[3px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "bg-white -translate-y-[9px] -rotate-45" : "bg-brand"
+                            "block w-8 h-[2.5px] rounded-full transition-all duration-300 ease-in-out",
+                            isOpen ? "bg-white -translate-y-[8.5px] -rotate-45" : "bg-zinc-900 group-hover:bg-brand"
                         )}
                     />
                 </button>
