@@ -102,14 +102,14 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                     </Link>
                 </div>
 
-                {/* Desktop Navigation - Only visible from XL (1280px) */}
-                <div className="hidden xl:flex items-center gap-x-8 xl:gap-x-10">
+                {/* Desktop Navigation - Visible from LG (1024px) */}
+                <div className="hidden lg:flex items-center gap-x-5 xl:gap-x-8">
                     {navLinks.map((link, idx) => (
                         <Link
                             key={idx}
                             href={link.href}
                             className={clsx(
-                                "text-[11px] font-bold font-outfit uppercase tracking-[0.15em] transition-all duration-300 hover:text-brand whitespace-nowrap",
+                                "text-[11px] font-bold font-outfit uppercase tracking-[0.12em] transition-all duration-300 hover:text-brand whitespace-nowrap",
                                 pathname === link.href ? "text-brand" : "text-zinc-900"
                             )}
                         >
@@ -121,7 +121,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                 {/* Botón del Menú Hamburguesa - Sin márgenes verticales */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="relative w-10 h-10 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[60] xl:hidden group"
+                    className="relative w-10 h-10 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[60] lg:hidden group"
                     aria-label="Toggle Menu"
                 >
                     <span
@@ -152,8 +152,8 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                     isOpen ? "opacity-100 pointer-events-auto visible" : "opacity-0 pointer-events-none invisible"
                 )}
             >
-                <div className="container mx-auto px-6 xl:px-12 min-h-screen flex items-center justify-center pt-28 pb-12">
-                    <div className="w-full max-w-6xl grid grid-cols-1 xl:grid-cols-2 gap-16 xl:gap-24 items-center">
+                <div className="container mx-auto px-6 lg:px-12 min-h-screen flex items-center justify-center pt-28 pb-12">
+                    <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
                         {/* Left Column: Navigation Main Links */}
                         <div className="flex flex-col space-y-6 lg:space-y-8">
