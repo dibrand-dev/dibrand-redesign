@@ -70,7 +70,7 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
                     className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8"
                 >
                     <div>
-                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black font-outfit text-zinc-900 tracking-tighter leading-none not-italic">
+                        <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight leading-tight">
                             {dict.selectedWork.title}
                         </h2>
                         <div className="mt-6 h-1 w-24 bg-[#a04c97]" />
@@ -78,7 +78,7 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
 
                     <Link
                         href={`/${lang}/success-stories`}
-                        className="inline-flex items-center gap-2 text-[#a04c97] font-black font-outfit uppercase tracking-widest text-[10px] hover:opacity-80 transition-all border border-[#a04c97]/20 px-6 py-3 rounded-full hover:bg-[#a04c97]/5"
+                        className="inline-flex items-center gap-2 text-[#a04c97] font-bold font-outfit uppercase tracking-widest text-[10px] hover:opacity-80 transition-all border border-[#a04c97]/20 px-6 py-3 rounded-full hover:bg-[#a04c97]/5 mb-1"
                     >
                         {dict.selectedWork.cta}
                         <ArrowRight size={14} />
@@ -128,7 +128,7 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
                                                     <span className="text-[10px] font-black text-[#a04c97]/60 uppercase tracking-[0.2em] font-outfit">
                                                         {project.client_name}
                                                     </span>
-                                                    <h3 className="text-xl md:text-2xl font-black font-outfit text-zinc-900 not-italic tracking-tighter leading-tight group-hover:text-[#a04c97] transition-colors line-clamp-2 min-h-[3rem]">
+                                                    <h3 className="text-xl md:text-2xl font-bold font-outfit text-zinc-900 tracking-tight leading-tight group-hover:text-[#a04c97] transition-colors line-clamp-2 min-h-[3.5rem]">
                                                         {project.title}
                                                     </h3>
                                                 </div>

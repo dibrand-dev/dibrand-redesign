@@ -17,17 +17,18 @@ export default function ComplianceSection({ dict }: ComplianceSectionProps) {
     const { title, items } = dict.compliance;
 
     return (
-        <section className="py-16 bg-white font-outfit" id="compliance">
-            <div className="container mx-auto px-6">
-                {/* Compact Header */}
-                <div className="text-center mb-12">
-                    <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 tracking-tight">
+        <section className="py-24 md:py-32 bg-white font-outfit" id="compliance">
+            <div className="container mx-auto px-6 max-w-7xl">
+                {/* Header Section - Standardized */}
+                <div className="mb-16 md:mb-20">
+                    <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight leading-tight">
                         {title}
                     </h2>
+                    <div className="mt-6 h-1 w-24 bg-brand" />
                 </div>
 
                 {/* 3 Pillars Grid - Horizontal Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10 max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10">
                     {items.map((item, index) => (
                         <div key={index} className="flex items-start gap-4 group">
                             {/* Purple Checkbox */}
@@ -35,7 +36,7 @@ export default function ComplianceSection({ dict }: ComplianceSectionProps) {
                                 <Check size={18} strokeWidth={3} />
                             </div>
                             <div className="flex flex-col">
-                                <h3 className="text-lg font-bold text-zinc-900 font-outfit tracking-tight mb-2">
+                                <h3 className="text-xl md:text-2xl font-bold font-outfit text-zinc-900 tracking-tight mb-2 leading-snug">
                                     {item.title}
                                 </h3>
                                 <p className="text-sm text-zinc-500 font-outfit leading-relaxed font-light">

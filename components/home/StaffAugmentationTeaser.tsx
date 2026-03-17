@@ -37,14 +37,15 @@ export default function StaffAugmentationTeaser({ dict, lang }: StaffAugmentatio
     const { title, subtitle, pillars, cta } = dict.staffAugmentationTeaser;
 
     return (
-        <section className="relative w-full pt-16 pb-20 bg-white overflow-hidden" id="staff-augmentation">
-            <div className="container mx-auto px-6 relative z-10">
-                {/* 1. Header and Subtitle - Compact */}
-                <div className="text-center max-w-4xl mx-auto mb-12">
-                    <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 mb-3 font-outfit tracking-tight">
+        <section className="relative w-full py-24 md:py-32 bg-white overflow-hidden" id="staff-augmentation">
+            <div className="container mx-auto px-6 max-w-7xl relative z-10">
+                {/* 1. Header and Subtitle - Standardized */}
+                <div className="mb-16 md:mb-20">
+                    <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight leading-tight">
                         {title}
                     </h2>
-                    <p className="text-base md:text-lg text-zinc-500 font-outfit font-light leading-relaxed max-w-2xl mx-auto">
+                    <div className="mt-6 h-1 w-24 bg-brand mb-6" />
+                    <p className="text-base md:text-lg text-zinc-500 font-outfit font-light leading-relaxed max-w-2xl">
                         {subtitle}
                     </p>
                 </div>
@@ -58,7 +59,7 @@ export default function StaffAugmentationTeaser({ dict, lang }: StaffAugmentatio
                                 <Check size={18} strokeWidth={3} />
                             </div>
                             <div className="flex flex-col">
-                                <h3 className="text-lg font-bold text-zinc-900 font-outfit tracking-tight mb-2">
+                                <h3 className="text-xl md:text-2xl font-bold font-outfit text-zinc-900 tracking-tight mb-2 leading-snug">
                                     {pillar.title}
                                 </h3>
                                 <p className="text-sm text-zinc-500 font-outfit leading-relaxed font-light">

@@ -24,15 +24,15 @@ export default function ServicesGrid({ dict, lang }: ServicesGridProps) {
     return (
         <section className="bg-zinc-50 py-24 md:py-32 overflow-hidden" id="ecosystem">
             <div className="container mx-auto px-6 max-w-7xl">
-                {/* Header Section */}
-                <div className="text-center max-w-3xl mx-auto mb-20">
-                    <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 mb-6 font-outfit tracking-tight">
+                {/* Header Section - Standardized */}
+                <div className="mb-16 md:mb-20">
+                    <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight leading-tight">
                         {title}
                     </h2>
-                    <p className="text-lg text-zinc-500 font-outfit font-light leading-relaxed">
+                    <div className="mt-6 h-1 w-24 bg-brand mb-6" />
+                    <p className="text-base md:text-lg text-zinc-500 font-outfit font-light leading-relaxed max-w-2xl">
                         {subtitle}
                     </p>
-                    <div className="mt-8 h-1 w-20 bg-brand/30 mx-auto" />
                 </div>
 
                 {/* 4 Pillars Grid */}

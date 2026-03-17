@@ -19,14 +19,17 @@ const row2 = [
 
 export default function TechStack({ dict }: TechStackProps) {
     return (
-        <section className="bg-gray-50 py-24 md:py-32 overflow-hidden">
-            <div className="container mx-auto px-4 mb-16 text-center">
-                <h2 className="font-heading text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-                    {dict.techStack.title}
-                </h2>
-                <p className="text-gray-500 max-w-2xl mx-auto text-lg">
-                    {dict.techStack.subtitle}
-                </p>
+        <section className="bg-gray-50 py-24 md:py-32 overflow-hidden" id="tech-stack">
+            <div className="container mx-auto px-6 max-w-7xl">
+                <div className="mb-16 md:mb-20">
+                    <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight leading-tight">
+                        {dict.techStack.title}
+                    </h2>
+                    <div className="mt-6 h-1 w-24 bg-brand mb-6" />
+                    <p className="text-base md:text-lg text-zinc-500 font-outfit font-light leading-relaxed max-w-2xl">
+                        {dict.techStack.subtitle}
+                    </p>
+                </div>
             </div>
 
             <div className="relative flex flex-col gap-12">
