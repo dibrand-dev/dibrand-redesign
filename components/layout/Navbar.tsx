@@ -102,15 +102,15 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                     </Link>
                 </div>
 
-                {/* Desktop Navigation */}
-                <div className="hidden lg:flex items-center gap-x-6 xl:gap-x-8">
+                {/* Desktop Navigation - Only visible from XL (1280px) */}
+                <div className="hidden xl:flex items-center gap-x-8 xl:gap-x-10">
                     {navLinks.map((link, idx) => (
                         <Link
                             key={idx}
                             href={link.href}
                             className={clsx(
-                                "text-[11px] font-bold font-outfit uppercase tracking-[0.12em] transition-colors hover:text-brand whitespace-nowrap",
-                                pathname === link.href ? "text-brand" : (isOpen ? "text-white" : "text-zinc-900")
+                                "text-[11px] font-bold font-outfit uppercase tracking-[0.15em] transition-all duration-300 hover:text-brand whitespace-nowrap",
+                                pathname === link.href ? "text-brand" : "text-zinc-900"
                             )}
                         >
                             {link.name}
@@ -121,39 +121,39 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                 {/* Botón del Menú Hamburguesa - Sin márgenes verticales */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="relative w-10 h-10 flex flex-col items-center justify-center gap-[5px] focus:outline-none z-[60] lg:hidden"
+                    className="relative w-10 h-10 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[60] xl:hidden group"
                     aria-label="Toggle Menu"
                 >
                     <span
                         className={clsx(
                             "block w-8 h-[2px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "bg-white translate-y-[7px] rotate-45" : "bg-gray-900"
+                            isOpen ? "bg-white translate-y-[8px] rotate-45" : "bg-gray-900 group-hover:bg-brand"
                         )}
                     />
                     <span
                         className={clsx(
                             "block w-8 h-[2px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "opacity-0 translate-x-3" : "bg-gray-900"
+                            isOpen ? "opacity-0 translate-x-3" : "bg-gray-900 group-hover:bg-brand"
                         )}
                     />
                     <span
                         className={clsx(
                             "block w-8 h-[2px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "bg-white -translate-y-[7px] -rotate-45" : "bg-gray-900"
+                            isOpen ? "bg-white -translate-y-[8px] -rotate-45" : "bg-gray-900 group-hover:bg-brand"
                         )}
                     />
                 </button>
             </nav>
 
-            {/* Fullscreen Overlay Menu */}
+            {/* Fullscreen Overlay Menu - Premium Glassmorphism */}
             <div
                 className={clsx(
-                    "fixed inset-0 z-50 bg-black/80 backdrop-blur-md transition-all duration-500 overflow-y-auto",
+                    "fixed inset-0 z-50 bg-zinc-950/95 backdrop-blur-2xl transition-all duration-500 overflow-y-auto",
                     isOpen ? "opacity-100 pointer-events-auto visible" : "opacity-0 pointer-events-none invisible"
                 )}
             >
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center justify-center pt-24 pb-12">
-                    <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
+                <div className="container mx-auto px-6 xl:px-12 min-h-screen flex items-center justify-center pt-28 pb-12">
+                    <div className="w-full max-w-6xl grid grid-cols-1 xl:grid-cols-2 gap-16 xl:gap-24 items-center">
 
                         {/* Left Column: Navigation Main Links */}
                         <div className="flex flex-col space-y-6 lg:space-y-8">
@@ -162,8 +162,9 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                                     key={idx}
                                     href={link.href}
                                     onClick={() => setIsOpen(false)}
-                                    className="text-3xl lg:text-4xl font-bold text-white hover:text-gray-300 transition-colors w-fit"
+                                    className="text-3xl lg:text-5xl font-bold text-white hover:text-brand transition-all duration-300 w-fit font-outfit tracking-tight group flex items-center gap-4"
                                 >
+                                    <span className="text-brand opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all font-light text-2xl">•</span>
                                     {link.name}
                                 </Link>
                             ))}
