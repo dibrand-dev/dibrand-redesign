@@ -139,16 +139,16 @@
             "title": "Dibrand Compliance Commitment",
             "items": [
                 {
-                    "title": "IP Protection",
-                    "desc": "Full legal transfer of intellectual property under international standards."
+                    "title": "Intellectual Property",
+                    "desc": "100% IP Ownership. All code, documentation, and assets developed belong exclusively to you from day one."
                 },
                 {
-                    "title": "Secure Coding",
-                    "desc": "SOC2-aligned development practices and rigorous background checks."
+                    "title": "Confidentiality & NDAs",
+                    "desc": "Ironclad Privacy. We protect your business logic through rigorous NDAs and secure data handling protocols."
                 },
                 {
-                    "title": "Nearshore Synergy",
-                    "desc": "Real-time collaboration. No 'black boxes', no lag, just high-bandwidth communication."
+                    "title": "Legal & Regulatory Alignment",
+                    "desc": "Seamless Compliance. Our contracts are designed to meet international standards and US legal requirements for global operations."
                 }
             ]
         },

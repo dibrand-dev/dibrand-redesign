@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Lock, Globe } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 interface ComplianceSectionProps {
     dict: {
@@ -13,37 +13,37 @@ interface ComplianceSectionProps {
     };
 }
 
-const icons = [ShieldCheck, Lock, Globe];
-
 export default function ComplianceSection({ dict }: ComplianceSectionProps) {
     const { title, items } = dict.compliance;
 
     return (
-        <section className="py-24 bg-white font-outfit">
+        <section className="py-16 bg-white font-outfit" id="compliance">
             <div className="container mx-auto px-6">
-                <div className="text-center mb-20">
-                    <h2 className="text-4xl md:text-6xl font-black text-zinc-900 tracking-tighter leading-tight max-w-3xl mx-auto">
+                {/* Compact Header */}
+                <div className="text-center mb-12">
+                    <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 tracking-tight">
                         {title}
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
-                    {items.map((item, index) => {
-                        const Icon = icons[index] || ShieldCheck;
-                        return (
-                            <div key={index} className="flex flex-col items-center text-center p-8 rounded-[3rem] bg-slate-50 border border-slate-100 hover:shadow-xl hover:shadow-brand/5 hover:-translate-y-2 transition-all duration-500">
-                                <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-brand mb-8 shadow-sm">
-                                    <Icon size={32} strokeWidth={2.5} />
-                                </div>
-                                <h3 className="text-2xl font-bold text-zinc-900 mb-4 tracking-tight">
+                {/* 3 Pillars Grid - Horizontal Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10 max-w-7xl mx-auto">
+                    {items.map((item, index) => (
+                        <div key={index} className="flex items-start gap-4 group">
+                            {/* Purple Checkbox */}
+                            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-brand flex items-center justify-center text-white mt-1 transform group-hover:rotate-12 transition-transform duration-300">
+                                <Check size={18} strokeWidth={3} />
+                            </div>
+                            <div className="flex flex-col">
+                                <h3 className="text-lg font-bold text-zinc-900 font-outfit tracking-tight mb-2">
                                     {item.title}
                                 </h3>
-                                <p className="text-zinc-500 font-light leading-relaxed">
+                                <p className="text-sm text-zinc-500 font-outfit leading-relaxed font-light">
                                     {item.desc}
                                 </p>
                             </div>
-                        );
-                    })}
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>
