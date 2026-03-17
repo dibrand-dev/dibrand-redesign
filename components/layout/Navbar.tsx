@@ -85,7 +85,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
         <>
             {/* Header top bar */}
             <nav className={clsx(
-                "fixed top-0 left-0 right-0 z-[60] transition-all duration-300 w-full h-20 flex items-center justify-between px-6 lg:px-8 pb-3",
+                "fixed top-0 left-0 right-0 z-[60] transition-all duration-300 w-full h-20 flex items-center justify-between px-6 lg:px-8",
                 isOpen ? 'bg-transparent' : 'bg-white/80 backdrop-blur-md shadow-sm border-b border-zinc-100/50'
             )}>
                 {/* Contenedor del Logo - Sin márgenes verticales */}
@@ -102,8 +102,8 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                     </Link>
                 </div>
 
-                {/* Desktop Navigation - Visible from LG (1024px) */}
-                <div className="hidden lg:flex items-center gap-x-5 xl:gap-x-8">
+                {/* Desktop Navigation - Visible from XL (1280px) for safer tablet coverage */}
+                <div className="hidden xl:flex items-center gap-x-8 px-4">
                     {navLinks.map((link, idx) => (
                         <Link
                             key={idx}
@@ -118,28 +118,27 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                     ))}
                 </div>
 
-                {/* Botón del Menú Hamburguesa - Sin márgenes verticales */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="relative w-10 h-10 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[60] lg:hidden group"
+                    className="relative w-12 h-12 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[70] xl:hidden group"
                     aria-label="Toggle Menu"
                 >
                     <span
                         className={clsx(
-                            "block w-8 h-[2px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "bg-white translate-y-[8px] rotate-45" : "bg-gray-900 group-hover:bg-brand"
+                            "block w-8 h-[3px] rounded-full transition-all duration-300 ease-in-out",
+                            isOpen ? "bg-white translate-y-[9px] rotate-45" : "bg-gray-900 group-hover:bg-brand"
                         )}
                     />
                     <span
                         className={clsx(
-                            "block w-8 h-[2px] rounded-full transition-all duration-300 ease-in-out",
+                            "block w-8 h-[3px] rounded-full transition-all duration-300 ease-in-out",
                             isOpen ? "opacity-0 translate-x-3" : "bg-gray-900 group-hover:bg-brand"
                         )}
                     />
                     <span
                         className={clsx(
-                            "block w-8 h-[2px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "bg-white -translate-y-[8px] -rotate-45" : "bg-gray-900 group-hover:bg-brand"
+                            "block w-8 h-[3px] rounded-full transition-all duration-300 ease-in-out",
+                            isOpen ? "bg-white -translate-y-[9px] -rotate-45" : "bg-gray-900 group-hover:bg-brand"
                         )}
                     />
                 </button>
