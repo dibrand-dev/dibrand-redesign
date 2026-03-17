@@ -541,5 +541,46 @@
                 }
             ]
         }
+    },
+    "softwareDevelopment": {
+        "hero": {
+            "title": "Ingeniería de Software de Clase Mundial impulsada por IA.",
+            "subtitle": "Combinamos el rigor técnico del top 3% de talento en LATAM con flujos de trabajo nativos de IA para entregar software escalable, seguro y de alto impacto.",
+            "cta": "Empezar un proyecto"
+        },
+        "services": {
+            "title": "Servicios Core",
+            "items": [
+                {
+                    "title": "Custom Software Development",
+                    "desc": "Soluciones End-to-End, Full-Stack y arquitecturas Cloud-Native para desafíos de negocio únicos."
+                },
+                {
+                    "title": "AI Implementation & Custom Workflows",
+                    "desc": "Integración de LLMs, Agentes de IA, RAG y automatización de procesos operativos."
+                },
+                {
+                    "title": "Strategic Architecture & Modernization",
+                    "desc": "Diseño de cimientos escalables, seguridad de grado empresarial y migración de sistemas legacy con cero fricción."
+                },
+                {
+                    "title": "UX/UI & Product Engineering",
+                    "desc": "Diseño centrado en el usuario, prototipado rápido y optimización de engagement de alto rendimiento."
+                }
+            ]
+        },
+        "advantage": {
+            "title": "The Dibrand Advantage",
+            "items": [
+                { "title": "Elite Talent Only" },
+                { "title": "AI-Driven Efficiency" },
+                { "title": "Time-Zone Alignment" },
+                { "title": "Agile Precision" }
+            ]
+        },
+        "finalCta": {
+            "title": "¿Listo para convertir tu visión en una ventaja competitiva?",
+            "cta": "Hablemos de tu proyecto"
+        }
     }
 }

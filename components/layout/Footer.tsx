@@ -54,7 +54,7 @@ export default function Footer({ dict, lang }: FooterProps) {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 mb-12">
                         <div className="flex flex-col gap-2">
                             <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-2">Expertise</span>
-                            <a href={`/${lang}/servicios/desarrollo-software-ia`} className="text-gray-400 hover:text-brand transition-colors text-sm">
+                            <a href={`/${lang}/software-development`} className="text-gray-400 hover:text-brand transition-colors text-sm">
                                 {dict.navigation.softwareDevelopment}
                             </a>
                             <a href={`/${lang}/software-outsourcing`} className="text-gray-400 hover:text-brand transition-colors text-sm">

@@ -103,4 +103,23 @@ export interface Dictionary {
             steps: Array<{ title: string; desc: string }>;
         };
     };
+    softwareDevelopment: {
+        hero: {
+            title: string;
+            subtitle: string;
+            cta: string;
+        };
+        services: {
+            title: string;
+            items: Array<{ title: string; desc: string }>;
+        };
+        advantage: {
+            title: string;
+            items: Array<{ title: string }>;
+        };
+        finalCta: {
+            title: string;
+            cta: string;
+        };
+    };
 }

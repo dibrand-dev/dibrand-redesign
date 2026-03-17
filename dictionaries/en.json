@@ -541,5 +541,46 @@
                 }
             ]
         }
+    },
+    "softwareDevelopment": {
+        "hero": {
+            "title": "World-Class Software Engineering Powered by AI.",
+            "subtitle": "We combine the technical rigor of the top 3% of LATAM talent with AI-native workflows to deliver scalable, secure, and high-impact software.",
+            "cta": "Start a project"
+        },
+        "services": {
+            "title": "Core Services",
+            "items": [
+                {
+                    "title": "Custom Software Development",
+                    "desc": "End-to-End solutions, Full-Stack, and Cloud-Native architectures for unique business challenges."
+                },
+                {
+                    "title": "AI Implementation & Custom Workflows",
+                    "desc": "Integration of LLMs, AI Agents, RAG, and automation of operational processes."
+                },
+                {
+                    "title": "Strategic Architecture & Modernization",
+                    "desc": "Design of scalable foundations, enterprise-grade security, and friction-less legacy system migration."
+                },
+                {
+                    "title": "UX/UI & Product Engineering",
+                    "desc": "User-centered design, rapid prototyping, and high-performance engagement optimization."
+                }
+            ]
+        },
+        "advantage": {
+            "title": "The Dibrand Advantage",
+            "items": [
+                { "title": "Elite Talent Only" },
+                { "title": "AI-Driven Efficiency" },
+                { "title": "Time-Zone Alignment" },
+                { "title": "Agile Precision" }
+            ]
+        },
+        "finalCta": {
+            "title": "Ready to turn your vision into a competitive advantage?",
+            "cta": "Let’s talk about your project"
+        }
     }
 }

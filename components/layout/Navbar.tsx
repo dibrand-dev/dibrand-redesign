@@ -73,7 +73,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
 
     
     const navLinks = [
-        { name: dict.navigation.softwareDevelopment, href: `/${lang}/servicios/desarrollo-software-ia` },
+        { name: dict.navigation.softwareDevelopment, href: `/${lang}/software-development` },
         { name: dict.navigation.softwareOutsourcing, href: `/${lang}/software-outsourcing` },
         { name: dict.navigation.staffAugmentation, href: `/${lang}/staff-augmentation` },
         { name: dict.navigation.portfolio, href: `/${lang}/success-stories` },
