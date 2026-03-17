@@ -102,8 +102,8 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                     </Link>
                 </div>
 
-                {/* Desktop Navigation - Visible from XL (1280px) for safer tablet coverage */}
-                <div className="hidden xl:flex items-center gap-x-8 px-4">
+                {/* Desktop Navigation - Visible from LG (1024px) */}
+                <div className="hidden lg:flex items-center gap-x-6 xl:gap-x-8 px-4">
                     {navLinks.map((link, idx) => (
                         <Link
                             key={idx}
@@ -120,25 +120,25 @@ export default function Navbar({ dict, lang }: NavbarProps) {
 
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="relative w-12 h-12 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[70] xl:hidden group"
+                    className="relative w-12 h-12 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[9999] lg:hidden group border-2 border-red-500"
                     aria-label="Toggle Menu"
                 >
                     <span
                         className={clsx(
                             "block w-8 h-[3px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "bg-white translate-y-[9px] rotate-45" : "bg-gray-900 group-hover:bg-brand"
+                            isOpen ? "bg-white translate-y-[9px] rotate-45" : "bg-brand"
                         )}
                     />
                     <span
                         className={clsx(
                             "block w-8 h-[3px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "opacity-0 translate-x-3" : "bg-gray-900 group-hover:bg-brand"
+                            isOpen ? "opacity-0 translate-x-3" : "bg-brand"
                         )}
                     />
                     <span
                         className={clsx(
                             "block w-8 h-[3px] rounded-full transition-all duration-300 ease-in-out",
-                            isOpen ? "bg-white -translate-y-[9px] -rotate-45" : "bg-gray-900 group-hover:bg-brand"
+                            isOpen ? "bg-white -translate-y-[9px] -rotate-45" : "bg-brand"
                         )}
                     />
                 </button>
