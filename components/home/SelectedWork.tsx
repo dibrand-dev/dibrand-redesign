@@ -151,15 +151,6 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
                                                 )}
                                                 <div className="absolute inset-0 bg-zinc-950/5 group-hover:bg-zinc-950/0 transition-colors duration-700" />
 
-                                                {/* Learn More Overlay / Button */}
-                                                <div className="absolute bottom-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                                                    <div className="bg-white px-5 py-2.5 rounded-full shadow-xl flex items-center gap-2">
-                                                        <span className="text-[10px] font-black font-outfit uppercase tracking-widest text-zinc-900">
-                                                            {dict.selectedWork.viewCase}
-                                                        </span>
-                                                        <ArrowRight size={12} className="text-[#a04c97]" />
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </Link>
