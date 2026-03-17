@@ -51,6 +51,51 @@ export default async function RootLayout({
     <html lang={lang} className={`${outfit.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <GTMScript />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareBusiness",
+              "name": "Dibrand",
+              "alternateName": "Dibrand Engineering",
+              "url": "https://dibrand.co/",
+              "logo": "https://dibrand.co/logo.png",
+              "description": "Agencia boutique de ingeniería de software de élite. Especialistas en desarrollo de productos digitales, Staff Augmentation con el top 3% de talento de LATAM y flujos de trabajo potenciados por IA.",
+              "address": [
+                {
+                  "@type": "PostalAddress",
+                  "streetAddress": "1309 Coffen Ave STE 1200",
+                  "addressLocality": "Sheridan",
+                  "addressRegion": "WY",
+                  "postalCode": "82801",
+                  "addressCountry": "USA"
+                },
+                {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Avenida de los lagos 100, Puertos",
+                  "addressLocality": "Belén de Escobar",
+                  "addressRegion": "Buenos Aires",
+                  "postalCode": "1625",
+                  "addressCountry": "Argentina"
+                }
+              ],
+              "knowsAbout": [
+                "Software Development",
+                "AI-Augmented Engineering",
+                "Staff Augmentation",
+                "Software Outsourcing",
+                "Custom AI Workflows",
+                "Strategic Architecture"
+              ],
+              "brand": {
+                "@type": "Brand",
+                "name": "Dibrand",
+                "slogan": "Elite Talent Only"
+              }
+            })
+          }}
+        />
       </head>
       <body className="font-sans antialiased pt-16" suppressHydrationWarning>
         <GTMNoScript />
