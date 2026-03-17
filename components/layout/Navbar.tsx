@@ -102,8 +102,8 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                     </Link>
                 </div>
 
-                {/* Desktop Navigation - Visible from LG (1024px) */}
-                <div className="hidden lg:flex items-center gap-x-6 xl:gap-x-8 px-4">
+                {/* Desktop Navigation - Hidden as per user request to use Hamburger only */}
+                <div className="hidden">
                     {navLinks.map((link, idx) => (
                         <Link
                             key={idx}
@@ -120,7 +120,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
 
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="relative w-12 h-12 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[9999] lg:hidden group"
+                    className="relative w-12 h-12 flex flex-col items-center justify-center gap-[6px] focus:outline-none z-[9999] group"
                     aria-label="Toggle Menu"
                 >
                     <span
