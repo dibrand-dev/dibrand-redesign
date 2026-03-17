@@ -12,6 +12,7 @@ export interface Dictionary {
         contact: string;
         aiWorkflows: string;
         strategicArchitecture: string;
+        softwareDevelopment: string;
         scheduleCall: string;
         conversionHook: string;
         conversionCta: string;

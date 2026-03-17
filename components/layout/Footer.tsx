@@ -51,26 +51,32 @@ export default function Footer({ dict, lang }: FooterProps) {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-12">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 mb-12">
                         <div className="flex flex-col gap-2">
-                            <span className="text-white font-medium">{dict.navigation.services}</span>
-                            <a href={`/${lang}/software-outsourcing`} className="text-gray-400 hover:text-brand transition-colors">
+                            <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-2">Expertise</span>
+                            <a href={`/${lang}/servicios/desarrollo-software-ia`} className="text-gray-400 hover:text-brand transition-colors text-sm">
+                                {dict.navigation.softwareDevelopment}
+                            </a>
+                            <a href={`/${lang}/software-outsourcing`} className="text-gray-400 hover:text-brand transition-colors text-sm">
                                 {dict.navigation.softwareOutsourcing}
                             </a>
-                            <a href={`/${lang}/staff-augmentation`} className="text-gray-400 hover:text-brand transition-colors">
+                            <a href={`/${lang}/staff-augmentation`} className="text-gray-400 hover:text-brand transition-colors text-sm">
                                 {dict.navigation.staffAugmentation}
-                            </a>
-                            <a href={`/${lang}/ai-workflows`} className="text-gray-400 hover:text-brand transition-colors">
-                                {dict.navigation.aiWorkflows}
-                            </a>
-                            <a href={`/${lang}/strategic-architecture`} className="text-gray-400 hover:text-brand transition-colors">
-                                {dict.navigation.strategicArchitecture}
                             </a>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <span className="text-white font-medium">Join Us</span>
-                            <a href={`/${lang}/join-us`} className="text-gray-400 hover:text-brand transition-colors">
+                            <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-2">Company</span>
+                            <a href={`/${lang}/about`} className="text-gray-400 hover:text-brand transition-colors text-sm">
+                                {dict.navigation.aboutUs}
+                            </a>
+                            <a href={`/${lang}/join-us`} className="text-gray-400 hover:text-brand transition-colors text-sm">
                                 {dict.navigation.careers}
+                            </a>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-2">Work</span>
+                            <a href={`/${lang}/success-stories`} className="text-gray-400 hover:text-brand transition-colors text-sm">
+                                {dict.navigation.portfolio}
                             </a>
                         </div>
                     </div>
