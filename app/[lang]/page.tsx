@@ -118,17 +118,17 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
         {/* 5. Featured Cases (Dynamic Portfolio Engine) */}
         <SelectedWork dict={dict.home} lang={params.lang} cases={topCases} />
 
-        {/* 6. Solutions / Services Grid */}
+        {/* 6. Solution Ecosystem */}
         <ServicesGrid dict={dict.home} lang={params.lang} />
 
-        {/* 7. Compliance (Zero-Friction) */}
-        <ComplianceSection dict={dict.home} />
-
-        {/* 8. Brands */}
+        {/* 7. Brands */}
         <TrustedBySection brands={brands || []} dict={dict.home} />
 
-        {/* 9. Testimonials (Individual Social Proof) */}
+        {/* 8. Testimonials (Individual Social Proof) */}
         <TestimonialsSection testimonials={testimonials || []} dict={dict.home} lang={params.lang} />
+
+        {/* 9. Compliance (Zero-Friction) */}
+        <ComplianceSection dict={dict.home} />
       </main>
 
       {/* Footer */}

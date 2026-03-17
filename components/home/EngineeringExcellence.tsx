@@ -32,7 +32,7 @@ export default function EngineeringExcellence({ dict, lang }: EngineeringExcelle
                                 <div className="w-14 h-14 bg-brand/5 rounded-2xl flex items-center justify-center text-brand mb-8 group-hover:scale-110 transition-transform">
                                     <Icon size={28} strokeWidth={2} />
                                 </div>
-                                <h3 className="text-xl md:text-2xl font-bold font-outfit text-zinc-900 mb-4 leading-snug">
+                                <h3 className="text-xl md:text-2xl font-bold font-outfit text-zinc-900 mb-4 leading-snug tracking-tight">
                                     {item.title}
                                 </h3>
                                 <p className="text-lg text-zinc-500 font-outfit leading-relaxed flex-grow">

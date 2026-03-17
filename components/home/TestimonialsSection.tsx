@@ -43,19 +43,19 @@ export default function TestimonialsSection({ testimonials, dict, lang }: Testim
     if (!mounted) return null;
 
     return (
-        <section className="bg-zinc-800 py-24 lg:py-32 relative overflow-hidden" id="testimonials">
+        <section className="bg-zinc-800 py-24 md:py-32 relative overflow-hidden" id="testimonials">
             {/* Background elements refined for zinc-800 */}
             <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 transform opacity-10">
                 <div className="h-[40rem] w-[40rem] rounded-full bg-gradient-to-br from-brand to-brand blur-3xl" />
             </div>
 
-            <div className="container mx-auto px-6 relative z-10">
-                <div className="mb-16">
-                    <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl mb-4 font-outfit">
+            <div className="container mx-auto px-6 max-w-7xl relative z-10">
+                <div className="mb-16 md:mb-20">
+                    <h2 className="text-3xl md:text-5xl font-bold font-outfit text-white tracking-tight leading-tight">
                         {dict.testimonials.title}
                     </h2>
-                    <div className="h-1 w-20 bg-gradient-to-r from-brand to-brand mb-8" />
-                    <p className="text-gray-400 max-w-4xl text-lg font-outfit">
+                    <div className="mt-6 h-1 w-24 bg-brand mb-6" />
+                    <p className="text-base md:text-lg text-gray-400 font-outfit font-light leading-relaxed max-w-2xl">
                         {dict.testimonials.subtitle}
                     </p>
                 </div>

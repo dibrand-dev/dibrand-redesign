@@ -48,7 +48,7 @@ export default function ServicesGrid({ dict, lang }: ServicesGridProps) {
                                 <div className="mb-6 h-14 w-14 rounded-full bg-zinc-50 flex items-center justify-center text-brand group-hover:bg-brand group-hover:text-white transition-all duration-300">
                                     <Icon className="h-7 w-7" strokeWidth={1.5} />
                                 </div>
-                                <h3 className="mb-4 text-xl font-bold text-zinc-900 font-outfit">
+                                <h3 className="text-xl md:text-2xl font-bold font-outfit text-zinc-900 tracking-tight mb-4 leading-snug">
                                     {item.title}
                                 </h3>
                                 <p className="text-sm leading-relaxed text-zinc-500 font-outfit font-light">
