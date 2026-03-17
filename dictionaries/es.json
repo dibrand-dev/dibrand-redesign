@@ -52,23 +52,24 @@
             ]
         },
         "services": {
-            "title": "Ecosistema de Soluciones Dibrand",
+            "title": "Dibrand Solution Ecosystem",
+            "subtitle": "Una infraestructura integral de ejecución diseñada para eliminar la fricción técnica y maximizar el retorno de inversión en cada etapa del desarrollo.",
             "items": [
                 {
-                    "title": "Software Outsourcing",
-                    "desc": "Construimos tu producto de punta a punta. Delegá el desarrollo y acelerá tu go-to-market con nuestros squads autogestionados."
+                    "title": "Software Development",
+                    "desc": "Ejecución de ciclo completo. Construimos soluciones robustas y escalables, priorizando la calidad del código y la arquitectura para productos que necesitan liderar el mercado."
                 },
                 {
-                    "title": "Staff Augmentation",
-                    "desc": "Escala tu equipo en 72 horas con talento senior de ingeniería de LATAM, potenciado por IA."
-                },
-                {
-                    "title": "AI & Custom Workflows",
-                    "desc": "Optimiza tus operaciones y escala tu negocio con soluciones de Inteligencia Artificial y agentes cognitivos a medida."
+                    "title": "IA & Custom Workflows",
+                    "desc": "Eficiencia aumentada. Integramos flujos de trabajo nativos de IA para automatizar tareas repetitivas, acelerar el testing y optimizar los tiempos de entrega sin comprometer la precisión."
                 },
                 {
                     "title": "Strategic Architecture",
-                    "desc": "Diseñamos bases técnicas sólidas y escalables que soportan el crecimiento acelerado de tu plataforma o modelo de negocio."
+                    "desc": "Cimientos para el futuro. No solo programamos; diseñamos arquitecturas estratégicas que permiten que tu producto crezca, se integre y escale globalmente de forma segura."
+                },
+                {
+                    "title": "Talent IT Senior",
+                    "desc": "Cerebro de élite. Nuestro ecosistema se nutre exclusivamente de ingenieros senior (Top 3% LATAM), capaces de liderar la toma de decisiones técnicas y resolver problemas de alta complejidad."
                 }
             ]
         },

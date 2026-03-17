@@ -53,22 +53,23 @@
         },
         "services": {
             "title": "Dibrand Solution Ecosystem",
+            "subtitle": "A comprehensive execution infrastructure designed to eliminate technical friction and maximize return on investment at every stage of development.",
             "items": [
                 {
-                    "title": "Software Outsourcing",
-                    "desc": "We build your product end-to-end. Delegate development and accelerate your go-to-market with our self-managed delivery squads."
+                    "title": "Software Development",
+                    "desc": "Full-cycle execution. We build robust and scalable solutions, prioritizing code quality and architecture for products that need to lead the market."
                 },
                 {
-                    "title": "Staff Augmentation",
-                    "desc": "Scale your team in 72 hours with top-tier senior engineering talent from LATAM, augmented by AI tools."
-                },
-                {
-                    "title": "AI & Custom Workflows",
-                    "desc": "Optimize operations and scale your business with custom Artificial Intelligence solutions and cognitive agents."
+                    "title": "IA & Custom Workflows",
+                    "desc": "Augmented efficiency. We integrate AI-native workflows to automate repetitive tasks, accelerate testing, and optimize delivery times without compromising precision."
                 },
                 {
                     "title": "Strategic Architecture",
-                    "desc": "We design solid, scalable technical foundations that support the accelerated growth of your platform or business model."
+                    "desc": "Foundations for the future. We don’t just code; we design strategic architectures that allow your product to grow, integrate, and scale globally and securely."
+                },
+                {
+                    "title": "Talent IT Senior",
+                    "desc": "Elite brainpower. Our ecosystem is powered exclusively by senior engineers (Top 3% LATAM), capable of leading technical decision-making and solving high-complexity problems."
                 }
             ]
         },

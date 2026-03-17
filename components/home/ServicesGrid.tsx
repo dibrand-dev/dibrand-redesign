@@ -1,11 +1,10 @@
-import { Users, Rocket, Brain, Landmark, ArrowRight } from 'lucide-react';
-
-import Link from 'next/link';
+import { Network, Sparkles, DraftingCompass, Award } from 'lucide-react';
 
 interface ServicesGridProps {
     dict: {
         services: {
             title: string;
+            subtitle: string;
             items: { title: string; desc: string }[];
         };
     };
@@ -13,56 +12,49 @@ interface ServicesGridProps {
 }
 
 const iconMap = [
-    Rocket,              // Software Outsourcing
-    Users,               // Staff Augmentation
-    Brain,               // AI & Custom Workflows
-    Landmark             // Strategic Architecture
+    Network,          // Software Development
+    Sparkles,         // IA & Custom Workflows
+    DraftingCompass,  // Strategic Architecture
+    Award            // Talent IT Senior
 ];
 
 export default function ServicesGrid({ dict, lang }: ServicesGridProps) {
+    const { title, subtitle, items } = dict.services;
+
     return (
-        <section className="bg-zinc-800 flex flex-col justify-start pt-32 pb-40" id="services">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-24 text-center">
-                    <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl font-outfit">
-                        {dict.services.title}
+        <section className="bg-zinc-50 py-24 md:py-32 overflow-hidden" id="ecosystem">
+            <div className="container mx-auto px-6 max-w-7xl">
+                {/* Header Section */}
+                <div className="text-center max-w-3xl mx-auto mb-20">
+                    <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 mb-6 font-outfit tracking-tight">
+                        {title}
                     </h2>
-                    <div className="mt-4 h-1 w-20 bg-gradient-to-r from-brand to-brand mx-auto" />
+                    <p className="text-lg text-zinc-500 font-outfit font-light leading-relaxed">
+                        {subtitle}
+                    </p>
+                    <div className="mt-8 h-1 w-20 bg-brand/30 mx-auto" />
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    {dict.services.items.map((item, index) => {
-                        const Icon = iconMap[index] || Rocket;
-
-                        let href = `/${lang}`;
-                        if (item.title.includes("Outsourcing")) href = `/${lang}/software-outsourcing`;
-                        if (item.title.includes("Staff Augmentation")) href = `/${lang}/staff-augmentation`;
-                        if (item.title.includes("AI & Custom Workflows")) href = `/${lang}/ai-workflows`;
-                        if (item.title.includes("Strategic Architecture")) href = `/${lang}/strategic-architecture`;
+                {/* 4 Pillars Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {items.map((item, index) => {
+                        const Icon = iconMap[index] || Network;
 
                         return (
-                            <Link
+                            <div
                                 key={index}
-                                href={href}
-                                className="group flex flex-col justify-between rounded-xl bg-white/5 backdrop-blur-sm p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border border-white/10 hover:border-brand/30"
+                                className="group p-8 rounded-2xl bg-white border border-zinc-200 transition-all duration-300 hover:shadow-xl hover:border-brand/20 flex flex-col items-center text-center"
                             >
-                                <article>
-                                    <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/5 text-brand group-hover:bg-brand group-hover:text-white transition-all duration-300">
-                                        <Icon className="h-6 w-6" />
-                                    </div>
-                                    <h3 className="mb-3 text-lg font-bold text-white font-outfit">
-                                        {item.title}
-                                    </h3>
-                                    <p className="text-sm leading-relaxed text-gray-400 font-outfit">
-                                        {item.desc}
-                                    </p>
-                                </article>
-
-                                <div className="mt-6 flex items-center text-xs font-bold uppercase tracking-wider text-gray-400 group-hover:text-brand transition-colors">
-                                    <span>{lang === 'es' ? 'Saber más' : 'Learn More'}</span>
-                                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                <div className="mb-6 h-14 w-14 rounded-full bg-zinc-50 flex items-center justify-center text-brand group-hover:bg-brand group-hover:text-white transition-all duration-300">
+                                    <Icon className="h-7 w-7" strokeWidth={1.5} />
                                 </div>
-                            </Link>
+                                <h3 className="mb-4 text-xl font-bold text-zinc-900 font-outfit">
+                                    {item.title}
+                                </h3>
+                                <p className="text-sm leading-relaxed text-zinc-500 font-outfit font-light">
+                                    {item.desc}
+                                </p>
+                            </div>
                         );
                     })}
                 </div>
