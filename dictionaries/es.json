@@ -573,16 +573,20 @@
             "title": "The Dibrand Advantage",
             "items": [
                 {
-                    "title": "Elite Talent Only"
+                    "title": "Elite Talent Only",
+                    "desc": "Acceso exclusivo al top 3% de ingeniería senior en LATAM."
                 },
                 {
-                    "title": "AI-Driven Efficiency"
+                    "title": "AI-Driven Efficiency",
+                    "desc": "Flujos de trabajo optimizados con IA para acelerar el desarrollo."
                 },
                 {
-                    "title": "Time-Zone Alignment"
+                    "title": "Time-Zone Alignment",
+                    "desc": "Colaboración fluida en tiempo real y alineación Nearshore total."
                 },
                 {
-                    "title": "Agile Precision"
+                    "title": "Agile Precision",
+                    "desc": "Entregas predecibles y de alto impacto con rigor metodológico."
                 }
             ]
         },
