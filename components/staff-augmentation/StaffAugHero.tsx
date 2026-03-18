@@ -30,7 +30,7 @@ export default function StaffAugHero({ dict, lang }: StaffAugHeroProps) {
 
             {/* Capa 3: Contenido de Texto */}
             <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-32 pb-16">
-                <h1 className="font-outfit text-3xl md:text-5xl lg:text-[54px] font-bold tracking-tight text-white leading-[1.1] max-w-4xl uppercase">
+                <h1 className="font-outfit text-3xl md:text-5xl lg:text-[54px] font-bold tracking-tight text-white leading-[1.1] max-w-4xl capitalize">
                     {dict.hero.title}
                 </h1>
 

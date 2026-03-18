@@ -22,7 +22,7 @@ export default function AboutHero({ dict, imagePath }: AboutHeroProps) {
             
             {/* Content Over */}
             <div className="relative z-10 container mx-auto px-6 text-center max-w-4xl pt-32 pb-20">
-                <h1 className="text-3xl md:text-5xl lg:text-[54px] font-bold font-outfit text-white tracking-tight leading-[1.1] uppercase mb-8">
+                <h1 className="text-3xl md:text-5xl lg:text-[54px] font-bold font-outfit text-white tracking-tight leading-[1.1] capitalize mb-8">
                     {dict.title}
                 </h1>
                 <p className="mt-4 md:mt-6 text-base md:text-xl leading-relaxed text-zinc-100 max-w-2xl mx-auto font-outfit font-light">

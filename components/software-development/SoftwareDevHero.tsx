@@ -31,7 +31,7 @@ export default function SoftwareDevHero({ dict }: SoftwareDevHeroProps) {
             {/* Content centered stacked */}
             <div className="container mx-auto px-6 relative z-10 text-center max-w-4xl">
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-10 duration-1000">
-                    <h1 className="font-outfit text-4xl md:text-5xl lg:text-[54px] font-bold tracking-tight text-white leading-[1.1] uppercase">
+                    <h1 className="font-outfit text-4xl md:text-5xl lg:text-[54px] font-bold tracking-tight text-white leading-[1.1] capitalize">
                         {dict.title}
                     </h1>
                     
