@@ -23,7 +23,7 @@ export default async function SolutionsPage(props: { params: Promise<{ lang: "en
     const content = dict.solutions;
 
     return (
-        <main className="bg-white overflow-x-hidden pt-16">
+        <main className="bg-white overflow-x-hidden">
             {/* 1. Hero Section */}
             <SolutionsHero dict={content.hero} />
 
