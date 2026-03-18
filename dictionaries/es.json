@@ -606,37 +606,100 @@
             {
                 "title": "Software Development & Design",
                 "items": [
-                    { "title": "Desarrollo de Software a Medida", "desc": "Ingeniería de software robusta diseñada para resolver necesidades específicas de negocio." },
-                    { "title": "Desarrollo de E-commerce", "desc": "Plataformas transaccionales de alto rendimiento enfocadas en la conversión y escalabilidad." },
-                    { "title": "Desarrollo de MVP", "desc": "Construcción rápida de productos mínimos viables para validar mercados con rigor técnico." },
-                    { "title": "Desarrollo de Apps Web y Móviles (iOS/Android)", "desc": "Aplicaciones multiplataforma fluidas con las últimas tecnologías híbridas y nativas." },
-                    { "title": "Diseño UX/UI", "desc": "Experiencias de usuario de clase mundial que combinan estética premium y funcionalidad." },
-                    { "title": "Aplicaciones SaaS y Cloud", "desc": "Arquitecturas multi-tenant seguras preparadas para el crecimiento masivo de usuarios." },
-                    { "title": "Desarrollo Back-End y Front-End", "desc": "Ingeniería integral que garantiza rendimiento en el servidor y reactividad en el cliente." },
-                    { "title": "Desarrollo de Software Empresarial", "desc": "Soluciones a gran escala para automatizar flujos críticos en organizaciones complejas." },
-                    { "title": "Desarrollo de dApps y Blockchain", "desc": "Implementación de tecnologías descentralizadas, smart contracts y seguridad Web3." }
+                    {
+                        "title": "Desarrollo de Software a Medida",
+                        "desc": "Ingeniería de software robusta diseñada para resolver necesidades específicas de negocio."
+                    },
+                    {
+                        "title": "Desarrollo de E-commerce",
+                        "desc": "Plataformas transaccionales de alto rendimiento enfocadas en la conversión y escalabilidad."
+                    },
+                    {
+                        "title": "Desarrollo de MVP",
+                        "desc": "Construcción rápida de productos mínimos viables para validar mercados con rigor técnico."
+                    },
+                    {
+                        "title": "Desarrollo de Apps Web y Móviles (iOS/Android)",
+                        "desc": "Aplicaciones multiplataforma fluidas con las últimas tecnologías híbridas y nativas."
+                    },
+                    {
+                        "title": "Diseño UX/UI",
+                        "desc": "Experiencias de usuario de clase mundial que combinan estética premium y funcionalidad."
+                    },
+                    {
+                        "title": "Aplicaciones SaaS y Cloud",
+                        "desc": "Arquitecturas multi-tenant seguras preparadas para el crecimiento masivo de usuarios."
+                    },
+                    {
+                        "title": "Desarrollo Back-End y Front-End",
+                        "desc": "Ingeniería integral que garantiza rendimiento en el servidor y reactividad en el cliente."
+                    },
+                    {
+                        "title": "Desarrollo de Software Empresarial",
+                        "desc": "Soluciones a gran escala para automatizar flujos críticos en organizaciones complejas."
+                    },
+                    {
+                        "title": "Desarrollo de dApps y Blockchain",
+                        "desc": "Implementación de tecnologías descentralizadas, smart contracts y seguridad Web3."
+                    }
                 ]
             },
             {
                 "title": "QA, Testing, Maintenance & Modernization",
                 "items": [
-                    { "title": "Migración de Aplicaciones Legacy", "desc": "Modernización de sistemas antiguos a arquitecturas modernas sin interrupción operativa." },
-                    { "title": "QA y Testing de Software", "desc": "Ciclos de control de calidad exhaustivos para garantizar productos libres de errores." },
-                    { "title": "Testing Manual y Automatizado", "desc": "Scripts de prueba inteligentes que aceleran el despliegue manteniendo la integridad." },
-                    { "title": "Ciberseguridad y Pentesting", "desc": "Protección proactiva de datos y pruebas de penetración para mitigar vulnerabilidades." },
-                    { "title": "DevOps y Automatización de Despliegues", "desc": "Implementación de pipelines CI/CD que optimizan la entrega continua de valor." },
-                    { "title": "Transformación Digital", "desc": "Consultoría estratégica para integrar tecnología de vanguardia en modelos de negocio." }
+                    {
+                        "title": "Migración de Aplicaciones Legacy",
+                        "desc": "Modernización de sistemas antiguos a arquitecturas modernas sin interrupción operativa."
+                    },
+                    {
+                        "title": "QA y Testing de Software",
+                        "desc": "Ciclos de control de calidad exhaustivos para garantizar productos libres de errores."
+                    },
+                    {
+                        "title": "Testing Manual y Automatizado",
+                        "desc": "Scripts de prueba inteligentes que aceleran el despliegue manteniendo la integridad."
+                    },
+                    {
+                        "title": "Ciberseguridad y Pentesting",
+                        "desc": "Protección proactiva de datos y pruebas de penetración para mitigar vulnerabilidades."
+                    },
+                    {
+                        "title": "DevOps y Automatización de Despliegues",
+                        "desc": "Implementación de pipelines CI/CD que optimizan la entrega continua de valor."
+                    },
+                    {
+                        "title": "Transformación Digital",
+                        "desc": "Consultoría estratégica para integrar tecnología de vanguardia en modelos de negocio."
+                    }
                 ]
             },
             {
                 "title": "Cloud & Advanced Technologies",
                 "items": [
-                    { "title": "Inteligencia Artificial y Machine Learning", "desc": "Entrenamiento de modelos y algoritmos predictivos para ventajas competitivas reales." },
-                    { "title": "Computación y Migración a la Nube", "desc": "Transición segura a la nube y optimización de costos de infraestructura global." },
-                    { "title": "Big Data y Almacenamiento de Datos", "desc": "Gestión de grandes volúmenes de información para análisis estratégico en tiempo real." },
-                    { "title": "Deep Learning y Visión Artificial", "desc": "Tecnología avanzada para el reconocimiento de patrones y procesamiento de imágenes." },
-                    { "title": "Automatización Robótica de Procesos (RPA)", "desc": "Software inteligente que automatiza tareas repetitivas de alta carga operativa." },
-                    { "title": "Realidad Aumentada, Virtual y Metaverso", "desc": "Creación de experiencias inmersivas que definen el futuro de la interacción digital." }
+                    {
+                        "title": "Inteligencia Artificial y Machine Learning",
+                        "desc": "Entrenamiento de modelos y algoritmos predictivos para ventajas competitivas reales."
+                    },
+                    {
+                        "title": "Computación y Migración a la Nube",
+                        "desc": "Transición segura a la nube y optimización de costos de infraestructura global."
+                    },
+                    {
+                        "title": "Big Data y Almacenamiento de Datos",
+                        "desc": "Gestión de grandes volúmenes de información para análisis estratégico en tiempo real."
+                    },
+                    {
+                        "title": "Deep Learning y Visión Artificial",
+                        "desc": "Tecnología avanzada para el reconocimiento de patrones y procesamiento de imágenes."
+                    },
+                    {
+                        "title": "Automatización Robótica de Procesos (RPA)",
+                        "desc": "Software inteligente que automatiza tareas repetitivas de alta carga operativa."
+                    },
+                    {
+                        "title": "Realidad Aumentada, Virtual y Metaverso",
+                        "desc": "Creación de experiencias inmersivas que definen el futuro de la interacción digital."
+                    }
                 ]
             }
         ]
