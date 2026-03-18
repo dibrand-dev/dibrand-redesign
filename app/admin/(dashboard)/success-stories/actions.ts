@@ -3,6 +3,7 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { logAdminAction } from '@/lib/logging';
 
 export async function getSuccessStories() {
     try {
@@ -338,6 +339,8 @@ export async function createSuccessStory(payload: any) {
     const { data: newRow } = await supabase.from('success_stories').select('sort_order').eq('title_es', payload.title_es).single();
     await syncToCaseStudies({ ...payload, sort_order: newRow?.sort_order || 0 });
 
+    await logAdminAction('creó el caso', 'case_study', payload.client_name);
+
     revalidatePath('/admin/success-stories');
     redirect('/admin/success-stories');
 }
@@ -429,6 +432,8 @@ export async function updateSuccessStory(id: string, payload: any) {
             });
         }
 
+        await logAdminAction('actualizó el caso', 'case_study', payload.client_name);
+
         revalidatePath('/admin/success-stories');
         revalidatePath(`/[lang]/success-stories/${id}`);
     } catch (e: any) {
@@ -445,6 +450,9 @@ export async function deleteSuccessStory(id: string) {
         .delete()
         .eq('id', id);
     if (error) throw new Error(error.message);
+
+    await logAdminAction('eliminó el caso', 'case_study', id);
+
     revalidatePath('/admin/success-stories');
 }
 

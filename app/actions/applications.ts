@@ -2,6 +2,7 @@
 
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { revalidatePath } from 'next/cache';
+import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
 
 export async function submitApplication(formData: any) {
     const dataToInsert = {
@@ -19,6 +20,15 @@ export async function submitApplication(formData: any) {
         // Throw a more descriptive error that includes the Postgres message
         throw new Error(error.message + (error.details ? ': ' + error.details : ''));
     }
+
+    // Create notification
+    await createNotification({
+        type: 'candidate',
+        title: 'Nuevo Candidato Recibido',
+        description: `Nuevo CV recibido: ${formData.full_name || 'Desconocido'}`,
+        link: '/admin/candidates?status=New',
+        metadata: { name: formData.full_name, email: formData.email }
+    });
 
     revalidatePath('/admin/candidates');
     return { success: true };

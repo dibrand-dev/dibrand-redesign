@@ -24,13 +24,13 @@ import LogoutButton from './LogoutButton';
 const MENU_ITEMS = [
     { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { label: 'Clientes', href: '/admin/brands', icon: Building2 },
-    { label: 'Success Stories', href: '/admin/success-stories', icon: Trophy },
-    { label: 'Testimonials', href: '/admin/testimonials', icon: MessageSquare },
-    { label: 'Job Openings', href: '/admin/jobs', icon: Briefcase },
-    { label: 'Candidates', href: '/admin/candidates', icon: Users },
+    { label: 'Casos de Éxito', href: '/admin/success-stories', icon: Trophy },
+    { label: 'Testimonios', href: '/admin/testimonials', icon: MessageSquare },
+    { label: 'Búsquedas Laborales', href: '/admin/jobs', icon: Briefcase },
+    { label: 'Candidatos', href: '/admin/candidates', icon: Users },
     { label: 'Tech Stacks', href: '/admin/stacks', icon: Code },
     { label: 'Administradores', href: '/admin/users', icon: Settings },
-    { label: 'Settings', href: '/admin/settings', icon: Settings },
+    { label: 'Configuración', href: '/admin/settings', icon: Settings },
 ];
 
 export default function Sidebar() {

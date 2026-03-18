@@ -15,7 +15,7 @@ interface SoftwareOutsourcingHeroProps {
 
 export default function SoftwareOutsourcingHero({ dict, lang }: SoftwareOutsourcingHeroProps) {
     return (
-        <section className="relative h-[80vh] min-h-[600px] w-full overflow-hidden flex flex-col">
+        <section className="relative h-[70vh] min-h-[600px] w-full overflow-hidden flex flex-col">
             <Image
                 src="/images/outsourcing.png"
                 alt="Dibrand Software Outsourcing - End-to-End Product Development"

@@ -1,4 +1,6 @@
 'use server'
+import { createAdminClient } from '@/lib/supabase-server';
+import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
 
 interface ZohoFormData {
     xnQsjsdp: string;
@@ -46,6 +48,31 @@ export async function submitToZoho(formData: FormData) {
         // Zoho WebToLead often behaves weirdly (redirecting), but fetch might follow it.
 
         if (response.ok) {
+            // Save to Supabase Leads table as well
+            try {
+                const supabase = createAdminClient();
+                await supabase.from('leads').insert({
+                    name: `${data['First Name']} ${data['Last Name']}`,
+                    email: data['Email'],
+                    company: data['Company'],
+                    message: data['Description'],
+                    service_interest: 'Contact Form'
+                });
+
+                // Create notification
+                await createNotification({
+                    type: 'lead',
+                    title: 'Nuevo Lead Recibido',
+                    description: `Nueva consulta de contacto: ${data['Company'] || data['Email']}`,
+                    link: '/admin/dashboard', // Or wherever leads are listed
+                    metadata: { company: data['Company'], email: data['Email'] }
+                });
+            } catch (dbError) {
+                console.error('Error saving lead to Supabase:', dbError);
+                // We don't fail the whole action if only Supabase fails, 
+                // as Zoho is the primary destination.
+            }
+
             return { success: true };
         } else {
             console.error('Zoho Error:', response.status, response.statusText);

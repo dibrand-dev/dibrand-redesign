@@ -10,6 +10,7 @@ import PortfolioFilters from '@/components/portfolio/PortfolioFilters';
 import { MAP_OLD_INDUSTRY } from '@/lib/case-constants';
 import { Calendar } from 'lucide-react';
 import ScheduleButton from '@/components/ui/ScheduleButton';
+import PortfolioTracker from '@/components/portfolio/PortfolioTracker';
 
 interface CaseStudy {
     id: string;
@@ -98,6 +99,7 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
 
     return (
         <div className="flex min-h-screen flex-col bg-white">
+            <PortfolioTracker />
             <main className="flex-grow pt-8 pb-20">
                 <div className="container mx-auto px-6 max-w-7xl">
                     {/* Header Section */}

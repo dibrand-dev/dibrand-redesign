@@ -3,6 +3,7 @@
 
 import { createAdminClient } from '@/lib/supabase-server';
 import { revalidatePath } from 'next/cache';
+import { logAdminAction } from '@/lib/logging';
 
 export async function getJobs() {
     const supabase = createAdminClient();
@@ -53,6 +54,9 @@ export async function createJob(formData: any) {
         }]);
 
     if (error) throw error;
+
+    await logAdminAction('publicó búsqueda', 'job_opening', formData.title_es || formData.title);
+
     revalidatePath('/admin/jobs');
     revalidatePath('/en/join-us');
     revalidatePath('/es/join-us');
@@ -86,6 +90,9 @@ export async function updateJob(id: string, formData: any) {
         .eq('id', id);
 
     if (error) throw error;
+
+    await logAdminAction('actualizó búsqueda', 'job_opening', formData.title_es || formData.title);
+
     revalidatePath('/admin/jobs');
     revalidatePath(`/en/join-us/${id}`);
     revalidatePath(`/es/join-us/${id}`);
@@ -102,6 +109,9 @@ export async function toggleJobStatus(id: string, currentStatus: boolean) {
         .eq('id', id);
 
     if (error) throw error;
+
+    await logAdminAction(currentStatus ? 'pausó búsqueda' : 'activó búsqueda', 'job_opening', id);
+
     revalidatePath('/admin/jobs');
     return { success: true };
 }
@@ -114,6 +124,9 @@ export async function deleteJob(id: string) {
         .eq('id', id);
 
     if (error) throw error;
+
+    await logAdminAction('eliminó búsqueda', 'job_opening', id);
+
     revalidatePath('/admin/jobs');
     return { success: true };
 }

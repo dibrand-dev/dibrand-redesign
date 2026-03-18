@@ -15,7 +15,7 @@ interface StaffAugHeroProps {
 
 export default function StaffAugHero({ dict, lang }: StaffAugHeroProps) {
     return (
-        <section className="relative h-[80vh] min-h-[600px] w-full overflow-hidden flex flex-col">
+        <section className="relative h-[70vh] min-h-[600px] w-full overflow-hidden flex flex-col">
             {/* Capa 1: Imagen de Fondo */}
             <Image
                 src="/images/hero-staff-aug.png"

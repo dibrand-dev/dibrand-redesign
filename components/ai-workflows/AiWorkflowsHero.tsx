@@ -15,7 +15,7 @@ interface AiWorkflowsHeroProps {
 
 export default function AiWorkflowsHero({ dict, lang }: AiWorkflowsHeroProps) {
     return (
-        <section className="relative h-[80vh] min-h-[600px] w-full overflow-hidden flex flex-col">
+        <section className="relative h-[70vh] min-h-[600px] w-full overflow-hidden flex flex-col">
             <Image
                 src="/images/ai-workflows-hero.png"
                 alt="Dibrand AI Workflows & Data Intelligence"

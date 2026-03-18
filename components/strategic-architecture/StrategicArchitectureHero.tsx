@@ -15,7 +15,7 @@ interface StrategicArchitectureHeroProps {
 
 export default function StrategicArchitectureHero({ dict, lang }: StrategicArchitectureHeroProps) {
     return (
-        <section className="relative h-[80vh] min-h-[600px] w-full overflow-hidden flex flex-col">
+        <section className="relative h-[70vh] min-h-[600px] w-full overflow-hidden flex flex-col">
             <Image
                 src="/images/strategic-architecture-hero.png"
                 alt="Dibrand Strategic Software Architecture"

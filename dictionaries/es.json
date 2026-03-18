@@ -544,8 +544,8 @@
     },
     "softwareDevelopment": {
         "hero": {
-            "title": "Ingeniería de Software de Clase Mundial impulsada por IA.",
-            "subtitle": "Combinamos el rigor técnico del top 3% de talento en LATAM con flujos de trabajo nativos de IA para entregar software escalable, seguro y de alto impacto.",
+            "title": "INGENIERÍA DE SOFTWARE DE CLASE MUNDIAL IMPULSADA POR IA.",
+            "subtitle": "Construimos productos digitales que definen industrias. Combinamos el rigor técnico del top 3% de talento en LATAM con flujos de trabajo nativos de IA para entregar software escalable, seguro y de alto impacto.",
             "cta": "Empezar un proyecto"
         },
         "services": {
@@ -572,10 +572,18 @@
         "advantage": {
             "title": "The Dibrand Advantage",
             "items": [
-                { "title": "Elite Talent Only" },
-                { "title": "AI-Driven Efficiency" },
-                { "title": "Time-Zone Alignment" },
-                { "title": "Agile Precision" }
+                {
+                    "title": "Elite Talent Only"
+                },
+                {
+                    "title": "AI-Driven Efficiency"
+                },
+                {
+                    "title": "Time-Zone Alignment"
+                },
+                {
+                    "title": "Agile Precision"
+                }
             ]
         },
         "finalCta": {

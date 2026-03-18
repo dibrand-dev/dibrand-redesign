@@ -10,6 +10,7 @@ import Footer from "@/components/layout/Footer";
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import ScheduleButton from '@/components/ui/ScheduleButton';
+import PortfolioTracker from '@/components/portfolio/PortfolioTracker';
 import { CASE_INDUSTRIES, MAP_OLD_PROJECT_TYPE, cleanOldServiceName, MAP_OLD_INDUSTRY } from '@/lib/case-constants';
 
 export const dynamic = 'force-dynamic';
@@ -223,6 +224,7 @@ export default async function CaseStudyDetailPage({ params }: Props) {
 
         return (
             <div className="flex min-h-screen flex-col bg-white pt-24 md:pt-28">
+                <PortfolioTracker />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

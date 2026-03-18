@@ -22,7 +22,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ dict }: HeroSectionProps) {
     return (
-        <section className="relative w-full overflow-hidden flex flex-col" style={{ minHeight: '100svh' }}>
+        <section className="relative w-full h-[70vh] min-h-[600px] overflow-hidden flex flex-col">
             {/* Capa 1: Imagen de Fondo */}
             <Image
                 src="/oficina-dibrand.png"
@@ -32,8 +32,8 @@ export default function HeroSection({ dict }: HeroSectionProps) {
                 className="object-cover object-center z-0"
             />
 
-            {/* Capa 2: Overlay de Marca - gradient from top to bottom, covers full height */}
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-zinc-950/85 via-zinc-950/70 to-zinc-950/90" />
+            {/* Capa 2: Overlay de Marca - flat color for readability and consistency */}
+            <div className="absolute inset-0 z-10 bg-zinc-950/75" />
 
             {/* Capa 3: Contenido de Texto */}
             <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-28 pb-20 md:pb-28">
