@@ -30,7 +30,7 @@ export default async function SoftwareDevelopmentPage(props: { params: Promise<{
             <SoftwareDevHero dict={content.hero} />
 
             {/* 2. Core Services Grid */}
-            <SoftwareDevServices dict={content.services} />
+            <SoftwareDevServices dict={content.services} lang={params.lang} />
 
             {/* 3. The Dibrand Advantage */}
             <SoftwareDevAdvantage dict={content.advantage} />

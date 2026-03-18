@@ -1,23 +1,38 @@
-import { Code2, Cpu, DraftingCompass, LayoutPanelLeft } from 'lucide-react';
+import { Code2, Cpu, DraftingCompass, LayoutPanelLeft, ArrowUpRight } from 'lucide-react';
+import Link from 'next/link';
 
 interface SoftwareDevServicesProps {
     dict: {
         title: string;
+        everythingLink?: string;
         items: Array<{ title: string; desc: string }>;
     };
+    lang: string;
 }
 
 const icons = [Code2, Cpu, DraftingCompass, LayoutPanelLeft];
 
-export default function SoftwareDevServices({ dict }: SoftwareDevServicesProps) {
+export default function SoftwareDevServices({ dict, lang }: SoftwareDevServicesProps) {
     return (
-        <section className="py-16 md:py-24 bg-zinc-50">
+        <section className="py-16 md:py-24 bg-zinc-50 border-t border-zinc-100">
             <div className="container mx-auto px-6 max-w-7xl">
-                <header className="mb-16 md:mb-20">
-                    <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 font-outfit uppercase tracking-tighter mb-6">
-                        {dict.title}
-                    </h2>
-                    <div className="h-1 w-24 bg-brand" />
+                <header className="mb-16 md:mb-20 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 font-outfit uppercase tracking-tighter mb-6">
+                            {dict.title}
+                        </h2>
+                        <div className="h-1 w-24 bg-brand" />
+                    </div>
+                    
+                    {dict.everythingLink && (
+                        <Link 
+                            href={`/${lang}/solutions`}
+                            className="group flex items-center gap-2 text-zinc-900 font-outfit font-bold text-lg hover:text-brand transition-colors duration-300"
+                        >
+                            {dict.everythingLink}
+                            <ArrowUpRight className="text-brand group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" size={24} />
+                        </Link>
+                    )}
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">

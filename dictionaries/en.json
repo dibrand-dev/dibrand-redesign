@@ -550,6 +550,7 @@
         },
         "services": {
             "title": "Core Services",
+            "everythingLink": "Everything we do",
             "items": [
                 {
                     "title": "Custom Software Development",
