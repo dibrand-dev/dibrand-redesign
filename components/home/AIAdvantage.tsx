@@ -14,7 +14,7 @@ export default function AIAdvantage({ dict }: AIAdvantageProps) {
     const { title, content } = dict.aiAdvantage;
 
     return (
-        <section className="relative w-full py-24 bg-zinc-950 overflow-hidden">
+        <section className="relative w-full py-12 bg-zinc-950 overflow-hidden">
             {/* Background elements */}
             <div className="absolute top-0 left-0 w-full h-full opacity-30">
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand/20 blur-[120px] rounded-full" />

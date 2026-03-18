@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { UserCheck, Heart, Zap, Users, ArrowRight } from 'lucide-react';
+import { UserCheck, Heart, Zap, Users, ArrowUpRight } from 'lucide-react';
 
 const pillars = [
     {
@@ -35,15 +35,15 @@ const teamRoles = [
 
 export default function StaffAugmentation() {
     return (
-        <section className="relative w-full py-24 bg-[#0A0A0A] overflow-hidden" id="staff-augmentation">
+        <section className="relative w-full py-12 bg-[#0A0A0A] overflow-hidden" id="staff-augmentation">
             {/* Background geometric 'life' elements */}
             <div className="absolute top-1/4 -right-20 w-96 h-96 bg-brand/10 blur-[120px] rounded-full" />
             <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-[#3B82F6]/10 blur-[120px] rounded-full" />
 
             <div className="container mx-auto px-6 relative z-10">
                 {/* 1. Encabezado y Texto */}
-                <div className="text-center max-w-4xl mx-auto mb-20">
-                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-outfit tracking-tight">
+                <div className="text-center max-w-4xl mx-auto mb-10">
+                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 font-outfit tracking-tight">
                         Talento que potencia tu visión.
                     </h2>
                     <p className="text-xl md:text-2xl text-gray-400 font-outfit font-light">
@@ -52,7 +52,7 @@ export default function StaffAugmentation() {
                 </div>
 
                 {/* 2. Grid de 4 Pilares */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-24">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
                     {pillars.map((pillar, index) => (
                         <div key={index} className="flex gap-6 p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-brand/50 transition-colors group">
                             <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center text-brand group-hover:bg-brand group-hover:text-white transition-all duration-300">
@@ -95,10 +95,10 @@ export default function StaffAugmentation() {
                 <div className="flex justify-center">
                     <Link
                         href="/staff-augmentation"
-                        className="inline-flex items-center gap-4 px-12 py-6 bg-white text-black font-black text-lg rounded-full hover:bg-brand hover:text-white transition-all duration-300 shadow-2xl hover:shadow-brand/30 active:scale-95 group"
+                        className="inline-flex items-center gap-3 px-10 py-5 bg-white text-black font-black text-lg rounded-full hover:bg-brand hover:text-white hover:scale-[1.02] transition-all duration-300 shadow-2xl hover:shadow-brand/30 group"
                     >
                         Explorar Staff Augmentation
-                        <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+                        <ArrowUpRight size={22} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                     </Link>
                 </div>
             </div>

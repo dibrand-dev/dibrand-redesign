@@ -7,6 +7,7 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { CONTACT_CALENDAR_URL } from '@/lib/constants';
 import { trackAppointmentClick } from '@/lib/gtm';
+import { ArrowUpRight } from 'lucide-react';
 
 interface NavbarProps {
     dict: {
@@ -202,9 +203,10 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={() => trackAppointmentClick(dict.navigation.conversionCta)}
-                                className="block w-full text-center bg-white text-black px-6 py-4 rounded-xl text-sm font-bold hover:bg-gray-200 transition-all hover:scale-[1.02]"
+                                className="inline-flex items-center justify-center gap-3 w-full text-center bg-white text-black px-8 py-4 rounded-full text-sm font-bold hover:bg-brand hover:text-white hover:scale-[1.02] transition-all group"
                             >
                                 {dict.navigation.conversionCta}
+                                <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                             </a>
                         </div>
 

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
@@ -59,7 +59,7 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
     }
 
     return (
-        <section className="bg-white py-24 md:py-32 overflow-hidden">
+        <section className="bg-white py-12 md:py-16 overflow-hidden">
             <div className="container mx-auto px-4 max-w-7xl">
                 {/* Header Section */}
                 <motion.div
@@ -67,7 +67,7 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8"
+                    className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-8"
                 >
                     <div>
                         <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight leading-tight">
@@ -78,10 +78,10 @@ export default function SelectedWork({ dict, lang, cases }: SelectedWorkProps) {
 
                     <Link
                         href={`/${lang}/success-stories`}
-                        className="inline-flex items-center gap-2 text-[#a04c97] font-bold font-outfit uppercase tracking-widest text-[10px] hover:opacity-80 transition-all border border-[#a04c97]/20 px-6 py-3 rounded-full hover:bg-[#a04c97]/5 mb-1"
+                        className="inline-flex items-center gap-2 text-[#a04c97] font-bold font-outfit uppercase tracking-widest text-[10px] hover:scale-[1.02] transition-all border border-[#a04c97]/20 px-6 py-3 rounded-full hover:bg-[#a04c97]/5 mb-1 group"
                     >
                         {dict.selectedWork.cta}
-                        <ArrowRight size={14} />
+                        <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </Link>
                 </motion.div>
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowUpRight } from 'lucide-react';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 import { submitToZoho } from '@/app/actions/submitToZoho';
@@ -185,10 +185,10 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
               type="submit"
               disabled={isSubmitting}
               className={clsx(
-                "w-full md:w-64 py-5 px-8 rounded-lg text-lg font-bold text-white transition-all transform hover:-translate-y-1 hover:shadow-2xl",
+                "inline-flex items-center justify-center gap-3 w-full md:w-auto px-10 py-5 rounded-full text-base font-bold text-white transition-all hover:scale-[1.02] group",
                 isSubmitting
-                  ? "bg-gray-600 cursor-not-allowed"
-                  : "bg-gradient-to-r from-brand to-brand hover:opacity-90 shadow-lg shadow-purple-500/20"
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-brand shadow-lg shadow-brand/20 hover:bg-brand/90"
               )}
             >
               {isSubmitting ? (
@@ -197,7 +197,10 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
                   {dict.contact.form.sending}
                 </span>
               ) : (
-                dict.contact.form.submit
+                <>
+                  {dict.contact.form.submit}
+                  <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </>
               )}
             </button>
           </div>
