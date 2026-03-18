@@ -73,13 +73,20 @@ export default function Navbar({ dict, lang }: NavbarProps) {
 
 
     
+    const softwareDevLink = { name: dict.navigation.softwareDevelopment, href: `/${lang}/software-development` };
+    const softwareOutLink = { name: dict.navigation.softwareOutsourcing, href: `/${lang}/software-outsourcing` };
+    const staffAugLink = { name: dict.navigation.staffAugmentation, href: `/${lang}/staff-augmentation` };
+    const portfolioLink = { name: dict.navigation.portfolio, href: `/${lang}/success-stories` };
+    const careersLink = { name: dict.navigation.careers, href: `/${lang}/join-us` };
+    const aboutLink = { name: dict.navigation.aboutUs, href: `/${lang}/about` };
+
     const navLinks = [
-        { name: dict.navigation.softwareDevelopment, href: `/${lang}/software-development` },
-        { name: dict.navigation.softwareOutsourcing, href: `/${lang}/software-outsourcing` },
-        { name: dict.navigation.staffAugmentation, href: `/${lang}/staff-augmentation` },
-        { name: dict.navigation.portfolio, href: `/${lang}/success-stories` },
-        { name: dict.navigation.careers, href: `/${lang}/join-us` },
-        { name: dict.navigation.aboutUs, href: `/${lang}/about` },
+        softwareDevLink,
+        softwareOutLink,
+        staffAugLink,
+        portfolioLink,
+        careersLink,
+        aboutLink,
     ];
 
     return (
