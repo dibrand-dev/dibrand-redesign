@@ -595,5 +595,38 @@
             "title": "¿Listo para convertir tu visión en una ventaja competitiva?",
             "cta": "Hablemos de tu proyecto"
         }
+    },
+    "solutions": {
+        "hero": {
+            "title": "Nuestras Soluciones",
+            "subtitle": "Capacidades de ingeniería de clase mundial para escalar tu producto digital.",
+            "cta": "Agendar consulta técnica"
+        },
+        "categories": [
+            {
+                "title": "Software Development & Design",
+                "items": [
+                    { "title": "Custom Software", "desc": "Desarrollo a medida con las últimas tecnologías." },
+                    { "title": "UX/UI", "desc": "Interfaces intuitivas y experiencias de usuario excepcionales." },
+                    { "title": "Web & Mobile Development", "desc": "Soluciones multiplataforma escalables y seguras." }
+                ]
+            },
+            {
+                "title": "QA, Testing, Maintenance & Modernization",
+                "items": [
+                    { "title": "Quality Assurance", "desc": "Pruebas rigurosas para garantizar la estabilidad total." },
+                    { "title": "Legacy Migration", "desc": "Modernización de sistemas antiguos con riesgo cero." },
+                    { "title": "Support", "desc": "Mantenimiento proactivo y soporte técnico 24/7." }
+                ]
+            },
+            {
+                "title": "Cloud & Advanced Technologies",
+                "items": [
+                    { "title": "Cloud Infrastructure", "desc": "Arquitecturas en la nube optimizadas para el rendimiento." },
+                    { "title": "AI Implementation", "desc": "Integración de inteligencia artificial en flujos reales." },
+                    { "title": "Data Science", "desc": "Análisis avanzado para decisiones basadas en datos." }
+                ]
+            }
+        ]
     }
 }

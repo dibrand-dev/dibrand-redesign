@@ -595,5 +595,38 @@
             "title": "Ready to turn your vision into a competitive advantage?",
             "cta": "Let’s talk about your project"
         }
+    },
+    "solutions": {
+        "hero": {
+            "title": "Our Solutions",
+            "subtitle": "World-class engineering capabilities to scale your digital product.",
+            "cta": "Schedule a call"
+        },
+        "categories": [
+            {
+                "title": "Software Development & Design",
+                "items": [
+                    { "title": "Custom Software", "desc": "Bespoke development with the latest tech stack." },
+                    { "title": "UX/UI", "desc": "Intuitive interfaces and exceptional user experiences." },
+                    { "title": "Web & Mobile Development", "desc": "Scalable and secure multi-platform solutions." }
+                ]
+            },
+            {
+                "title": "QA, Testing, Maintenance & Modernization",
+                "items": [
+                    { "title": "Quality Assurance", "desc": "Rigorous testing to ensure total stability." },
+                    { "title": "Legacy Migration", "desc": "Legacy system modernization with zero risk." },
+                    { "title": "Support", "desc": "Proactive maintenance and 24/7 technical support." }
+                ]
+            },
+            {
+                "title": "Cloud & Advanced Technologies",
+                "items": [
+                    { "title": "Cloud Infrastructure", "desc": "Cloud architectures optimized for performance." },
+                    { "title": "AI Implementation", "desc": "Integration of artificial intelligence into real workflows." },
+                    { "title": "Data Science", "desc": "Advanced analytics for data-driven decisions." }
+                ]
+            }
+        ]
     }
 }
