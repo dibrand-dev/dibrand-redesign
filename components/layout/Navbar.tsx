@@ -116,6 +116,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                         <Link
                             key={idx}
                             href={link.href}
+                            prefetch={false}
                             className={clsx(
                                 "text-[11px] font-bold font-outfit uppercase tracking-[0.12em] transition-all duration-300 hover:text-brand whitespace-nowrap",
                                 pathname === link.href ? "text-brand" : "text-zinc-900"
@@ -168,6 +169,7 @@ export default function Navbar({ dict, lang }: NavbarProps) {
                                 <Link
                                     key={idx}
                                     href={link.href}
+                                    prefetch={false}
                                     onClick={() => setIsOpen(false)}
                                     className="text-3xl lg:text-5xl font-bold text-white hover:text-brand transition-all duration-300 w-fit font-outfit tracking-tight group flex items-center gap-4"
                                 >
