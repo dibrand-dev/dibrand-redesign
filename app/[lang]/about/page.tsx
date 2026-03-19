@@ -47,7 +47,7 @@ export default async function AboutPage({ params }: Props) {
                 {/* 3. The Elite 3% Selection Process */}
                 <EliteTalent 
                     dict={content.eliteTalent} 
-                    imagePath="/images/elite-talent-v3.png" 
+                    imagePath="/images/elite-talent-clean.png" 
                 />
 
                 {/* 4. AI-Native DNA Section */}
