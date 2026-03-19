@@ -13,20 +13,21 @@ export default function EliteTalent({ dict, imagePath }: EliteTalentProps) {
         <section className="py-24 bg-white overflow-hidden">
             <div className="container mx-auto px-6">
                 <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-                    {/* Image Side */}
+                    {/* Image Side - Flat Portrait Panel (Design System V3) */}
                     <div className="w-full lg:w-1/2 relative aspect-square max-w-xl mx-auto lg:mx-0">
-                        <div className="absolute inset-0 bg-brand/5 rounded-[2rem] -rotate-6 scale-105" />
-                        <div className="relative h-full w-full rounded-[2rem] overflow-hidden shadow-2xl">
+                        <div className="relative h-full w-full rounded-[2rem] overflow-hidden shadow-none border border-zinc-100">
                             <Image
                                 src={imagePath}
                                 alt="Elite Talent Selection"
                                 fill
                                 className="object-cover"
                             />
-                        </div>
-                        {/* Decorative Badge */}
-                        <div className="absolute -bottom-6 -right-6 bg-zinc-950 text-white p-8 rounded-full w-32 h-32 flex items-center justify-center text-center leading-tight font-bold font-outfit text-sm rotate-12 shadow-xl border border-white/10">
-                            THE ELITE<br/>3%
+                            
+                            {/* Decorative Badge - Solid Black Circle (Flat Design) */}
+                            <div className="absolute bottom-8 right-8 bg-black text-white w-28 h-28 rounded-full flex flex-col items-center justify-center text-center border border-white/10 shadow-none z-10">
+                                <span className="font-outfit text-[10px] tracking-[0.2em] font-normal mb-1 opacity-80">THE ELITE</span>
+                                <span className="font-outfit font-bold text-3xl">3%</span>
+                            </div>
                         </div>
                     </div>
                     
