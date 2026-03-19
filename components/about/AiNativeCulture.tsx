@@ -14,7 +14,7 @@ export default function AiNativeCulture({ dict, imagePath }: AiNativeCultureProp
             <div className="container mx-auto px-6">
                 <div className="flex flex-col lg:flex-row-reverse items-center gap-16 lg:gap-24">
                     {/* Image Side */}
-                    <div className="w-full lg:w-1/2 relative aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl group">
+                    <div className="w-full lg:w-1/2 relative aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl group">
                         <Image
                             src={imagePath}
                             alt="AI Native Engineering Culture"

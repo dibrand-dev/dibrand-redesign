@@ -15,8 +15,8 @@ export default function EliteTalent({ dict, imagePath }: EliteTalentProps) {
                 <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
                     {/* Image Side */}
                     <div className="w-full lg:w-1/2 relative aspect-square max-w-xl mx-auto lg:mx-0">
-                        <div className="absolute inset-0 bg-brand/5 rounded-[3rem] -rotate-6 scale-105" />
-                        <div className="relative h-full w-full rounded-[3rem] overflow-hidden shadow-2xl">
+                        <div className="absolute inset-0 bg-brand/5 rounded-[2rem] -rotate-6 scale-105" />
+                        <div className="relative h-full w-full rounded-[2rem] overflow-hidden shadow-2xl">
                             <Image
                                 src={imagePath}
                                 alt="Elite Talent Selection"
