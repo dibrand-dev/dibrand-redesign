@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { getDictionary } from "@/lib/dictionaries";
 import Footer from "@/components/layout/Footer";
+import FinalQuote from "@/components/ui/FinalQuote";
 import ScheduleButton from "@/components/ui/ScheduleButton";
 import TrustedBySection from "@/components/home/TrustedBySection";
 import { supabase } from "@/lib/supabase";
@@ -167,17 +168,11 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                             );
                         })}
                     </div>
-
-                    {/* High Impact Closing Phrase */}
-                    <div className="mt-24 text-center max-w-4xl mx-auto pb-8">
-                        <div className="inline-block h-px w-24 bg-gradient-to-r from-transparent via-brand to-transparent mb-12 opacity-30" />
-                        <p className="text-2xl md:text-3xl text-zinc-900 font-outfit font-medium italic leading-tight tracking-tight px-4">
-                            &ldquo;{content.pillars.lema}&rdquo;
-                        </p>
-                        <div className="mt-12 h-px w-24 bg-gradient-to-r from-transparent via-brand to-transparent mx-auto opacity-30" />
-                    </div>
                 </div>
             </section>
+
+            {/* High Impact Closing Phrase */}
+            <FinalQuote text={content.pillars.lema} />
 
             <Footer dict={dict} lang={params.lang} />
         </div>

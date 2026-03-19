@@ -11,13 +11,14 @@ interface Brand {
 interface TrustedBySectionProps {
     brands: Brand[];
     dict?: any;
+    className?: string;
 }
 
-export default function TrustedBySection({ brands, dict }: TrustedBySectionProps) {
+export default function TrustedBySection({ brands, dict, className = "py-12 md:py-16" }: TrustedBySectionProps) {
     if (!brands || brands.length === 0) return null;
 
     return (
-        <section className="bg-white py-12 md:py-16 overflow-hidden" id="clients">
+        <section className={`bg-white overflow-hidden ${className}`} id="clients">
             <div className="container mx-auto px-6 max-w-7xl">
                 <div className="mb-8 md:mb-10">
                     <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight leading-tight">

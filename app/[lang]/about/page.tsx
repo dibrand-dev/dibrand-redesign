@@ -7,6 +7,7 @@ import EliteTalent from '@/components/about/EliteTalent';
 import AiNativeCulture from '@/components/about/AiNativeCulture';
 import MinimalStats from '@/components/about/MinimalStats';
 import BrandValues from '@/components/about/BrandValues';
+import FinalQuote from '@/components/ui/FinalQuote';
 
 interface Props {
     params: Promise<{ lang: 'en' | 'es' }>;
@@ -59,16 +60,11 @@ export default async function AboutPage({ params }: Props) {
                 <BrandValues dict={content.values} />
 
                 {/* Closing Phrase (Refined) */}
-                <section className="py-24 bg-zinc-50 border-t border-zinc-100">
-                    <div className="container mx-auto px-6 text-center max-w-3xl">
-                        <div className="h-0.5 w-12 bg-zinc-300 mx-auto mb-10" />
-                        <h3 className="text-2xl md:text-3xl font-outfit font-light text-zinc-900 leading-tight italic">
-                            {lang === 'es' 
-                                ? "No construimos software para el hoy, diseñamos arquitecturas para el impacto del mañana."
-                                : "We don't build software for today, we design architectures for tomorrow's impact."}
-                        </h3>
-                    </div>
-                </section>
+                <FinalQuote 
+                    text={content.lemaLine1} 
+                    text2={content.lemaLine2} 
+                    variant="about" 
+                />
             </main>
             
             <Footer dict={dict} lang={lang} />

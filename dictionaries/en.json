@@ -540,7 +540,9 @@
                     "desc": "Direct and honest communication. No unnecessary management layers, just engineers solving problems."
                 }
             ]
-        }
+        },
+        "lemaLine1": "We Don’t Build Software For Today",
+        "lemaLine2": "We Design Architectures For Tomorrow’s Impact."
     },
     "softwareDevelopment": {
         "hero": {

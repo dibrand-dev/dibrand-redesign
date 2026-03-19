@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { getDictionary } from "@/lib/dictionaries";
 import Footer from "@/components/layout/Footer";
+import FinalQuote from "@/components/ui/FinalQuote";
 import SoftwareOutsourcingHero from "@/components/software-outsourcing/SoftwareOutsourcingHero";
 import TrustedBySection from "@/components/home/TrustedBySection";
 import { supabase } from "@/lib/supabase";
@@ -82,9 +83,6 @@ export default async function SoftwareOutsourcingPage(props: { params: Promise<{
             {/* Hero Section */}
             <SoftwareOutsourcingHero dict={content} lang={params.lang} />
 
-            {/* Social Proof Section */}
-            <TrustedBySection brands={brands} dict={dict} />
-
             {/* 4 Pillars Grid - Pure Seniority, Tech Alignment, Speed to Value, Boutique Quality */}
             <section className="py-24 bg-white">
                 <div className="container mx-auto px-6">
@@ -145,7 +143,7 @@ export default async function SoftwareOutsourcingPage(props: { params: Promise<{
             </section>
 
             {/* Nuestras Especialidades (Technical Specialties) */}
-            <section className="py-24 bg-white relative overflow-hidden border-t border-slate-100">
+            <section className="pt-24 pb-12 md:pb-16 bg-white relative overflow-hidden border-t border-slate-100">
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-12">
                         <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-4 font-outfit uppercase tracking-tight">
@@ -163,16 +161,15 @@ export default async function SoftwareOutsourcingPage(props: { params: Promise<{
                 </div>
             </section>
 
+            {/* Social Proof Section - Moved here */}
+            <TrustedBySection 
+                brands={brands} 
+                dict={dict} 
+                className="pt-12 md:pt-16 pb-24" 
+            />
+
             {/* High Impact Closing Phrase */}
-            <section className="py-24 bg-white">
-                <div className="container mx-auto px-6 flex flex-col items-center">
-                    <div className="inline-block h-px w-24 bg-gradient-to-r from-transparent via-brand to-transparent mb-12 opacity-30" />
-                    <p className="text-2xl md:text-3xl text-zinc-900 font-outfit font-medium italic leading-tight tracking-tight px-4 text-center">
-                        &ldquo;{content.pillars.lema}&rdquo;
-                    </p>
-                    <div className="mt-12 h-px w-24 bg-gradient-to-r from-transparent via-brand to-transparent mx-auto opacity-30" />
-                </div>
-            </section>
+            <FinalQuote text={content.pillars.lema} />
 
             <Footer dict={dict} lang={params.lang} />
         </div>
