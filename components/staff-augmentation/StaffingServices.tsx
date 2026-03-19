@@ -18,7 +18,7 @@ export default function StaffingServices({ dict }: StaffingServicesProps) {
     const { intro, categories } = dict;
 
     return (
-        <section className="bg-white pt-4 pb-16">
+        <section className="bg-white pt-20 pb-16">
             <div className="container mx-auto px-6">
                 {/* Header Section - Compact */}
                 <div className="max-w-4xl mb-12">

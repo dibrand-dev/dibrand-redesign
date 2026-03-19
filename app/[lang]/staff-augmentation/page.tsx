@@ -92,19 +92,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
             {/* Hero Section - Elevated with Background Image */}
             <StaffAugHero dict={content} lang={params.lang} />
 
-            {/* Detailed Section (The "What is") - Compact & Unified */}
-            <section className="bg-white pt-12 pb-2">
-                <div className="container mx-auto px-6">
-                    <div className="max-w-5xl mx-auto text-center">
-                        <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 mb-6 font-outfit tracking-tight">
-                            {content.whatIs.title}
-                        </h2>
-                        <p className="text-lg md:text-xl text-zinc-500 font-outfit font-light leading-relaxed">
-                            {content.whatIs.content}
-                        </p>
-                    </div>
-                </div>
-            </section>
+
 
             {/* New Staffing Services Section */}
             <StaffingServices dict={content.services} />
