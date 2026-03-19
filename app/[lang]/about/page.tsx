@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             : 'Discover the vision of Dibrand, the elite AI-driven software engineering boutique.',
         openGraph: {
             title: lang === 'es' ? 'Sobre Dibrand | Propósito y Valor' : 'About Dibrand | Purpose & Value',
-            images: ['/images/about-hero.png']
+            images: ['/images/about-hero-v2.jpg']
         }
     };
 }
@@ -38,7 +38,7 @@ export default async function AboutPage({ params }: Props) {
                 {/* 1. Impact Hero */}
                 <AboutHero 
                     dict={content.hero} 
-                    imagePath="/images/about-hero.png" 
+                    imagePath="/images/about-hero-v2.jpg" 
                 />
 
                 {/* 2. Trust Stats - Minimalist Design */}
