@@ -86,15 +86,20 @@ export default async function SoftwareOutsourcingPage(props: { params: Promise<{
             {/* 4 Pillars Grid - Pure Seniority, Tech Alignment, Speed to Value, Boutique Quality */}
             <section className="py-24 bg-white">
                 <div className="container mx-auto px-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {content.pillars.items.map((pillar: any, idx: number) => {
                             const Icon = pillarIcons[idx] || Shield;
                             return (
-                                <div key={idx} className="flex flex-col p-8 rounded-[2rem] bg-slate-50 border border-slate-100 hover:shadow-xl hover:shadow-purple-500/5 transition-all duration-500 group">
-                                    <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mb-6 shadow-sm group-hover:bg-brand transition-colors duration-500">
-                                        <Icon size={28} className="text-brand group-hover:text-white transition-colors duration-500" />
+                                <div 
+                                    key={idx} 
+                                    className="group p-8 md:p-10 rounded-[2rem] bg-white border border-zinc-100/80 shadow-sm hover:shadow-xl hover:shadow-zinc-200/50 hover:-translate-y-1 transition-all duration-400 flex flex-col items-center text-center"
+                                >
+                                    {/* Icon Circle */}
+                                    <div className="mb-8 h-16 w-16 rounded-full bg-brand/5 flex items-center justify-center text-brand group-hover:bg-brand/10 transition-all duration-500">
+                                        <Icon className="h-8 w-8" strokeWidth={1.5} />
                                     </div>
-                                    <h3 className="text-xl font-bold text-zinc-900 mb-4 font-outfit uppercase tracking-tight">
+
+                                    <h3 className="text-xl font-bold font-outfit text-zinc-900 tracking-tight mb-4 leading-snug uppercase">
                                         {pillar.title}
                                     </h3>
                                     <p className="text-zinc-500 font-outfit font-light leading-relaxed text-sm">
