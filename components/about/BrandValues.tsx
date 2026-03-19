@@ -29,8 +29,8 @@ export default function BrandValues({ dict }: BrandValuesProps) {
                         const Icon = icons[idx] || Shield;
                         return (
                             <div key={idx} className="flex flex-col items-center text-center p-8 rounded-[2rem] bg-zinc-50 border border-zinc-100 group hover:shadow-xl transition-all duration-500">
-                                <div className="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-6 group-hover:bg-brand transition-colors duration-500">
-                                    <Icon size={32} className="text-brand group-hover:text-white transition-colors duration-500" />
+                                <div className="w-20 h-20 rounded-full bg-brand/5 flex items-center justify-center mb-8 group-hover:bg-brand transition-colors duration-500">
+                                    <Icon size={36} className="text-brand group-hover:text-white transition-colors duration-500" />
                                 </div>
                                 <h3 className="text-xl font-bold font-outfit text-zinc-900 mb-4 uppercase tracking-tight">
                                     {item.title}
