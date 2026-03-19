@@ -6,7 +6,8 @@ interface StaffAugHeroProps {
     dict: {
         hero: {
             title: string;
-            subtitle: string;
+            subtitle1: string;
+            subtitle2: string;
             cta: string;
         };
     };
@@ -30,13 +31,18 @@ export default function StaffAugHero({ dict, lang }: StaffAugHeroProps) {
 
             {/* Capa 3: Contenido de Texto */}
             <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-32 pb-16">
-                <h1 className="font-outfit text-3xl md:text-5xl lg:text-[54px] font-bold tracking-tight text-white leading-[1.1] max-w-4xl capitalize">
+                <h1 className="font-outfit text-3xl md:text-5xl lg:text-[64px] font-bold tracking-tight text-white leading-[1.1] max-w-4xl capitalize">
                     {dict.hero.title}
                 </h1>
 
-                <p className="mt-4 md:mt-6 text-base md:text-xl leading-relaxed text-zinc-100 max-w-2xl font-outfit font-light">
-                    {dict.hero.subtitle}
-                </p>
+                <div className="mt-8 md:mt-10 max-w-3xl">
+                    <p className="text-xl md:text-3xl font-semibold text-white mb-4 font-outfit">
+                        {dict.hero.subtitle1}
+                    </p>
+                    <p className="text-base md:text-xl leading-relaxed text-zinc-100 font-outfit font-light max-w-2xl mx-auto">
+                        {dict.hero.subtitle2}
+                    </p>
+                </div>
 
                 <div className="mt-10 flex flex-col items-center w-full max-w-4xl">
                     <ScheduleButton text={dict.hero.cta} />

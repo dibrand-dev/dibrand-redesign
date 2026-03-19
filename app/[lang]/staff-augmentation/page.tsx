@@ -67,7 +67,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
             "name": "Dibrand",
             "url": "https://dibrand.co"
         },
-        "description": content.hero.subtitle,
+        "description": `${content.hero.subtitle1} ${content.hero.subtitle2}`,
         "areaServed": "Global",
         "hasOfferCatalog": {
             "@type": "OfferCatalog",

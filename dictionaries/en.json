@@ -192,7 +192,8 @@
     "staffAugmentation": {
         "hero": {
             "title": "Senior Staff Augmentation",
-            "subtitle": "Stop adding headcount. Start adding impact. Dibrand deploys AI-augmented engineering squads that don't just fill seats—they own your roadmap and accelerate your time-to-market.",
+            "subtitle1": "Stop adding headcount. Start adding impact.",
+            "subtitle2": "Dibrand deploys AI-augmented engineering squads that don't just fill a seat: they own your roadmap and accelerate your time-to-market.",
             "cta": "Schedule Staff Augmentation Consultation"
         },
         "whatIs": {

@@ -192,7 +192,8 @@
     "staffAugmentation": {
         "hero": {
             "title": "Senior Staff Augmentation",
-            "subtitle": "Deja de sumar headcount. Empieza a sumar impacto. Dibrand despliega squads de ingeniería aumentados por IA que no solo ocupan un lugar: se adueñan de tu roadmap y aceleran tu time-to-market.",
+            "subtitle1": "Deja de sumar headcount. Empieza a sumar impacto.",
+            "subtitle2": "Dibrand despliega Squads de ingeniería aumentados por IA que no solo ocupan un lugar: se adueñan de tu roadmap y aceleran tu time-to-market.",
             "cta": "Agendar una Cita"
         },
         "whatIs": {

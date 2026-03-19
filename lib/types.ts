@@ -63,7 +63,8 @@ export interface Dictionary {
     staffAugmentation: {
         hero: {
             title: string;
-            subtitle: string;
+            subtitle1: string;
+            subtitle2: string;
             cta: string;
         };
         whatIs: {
