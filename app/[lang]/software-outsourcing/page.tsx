@@ -99,7 +99,7 @@ export default async function SoftwareOutsourcingPage(props: { params: Promise<{
                                         <Icon className="h-8 w-8" strokeWidth={1.5} />
                                     </div>
 
-                                    <h3 className="text-xl font-bold font-outfit text-zinc-900 tracking-tight mb-4 leading-snug uppercase">
+                                    <h3 className="text-xl font-bold font-outfit text-zinc-900 tracking-tight mb-4 leading-snug">
                                         {pillar.title}
                                     </h3>
                                     <p className="text-zinc-500 font-outfit font-light leading-relaxed text-sm">
@@ -116,7 +116,7 @@ export default async function SoftwareOutsourcingPage(props: { params: Promise<{
             <section className="py-20 bg-[#F9FAFB] relative overflow-hidden">
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-4 font-outfit uppercase tracking-tight">
+                        <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-4 font-outfit tracking-tight">
                             {content.process.title}
                         </h2>
                         <p className="text-zinc-500 font-outfit font-light max-w-2xl mx-auto">
@@ -151,14 +151,14 @@ export default async function SoftwareOutsourcingPage(props: { params: Promise<{
             <section className="pt-24 pb-12 md:pb-16 bg-white relative overflow-hidden border-t border-slate-100">
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-12">
-                        <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-4 font-outfit uppercase tracking-tight">
+                        <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-4 font-outfit tracking-tight">
                             {content.specialties.title}
                         </h2>
                     </div>
                     
                     <div className="flex flex-wrap justify-center gap-3 md:gap-4 max-w-4xl mx-auto">
                         {content.specialties.items.map((item: string, idx: number) => (
-                            <div key={idx} className="px-6 py-3 rounded-full bg-slate-50 border border-slate-200 text-xs md:text-sm font-bold text-zinc-600 tracking-widest hover:bg-white hover:shadow-lg hover:shadow-brand/5 hover:border-brand/30 hover:text-brand transition-all duration-300 transform hover:-translate-y-1">
+                            <div key={idx} className="px-6 py-3 rounded-full bg-slate-50 border border-slate-200 text-xs md:text-sm font-bold text-zinc-600 hover:bg-white hover:shadow-lg hover:shadow-brand/5 hover:border-brand/30 hover:text-brand transition-all duration-300 transform hover:-translate-y-1">
                                 {item}
                             </div>
                         ))}

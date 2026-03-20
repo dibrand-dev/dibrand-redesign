@@ -146,7 +146,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                                     <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mb-6 shadow-sm group-hover:bg-brand transition-colors duration-500">
                                         <Icon size={28} className="text-brand group-hover:text-white transition-colors duration-500" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-zinc-900 mb-4 font-outfit uppercase tracking-tight">
+                                    <h3 className="text-xl font-bold text-zinc-900 mb-4 font-outfit tracking-tight">
                                         {pillar.title}
                                     </h3>
                                     <p className="text-zinc-500 font-outfit font-light leading-relaxed text-sm">

@@ -68,7 +68,7 @@ export default async function AiWorkflowsPage(props: { params: Promise<{ lang: "
                                     <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mb-6 shadow-sm group-hover:bg-brand transition-colors duration-500">
                                         <Icon size={28} className="text-brand group-hover:text-white transition-colors duration-500" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-zinc-900 mb-4 font-outfit uppercase tracking-tight">
+                                    <h3 className="text-xl font-bold text-zinc-900 mb-4 font-outfit tracking-tight">
                                         {pillar.title}
                                     </h3>
                                     <p className="text-zinc-500 font-outfit font-light leading-relaxed text-sm">
@@ -85,7 +85,7 @@ export default async function AiWorkflowsPage(props: { params: Promise<{ lang: "
             <section className="py-20 bg-[#F9FAFB] relative overflow-hidden">
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-4 font-outfit uppercase tracking-tight">
+                        <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-4 font-outfit tracking-tight">
                             {content.process.title}
                         </h2>
                         <p className="text-zinc-500 font-outfit font-light max-w-2xl mx-auto">

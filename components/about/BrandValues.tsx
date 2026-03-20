@@ -18,7 +18,7 @@ export default function BrandValues({ dict }: BrandValuesProps) {
         <section className="py-24 bg-white">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight uppercase">
+                    <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight">
                         {dict.title}
                     </h2>
                     <div className="w-20 h-1.5 bg-brand mx-auto mt-6" />
@@ -32,7 +32,7 @@ export default function BrandValues({ dict }: BrandValuesProps) {
                                 <div className="w-20 h-20 rounded-full bg-brand/5 flex items-center justify-center mb-8 group-hover:bg-brand transition-colors duration-500">
                                     <Icon size={36} className="text-brand group-hover:text-white transition-colors duration-500" />
                                 </div>
-                                <h3 className="text-xl font-bold font-outfit text-zinc-900 mb-4 uppercase tracking-tight">
+                                <h3 className="text-xl font-bold font-outfit text-zinc-900 mb-4 tracking-tight">
                                     {item.title}
                                 </h3>
                                 <p className="text-zinc-500 font-outfit font-light leading-relaxed">

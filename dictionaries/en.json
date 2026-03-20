@@ -2,22 +2,22 @@
     "navigation": {
         "home": "Home",
         "services": "Services",
-        "successCases": "Success Stories",
-        "softwareDevelopment": "Software Development",
-        "staffAugmentation": "Staff Augmentation",
-        "softwareOutsourcing": "Software Outsourcing",
+        "successCases": "Success stories",
+        "softwareDevelopment": "Software development",
+        "staffAugmentation": "Staff augmentation",
+        "softwareOutsourcing": "Software outsourcing",
         "portfolio": "Portfolio",
-        "aboutUs": "About Us",
-        "careers": "Join Us",
+        "aboutUs": "About us",
+        "careers": "Join us",
         "contact": "Contact",
-        "aiWorkflows": "AI & Custom Workflows",
-        "strategicArchitecture": "Strategic Architecture",
-        "scheduleCall": "Schedule a Consultation",
+        "aiWorkflows": "AI & custom workflows",
+        "strategicArchitecture": "Strategic architecture",
+        "scheduleCall": "Schedule a consultation",
         "conversionHook": "Let's talk about your next project.",
-        "conversionCta": "[ Book a 30-min Discovery Call ]"
+        "conversionCta": "[ Book a 30-min discovery call ]"
     },
     "footer": {
-        "title1": "LET'S TALK",
+        "title1": "Let's talk",
         "title2": "about your next project.",
         "subtitle": "Tell us how we can help you."
     },
@@ -35,40 +35,40 @@
             "tagline": "Let us make your idea a reality!"
         },
         "stats": {
-            "trustLabel": "Global Trust",
+            "trustLabel": "Global trust",
             "items": [
                 {
-                    "label": "Successful Projects",
+                    "label": "Successful projects",
                     "value": "+200"
                 },
                 {
-                    "label": "Global Reach",
+                    "label": "Global reach",
                     "value": "LATAM & US"
                 },
                 {
-                    "label": "Talent Retention",
+                    "label": "Talent retention",
                     "value": "98%"
                 }
             ]
         },
         "services": {
-            "title": "Dibrand Solution Ecosystem",
+            "title": "Dibrand solution ecosystem",
             "subtitle": "A comprehensive execution infrastructure designed to eliminate technical friction and maximize return on investment at every stage of development.",
             "items": [
                 {
-                    "title": "Software Development",
+                    "title": "Software development",
                     "desc": "Full-cycle execution. We build robust and scalable solutions, prioritizing code quality and architecture for products that need to lead the market."
                 },
                 {
-                    "title": "IA & Custom Workflows",
+                    "title": "IA & custom workflows",
                     "desc": "Augmented efficiency. We integrate AI-native workflows to automate repetitive tasks, accelerate testing, and optimize delivery times without compromising precision."
                 },
                 {
-                    "title": "Strategic Architecture",
+                    "title": "Strategic architecture",
                     "desc": "Foundations for the future. We don’t just code; we design strategic architectures that allow your product to grow, integrate, and scale globally and securely."
                 },
                 {
-                    "title": "Talent IT Senior",
+                    "title": "Talent IT senior",
                     "desc": "Elite brainpower. Our ecosystem is powered exclusively by senior engineers (Top 3% LATAM), capable of leading technical decision-making and solving high-complexity problems."
                 }
             ]
@@ -85,7 +85,7 @@
                     "desc": "Clean, tested, and maintainable code."
                 },
                 {
-                    "title": "Top Talent",
+                    "title": "Top talent",
                     "desc": "Exclusive access to the region's best engineers."
                 }
             ]
@@ -95,27 +95,27 @@
             "subtitle": "Our expert team has mastery over the most in-demand languages and frameworks."
         },
         "testimonials": {
-            "title": "What Our Partners Say",
+            "title": "What our partners say",
             "subtitle": "High-stakes engineering excellence, validated by the companies we help grow."
         },
         "staffAugmentationTeaser": {
-            "title": "Elite Talent Only",
+            "title": "Elite talent only",
             "subtitle": "At Dibrand, we only work with the top 3% of technical talent in Latin America. Our rigorous selection process ensures that every engineer on our team possesses the technical and communication skills required to lead highly complex global projects.",
             "pillars": [
                 {
-                    "title": "Seniority & Technical Excellence",
+                    "title": "Seniority & technical excellence",
                     "desc": "Top-Tier Seniority. Expert engineers with a product-driven mindset, specializing in scalable architectures and high-performance code."
                 },
                 {
-                    "title": "Global Adaptability",
+                    "title": "Global adaptability",
                     "desc": "Global Adaptability. Remote-native talent experienced in integrating across diverse time zones, cultures, and complex workflows."
                 },
                 {
-                    "title": "AI-Augmented Engineering",
+                    "title": "AI-augmented engineering",
                     "desc": "AI-Augmented Engineering. We leverage AI-native workflows to accelerate development cycles and optimize QA, multiplying our engineers' output."
                 }
             ],
-            "cta": "Explore Staff Augmentation"
+            "cta": "Explore staff augmentation"
         },
         "trustedByTitle": "Some companies that trust us",
         "engineeringExcellence": {
@@ -136,40 +136,40 @@
             ]
         },
         "compliance": {
-            "title": "Dibrand Compliance Commitment",
+            "title": "Dibrand compliance commitment",
             "items": [
                 {
-                    "title": "Intellectual Property",
-                    "desc": "100% IP Ownership. All code, documentation, and assets developed belong exclusively to you from day one."
+                    "title": "Intellectual property",
+                    "desc": "100% IP ownership. All code, documentation, and assets developed belong exclusively to you from day one."
                 },
                 {
                     "title": "Confidentiality & NDAs",
-                    "desc": "Ironclad Privacy. We protect your business logic through rigorous NDAs and secure data handling protocols."
+                    "desc": "Ironclad privacy. We protect your business logic through rigorous NDAs and secure data handling protocols."
                 },
                 {
-                    "title": "Legal & Regulatory Alignment",
-                    "desc": "Seamless Compliance. Our contracts are designed to meet international standards and US legal requirements for global operations."
+                    "title": "Legal & regulatory alignment",
+                    "desc": "Seamless compliance. Our contracts are designed to meet international standards and US legal requirements for global operations."
                 }
             ]
         },
         "selectedWork": {
-            "title": "Featured Cases",
+            "title": "Featured cases",
             "viewCase": "Learn more",
-            "cta": "Explore All Projects"
+            "cta": "Explore all projects"
         },
         "caseDetail": {
-            "challenge": "The Challenge",
+            "challenge": "The challenge",
             "solution": "Solution",
-            "impact": "Outcome & Impact",
-            "resultsDescription": "Business Results",
-            "metrics": "Key Metrics",
-            "techStack": "Tech Stack",
-            "cta": "Schedule a Consultation",
+            "impact": "Outcome & impact",
+            "resultsDescription": "Business results",
+            "metrics": "Key metrics",
+            "techStack": "Tech stack",
+            "cta": "Schedule a consultation",
             "backLink": "Back to all stories",
             "share": "Share success story"
         },
         "portfolio": {
-            "headline": "Selected Cases",
+            "headline": "Selected cases",
             "subheadline": "A selection of our most significant projects, showcasing how we merge technical excellence with strategic vision to build high-impact products."
         }
     },
@@ -194,28 +194,28 @@
             "title": "Senior staff augmentation",
             "subtitle1": "Stop adding headcount. Start adding impact.",
             "subtitle2": "Dibrand deploys AI-augmented engineering squads that don't just fill a seat: they own your roadmap and accelerate your time-to-market.",
-            "cta": "Schedule Staff Augmentation Consultation"
+            "cta": "Schedule staff augmentation consultation"
         },
         "whatIs": {
-            "title": "Staff Augmentation Talent Integration",
+            "title": "Staff augmentation talent integration",
             "content": "Access the top 3% of LATAM’s senior engineering talent. Our professionals are not just coders; they are AI-native consultants who integrate into your culture, align with your timezone, and multiply your team’s productivity from day one."
         },
         "pillars": {
             "items": [
                 {
-                    "title": "Pure Seniority",
+                    "title": "Pure seniority",
                     "desc": "Exclusive access to the top 3% of LATAM’s engineering talent. Experts who don’t just write code, but design solutions."
                 },
                 {
-                    "title": "Tech Alignment",
-                    "desc": "Full integration with your processes, culture, and time zone. Real-time collaboration without communication barriers."
+                    "title": "Tech alignment",
+                    "desc": "Full integration with your processes, cultura, and time zone. Real-time collaboration without communication barriers."
                 },
                 {
-                    "title": "Speed to Value",
+                    "title": "Speed to value",
                     "desc": "We reduce hiring time to weeks. Our engineers deliver measurable impact from the very first sprint."
                 },
                 {
-                    "title": "Boutique Quality",
+                    "title": "Boutique quality",
                     "desc": "Personalized and handcrafted approach. We maintain the highest standard of technical quality in every line of code."
                 }
             ],
@@ -228,7 +228,7 @@
                     "desc": "We understand your technical needs and team culture."
                 },
                 {
-                    "title": "Technical Match",
+                    "title": "Technical match",
                     "desc": "We select the best candidates from our pre-validated pool."
                 },
                 {
@@ -267,7 +267,7 @@
             "intro": "We fill critical technical gaps with experts who don’t just write code, they design your product’s success. Senior in-house engineering for organizations that can’t afford mistakes.",
             "categories": [
                 {
-                    "title": "Product & Innovation",
+                    "title": "Product & innovation",
                     "roles": [
                         {
                             "name": "Product Managers",
@@ -284,7 +284,7 @@
                     ]
                 },
                 {
-                    "title": "UX/UI Design",
+                    "title": "UX/UI design",
                     "roles": [
                         {
                             "name": "UX Designers",
@@ -320,18 +320,18 @@
             ]
         },
         "theDibrandWay": {
-            "title": "The Dibrand Way",
+            "title": "The dibrand way",
             "items": [
                 {
                     "title": "Timezone match",
                     "desc": "We work in your same time zone for smooth and real-time collaboration."
                 },
                 {
-                    "title": "100% Proven Seniority",
+                    "title": "100% proven seniority",
                     "desc": "Our engineers go through an exhaustive technical validation process before joining."
                 },
                 {
-                    "title": "Product Culture",
+                    "title": "Product culture",
                     "desc": "We don’t just write code; we understand the business and propose value-adding solutions."
                 }
             ]
@@ -341,49 +341,49 @@
         "hero": {
             "title": "We build your product from end to end.",
             "subtitle": "We take full responsibility for development so you can focus on scaling your business. Autonomous engineering with guaranteed delivery.",
-            "cta": "Schedule Outsourcing Consultation"
+            "cta": "Schedule outsourcing consultation"
         },
         "pillars": {
             "items": [
                 {
-                    "title": "End-to-End Delivery",
+                    "title": "End-to-end delivery",
                     "desc": "From conception to launch. We manage the full product lifecycle with agile methodologies."
                 },
                 {
-                    "title": "Autonomous Execution",
+                    "title": "Autonomous execution",
                     "desc": "Self-managed teams that require minimal supervision, allowing you total strategic focus."
                 },
                 {
-                    "title": "Tailored Architecture",
+                    "title": "Tailored architecture",
                     "desc": "We design scalable and secure technological solutions, specifically adapted to your business goals."
                 },
                 {
-                    "title": "Turnkey Results",
+                    "title": "Turnkey results",
                     "desc": "Ready-to-operate deliverables. We don't deliver loose code; we deliver real value solutions."
                 }
             ],
             "lema": "Delegate the development, own the results."
         },
         "process": {
-            "title": "Our Methodology",
+            "title": "Our methodology",
             "subtitle": "How we build your product from end to end.",
             "steps": [
                 {
-                    "title": "Discovery & Roadmap",
+                    "title": "Discovery & roadmap",
                     "desc": "We analyze your business goals, define the technical architecture, and draft a clear execution roadmap."
                 },
                 {
-                    "title": "Autonomous Execution",
+                    "title": "Autonomous execution",
                     "desc": "Our senior teams execute autonomously with agile methodologies, ensuring transparency and constant technical quality."
                 },
                 {
-                    "title": "Turnkey Delivery",
+                    "title": "Turnkey delivery",
                     "desc": "We deliver a robust, scalable, and market-ready product, with complete documentation and full IP transfer."
                 }
             ]
         },
         "specialties": {
-            "title": "Technical Specialties",
+            "title": "Technical specialties",
             "items": [
                 "Blockchain & Web3",
                 "Cybersecurity",
@@ -407,12 +407,12 @@
         "fullName": "Full Name",
         "email": "Email Address",
         "phone": "Phone",
-        "mobilePhone": "Mobile Phone",
+        "mobilePhone": "Mobile phone",
         "country": "Country",
-        "stateProvince": "State / Province",
-        "techStacks": "Tech Stacks (Skills)",
-        "linkedin": "LinkedIn Profile / Portfolio URL",
-        "attachResume": "Attach Resume (PDF Only)",
+        "stateProvince": "State / province",
+        "techStacks": "Tech stacks (skills)",
+        "linkedin": "LinkedIn profile / portfolio URL",
+        "attachResume": "Attach resume (PDF only)",
         "clickToUpload": "Click to upload or drag & drop",
         "pdfOnly": "PDF only (Max 5MB)",
         "sendApplication": "Send Application",
@@ -429,26 +429,26 @@
         "pillars": {
             "items": [
                 {
-                    "title": "Automated Cognitive Agents",
+                    "title": "Automated cognitive agents",
                     "desc": "We implement LLMs and virtual assistants trained with your company's data operating 24/7."
                 },
                 {
-                    "title": "Data Orchestration",
+                    "title": "Data orchestration",
                     "desc": "We connect multiple structured and unstructured data sources to generate comprehensive insights."
                 },
                 {
-                    "title": "End-to-End Automation",
+                    "title": "End-to-end automation",
                     "desc": "We replace slow, repetitive tasks with automated workflows, reducing operational costs."
                 },
                 {
-                    "title": "Predictive Scalability",
+                    "title": "Predictive scalability",
                     "desc": "We generate Machine Learning models that anticipate future scenarios and evolve over time."
                 }
             ],
             "lema": "The future is not coded, it's trained."
         },
         "process": {
-            "title": "Our MLOps Methodology",
+            "title": "Our MLOps methodology",
             "subtitle": "How we audit, prepare and deploy AI in your operations.",
             "steps": [
                 {
@@ -475,38 +475,38 @@
         "pillars": {
             "items": [
                 {
-                    "title": "Scalable Microservices",
+                    "title": "Scalable microservices",
                     "desc": "We decouple monolithic architectures into agile distributed services for independent deployments."
                 },
                 {
-                    "title": "Cloud Resilience",
+                    "title": "Cloud resilience",
                     "desc": "We design Serverless and Multi-Cloud infrastructures prepared to recover from any failure in record time."
                 },
                 {
-                    "title": "Event-Driven Design",
+                    "title": "Event-driven design",
                     "desc": "We maximize real-time information flow through reliable brokers for immediate reactions."
                 },
                 {
-                    "title": "Enterprise-Grade Security",
+                    "title": "Enterprise-grade security",
                     "desc": "We implement protocols and mitigation measures from the design phase (Security by Design)."
                 }
             ],
             "lema": "A solid foundation is everything."
         },
         "process": {
-            "title": "Architectural Framework",
+            "title": "Architectural framework",
             "subtitle": "Our way of bulletproofing growth and technological resilience.",
             "steps": [
                 {
-                    "title": "Architectural Discovery",
+                    "title": "Architectural discovery",
                     "desc": "We diagnose current infrastructure, identifying bottlenecks and impending technical debt risks."
                 },
                 {
-                    "title": "Blueprint Definition",
+                    "title": "Blueprint definition",
                     "desc": "We bring to life C4 diagrams and design documents that will guide the platform's build or modernization."
                 },
                 {
-                    "title": "Secure Refactoring",
+                    "title": "Secure refactoring",
                     "desc": "We accompany your team (or ours) through progressive transitions with guaranteed Zero Downtime."
                 }
             ]
@@ -518,32 +518,32 @@
             "subtitle": "We aren't just a software provider; we are the engineering engine that allows high-growth startups to scale without friction."
         },
         "eliteTalent": {
-            "title": "Curated Seniority: The Elite 3%",
+            "title": "Top 3% of Tech Talent",
             "desc": "We don't look for volume, we look for precision. Only 3% of senior engineers in LATAM pass our technical and strategic validation process. We handpick experts who don't just code, they design success."
         },
         "aiNative": {
-            "title": "AI-Native DNA: Your Competitive Advantage",
+            "title": "AI-native DNA: your competitive advantage",
             "desc": "We were born in the era of Artificial Intelligence. All our development processes are optimized with AI-native workflows, guaranteeing more robust code in record time and unprecedented efficiency."
         },
         "values": {
-            "title": "Values in Action",
+            "title": "Values in action",
             "items": [
                 {
-                    "title": "Strategic Partnership Engineering",
+                    "title": "Strategic partnership engineering",
                     "desc": "We don’t believe in traditional \"body shopping.\" Our outsourcing model is a high-level engineering extension: we take ownership of our clients' technical challenges as our own, ensuring senior quality and measurable outcomes."
                 },
                 {
-                    "title": "Obsession with Quality",
+                    "title": "Obsession with quality",
                     "desc": "If it's not scalable, we don't build it. We maintain the elite boutique standard in every line of code."
                 },
                 {
-                    "title": "Radical Transparency",
+                    "title": "Radical transparency",
                     "desc": "Direct and honest communication. No unnecessary management layers, just engineers solving problems."
                 }
             ]
         },
-        "lemaLine1": "We don’t build software for today",
-        "lemaLine2": "We design architectures for tomorrow’s impact."
+        "lemaLine1": "We don’t build software for today.",
+        "lemaLine2": "We design architectures for tomorrow's impact."
     },
     "softwareDevelopment": {
         "hero": {
@@ -574,22 +574,22 @@
             ]
         },
         "advantage": {
-            "title": "The Dibrand Advantage",
+            "title": "The dibrand advantage",
             "items": [
                 {
-                    "title": "Elite Talent Only",
+                    "title": "Elite talent only",
                     "desc": "Exclusive access to the top 3% of senior engineering talent in LATAM."
                 },
                 {
-                    "title": "AI-Driven Efficiency",
+                    "title": "AI-driven efficiency",
                     "desc": "AI-optimized workflows designed to accelerate the development lifecycle."
                 },
                 {
-                    "title": "Time-Zone Alignment",
+                    "title": "Time-zone alignment",
                     "desc": "Seamless real-time collaboration with total Nearshore alignment."
                 },
                 {
-                    "title": "Agile Precision",
+                    "title": "Agile precision",
                     "desc": "Predictable, high-impact deliveries driven by methodological rigor."
                 }
             ]
@@ -607,39 +607,39 @@
         },
         "categories": [
             {
-                "title": "Software Development & Design",
+                "title": "Software development & design",
                 "items": [
-                    { "title": "Custom Software Development", "desc": "Robust software engineering designed to solve specific business needs." },
-                    { "title": "E-commerce Development", "desc": "High-performance transactional platforms focused on conversion and scalability." },
-                    { "title": "MVP Development", "desc": "Rapid construction of minimum viable products to validate markets with technical rigor." },
-                    { "title": "Web & Mobile App Development (iOS/Android)", "desc": "Fluid multi-platform applications using the latest hybrid and native technologies." },
-                    { "title": "UX/UI Design", "desc": "World-class user experiences combining premium aesthetics and functionality." },
-                    { "title": "SaaS & Cloud Applications", "desc": "Secure multi-tenant architectures prepared for massive user growth." },
-                    { "title": "Back-End & Front-End Development", "desc": "End-to-end engineering ensuring server performance and client reactivity." },
-                    { "title": "Enterprise Software Development", "desc": "Large-scale solutions to automate critical flows in complex organizations." },
-                    { "title": "dApp Development", "desc": "Implementation of decentralized technologies, smart contracts, and Web3 security." }
+                    { "title": "Custom software development", "desc": "Robust software engineering designed to solve specific business needs." },
+                    { "title": "E-commerce development", "desc": "High-performance transactional platforms focused on conversion and scalability." },
+                    { "title": "MVP development", "desc": "Rapid construction of minimum viable products to validate markets with technical rigor." },
+                    { "title": "Web & mobile app development (iOS/Android)", "desc": "Fluid multi-platform applications using the latest hybrid and native technologies." },
+                    { "title": "UX/UI design", "desc": "World-class user experiences combining premium aesthetics and functionality." },
+                    { "title": "SaaS & cloud applications", "desc": "Secure multi-tenant architectures prepared for massive user growth." },
+                    { "title": "Back-end & front-end development", "desc": "End-to-end engineering ensuring server performance and client reactivity." },
+                    { "title": "Enterprise software development", "desc": "Large-scale solutions to automate critical flows in complex organizations." },
+                    { "title": "dApp development", "desc": "Implementation of decentralized technologies, smart contracts, and Web3 security." }
                 ]
             },
             {
-                "title": "QA, Testing, Maintenance & Modernization",
+                "title": "QA, testing, maintenance & modernization",
                 "items": [
-                    { "title": "Legacy Application Migration", "desc": "Modernization of old systems to modern architectures without operational downtime." },
-                    { "title": "Software Testing & QA", "desc": "Exhaustive quality control cycles to ensure bug-free digital products." },
-                    { "title": "Manual & Automation Testing", "desc": "Intelligent test scripts that accelerate deployment while maintaining integrity." },
-                    { "title": "Cybersecurity & Penetration Testing", "desc": "Proactive data protection and penetration testing to mitigate vulnerabilities." },
+                    { "title": "Legacy application migration", "desc": "Modernization of old systems to modern architectures without operational downtime." },
+                    { "title": "Software testing & QA", "desc": "Exhaustive quality control cycles to ensure bug-free digital products." },
+                    { "title": "Manual & automation testing", "desc": "Intelligent test scripts that accelerate deployment while maintaining integrity." },
+                    { "title": "Cybersecurity & penetration testing", "desc": "Proactive data protection and penetration testing to mitigate vulnerabilities." },
                     { "title": "DevOps & CI/CD", "desc": "Implementation of CI/CD pipelines that optimize continuous value delivery." },
-                    { "title": "Digital Transformation", "desc": "Strategic consultancy to integrate cutting-edge technology into business models." }
+                    { "title": "Digital transformation", "desc": "Strategic consultancy to integrate cutting-edge technology into business models." }
                 ]
             },
             {
-                "title": "Cloud & Advanced Technologies",
+                "title": "Cloud & advanced technologies",
                 "items": [
-                    { "title": "Machine Learning & AI", "desc": "Model training and predictive algorithms for real competitive advantages." },
-                    { "title": "Cloud Computing & Migration", "desc": "Secure cloud transition and optimization of global infrastructure costs." },
-                    { "title": "Big Data & Data Warehouse", "desc": "Management of large volumes of information for real-time strategic analysis." },
-                    { "title": "Deep Learning & Computer Vision", "desc": "Advanced technology for pattern recognition and image processing." },
+                    { "title": "Machine learning & AI", "desc": "Model training and predictive algorithms for real competitive advantages." },
+                    { "title": "Cloud computing & migration", "desc": "Secure cloud transition and optimization of global infrastructure costs." },
+                    { "title": "Big data & data warehouse", "desc": "Management of large volumes of information for real-time strategic analysis." },
+                    { "title": "Deep learning & computer vision", "desc": "Advanced technology for pattern recognition and image processing." },
                     { "title": "RPA", "desc": "Intelligent software that automates repetitive tasks with high operational load." },
-                    { "title": "AR/VR & Metaverse", "desc": "Creation of immersive experiences defining the future of digital interaction." }
+                    { "title": "AR/VR & metaverse", "desc": "Creation of immersive experiences defining the future of digital interaction." }
                 ]
             }
         ]

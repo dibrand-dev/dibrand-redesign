@@ -26,8 +26,8 @@ export default function AiNativeCulture({ dict, imagePath }: AiNativeCultureProp
                     
                     {/* Content Side */}
                     <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
-                        <span className="text-brand font-bold tracking-[0.2em] uppercase text-sm mb-4">Advantage</span>
-                        <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight mb-8 uppercase leading-tight">
+                        <span className="text-brand font-bold text-sm mb-4">Advantage</span>
+                        <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight mb-8 leading-tight">
                             {dict.title}
                         </h2>
                         <p className="text-lg md:text-xl text-zinc-500 font-outfit font-light leading-relaxed mb-10">
@@ -36,11 +36,11 @@ export default function AiNativeCulture({ dict, imagePath }: AiNativeCultureProp
                         
                         <div className="grid grid-cols-2 gap-8 w-full border-t border-zinc-200 pt-10">
                             <div>
-                                <h4 className="font-bold text-zinc-900 mb-2 uppercase text-xs tracking-widest">Precision</h4>
+                                <h4 className="font-bold text-zinc-900 mb-2 text-xs">Precision</h4>
                                 <p className="text-sm text-zinc-500 font-light">AI-augmented code reviews and architecture analysis.</p>
                             </div>
                             <div>
-                                <h4 className="font-bold text-zinc-900 mb-2 uppercase text-xs tracking-widest">Velocity</h4>
+                                <h4 className="font-bold text-zinc-900 mb-2 text-xs">Velocity</h4>
                                 <p className="text-sm text-zinc-500 font-light">Accelerated development cycles without quality loss.</p>
                             </div>
                         </div>

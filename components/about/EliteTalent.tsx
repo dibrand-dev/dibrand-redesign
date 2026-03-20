@@ -25,7 +25,7 @@ export default function EliteTalent({ dict, imagePath }: EliteTalentProps) {
                             
                             {/* Decorative Badge - Solid Black Circle (Flat Design) */}
                             <div className="absolute bottom-8 right-8 bg-black text-white w-28 h-28 rounded-full flex flex-col items-center justify-center text-center border border-white/10 shadow-none z-10">
-                                <span className="font-outfit text-[10px] tracking-[0.2em] font-normal mb-1 opacity-80">THE ELITE</span>
+                                <span className="font-outfit text-[10px] font-normal mb-1 opacity-80">The elite</span>
                                 <span className="font-outfit font-bold text-3xl">3%</span>
                             </div>
                         </div>
@@ -33,7 +33,7 @@ export default function EliteTalent({ dict, imagePath }: EliteTalentProps) {
                     
                     {/* Content Side */}
                     <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
-                        <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight mb-8 uppercase leading-tight">
+                        <h2 className="text-3xl md:text-5xl font-bold font-outfit text-zinc-900 tracking-tight mb-8 leading-tight">
                             {dict.title}
                         </h2>
                         <div className="w-20 h-1.5 bg-brand mb-10" />

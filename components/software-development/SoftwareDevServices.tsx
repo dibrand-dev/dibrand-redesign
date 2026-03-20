@@ -18,7 +18,7 @@ export default function SoftwareDevServices({ dict, lang }: SoftwareDevServicesP
             <div className="container mx-auto px-6 max-w-7xl">
                 <header className="mb-16 md:mb-20 flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div>
-                        <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 font-outfit uppercase tracking-tighter mb-6">
+                        <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 font-outfit tracking-tighter mb-6">
                             {dict.title}
                         </h2>
                         <div className="h-1 w-24 bg-brand" />
@@ -46,7 +46,7 @@ export default function SoftwareDevServices({ dict, lang }: SoftwareDevServicesP
                                 <div className="w-16 h-16 rounded-full bg-brand/5 flex items-center justify-center mb-8 group-hover:bg-brand/10 transition-colors duration-400">
                                     <Icon size={32} className="text-brand transition-colors duration-400" strokeWidth={1.5} />
                                 </div>
-                                <h3 className="text-2xl font-bold text-zinc-900 mb-4 font-outfit uppercase tracking-tight leading-tight">
+                                <h3 className="text-2xl font-bold text-zinc-900 mb-4 font-outfit tracking-tight leading-tight">
                                     {service.title}
                                 </h3>
                                 <p className="text-zinc-500 font-outfit font-light leading-relaxed max-w-sm">

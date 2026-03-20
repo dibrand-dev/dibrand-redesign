@@ -16,7 +16,7 @@ export default function MinimalStats({ dict }: MinimalStatsProps) {
                                 {item.value}
                             </span>
                             <div className="h-0.5 w-12 bg-zinc-200 group-hover:w-20 group-hover:bg-brand transition-all duration-500 mb-6" />
-                            <span className="text-sm md:text-base font-bold font-outfit text-zinc-400 uppercase tracking-widest leading-none">
+                            <span className="text-sm md:text-base font-bold font-outfit text-zinc-400 leading-none">
                                 {item.label}
                             </span>
                         </div>

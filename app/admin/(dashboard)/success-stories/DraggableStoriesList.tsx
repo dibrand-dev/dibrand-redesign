@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Edit, Trash2, GripVertical, MoreHorizontal, ArrowUpDown, Search, Filter, Eye, EyeOff } from 'lucide-react';
+import { Edit, Trash2, GripVertical, MoreHorizontal, ArrowUpDown, Search, Filter, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { updateSuccessStoriesOrder, toggleSuccessStoryStatus } from './actions';
 
 interface Story {
@@ -43,6 +43,7 @@ export default function DraggableStoriesList({
     const [isSaving, setIsSaving] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterIndustry, setFilterIndustry] = useState('all');
+    const [showSuccess, setShowSuccess] = useState(false);
     const router = useRouter();
 
     const filteredStories = stories.filter((s: Story) => {
@@ -96,13 +97,15 @@ export default function DraggableStoriesList({
             setIsSaving(true);
             await toggleSuccessStoryStatus(id, currentStatus);
             setStories(prev => prev.map(s => s.id === id ? { ...s, is_published: !currentStatus } : s));
-            // In a real app we might use a toast library here
-            console.log('Estado actualizado correctamente');
+            
+            setIsSaving(false);
+            setShowSuccess(true);
+            setTimeout(() => setShowSuccess(false), 3000);
+            
             router.refresh();
         } catch (error) {
             console.error('Failed to toggle status:', error);
             alert('Error al actualizar el estado');
-        } finally {
             setIsSaving(false);
         }
     };
@@ -273,8 +276,16 @@ export default function DraggableStoriesList({
             </div>
 
             {isSaving && (
-                <div className="fixed bottom-8 right-8 bg-zinc-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-pulse">
+                <div className="fixed bottom-8 right-8 bg-zinc-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-pulse z-[100]">
+                    <div className="w-2 h-2 rounded-full bg-admin-accent animate-ping" />
                     <span className="text-xs font-bold uppercase tracking-widest">Sincronizando Estado...</span>
+                </div>
+            )}
+
+            {showSuccess && (
+                <div className="fixed bottom-8 right-8 bg-emerald-500 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 z-[100]">
+                    <CheckCircle2 size={16} />
+                    <span className="text-xs font-bold uppercase tracking-widest italic">Estado actualizado correctamente</span>
                 </div>
             )}
         </div>

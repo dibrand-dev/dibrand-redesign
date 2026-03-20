@@ -54,7 +54,7 @@ export default function StatCounter({ value, label }: StatCounterProps) {
             <span className="text-2xl md:text-3xl font-black text-white">
                 {displayValue}
             </span>
-            <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/70">{label}</span>
+            <span className="text-[10px] md:text-xs font-bold text-white/70">{label}</span>
         </div>
     );
 }
