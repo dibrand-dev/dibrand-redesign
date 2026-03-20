@@ -643,5 +643,14 @@
                 ]
             }
         ]
+    },
+    "admin": {
+        "status": {
+            "paused": "Paused",
+            "published": "Published",
+            "pauseAction": "Pause publication",
+            "publishAction": "Live publication",
+            "updateSuccess": "Status updated successfully"
+        }
     }
 }

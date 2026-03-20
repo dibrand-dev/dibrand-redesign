@@ -12,7 +12,7 @@ export async function getSuccessStories() {
         // --- Intento 1: Nuevo esquema estandarizado ---
         let result: any = await supabase
             .from('success_stories')
-            .select('id, title, title_es, client_name, industry, project_type, created_at, sort_order, description_es, challenge_es')
+            .select('id, title, title_es, client_name, industry, project_type, created_at, sort_order, description_es, challenge_es, is_published')
             .order('sort_order', { ascending: true });
 
         // Fallback robusto para el listado si fallan columnas nuevas
@@ -20,7 +20,7 @@ export async function getSuccessStories() {
             console.warn('New schema fetch failed, using legacy fallback', result.error.message);
             result = await supabase
                 .from('success_stories')
-                .select('id, title, client_company, industry, project_type, created_at, sort_order')
+                .select('id, title, client_company, industry, project_type, created_at, sort_order, is_published')
                 .order('sort_order', { ascending: true });
         }
 
@@ -53,7 +53,7 @@ export async function getSuccessStories() {
             title: item.title_es || item.title || 'Untitled',
             client_company: item.client_name || item.client_company,
             sort_order: item.sort_order || 0,
-            is_published: true
+            is_published: item.is_published ?? true
         }));
 
     } catch (error) {
@@ -442,6 +442,38 @@ export async function updateSuccessStory(id: string, payload: any) {
     }
 
     redirect('/admin/success-stories');
+}
+
+export async function toggleSuccessStoryStatus(id: string, currentStatus: boolean) {
+    const newStatus = !currentStatus;
+    
+    // 1. Update success_stories
+    const { error } = await supabase
+        .from('success_stories')
+        .update({ is_published: newStatus })
+        .eq('id', id);
+        
+    if (error) throw new Error(error.message);
+
+    // 2. Sync to case_studies
+    const { data: story } = await supabase.from('success_stories').select('client_name, client_company, title_es, title').eq('id', id).single();
+    if (story) {
+        const client = story.client_name || story.client_company;
+        const titleForSlug = story.title_es || story.title;
+        const slug = titleForSlug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        
+        // Find existing in case_studies to sync status
+        const { data: existing } = await supabase.from('case_studies').select('id').or(`slug.eq."${slug}",client_name.eq."${client.replace(/"/g, '\"')}"`).maybeSingle();
+        if (existing) {
+            await supabase.from('case_studies').update({ is_published: newStatus }).eq('id', existing.id);
+        }
+    }
+
+    await logAdminAction(newStatus ? 'activó publicación' : 'pausó publicación', 'case_study', id);
+    
+    revalidatePath('/admin/success-stories');
+    revalidatePath('/es/success-stories');
+    revalidatePath('/en/success-stories');
 }
 
 export async function deleteSuccessStory(id: string) {

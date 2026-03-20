@@ -706,5 +706,14 @@
                 ]
             }
         ]
+    },
+    "admin": {
+        "status": {
+            "paused": "Pausado",
+            "published": "Publicado",
+            "pauseAction": "Pausar publicación",
+            "publishAction": "Activar publicación",
+            "updateSuccess": "Estado actualizado correctamente"
+        }
     }
 }

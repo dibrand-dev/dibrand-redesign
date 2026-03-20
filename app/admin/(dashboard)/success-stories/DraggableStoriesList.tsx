@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Edit, Trash2, GripVertical, MoreHorizontal, ArrowUpDown, Search, Filter } from 'lucide-react';
-import { updateSuccessStoriesOrder } from './actions';
+import { Edit, Trash2, GripVertical, MoreHorizontal, ArrowUpDown, Search, Filter, Eye, EyeOff } from 'lucide-react';
+import { updateSuccessStoriesOrder, toggleSuccessStoryStatus } from './actions';
 
 interface Story {
     id: string;
@@ -86,6 +86,22 @@ export default function DraggableStoriesList({
         } catch (error) {
             console.error('Failed to save order:', error);
             alert('Error saving order');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleToggleStatus = async (id: string, currentStatus: boolean) => {
+        try {
+            setIsSaving(true);
+            await toggleSuccessStoryStatus(id, currentStatus);
+            setStories(prev => prev.map(s => s.id === id ? { ...s, is_published: !currentStatus } : s));
+            // In a real app we might use a toast library here
+            console.log('Estado actualizado correctamente');
+            router.refresh();
+        } catch (error) {
+            console.error('Failed to toggle status:', error);
+            alert('Error al actualizar el estado');
         } finally {
             setIsSaving(false);
         }
@@ -205,9 +221,9 @@ export default function DraggableStoriesList({
                                                 <span className="text-[10px] font-bold uppercase tracking-wider">Publicado</span>
                                             </div>
                                         ) : (
-                                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-500/20 shadow-sm">
+                                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-500/20 shadow-sm">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-amber-500"></div>
-                                                <span className="text-[10px] font-bold uppercase tracking-wider">Borrador</span>
+                                                <span className="text-[10px] font-bold uppercase tracking-wider">Pausado</span>
                                             </div>
                                         )}
                                     </td>
@@ -220,6 +236,15 @@ export default function DraggableStoriesList({
                                     </td>
                                     <td className="pr-6 py-5 text-right">
                                         <div className="flex justify-end items-center gap-2">
+                                            <button
+                                                onClick={() => handleToggleStatus(story.id, !!story.is_published)}
+                                                className={`p-2 transition-all rounded-lg ${story.is_published !== false 
+                                                    ? 'text-emerald-500 hover:bg-emerald-50' 
+                                                    : 'text-amber-500 hover:bg-amber-50'}`}
+                                                title={story.is_published !== false ? 'Pausar publicación' : 'Activar publicación'}
+                                            >
+                                                {story.is_published !== false ? <Eye size={16} /> : <EyeOff size={16} />}
+                                            </button>
                                             <Link
                                                 href={`/admin/success-stories/${story.id}`}
                                                 className="p-2 text-gray-400 hover:text-admin-accent transition-all rounded-lg hover:bg-admin-accent/5"
@@ -238,9 +263,6 @@ export default function DraggableStoriesList({
                                             >
                                                 <Trash2 size={16} />
                                             </button>
-                                            <button className="p-2 text-gray-300 hover:text-gray-500 transition-all">
-                                                <MoreHorizontal size={18} />
-                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -251,8 +273,8 @@ export default function DraggableStoriesList({
             </div>
 
             {isSaving && (
-                <div className="fixed bottom-8 right-8 bg-zinc-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-bounce">
-                    <span className="text-xs font-bold uppercase tracking-widest">Saving order...</span>
+                <div className="fixed bottom-8 right-8 bg-zinc-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-pulse">
+                    <span className="text-xs font-bold uppercase tracking-widest">Sincronizando Estado...</span>
                 </div>
             )}
         </div>
