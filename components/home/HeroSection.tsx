@@ -49,8 +49,8 @@ export default function HeroSection({ dict }: HeroSectionProps) {
                 <div className="mt-8 md:mt-10 flex flex-col items-center w-full max-w-4xl">
                     <ScheduleButton text={dict.hero.cta} />
 
-                    {/* Stats - Compact Row — drastically lifted */}
-                    <div className="mt-6 md:mt-10 flex flex-wrap justify-center gap-8 md:gap-20 items-end pt-8 border-t border-white/15 w-full pb-32">
+                    {/* Stats - Compact Row — drastically lifted — increased for Spanish text length clearance */}
+                    <div className="mt-6 md:mt-10 flex flex-wrap justify-center gap-8 md:gap-20 items-end pt-8 border-t border-white/15 w-full pb-48">
                         {dict.stats.items.map((stat, index) => (
                             <StatCounter key={index} value={stat.value} label={stat.label} />
                         ))}
