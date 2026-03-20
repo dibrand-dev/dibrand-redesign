@@ -36,7 +36,7 @@ export default function HeroSection({ dict }: HeroSectionProps) {
             <div className="absolute inset-0 z-10 bg-zinc-950/75" />
 
             {/* Capa 3: Contenido de Texto */}
-            <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-32 pb-72 md:pb-96">
+            <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-32 pb-24 md:pb-32">
                 <h1 className="font-outfit text-3xl md:text-5xl lg:text-[54px] font-bold tracking-tight text-white leading-[1.1] max-w-4xl">
                     {dict.hero.title}
                 </h1>
@@ -46,11 +46,11 @@ export default function HeroSection({ dict }: HeroSectionProps) {
                     dangerouslySetInnerHTML={{ __html: dict.hero.subtitle }}
                 />
 
-                <div className="mt-8 md:mt-10 flex flex-col items-center w-full max-w-4xl">
+                <div className="mt-8 md:mt-10 flex flex-col items-center w-full max-w-4xl flex-grow">
                     <ScheduleButton text={dict.hero.cta} />
 
-                    {/* Stats - Compact Row — drastically lifted — increased for Spanish text length clearance */}
-                    <div className="mt-6 md:mt-10 flex flex-wrap justify-center gap-8 md:gap-20 items-end pt-8 border-t border-white/15 w-full pb-48">
+                    {/* Stats - Compact Row — forced drastically upwards manually */}
+                    <div className="mt-auto flex flex-wrap justify-center gap-8 md:gap-20 items-end pt-8 border-t border-white/15 w-full pb-72 md:pb-80">
                         {dict.stats.items.map((stat, index) => (
                             <StatCounter key={index} value={stat.value} label={stat.label} />
                         ))}
