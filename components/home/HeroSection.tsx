@@ -37,7 +37,7 @@ export default function HeroSection({ dict }: HeroSectionProps) {
 
             {/* Capa 3: Contenido de Texto */}
             <div className="relative z-20 container mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center pt-28 pb-32 md:pb-40">
-                <h1 className="font-outfit text-3xl md:text-5xl lg:text-[54px] font-bold tracking-tight text-white leading-[1.1] max-w-4xl capitalize">
+                <h1 className="font-outfit text-3xl md:text-5xl lg:text-[54px] font-bold tracking-tight text-white leading-[1.1] max-w-4xl">
                     {dict.hero.title}
                 </h1>
 

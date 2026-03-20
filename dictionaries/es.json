@@ -126,7 +126,7 @@
                     "desc": "Construimos productos digitales robustos y escalables desde cero. Combinamos diseño estratégico con ingeniería de alto rendimiento para transformar ideas complejas en soluciones líderes en el mercado."
                 },
                 {
-                    "title": "Software Outsourcing",
+                    "title": "Software outsourcing",
                     "desc": "Tu partner tecnológico dedicado. Asumimos la responsabilidad total de tu roadmap técnico, entregando soluciones de software integrales a través de células especializadas alineadas con tus objetivos."
                 },
                 {
@@ -191,7 +191,7 @@
     },
     "staffAugmentation": {
         "hero": {
-            "title": "Senior Staff Augmentation",
+            "title": "Senior staff augmentation",
             "subtitle1": "Deja de sumar headcount. Empieza a sumar impacto.",
             "subtitle2": "Dibrand despliega Squads de ingeniería aumentados por IA que no solo ocupan un lugar: se adueñan de tu roadmap y aceleran tu time-to-market.",
             "cta": "Agendar una Cita"
@@ -547,7 +547,7 @@
     },
     "softwareDevelopment": {
         "hero": {
-            "title": "Ingeniería de Software de Clase Mundial Impulsada por IA.",
+            "title": "Ingeniería de software de clase mundial impulsada por IA.",
             "subtitle": "Construimos productos digitales que definen industrias. Combinamos el rigor técnico del top 3% de talento en LATAM con flujos de trabajo nativos de IA para entregar software escalable, seguro y de alto impacto.",
             "cta": "Empezar un proyecto"
         },
@@ -556,7 +556,7 @@
             "everythingLink": "Todo lo que hacemos",
             "items": [
                 {
-                    "title": "Custom Software Development",
+                    "title": "Custom software development",
                     "desc": "Soluciones End-to-End, Full-Stack y arquitecturas Cloud-Native para desafíos de negocio únicos."
                 },
                 {
@@ -601,7 +601,7 @@
     },
     "solutions": {
         "hero": {
-            "title": "Nuestras Soluciones",
+            "title": "Nuestras soluciones",
             "subtitle": "Capacidades de ingeniería de clase mundial para potenciar cada etapa de tu ecosistema digital.",
             "cta": "Agendar consulta técnica"
         },

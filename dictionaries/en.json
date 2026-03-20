@@ -122,15 +122,15 @@
             "title": "Services",
             "items": [
                 {
-                    "title": "Software Development",
+                    "title": "Software development",
                     "desc": "We build robust, scalable digital products from the ground up. Combining strategic design with high-performance engineering to transform complex ideas into market-leading solutions."
                 },
                 {
-                    "title": "Software Outsourcing",
+                    "title": "Software outsourcing",
                     "desc": "Your dedicated technology partner. We take full ownership of your technical roadmap, delivering end-to-end software solutions through specialized squads that align with your business goals."
                 },
                 {
-                    "title": "Staff Augmentation",
+                    "title": "Staff augmentation",
                     "desc": "Scale your team with the top 3% of LATAM’s technical talent. Seamlessly integrate senior engineers into your existing workflow to accelerate delivery and close technical gaps."
                 }
             ]
@@ -191,7 +191,7 @@
     },
     "staffAugmentation": {
         "hero": {
-            "title": "Senior Staff Augmentation",
+            "title": "Senior staff augmentation",
             "subtitle1": "Stop adding headcount. Start adding impact.",
             "subtitle2": "Dibrand deploys AI-augmented engineering squads that don't just fill a seat: they own your roadmap and accelerate your time-to-market.",
             "cta": "Schedule Staff Augmentation Consultation"
@@ -422,7 +422,7 @@
     },
     "aiWorkflows": {
         "hero": {
-            "title": "Data Intelligence & AI Workflows",
+            "title": "Data intelligence & AI workflows",
             "subtitle": "Drive your decision making and automate key processes with customized artificial intelligence. We deploy cognitive agents and data flows that transform your business.",
             "cta": "Book an Appointment"
         },
@@ -542,33 +542,33 @@
                 }
             ]
         },
-        "lemaLine1": "We Don’t Build Software For Today",
-        "lemaLine2": "We Design Architectures For Tomorrow’s Impact."
+        "lemaLine1": "We don’t build software for today",
+        "lemaLine2": "We design architectures for tomorrow’s impact."
     },
     "softwareDevelopment": {
         "hero": {
-            "title": "World-Class Software Engineering Powered by AI.",
+            "title": "World-class software engineering powered by AI.",
             "subtitle": "We build industry-defining digital products. We combine the technical rigor of the top 3% of LATAM talent with AI-native workflows to deliver scalable, secure, and high-impact software.",
             "cta": "Start a project"
         },
         "services": {
-            "title": "Core Services",
+            "title": "Core services",
             "everythingLink": "Everything we do",
             "items": [
                 {
-                    "title": "Custom Software Development",
+                    "title": "Custom software development",
                     "desc": "End-to-End solutions, Full-Stack, and Cloud-Native architectures for unique business challenges."
                 },
                 {
-                    "title": "AI Implementation & Custom Workflows",
+                    "title": "AI implementation & custom workflows",
                     "desc": "Integration of LLMs, AI Agents, RAG, and automation of operational processes."
                 },
                 {
-                    "title": "Strategic Architecture & Modernization",
-                    "desc": "Design of scalable foundations, enterprise-grade security, and friction-less legacy system migration."
+                    "title": "Strategic architecture & modernization",
+                    "desc": "Designing scalable foundations, enterprise-grade security, and legacy migration with zero friction."
                 },
                 {
-                    "title": "UX/UI & Product Engineering",
+                    "title": "UX/UI & product engineering",
                     "desc": "User-centered design, rapid prototyping, and high-performance engagement optimization."
                 }
             ]
@@ -601,7 +601,7 @@
     },
     "solutions": {
         "hero": {
-            "title": "Our Solutions",
+            "title": "Our solutions",
             "subtitle": "World-class engineering capabilities designed to power every stage of your digital ecosystem.",
             "cta": "Schedule a call"
         },
