@@ -16,7 +16,14 @@ export default function InviteRecruiterPage() {
         setLoading(true);
         setError(null);
         try {
-            await inviteRecruiter(formData);
+            const result = await inviteRecruiter(formData);
+            
+            if (result && 'error' in result) {
+                setError(result.error || 'Error desconocido');
+                setLoading(false);
+                return;
+            }
+
             setSuccess(true);
             setTimeout(() => {
                 router.push('/admin/users');

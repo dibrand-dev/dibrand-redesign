@@ -76,8 +76,11 @@ export async function inviteRecruiter(formData: FormData) {
         }
     });
 
-    if (error) throw error;
+    if (error) {
+        console.error('Invite Error:', error);
+        return { error: error.message };
+    }
     
     revalidatePath('/admin/users');
-    return data;
+    return { success: true, data };
 }
