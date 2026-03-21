@@ -18,19 +18,46 @@ export default function SetPasswordPage() {
     const [success, setSuccess] = useState(false);
     const router = useRouter();
 
+    const [sessionReady, setSessionReady] = useState(false);
+
     useEffect(() => {
-        // We need to check if we are authenticated (from the invite link)
-        const checkSession = async () => {
+        // Listen for auth state changes to detect the session from the URL fragment
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                setSessionReady(true);
+                setError(null);
+            }
+        });
+
+        // Also check immediately
+        const checkInitial = async () => {
             const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                setError('No se detectó una invitación válida o el link expiró.');
+            if (session) {
+                setSessionReady(true);
+            } else {
+                // Wait a bit more for fragment processing
+                setTimeout(async () => {
+                    const { data: { session: secondCheck } } = await supabase.auth.getSession();
+                    if (!secondCheck) {
+                        setError('No se detectó una invitación válida o el link expiró.');
+                    } else {
+                        setSessionReady(true);
+                    }
+                }, 2000);
             }
         };
-        checkSession();
+        
+        checkInitial();
+
+        return () => subscription.unsubscribe();
     }, [supabase]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!sessionReady) {
+            setError('Esperando validación de sesión...');
+            return;
+        }
         if (password !== confirmPassword) {
             setError('Las contraseñas no coinciden.');
             return;
