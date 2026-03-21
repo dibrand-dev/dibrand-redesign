@@ -1,6 +1,6 @@
 import React from 'react';
 import { getRecruiterStats, getRecentCandidates } from '../actions';
-import { Users, Briefcase, TrendingUp, Calendar, Filter, MoreHorizontal, ArrowRight, AlertTriangle, Clock } from 'lucide-react';
+import { Users, Briefcase, TrendingUp, Calendar, Filter, MoreHorizontal, ArrowRight, AlertTriangle, Clock, LayoutGrid } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function AtsDashboard() {
@@ -14,7 +14,7 @@ export default async function AtsDashboard() {
     const stats = [
         { label: 'Mis Candidatos', count: counts.Total || 0, icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50' },
         { label: 'Screening / Entrevistas', count: (counts.Screening || 0) + (counts.Interview || 0), icon: Calendar, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-        { label: 'Ofertas / Cierres', count: counts.Offered || 0, icon: Trophy, color: 'text-amber-600', bg: 'bg-amber-50' },
+        { label: 'Ofertas / Cierres', count: counts.Offered || 0, icon: LayoutGrid, color: 'text-amber-600', bg: 'bg-amber-50' },
         { label: 'Descartados', count: counts.Rejected || 0, icon: TrendingUp, color: 'text-rose-600', bg: 'bg-rose-50' }
     ];
 

@@ -1,5 +1,18 @@
 import React from 'react';
-import { getRecruiterJobs } from '../actions';
+import { getRecruiterJobs } from '../../actions';
+
+interface Job {
+    id: string;
+    title: string;
+    title_es?: string;
+    location?: string;
+    location_es?: string;
+    salary_range?: string;
+    seniority?: string;
+    myCandidatesCount: number;
+    totalCandidatesCount: number;
+    targetHires: number;
+}
 import { Briefcase, MapPin, Building2, Globe, ChevronRight, TrendingUp, Users, Target } from 'lucide-react';
 import Link from 'next/link';
 
@@ -16,7 +29,7 @@ export default async function AtsJobsPage() {
 
             {/* Jobs Cards Feed */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                {jobs.length > 0 ? jobs.map((job) => {
+                {jobs.length > 0 ? jobs.map((job: Job) => {
                     const progress = Math.min((job.totalCandidatesCount / (job.targetHires * 5)) * 100, 100); // 5 is arbitrary for visualization
                     
                     return (

@@ -5,11 +5,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import LogoutButton from '@/app/admin/(dashboard)/LogoutButton';
 
+import { syncRecruiterProfile } from '../actions';
+
 export default async function AtsDashboardLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    await syncRecruiterProfile();
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 

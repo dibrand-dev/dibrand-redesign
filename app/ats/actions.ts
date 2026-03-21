@@ -2,8 +2,36 @@
 
 import { createClient } from '@/lib/supabase-server-client';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { revalidatePath } from 'next/cache';
+import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
 
+export async function syncRecruiterProfile() {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+
+    if (!user) return null;
+
+    // Check if recruiter exists
+    const { data: recruiter, error } = await supabase
+        .from('recruiters')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+    if (error && error.code === 'PGRST116') { // Not found
+        const { error: insertError } = await supabase
+            .from('recruiters')
+            .insert([{
+                id: user.id,
+                full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Recruiter',
+                email: user.email,
+                avatar_url: user.user_metadata?.avatar_url || null
+            }]);
+        
+        if (insertError) console.error('Error auto-creating recruiter:', insertError);
+    }
+
+    return user.id;
+}
 export async function getRecruiterStats() {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
