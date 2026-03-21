@@ -484,9 +484,9 @@ export default async function CaseStudyDetailPage({ params }: Props) {
 
                             </div>
 
-                            {/* Global CTA Section — Full Width at bottom */}
+                            {/* Global CTA Section — Restored Image Background with New Border Radius */}
                             <div className="mt-32 lg:col-span-full">
-                                <div className="relative rounded-[3rem] overflow-hidden min-h-[600px] flex items-center p-8 md:p-24 group">
+                                <div className="relative rounded-[1.2rem] overflow-hidden min-h-[500px] flex items-center justify-center p-8 md:p-24 group">
                                     {/* Background Image with Overlay */}
                                     <div className="absolute inset-0 z-0">
                                         <Image
@@ -499,19 +499,19 @@ export default async function CaseStudyDetailPage({ params }: Props) {
                                         <div className="absolute inset-0 bg-[#a04c97]/15" />
                                     </div>
 
-                                    <div className="relative z-10 max-w-3xl space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
-                                        <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold font-outfit tracking-tighter leading-[1.1] text-white">
+                                    <div className="relative z-10 max-w-4xl space-y-8 text-center flex flex-col items-center">
+                                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black font-outfit tracking-tighter leading-tight text-white">
                                             {isEn ? 'Ready to build your own success story?' : '¿Listo para construir tu propia historia de éxito?'}
                                         </h2>
-                                        <p className="text-zinc-200 text-lg md:text-2xl font-outfit font-light leading-relaxed max-w-2xl">
+                                        <p className="text-zinc-200 text-lg md:text-xl font-outfit font-light leading-relaxed max-w-2xl mx-auto">
                                             {isEn
                                                 ? "Let's transform your technical challenges into a competitive advantage with our senior engineering team."
                                                 : 'Transformemos tus desafíos técnicos en una ventaja competitiva con nuestro equipo de ingeniería senior.'}
                                         </p>
-                                        <div className="pt-8">
+                                        <div className="pt-4">
                                             <ScheduleButton
-                                                text={isEn ? 'Schedule a Consultation' : 'Agendar Consulta'}
-                                                className="!bg-white/10 !backdrop-blur-md !border !border-white/30 !text-white hover:!bg-[#a04c97] hover:!border-transparent hover:!scale-105 transition-all duration-300 shadow-2xl px-12 py-6 text-lg"
+                                                text={isEn ? 'Start Your Project' : 'Iniciar Proyecto'}
+                                                className="shadow-2xl"
                                             />
                                         </div>
                                     </div>

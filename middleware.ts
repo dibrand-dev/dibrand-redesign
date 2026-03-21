@@ -34,33 +34,14 @@ function getLocale(request: NextRequest): string {
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
 
-    // 0. LIMPIEZA: El panel de admin (/admin) NO debe tener prefijo de idioma.
-    // Si alguien entra a /es/admin o /en/admin, lo redirigimos al path limpio.
-    const localePrefix = locales.find(l => pathname.startsWith(`/${l}/admin`));
-    if (localePrefix) {
-        const cleanPath = pathname.replace(`/${localePrefix}`, '');
-        return NextResponse.redirect(new URL(cleanPath, request.url));
-    }
-
-    // EXCLUDE STATIC ASSETS AND INTERNAL PATHS
-    if (
-        pathname.startsWith('/_next') ||
-        pathname.startsWith('/api') ||
-        pathname.match(/\.(svg|png|jpg|jpeg|gif|webp|ico)$/) ||
-        pathname === '/favicon.ico' ||
-        pathname === '/logo.png'
-    ) {
-        return NextResponse.next()
-    }
-
-    let response = NextResponse.next({
-        request: {
-            headers: request.headers,
-        },
-    })
-
-    // 1. SUPABASE AUTH PROTECTION FOR /admin
+    // 0. SUPABASE AUTH PROTECTION FOR /admin (Handle this BEFORE any i18n logic)
     if (pathname.startsWith('/admin')) {
+        let response = NextResponse.next({
+            request: {
+                headers: request.headers,
+            },
+        })
+
         const supabase = createServerClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
             process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -89,6 +70,7 @@ export async function middleware(request: NextRequest) {
 
         const { data: { user } } = await supabase.auth.getUser()
 
+        // Auth Logic
         if (!user && pathname !== '/admin/login') {
             return NextResponse.redirect(new URL('/admin/login', request.url))
         }
@@ -99,6 +81,23 @@ export async function middleware(request: NextRequest) {
 
         return response
     }
+
+    // EXCLUDE STATIC ASSETS AND INTERNAL PATHS
+    if (
+        pathname.startsWith('/_next') ||
+        pathname.startsWith('/api') ||
+        pathname.match(/\.(svg|png|jpg|jpeg|gif|webp|ico)$/) ||
+        pathname === '/favicon.ico' ||
+        pathname === '/logo.png'
+    ) {
+        return NextResponse.next()
+    }
+
+    let response = NextResponse.next({
+        request: {
+            headers: request.headers,
+        },
+    })
 
     // 2. LOCALE REDIRECTION (For non-admin routes)
     const pathnameIsMissingLocale = locales.every(
