@@ -126,4 +126,21 @@ export async function updateNote(noteId: string, newText: string, applicationId:
     if (error) throw error;
     revalidatePath(`/admin/candidates/${applicationId}`);
 }
+export async function deleteCandidate(id: string) {
+    // Delete associated notes first to avoid FKEY constraints if any
+    const { error: notesError } = await supabase
+        .from('application_notes')
+        .delete()
+        .eq('application_id', id);
 
+    if (notesError) throw notesError;
+
+    const { error } = await supabase
+        .from('job_applications')
+        .delete()
+        .eq('id', id);
+
+    if (error) throw error;
+    revalidatePath('/admin/candidates');
+    revalidatePath(`/admin/candidates/${id}`);
+}

@@ -3,6 +3,7 @@ import { getCandidates, updateCandidateStatus } from './actions';
 import { User, Briefcase, MapPin, Tag, Search, Filter, ExternalLink } from 'lucide-react';
 import StatusSelector from './StatusSelector';
 import CandidateFilters from './CandidateFilters';
+import DeleteCandidateButton from './DeleteCandidateButton';
 
 export default async function CandidatesPage({
     searchParams,
@@ -88,6 +89,10 @@ export default async function CandidatesPage({
                                         >
                                             <ExternalLink size={18} />
                                         </Link>
+                                        <DeleteCandidateButton 
+                                            candidateId={candidate.id} 
+                                            candidateName={candidate.full_name} 
+                                        />
                                     </div>
                                 </td>
                             </tr>
