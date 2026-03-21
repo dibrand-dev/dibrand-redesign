@@ -5,8 +5,15 @@ import { revalidatePath } from 'next/cache';
 import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
 
 export async function submitApplication(formData: any) {
+    // Split full_name into first_name and last_name for DB compliance
+    const nameParts = (formData.full_name || '').trim().split(/\s+/);
+    const firstName = nameParts[0] || 'Unknown';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
     const dataToInsert = {
         ...formData,
+        first_name: firstName,
+        last_name: lastName,
         status: 'New',
         source: 'Website'
     };
