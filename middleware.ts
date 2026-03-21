@@ -44,8 +44,8 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next()
     }
 
-    // 1. SUPABASE AUTH PROTECTION FOR /admin (Handle this BEFORE any i18n logic)
-    if (pathname.startsWith('/admin')) {
+    // 1. SUPABASE AUTH PROTECTION FOR /admin AND /ats
+    if (pathname.startsWith('/admin') || pathname.startsWith('/ats')) {
         let response = NextResponse.next({
             request: {
                 headers: request.headers,
@@ -84,12 +84,21 @@ export async function middleware(request: NextRequest) {
         const { data: { user } } = await supabase.auth.getUser()
 
         // Auth Logic
-        if (!user && pathname !== '/admin/login') {
-            return NextResponse.redirect(new URL('/admin/login', request.url))
+        if (!user) {
+            if (pathname === '/admin/login' || pathname === '/ats/login') {
+                return response;
+            }
+            const loginPath = pathname.startsWith('/admin') ? '/admin/login' : '/ats/login';
+            return NextResponse.redirect(new URL(loginPath, request.url));
         }
 
-        if (user && pathname === '/admin/login') {
-            return NextResponse.redirect(new URL('/admin/candidates', request.url))
+        if (user) {
+            if (pathname === '/admin/login') {
+                return NextResponse.redirect(new URL('/admin/candidates', request.url));
+            }
+            if (pathname === '/ats/login') {
+                return NextResponse.redirect(new URL('/ats', request.url));
+            }
         }
 
         return response
