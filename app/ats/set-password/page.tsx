@@ -16,38 +16,41 @@ export default function SetPasswordPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
-    const router = useRouter();
-
     const [sessionReady, setSessionReady] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         // Listen for auth state changes to detect the session from the URL fragment
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
                 setSessionReady(true);
+                setInitialLoading(false);
                 setError(null);
             }
         });
 
-        // Also check immediately
-        const checkInitial = async () => {
+        // Check for session with a delay to allow fragment processing
+        const validateSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
                 setSessionReady(true);
+                setInitialLoading(false);
             } else {
-                // Wait a bit more for fragment processing
+                // Give Supabase client 3 seconds to process the hash fragment
                 setTimeout(async () => {
-                    const { data: { session: secondCheck } } = await supabase.auth.getSession();
-                    if (!secondCheck) {
+                    const { data: { session: finalCheck } } = await supabase.auth.getSession();
+                    if (!finalCheck) {
                         setError('No se detectó una invitación válida o el link expiró.');
                     } else {
                         setSessionReady(true);
                     }
-                }, 2000);
+                    setInitialLoading(false);
+                }, 3000);
             }
         };
         
-        checkInitial();
+        validateSession();
 
         return () => subscription.unsubscribe();
     }, [supabase]);
@@ -82,6 +85,22 @@ export default function SetPasswordPage() {
             setLoading(false);
         }
     };
+
+    if (initialLoading) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center p-8">
+                <div className="max-w-md w-full text-center space-y-6 animate-pulse">
+                    <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto border border-slate-200">
+                        <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-black text-slate-800 uppercase tracking-tight">Validando Invitación</h2>
+                        <p className="text-slate-400 text-sm font-medium italic">Espera un momento...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (success) {
         return (
