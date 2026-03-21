@@ -70,7 +70,6 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                 full_name: formData.get('full_name'),
                 email: formData.get('email'),
                 phone: formData.get('phone'),
-                mobile_phone: formData.get('mobile_phone'),
                 country: selectedCountry?.label,
                 state_province: selectedState?.label,
                 linkedin_url: formData.get('linkedin_url'),
@@ -162,25 +161,14 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                 />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">{dict.phone || 'Phone'} *</label>
-                    <input
-                        name="phone"
-                        required
-                        placeholder="+1..."
-                        className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all font-outfit text-zinc-900 text-sm"
-                    />
-                </div>
-                <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">{dict.mobilePhone || 'Mobile Phone'} *</label>
-                    <input
-                        name="mobile_phone"
-                        required
-                        placeholder="+1..."
-                        className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all font-outfit text-zinc-900 text-sm"
-                    />
-                </div>
+            <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">{dict.phone || 'Phone'} *</label>
+                <input
+                    name="phone"
+                    required
+                    placeholder="+1..."
+                    className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-brand/10 focus:border-brand outline-none transition-all font-outfit text-zinc-900 text-sm"
+                />
             </div>
 
             <div className="grid grid-cols-1 gap-4">
