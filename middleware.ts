@@ -33,8 +33,18 @@ function getLocale(request: NextRequest): string {
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
+    const isApiRoute = pathname.startsWith('/api')
+    const isStaticAsset = pathname.match(/\.(svg|png|jpg|jpeg|gif|webp|ico|pdf|txt|xml|json)$/) || 
+                         pathname.startsWith('/_next') || 
+                         pathname === '/favicon.ico' || 
+                         pathname === '/logo.png'
 
-    // 0. SUPABASE AUTH PROTECTION FOR /admin (Handle this BEFORE any i18n logic)
+    // 0. IMMEDIATE EXCLUSION FOR API AND STATIC ASSETS
+    if (isApiRoute || isStaticAsset) {
+        return NextResponse.next()
+    }
+
+    // 1. SUPABASE AUTH PROTECTION FOR /admin (Handle this BEFORE any i18n logic)
     if (pathname.startsWith('/admin')) {
         let response = NextResponse.next({
             request: {
@@ -82,24 +92,13 @@ export async function middleware(request: NextRequest) {
         return response
     }
 
-    // EXCLUDE STATIC ASSETS AND INTERNAL PATHS
-    if (
-        pathname.startsWith('/_next') ||
-        pathname.startsWith('/api') ||
-        pathname.match(/\.(svg|png|jpg|jpeg|gif|webp|ico)$/) ||
-        pathname === '/favicon.ico' ||
-        pathname === '/logo.png'
-    ) {
+    // 2. PROTECT NON-GET REQUESTS FROM i18n REDIRECTS (Critical for Server Actions and APIs)
+    // Applying a redirect to a POST/PUT request will cause the body to be lost.
+    if (request.method !== 'GET') {
         return NextResponse.next()
     }
 
-    let response = NextResponse.next({
-        request: {
-            headers: request.headers,
-        },
-    })
-
-    // 2. LOCALE REDIRECTION (For non-admin routes)
+    // 3. LOCALE REDIRECTION (For non-admin, non-api, non-static GET routes)
     const pathnameIsMissingLocale = locales.every(
         (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
     );
@@ -111,7 +110,11 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(url);
     }
 
-    return response;
+    return NextResponse.next({
+        request: {
+            headers: request.headers,
+        },
+    });
 }
 
 export const config = {
