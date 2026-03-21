@@ -66,12 +66,8 @@ export async function inviteRecruiter(formData: FormData) {
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
 
-    const siteUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.includes('localhost') 
-        ? 'http://localhost:3000' 
-        : 'https://dibrand.co';
-
     const { data, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
-        redirectTo: `${siteUrl}/ats/set-password`,
+        redirectTo: 'https://dibrand.co/ats/set-password',
         data: { 
             firstName,
             lastName,
