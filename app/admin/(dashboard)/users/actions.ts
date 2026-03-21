@@ -73,6 +73,8 @@ export async function inviteRecruiter(formData: FormData) {
     const { data, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
         redirectTo: `${siteUrl}/ats/set-password`,
         data: { 
+            firstName,
+            lastName,
             full_name: `${firstName} ${lastName}`,
             role: 'recruiter' 
         }
