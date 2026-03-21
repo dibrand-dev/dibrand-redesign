@@ -12,7 +12,11 @@ export default async function AtsDashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
-    await syncRecruiterProfile();
+    try {
+        await syncRecruiterProfile();
+    } catch (e) {
+        console.error('Error syncing recruiter profile:', e);
+    }
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 

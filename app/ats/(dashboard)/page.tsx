@@ -66,7 +66,9 @@ export default async function AtsDashboard() {
                     </div>
                     <div className="divide-y divide-slate-100 italic">
                         {recentCandidatesData.length > 0 ? recentCandidatesData.map((candidate) => {
-                            const isStale = (new Date().getTime() - new Date(candidate.updated_at).getTime()) > 5 * 24 * 60 * 60 * 1000 && !['Rejected', 'Offered'].includes(candidate.status);
+                            const baseDate = candidate.updated_at || candidate.created_at;
+                            const isStale = (new Date().getTime() - new Date(baseDate).getTime()) > 5 * 24 * 60 * 60 * 1000 && 
+                                           !['Rejected', 'Offered'].includes(candidate.status);
                             
                             return (
                                 <div key={candidate.id} className="p-6 flex items-center justify-between hover:bg-slate-50/50 transition-colors group">

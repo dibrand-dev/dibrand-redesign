@@ -60,7 +60,7 @@ export async function getRecruiterStats() {
         .from('job_applications')
         .select('*', { count: 'exact', head: true })
         .eq('recruiter_id', user.id)
-        .lt('updated_at', fiveDaysAgo.toISOString())
+        .lt('created_at', fiveDaysAgo.toISOString()) // Temporary fallback until migration is complete
         .not('status', 'in', '("Rejected","Offered")'); // Exclude terminal states
 
     if (staleError) console.error('Error fetching stale count:', staleError);
