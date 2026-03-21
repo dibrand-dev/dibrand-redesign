@@ -13,13 +13,22 @@ export default async function UsersPage() {
                     <h2 className="text-3xl font-black text-admin-text-primary tracking-tight">Administradores</h2>
                     <p className="text-admin-text-secondary text-sm mt-1 font-medium italic">Gestiona los usuarios con acceso al panel</p>
                 </div>
-                <Link
-                    href="/admin/users/new"
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-admin-accent text-white font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-admin-accent/20 active:scale-95"
-                >
-                    <Plus size={20} />
-                    Nuevo Administrador
-                </Link>
+                <div className="flex items-center gap-3">
+                    <Link
+                        href="/admin/users/invite-recruiter"
+                        className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white border border-admin-border text-admin-text-primary font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm active:scale-95"
+                    >
+                        <Plus size={20} className="text-indigo-600" />
+                        Invitar Reclutador
+                    </Link>
+                    <Link
+                        href="/admin/users/new"
+                        className="flex items-center gap-2 px-6 py-3 rounded-xl bg-admin-accent text-white font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-admin-accent/20 active:scale-95"
+                    >
+                        <Plus size={20} />
+                        Nuevo Administrador
+                    </Link>
+                </div>
             </div>
 
             <div className="bg-admin-card-bg rounded-xl shadow-sm border border-admin-border overflow-hidden">

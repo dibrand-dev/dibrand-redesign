@@ -61,3 +61,25 @@ export async function deleteUser(id: string) {
 
     revalidatePath('/admin/users');
 }
+export async function inviteRecruiter(formData: FormData) {
+    const email = formData.get('email') as string;
+    const firstName = formData.get('firstName') as string;
+    const lastName = formData.get('lastName') as string;
+
+    const siteUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.includes('localhost') 
+        ? 'http://localhost:3000' 
+        : 'https://dibrand.co';
+
+    const { data, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+        redirectTo: `${siteUrl}/ats/set-password`,
+        data: { 
+            full_name: `${firstName} ${lastName}`,
+            role: 'recruiter' 
+        }
+    });
+
+    if (error) throw error;
+    
+    revalidatePath('/admin/users');
+    return data;
+}
