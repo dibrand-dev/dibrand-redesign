@@ -14,7 +14,7 @@ const inter = Inter({
     display: "swap",
 });
 
-import { Toaster } from 'react-hot-toast';
+import ToasterProvider from "@/components/admin/ToasterProvider";
 
 export default function AdminRootLayout({
     children,
@@ -24,7 +24,7 @@ export default function AdminRootLayout({
     return (
         <html lang="en" className={`${outfit.variable} ${inter.variable} scroll-smooth`}>
             <body className="font-sans antialiased">
-                <Toaster position="top-right" />
+                <ToasterProvider />
                 {children}
             </body>
         </html>

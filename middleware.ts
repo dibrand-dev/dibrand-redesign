@@ -110,11 +110,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(url);
     }
 
-    return NextResponse.next({
-        request: {
-            headers: request.headers,
-        },
-    });
+    return NextResponse.next();
 }
 
 export const config = {
