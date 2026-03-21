@@ -85,7 +85,7 @@ export async function middleware(request: NextRequest) {
 
         // Auth Logic
         if (!user) {
-            if (pathname === '/admin/login' || pathname === '/ats/login') {
+            if (pathname === '/admin/login' || pathname === '/ats/login' || pathname === '/ats/set-password') {
                 return response;
             }
             const loginPath = pathname.startsWith('/admin') ? '/admin/login' : '/ats/login';
