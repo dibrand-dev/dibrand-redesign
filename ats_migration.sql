@@ -69,20 +69,31 @@ CREATE INDEX IF NOT EXISTS idx_job_applications_recruiter ON job_applications(re
 CREATE OR REPLACE FUNCTION public.handle_invited_recruiter()
 RETURNS TRIGGER AS $$
 BEGIN
+  -- First, we check if there's an existing recruiter with this email but different ID
+  -- This avoids unique constraint violations if a user was re-invited
+  DELETE FROM public.recruiters WHERE email = NEW.email AND id != NEW.id;
+
   INSERT INTO public.recruiters (id, email, first_name, last_name, full_name, is_active)
   VALUES (
     NEW.id,
     NEW.email,
-    NEW.raw_user_meta_data->>'firstName',
-    NEW.raw_user_meta_data->>'lastName',
+    COALESCE(NEW.raw_user_meta_data->>'firstName', ''),
+    COALESCE(NEW.raw_user_meta_data->>'lastName', ''),
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email),
     TRUE
   )
   ON CONFLICT (id) DO UPDATE SET
+    email = EXCLUDED.email,
     first_name = EXCLUDED.first_name,
     last_name = EXCLUDED.last_name,
     full_name = EXCLUDED.full_name,
     updated_at = timezone('utc'::text, now());
+    
+  RETURN NEW;
+EXCEPTION WHEN OTHERS THEN
+  -- We catch all errors to never block the main Auth process
+  -- The syncRecruiterProfile() action in the code will handle 
+  -- the profile creation if this trigger fails.
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
