@@ -20,7 +20,15 @@ BEGIN
   END IF;
 END $$;
 
--- 3. Add Index for performance
+-- 3. Add target_hires to job_openings (if not exists)
+DO $$ 
+BEGIN 
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='job_openings' AND column_name='target_hires') THEN
+    ALTER TABLE job_openings ADD COLUMN target_hires INT DEFAULT 1;
+  END IF;
+END $$;
+
+-- 4. Add Index for performance
 CREATE INDEX IF NOT EXISTS idx_job_applications_recruiter ON job_applications(recruiter_id);
 
 -- 4. Enable RLS (Optional, recommended)
