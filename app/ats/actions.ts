@@ -3,6 +3,11 @@
 import { createClient } from '@/lib/supabase-server-client';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
+import { revalidatePath } from 'next/cache';
+
+export async function getRecentCandidates() {
+    return getAllCandidates({ limit: 5 } as any);
+}
 
 export async function syncRecruiterProfile() {
     const supabaseAuth = await createClient();
@@ -106,26 +111,79 @@ export async function getRecruiterJobs() {
     }) || [];
 }
 
-export async function getRecentCandidates() {
-   const supabaseAuth = await createClient();
+export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number } = {}) {
+    const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
 
     if (!user) return [];
 
-    const { data, error } = await supabase
+    const isAdmin = user.user_metadata?.role === 'admin';
+
+    let query = supabase
         .from('job_applications')
         .select(`
             *,
             job:job_openings(title)
         `)
-        .eq('recruiter_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(5);
+        .order('created_at', { ascending: false });
+
+    if (!isAdmin) {
+        query = query.eq('recruiter_id', user.id);
+    }
+
+    if (filters.status) {
+        query = query.eq('status', filters.status);
+    }
+
+    if (filters.search) {
+        query = query.or(`first_name.ilike.%${filters.search}%,last_name.ilike.%${filters.search}%,full_name.ilike.%${filters.search}%`);
+    }
+
+    if (filters.limit) {
+        query = query.limit(filters.limit);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
-        console.error('Error fetching recent candidates:', error);
+        console.error('Error fetching candidates:', error);
         return [];
     }
 
+    return data || [];
+}
+
+export async function updateCandidateStatus(id: string, status: string) {
+    const { error } = await supabase
+        .from('job_applications')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) throw error;
+    revalidatePath('/ats/candidates');
+    revalidatePath('/ats');
+    return { success: true };
+}
+
+export async function assignRecruiter(candidateId: string, recruiterId: string) {
+    const { error } = await supabase
+        .from('job_applications')
+        .update({ recruiter_id: recruiterId, updated_at: new Date().toISOString() })
+        .eq('id', candidateId);
+
+    if (error) throw error;
+    revalidatePath('/ats/candidates');
+    revalidatePath('/ats');
+    return { success: true };
+}
+
+export async function getRecruiters() {
+    const { data, error } = await supabase
+        .from('recruiters')
+        .select('*')
+        .eq('is_active', true)
+        .order('full_name');
+
+    if (error) throw error;
     return data || [];
 }

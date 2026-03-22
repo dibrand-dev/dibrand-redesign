@@ -106,3 +106,52 @@ CREATE TRIGGER on_auth_user_invited
 
 -- 8. Enable RLS
 ALTER TABLE recruiters ENABLE ROW LEVEL SECURITY;
+ALTER TABLE job_applications ENABLE ROW LEVEL SECURITY;
+
+-- 9. RECRUITERS Policies
+DROP POLICY IF EXISTS "Recruiters are viewable by everyone logged in" ON recruiters;
+CREATE POLICY "Recruiters are viewable by everyone logged in"
+  ON recruiters FOR SELECT
+  USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Recruiters can update own profile" ON recruiters;
+CREATE POLICY "Recruiters can update own profile"
+  ON recruiters FOR UPDATE
+  USING (auth.uid() = id);
+
+-- 10. JOB_APPLICATIONS Policies
+DROP POLICY IF EXISTS "Admins can do everything on applications" ON job_applications;
+CREATE POLICY "Admins can do everything on applications"
+  ON job_applications FOR ALL
+  USING (
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+  );
+
+DROP POLICY IF EXISTS "Recruiters can view assigned applications" ON job_applications;
+CREATE POLICY "Recruiters can view assigned applications"
+  ON job_applications FOR SELECT
+  USING (
+    recruiter_id = auth.uid() OR 
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+  );
+
+DROP POLICY IF EXISTS "Recruiters can update assigned applications" ON job_applications;
+CREATE POLICY "Recruiters can update assigned applications"
+  ON job_applications FOR UPDATE
+  USING (
+    recruiter_id = auth.uid() OR 
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+  );
+
+-- 11. DATA CLEANUP: Link all current applications to the first active recruiter (for testing)
+-- Replace 'USER_ID_HERE' with a real ID if needed, or let the sync handle it.
+-- This ensures the user can see existing demo data.
+DO $$
+DECLARE
+  first_recruiter_id UUID;
+BEGIN
+  SELECT id INTO first_recruiter_id FROM recruiters LIMIT 1;
+  IF first_recruiter_id IS NOT NULL THEN
+    UPDATE job_applications SET recruiter_id = first_recruiter_id WHERE recruiter_id IS NULL;
+  END IF;
+END $$;
