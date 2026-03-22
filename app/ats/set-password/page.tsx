@@ -50,10 +50,14 @@ export default function SetPasswordPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!sessionReady) {
-            setError('Esperando validación de sesión...');
+        
+        // Manual check of the session right before update
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            setError('La sesión ha caducado o no se detectó una invitación activa. Recarga la página.');
             return;
         }
+
         if (password !== confirmPassword) {
             setError('Las contraseñas no coinciden.');
             return;
@@ -63,17 +67,27 @@ export default function SetPasswordPage() {
         setError(null);
 
         try {
+            // Update password
             const { error: updateError } = await supabase.auth.updateUser({
                 password: password
             });
 
-            if (updateError) throw updateError;
+            if (updateError) {
+                setError(updateError.message);
+                setLoading(false);
+                return;
+            }
 
+            // SUCCESS FLOW
             setSuccess(true);
+            
+            // Wait slightly for UI feedback then force redirect
             setTimeout(() => {
                 router.push('/ats');
-            }, 2000);
+            }, 1500);
+
         } catch (err: any) {
+            console.error('Submission error:', err);
             setError(err.message || 'Error al establecer la contraseña.');
             setLoading(false);
         }
