@@ -141,11 +141,31 @@ CREATE POLICY "Recruiters can update assigned applications"
   USING (
     recruiter_id = auth.uid() OR 
     (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+  )
+  WITH CHECK (
+    -- Admins can update anything
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin' OR
+    -- Recruiters can only update if they ARE the owner, AND they are NOT trying to change the owner
+    (recruiter_id = auth.uid() AND (SELECT recruiter_id FROM job_applications WHERE id = id) = recruiter_id)
   );
 
--- 11. DATA CLEANUP: Link all current applications to the first active recruiter (for testing)
--- Replace 'USER_ID_HERE' with a real ID if needed, or let the sync handle it.
--- This ensures the user can see existing demo data.
+-- 11. Add columns for functionality
+ALTER TABLE job_applications ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN DEFAULT false;
+ALTER TABLE job_applications ADD COLUMN IF NOT EXISTS recruiter_notes TEXT;
+
+-- 14. Audit Log Table (Simple version)
+CREATE TABLE IF NOT EXISTS job_application_logs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  application_id UUID REFERENCES job_applications(id) ON DELETE CASCADE,
+  action TEXT NOT NULL,
+  performed_by UUID REFERENCES auth.users(id),
+  metadata JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 12. JOB_OPENINGS Policies
+ALTER TABLE job_openings ENABLE ROW LEVEL SECURITY;
+-- 13. DATA CLEANUP: Link all current applications to the first active recruiter (for testing)
 DO $$
 DECLARE
   first_recruiter_id UUID;

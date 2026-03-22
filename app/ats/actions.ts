@@ -125,6 +125,7 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
             *,
             job:job_openings(title)
         `)
+        .eq('is_deleted', false)
         .order('created_at', { ascending: false });
 
     if (!isAdmin) {
@@ -175,6 +176,46 @@ export async function assignRecruiter(candidateId: string, recruiterId: string) 
     revalidatePath('/ats/candidates');
     revalidatePath('/ats');
     return { success: true };
+}
+
+export async function deleteCandidate(id: string) {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+
+    if (user?.user_metadata?.role !== 'admin') {
+        throw new Error('Solo los administradores pueden eliminar candidatos.');
+    }
+
+    const { error } = await supabase
+        .from('job_applications')
+        .update({ is_deleted: true, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) throw error;
+    revalidatePath('/ats/candidates');
+    return { success: true };
+}
+
+export async function updateCandidateNotes(id: string, notes: string) {
+    const { error } = await supabase
+        .from('job_applications')
+        .update({ recruiter_notes: notes, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) throw error;
+    revalidatePath('/ats/candidates');
+    return { success: true };
+}
+
+export async function getApplicationLogs(applicationId: string) {
+    const { data, error } = await supabase
+        .from('job_application_logs')
+        .select('*')
+        .eq('application_id', applicationId)
+        .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
 }
 
 export async function getRecruiters() {

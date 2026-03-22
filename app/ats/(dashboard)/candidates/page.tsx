@@ -1,6 +1,7 @@
 import React from 'react';
 import { getAllCandidates, getRecruiters } from '../../actions';
 import { Users, Filter, Search, MoreVertical, ExternalLink, Calendar, MapPin, Building2, Briefcase } from 'lucide-react';
+import { createClient } from '@/lib/supabase-server-client';
 import Link from 'next/link';
 import CandidateActionMenu from './CandidateActionMenu';
 
@@ -8,6 +9,10 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const resolvedParams = await searchParams;
     const status = resolvedParams.status as string || undefined;
     const search = resolvedParams.search as string || undefined;
+
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    const userRole = user?.user_metadata?.role || 'recruiter';
 
     const [candidates, recruiters] = await Promise.all([
         getAllCandidates({ status, search }),
@@ -110,6 +115,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
                                             candidateId={candidate.id} 
                                             currentStatus={candidate.status}
                                             recruiters={recruiters}
+                                            userRole={userRole}
                                         />
                                     </td>
                                 </tr>
