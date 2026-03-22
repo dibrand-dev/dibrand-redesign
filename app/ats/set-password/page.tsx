@@ -21,39 +21,32 @@ export default function SetPasswordPage() {
     const router = useRouter();
 
     useEffect(() => {
-        // Listen for auth state changes to detect the session from the URL fragment
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        // Explicitly listen for the invitation session processing
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (session) {
                 setSessionReady(true);
                 setInitialLoading(false);
                 setError(null);
+            } else if (!window.location.hash.includes('access_token')) {
+                // Only show error if there's no token in the hash and no session
+                setError('No se detectó una invitación válida o el link expiró.');
+                setInitialLoading(false);
             }
         });
 
-        // Check for session with a delay to allow fragment processing
-        const validateSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                setSessionReady(true);
+        // Safety timeout for cases where hash processing takes too long or fails
+        const timer = setTimeout(() => {
+            if (initialLoading) {
                 setInitialLoading(false);
-            } else {
-                // Give Supabase client 3 seconds to process the hash fragment
-                setTimeout(async () => {
-                    const { data: { session: finalCheck } } = await supabase.auth.getSession();
-                    if (!finalCheck) {
-                        setError('No se detectó una invitación válida o el link expiró.');
-                    } else {
-                        setSessionReady(true);
-                    }
-                    setInitialLoading(false);
-                }, 3000);
+                // Check if session became ready in the meantime
             }
-        };
-        
-        validateSession();
+        }, 5000);
 
-        return () => subscription.unsubscribe();
-    }, [supabase]);
+        return () => {
+            subscription.unsubscribe();
+            clearTimeout(timer);
+        };
+    }, [supabase, initialLoading]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
