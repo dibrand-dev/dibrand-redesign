@@ -43,11 +43,19 @@ export async function getRecruiterStats() {
 
     if (!user) return null;
 
+    const isAdmin = user.user_metadata?.role === 'admin' || user.user_metadata?.role === 'SuperAdmin';
+
     // 1. Get stats by status
-    const { data: statusCounts, error: statusError } = await supabase
+    let query = supabase
         .from('job_applications')
         .select('status')
-        .eq('recruiter_id', user.id);
+        .eq('is_deleted', false);
+
+    if (!isAdmin) {
+        query = query.eq('recruiter_id', user.id);
+    }
+
+    const { data: statusCounts, error: statusError } = await query;
 
     if (statusError) console.error('Error fetching status counts:', statusError);
 
@@ -61,12 +69,18 @@ export async function getRecruiterStats() {
     const fiveDaysAgo = new Date();
     fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
 
-    const { count: staleCount, error: staleError } = await supabase
+    let staleQuery = supabase
         .from('job_applications')
         .select('*', { count: 'exact', head: true })
-        .eq('recruiter_id', user.id)
-        .lt('created_at', fiveDaysAgo.toISOString()) // Temporary fallback until migration is complete
+        .eq('is_deleted', false)
+        .lt('created_at', fiveDaysAgo.toISOString()) // Temporary fallback
         .not('status', 'in', '("Rejected","Offered")'); // Exclude terminal states
+
+    if (!isAdmin) {
+        staleQuery = staleQuery.eq('recruiter_id', user.id);
+    }
+
+    const { count: staleCount, error: staleError } = await staleQuery;
 
     if (staleError) console.error('Error fetching stale count:', staleError);
 
@@ -82,14 +96,14 @@ export async function getRecruiterJobs() {
 
     if (!user) return [];
 
-    // Fetch jobs and include candidate counts for this recruiter
-    // In a real scenario, we might want to see ALL active jobs 
-    // but with specific recruiter context
+    const isAdmin = user.user_metadata?.role === 'admin' || user.user_metadata?.role === 'SuperAdmin';
+
+    // Fetch jobs and include candidate counts
     const { data: jobs, error: jobsError } = await supabase
         .from('job_openings')
         .select(`
             *,
-            candidates:job_applications(id, recruiter_id)
+            candidates:job_applications(id, recruiter_id, is_deleted)
         `)
         .eq('is_active', true);
 
@@ -99,14 +113,15 @@ export async function getRecruiterJobs() {
     }
 
     return jobs?.map(job => {
-        const recruiterCandidates = job.candidates?.filter((c: any) => c.recruiter_id === user.id) || [];
-        const totalCandidates = job.candidates || [];
+        const allCandidates = job.candidates || [];
+        const activeCandidates = allCandidates.filter((c: any) => !c.is_deleted);
+        const recruiterCandidates = activeCandidates.filter((c: any) => c.recruiter_id === user.id);
         
         return {
             ...job,
             myCandidatesCount: recruiterCandidates.length,
-            totalCandidatesCount: totalCandidates.length,
-            targetHires: job.target_hires || 1 // Fallback if column not yet added
+            totalCandidatesCount: isAdmin ? activeCandidates.length : recruiterCandidates.length,
+            targetHires: job.target_hires || 1
         };
     }) || [];
 }
@@ -117,14 +132,19 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
 
     if (!user) return [];
 
-    const isAdmin = user.user_metadata?.role === 'admin';
+    // Robust check for both metadata and the auth role field
+    const isAdmin = 
+        user.user_metadata?.role === 'admin' || 
+        user.user_metadata?.role === 'SuperAdmin' ||
+        user.role === 'admin' ||
+        user.role === 'SuperAdmin';
 
     let query = supabase
         .from('job_applications')
         .select(`
             *,
             job:job_openings(title)
-        `)
+        `, { count: 'exact' })
         .eq('is_deleted', false)
         .order('created_at', { ascending: false });
 

@@ -149,9 +149,13 @@ CREATE POLICY "Recruiters can update assigned applications"
     (recruiter_id = auth.uid() AND (SELECT recruiter_id FROM job_applications WHERE id = id) = recruiter_id)
   );
 
--- 11. Add columns for functionality
+-- 11. Add columns for functionality and importMapping
 ALTER TABLE job_applications ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN DEFAULT false;
 ALTER TABLE job_applications ADD COLUMN IF NOT EXISTS recruiter_notes TEXT;
+ALTER TABLE job_applications ADD COLUMN IF NOT EXISTS linkedin_url TEXT;
+ALTER TABLE job_applications ADD COLUMN IF NOT EXISTS expected_salary TEXT;
+ALTER TABLE job_applications ADD COLUMN IF NOT EXISTS cv_filename TEXT;
+ALTER TABLE job_applications ADD COLUMN IF NOT EXISTS position TEXT; -- Raw position if job_id is missing
 
 -- 14. Audit Log Table (Simple version)
 CREATE TABLE IF NOT EXISTS job_application_logs (

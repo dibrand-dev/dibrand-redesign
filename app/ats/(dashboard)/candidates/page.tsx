@@ -26,8 +26,13 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
             {/* Context Heading */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200">
                 <div>
-                    <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase leading-none mb-3">Mis <span className="text-indigo-600">Candidatos</span></h2>
-                    <p className="text-slate-500 font-medium italic text-sm">Gestiona el pipeline de tus talentos presentados.</p>
+                    <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase leading-none mb-3">
+                        {userRole === 'admin' || userRole === 'SuperAdmin' ? 'Todos los ' : 'Mis '}
+                        <span className="text-indigo-600">Candidatos</span>
+                    </h2>
+                    <p className="text-slate-500 font-medium italic text-sm">
+                        {userRole === 'admin' || userRole === 'SuperAdmin' ? 'Supervisión global del pipeline de talentos.' : 'Gestiona el pipeline de tus talentos presentados.'}
+                    </p>
                 </div>
                 <form className="relative group">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={18} />
