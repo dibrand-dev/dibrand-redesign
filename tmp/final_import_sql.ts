@@ -36,7 +36,7 @@ async function finalImport() {
 
     console.log(`Processing ${records.length} candidates...`);
 
-    for (const record of records) {
+    for (const record of records as any[]) {
         const recruiterId = recruiterMap.get(record.recruiter_email.toLowerCase()) || recruiterMap.get('norberto@dibrand.co');
         
         // Split name (SQL split_part logic equivalent)

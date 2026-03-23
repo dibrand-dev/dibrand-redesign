@@ -33,7 +33,7 @@ async function importCandidates() {
         'Contacted': 'Screening'
     };
 
-    for (const record of records) {
+    for (const record of records as any[]) {
         const recruiterId = userMap.get(record.recruiter_email.toLowerCase()) || userMap.get('norberto@dibrand.co');
         
         // Split name basic logic
