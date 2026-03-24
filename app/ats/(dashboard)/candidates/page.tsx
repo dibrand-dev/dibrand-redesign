@@ -67,40 +67,40 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
                 </div>
 
             {/* Candidate Grid */}
-            {candidates.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
-                        {candidates.map((candidate: any) => (
-                            <CandidateCardProMax 
-                                key={candidate.id} 
-                                candidate={{
-                                    id: candidate.id,
-                                    full_name: `${candidate.first_name} ${candidate.last_name}`,
-                                    position: candidate.position || candidate.job?.title || 'General App',
-                                    status: candidate.status || 'Applied',
-                                    email: candidate.email,
-                                    phone: candidate.phone || 'No phone',
-                                    linkedin_url: candidate.linkedin_url || '#',
-                                    resume_url: candidate.resume_url || candidate.cv_filename || '#',
-                                    recruiter_id: candidate.recruiter_id
-                                } as Candidate} 
-                            />
-                        ))}
-                        
-                        {/* New Potential Card placeholder */}
-                        <div className="bg-[#FBFCFD] border-2 border-dashed border-[#E1E2E5] rounded-[16px] flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-[#0040A1] hover:bg-white transition-all">
-                            <div className="w-12 h-12 rounded-xl bg-white border border-[#E1E2E5] flex items-center justify-center text-[#6B7485] mb-4 group-hover:scale-110 transition-transform">
-                                <Plus size={24} />
-                            </div>
-                            <h4 className="text-[15px] font-bold text-[#010101] mb-2">New Potential</h4>
-                            <p className="text-[12px] text-[#6B7485] max-w-[180px]">Manually add a high-priority candidate to the pool.</p>
-                        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
+                {/* New Potential Card FIRST (Visible even if no results) */}
+                <div className="bg-[#FBFCFD] border-2 border-dashed border-[#E1E2E5] rounded-[16px] flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-[#0040A1] hover:bg-white transition-all order-first">
+                    <div className="w-12 h-12 rounded-xl bg-white border border-[#E1E2E5] flex items-center justify-center text-[#6B7485] mb-4 group-hover:scale-110 transition-transform">
+                        <Plus size={24} />
                     </div>
+                    <h4 className="text-[15px] font-bold text-[#010101] mb-2">New Potential</h4>
+                    <p className="text-[12px] text-[#6B7485] max-w-[180px]">Manually add a high-priority candidate to the pool.</p>
+                </div>
+
+                {candidates.length > 0 ? (
+                    candidates.map((candidate: any) => (
+                        <CandidateCardProMax 
+                            key={candidate.id} 
+                            candidate={{
+                                id: candidate.id,
+                                full_name: `${candidate.first_name} ${candidate.last_name}`,
+                                position: candidate.position || candidate.job?.title || 'General App',
+                                status: candidate.status || 'Applied',
+                                email: candidate.email,
+                                phone: candidate.phone || 'No phone',
+                                linkedin_url: candidate.linkedin_url || '#',
+                                resume_url: candidate.resume_url || candidate.cv_filename || '#',
+                                recruiter_id: candidate.recruiter_id
+                            } as Candidate} 
+                        />
+                    ))
                 ) : (
-                    <div className="py-24 text-center border-2 border-dashed border-[#E1E2E5] rounded-[16px]">
+                    <div className="col-span-full py-24 text-center border-2 border-dashed border-[#E1E2E5] rounded-[16px]">
                         <Users className="w-12 h-12 text-[#6B7485]/20 mx-auto mb-4" />
-                        <p className="text-[#6B7485] font-medium">No candidates found matching your criteria.</p>
+                        <p className="text-[#6B7485] font-medium">No other candidates found matching your criteria.</p>
                     </div>
                 )}
+            </div>
 
                 {/* Footer Section: Add Candidate + Pagination */}
                 <div className="flex items-center justify-between pt-12 border-t border-[#F1F5F9]">
