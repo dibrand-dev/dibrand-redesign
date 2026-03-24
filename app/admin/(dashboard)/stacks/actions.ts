@@ -55,3 +55,24 @@ export async function deleteStack(id: string) {
     if (error) throw error;
     revalidatePath('/admin', 'layout');
 }
+
+export async function updateStack(id: string, name: string, iconUrl?: string) {
+    if (!name) throw new Error('El nombre es obligatorio');
+    
+    const updateData: any = { 
+        name: name.trim(),
+        icon_url: iconUrl?.trim() || null 
+    };
+
+    const { error } = await supabase
+        .from('tech_stacks')
+        .update(updateData)
+        .eq('id', id);
+
+    if (error) {
+        if (error.code === '23505') throw new Error('Esta tecnología ya existe');
+        throw error;
+    }
+    
+    revalidatePath('/admin', 'layout');
+}

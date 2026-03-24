@@ -2,6 +2,7 @@ import { getStacks, deleteStack } from './actions';
 import { Trash2, Code } from 'lucide-react';
 import StackForm from './StackForm';
 import TechStackIcon from '@/components/admin/TechStackIcon';
+import EditStackModal from './EditStackModal';
 
 export default async function StacksPage() {
     const stacks = await getStacks();
@@ -47,17 +48,20 @@ export default async function StacksPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <form action={async (formData) => {
-                                                'use server'
-                                                await deleteStack(stack.id);
-                                            }}>
-                                                <button
-                                                    className="p-2.5 text-gray-300 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
-                                                    title="Eliminar"
-                                                >
-                                                    <Trash2 size={18} />
-                                                </button>
-                                            </form>
+                                            <div className="flex items-center justify-end gap-2">
+                                                <EditStackModal stack={stack} />
+                                                <form action={async (formData) => {
+                                                    'use server'
+                                                    await deleteStack(stack.id);
+                                                }}>
+                                                    <button
+                                                        className="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                                                        title="Eliminar"
+                                                    >
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
