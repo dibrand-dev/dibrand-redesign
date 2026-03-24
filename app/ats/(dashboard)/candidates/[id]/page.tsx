@@ -20,6 +20,7 @@ import RecruiterNotes from '@/components/ats/RecruiterNotes';
 import MessageButton from '@/components/ats/MessageButton';
 import CandidateProcessActions from '@/components/ats/CandidateProcessActions';
 import EditableCoverLetter from '@/components/ats/EditableCoverLetter';
+import CandidateSkills from '@/components/ats/CandidateSkills';
 
 export default async function CandidateDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -230,17 +231,11 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                                 stages={stages} 
                             />
 
-                            {/* Core Competencies Module */}
-                            <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
-                                <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em] mb-8">Core Competencies</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {(candidate.skills || ['PRODUCT STRATEGY', 'DESIGN SYSTEMS', 'FIGMA', 'NEXT.JS', 'TAILWIND']).map((skill: string) => (
-                                        <span key={skill} className="px-4 py-2 bg-[#0040A1] text-white text-[10px] font-black rounded-lg uppercase tracking-widest shadow-sm">
-                                            {skill}
-                                        </span>
-                                    ))}
-                                </div>
-                            </section>
+                            {/* Core Competencies Module (Interactive) */}
+                            <CandidateSkills 
+                                candidateId={candidate.id} 
+                                initialSkills={candidate.skills || ['PRODUCT STRATEGY', 'DESIGN SYSTEMS', 'FIGMA', 'NEXT.JS', 'TAILWIND']} 
+                            />
 
                             {/* Personal Metadata */}
                             <div className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">

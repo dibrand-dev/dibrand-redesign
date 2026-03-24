@@ -301,3 +301,32 @@ export async function getRecruiters() {
     if (error) throw error;
     return data || [];
 }
+
+export async function getGlobalSkills() {
+    // Select skills from all candidates to build a suggestion list
+    const { data, error } = await supabase
+        .from('job_applications')
+        .select('skills')
+        .not('skills', 'is', null)
+        .eq('is_deleted', false);
+
+    if (error) {
+        console.error('Error fetching global skills:', error);
+        return [];
+    }
+
+    // Flatten and unique
+    const allSkills = data.flatMap(item => item.skills || []);
+    return Array.from(new Set(allSkills)).sort();
+}
+
+export async function updateCandidateSkills(id: string, skills: string[]) {
+    const { error } = await supabase
+        .from('job_applications')
+        .update({ skills, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) throw error;
+    revalidatePath(`/ats/candidates/${id}`);
+    return { success: true };
+}
