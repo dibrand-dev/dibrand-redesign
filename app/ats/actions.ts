@@ -187,13 +187,14 @@ export async function getCandidateById(id: string) {
         .single();
 
     if (error) {
-        console.error('Supabase Error:', {
-            code: error.code,
-            message: error.message,
-            details: error.details,
-            hint: error.hint
-        });
+        console.error('--- DETAILED SUPABASE ERROR ---');
+        console.error('Error Object:', error);
+        console.error('Error Code:', error.code);
+        console.error('Error Message:', error.message);
+        console.error('Error Details:', error.details);
+        console.error('Error Hint:', error.hint);
         console.error('Requested ID:', id);
+        console.error('--- END ERROR ---');
         return null;
     }
 
