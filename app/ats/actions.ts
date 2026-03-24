@@ -139,7 +139,7 @@ export async function getRecruiterJobs() {
     }) || [];
 }
 
-export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number } = {}) {
+export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number, jobId?: string } = {}) {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
 
@@ -156,7 +156,7 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
         .from('job_applications')
         .select(`
             *,
-            job:job_openings(title)
+            job:job_openings(id, title)
         `, { count: 'exact' })
         .eq('is_deleted', false)
         .order('created_at', { ascending: false });
@@ -167,6 +167,10 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
 
     if (filters.status) {
         query = query.eq('status', filters.status);
+    }
+
+    if (filters.jobId) {
+        query = query.eq('job_id', filters.jobId);
     }
 
     if (filters.search) {

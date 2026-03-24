@@ -12,12 +12,13 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const resolvedParams = await searchParams;
     const status = resolvedParams.status as string || undefined;
     const search = resolvedParams.search as string || undefined;
+    const jobId = resolvedParams.jobId as string || undefined;
 
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
     const userRole = user?.user_metadata?.role || 'recruiter';
 
-    const candidates = await getAllCandidates({ status, search });
+    const candidates = await getAllCandidates({ status, search, jobId });
     console.log('CANDIDATES IDs PREVIEW:', candidates.slice(0, 5).map((c: any) => ({ name: c.full_name, id: c.id })));
     const candidateNames = await getCandidateNames();
     return (

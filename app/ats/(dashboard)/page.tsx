@@ -97,8 +97,10 @@ export default async function AtsDashboard() {
                                     {recentJobs.length > 0 ? recentJobs.map((job: any) => (
                                         <tr key={job.id} className="hover:bg-[#F8FAFC] transition-colors cursor-pointer group/row">
                                             <td className="px-6 py-5">
-                                                <p className="text-[14px] font-semibold text-[#191C1D]">{job.title}</p>
-                                                <p className="text-[12px] text-[#737785]">{job.department}</p>
+                                                <Link href={`/ats/candidates?jobId=${job.id}`}>
+                                                    <p className="text-[14px] font-semibold text-[#191C1D] group-hover/row:text-[#0040A1] transition-colors">{job.title}</p>
+                                                    <p className="text-[12px] text-[#737785]">{job.department}</p>
+                                                </Link>
                                             </td>
                                             <td className="px-6 py-5">
                                                 <div className="flex items-center gap-2">
