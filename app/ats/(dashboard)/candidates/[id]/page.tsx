@@ -13,6 +13,7 @@ import EditProfileButton from '@/components/ats/EditProfileButton';
 import ManageProcessButtons from '@/components/ats/ManageProcessButtons';
 import RecruiterNotes from '@/components/ats/RecruiterNotes';
 import MessageButton from '@/components/ats/MessageButton';
+import CandidateProcessActions from '@/components/ats/CandidateProcessActions';
 
 export default async function CandidateDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -75,6 +76,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
 
                         {/* Top Header Actions */}
                         <div className="flex items-center gap-3">
+                            <EditProfileButton candidate={candidate} />
                             <button className="px-8 py-2.5 bg-[#0040A1] text-white rounded-xl text-[13px] font-bold hover:bg-[#003380] transition-all shadow-sm">
                                 Interview
                             </button>
@@ -149,8 +151,17 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                         <div className="col-span-8 space-y-10">
                             {/* Cover Letter Module */}
                             <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
-                                <div className="flex items-center justify-between mb-8">
-                                    <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">Cover Letter</h3>
+                                <div className="flex items-center justify-between mb-6">
+                                    <div className="flex flex-col gap-1">
+                                        <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">Cover Letter</h3>
+                                        <div className="flex items-center gap-4 text-[#A1A5B7] mt-2">
+                                            <button className="hover:text-[#191C1D] transition-colors font-serif font-bold italic">B</button>
+                                            <button className="hover:text-[#191C1D] transition-colors italic">I</button>
+                                            <button className="hover:text-[#191C1D] transition-colors underline">U</button>
+                                            <div className="w-px h-4 bg-[#E1E2E5]" />
+                                            <button className="hover:text-[#191C1D] transition-colors text-[10px]">LIST</button>
+                                        </div>
+                                    </div>
                                     <button className="text-[11px] font-bold text-[#0040A1] hover:underline uppercase tracking-widest">Edit</button>
                                 </div>
                                 <div className="p-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl min-h-[200px] text-[14px] leading-relaxed text-[#424654] font-medium">
@@ -222,17 +233,11 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                         {/* Right Column (Sidebar/Actions) */}
                         <div className="col-span-4 space-y-10">
                             {/* Process Actions Module */}
-                            <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
-                                <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em] mb-8">Process Actions</h3>
-                                <div className="space-y-4">
-                                    <button className="w-full py-4 bg-[#0040A1] text-white rounded-2xl text-[14px] font-bold hover:bg-[#003380] transition-all shadow-md active:scale-98">
-                                        Advance Stage
-                                    </button>
-                                    <button className="w-full py-4 bg-white text-[#BA1A1A] border-2 border-[#FFDAD6] rounded-2xl text-[14px] font-bold hover:bg-[#FFF8F7] transition-all active:scale-98">
-                                        Reject Candidate
-                                    </button>
-                                </div>
-                            </section>
+                            <CandidateProcessActions 
+                                candidateId={candidate.id} 
+                                currentStatus={currentStatus} 
+                                stages={stages} 
+                            />
 
                             {/* Core Competencies Module */}
                             <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
