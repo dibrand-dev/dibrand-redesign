@@ -234,7 +234,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                             {/* Core Competencies Module (Interactive) */}
                             <CandidateSkills 
                                 candidateId={candidate.id} 
-                                initialSkills={candidate.skills || ['PRODUCT STRATEGY', 'DESIGN SYSTEMS', 'FIGMA', 'NEXT.JS', 'TAILWIND']} 
+                                initialSkills={candidate.skills || []} 
                             />
 
                             {/* Personal Metadata */}
