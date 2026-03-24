@@ -70,9 +70,11 @@ export async function updateStack(id: string, name: string, iconUrl?: string) {
         .eq('id', id);
 
     if (error) {
+        console.error('Database error in updateStack:', error);
         if (error.code === '23505') throw new Error('Esta tecnología ya existe');
-        throw error;
+        throw new Error(error.message || 'Error desconocido al actualizar');
     }
     
+    revalidatePath('/admin/stacks');
     revalidatePath('/admin', 'layout');
 }
