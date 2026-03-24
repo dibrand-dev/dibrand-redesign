@@ -194,6 +194,18 @@ export async function getCandidateById(id: string) {
     return data;
 }
 
+export async function updateCandidate(id: string, updates: any) {
+    const { error } = await supabase
+        .from('job_applications')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) throw error;
+    revalidatePath(`/ats/candidates/${id}`);
+    revalidatePath('/ats/candidates');
+    return { success: true };
+}
+
 export async function updateCandidateStatus(id: string, status: string) {
     const { error } = await supabase
         .from('job_applications')

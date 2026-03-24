@@ -5,10 +5,12 @@ import {
     ChevronRight, Briefcase, CheckCircle2, 
     Download, Maximize2, FileText, 
     UserPlus, XCircle, MoreVertical,
-    Clock, Globe, Linkedin, Star
+    Clock, Globe, Linkedin, Star,
+    Edit2
 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import EditProfileButton from '@/components/ats/EditProfileButton';
 
 export default async function CandidateDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -71,9 +73,12 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                             </div>
                         </div>
 
-                        <button className="px-8 py-3 rounded-xl border border-[#E1E2E5] text-[13px] font-bold text-[#191C1D] hover:bg-[#F8FAFC] transition-all bg-white shadow-sm flex items-center gap-2">
-                            <MessageSquare size={18} /> Message
-                        </button>
+                        <div className="flex flex-wrap items-center gap-4">
+                            <EditProfileButton candidate={candidate} />
+                            <button className="px-8 py-3 rounded-xl border border-[#E1E2E5] text-[13px] font-bold text-[#191C1D] hover:bg-[#F8FAFC] transition-all bg-white shadow-sm flex items-center gap-2">
+                                <MessageSquare size={18} /> Message
+                            </button>
+                        </div>
                     </div>
 
                     {/* Horizontal Pipeline Status */}
