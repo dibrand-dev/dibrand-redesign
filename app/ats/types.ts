@@ -9,6 +9,7 @@ export interface Candidate {
   linkedin_url: string;
   resume_url: string; 
   recruiter_id: string;
+  country?: string;
   first_name?: string;
   last_name?: string;
   location?: string;

@@ -51,7 +51,7 @@ const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
         <p className="text-[13px] text-[#6B7485] font-medium leading-none mb-2">{candidate.position}</p>
         <div className="flex items-center gap-1.5 text-[11px] text-[#6B7485] font-bold uppercase tracking-widest">
             <MapPin size={12} className="shrink-0" />
-            UNITED KINGDOM
+            {candidate.country?.toUpperCase() || 'N/A'}
         </div>
       </div>
 
