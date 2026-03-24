@@ -303,21 +303,28 @@ export async function getRecruiters() {
 }
 
 export async function getGlobalSkills() {
-    // Select skills from all candidates to build a suggestion list
-    const { data, error } = await supabase
+    // Select from tech_stacks (Admin defined)
+    const { data: adminStacks, error } = await supabase
+        .from('tech_stacks')
+        .select('name')
+        .order('name');
+
+    if (error) {
+        console.error('Error fetching admin stacks:', error);
+    }
+
+    // Select skills from candidates as well for a broader list
+    const { data: candidateSkills, error: cError } = await supabase
         .from('job_applications')
         .select('skills')
         .not('skills', 'is', null)
         .eq('is_deleted', false);
 
-    if (error) {
-        console.error('Error fetching global skills:', error);
-        return [];
-    }
+    const adminNames = (adminStacks || []).map(s => s.name);
+    const candidateNames = (candidateSkills || []).flatMap(item => item.skills || []);
 
-    // Flatten and unique
-    const allSkills = data.flatMap(item => item.skills || []);
-    return Array.from(new Set(allSkills)).sort();
+    // Flatten, make unique and sort
+    return Array.from(new Set([...adminNames, ...candidateNames])).sort();
 }
 
 export async function updateCandidateSkills(id: string, skills: string[]) {
