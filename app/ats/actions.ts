@@ -421,3 +421,64 @@ export async function getCandidateNames() {
         email: c.email
     }));
 }
+
+export async function createCandidate(formData: {
+    full_name: string;
+    email: string;
+    phone: string;
+    candidate_summary: string;
+    resume_url: string;
+    country: string;
+    state_province: string;
+    job_id: string;
+    linkedin_url?: string;
+}) {
+    // 1. Check for duplicate email
+    const { data: existing } = await supabase
+        .from('job_applications')
+        .select('id')
+        .eq('email', formData.email)
+        .eq('is_deleted', false)
+        .single();
+
+    if (existing) {
+        return { error: 'Este email ya pertenece a otro candidato.' };
+    }
+
+    // 2. Name Splitting
+    const names = formData.full_name.trim().split(' ');
+    const first_name = names[0];
+    const last_name = names.length > 1 ? names.slice(1).join(' ') : '';
+
+    // 3. Insert into DB
+    const { data, error } = await supabase
+        .from('job_applications')
+        .insert([{
+            full_name: formData.full_name,
+            first_name,
+            last_name,
+            email: formData.email,
+            phone: formData.phone,
+            candidate_summary: formData.candidate_summary,
+            resume_url: formData.resume_url,
+            country: formData.country,
+            state_province: formData.state_province,
+            job_id: formData.job_id,
+            linkedin_url: formData.linkedin_url,
+            status: 'Applied', // Default Stage
+            is_deleted: false,
+            created_at: new Date().toISOString()
+        }])
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error creating candidate:', error);
+        return { error: error.message };
+    }
+
+    revalidatePath('/ats/candidates');
+    revalidatePath('/ats');
+    
+    return { success: true, id: data.id };
+}
