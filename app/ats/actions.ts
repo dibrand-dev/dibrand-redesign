@@ -60,7 +60,8 @@ export async function getRecruiterStats() {
     if (statusError) console.error('Error fetching status counts:', statusError);
 
     const counts = (statusCounts || []).reduce((acc: any, curr: any) => {
-        acc[curr.status] = (acc[curr.status] || 0) + 1;
+        const stage = curr.status || 'Applied';
+        acc[stage] = (acc[stage] || 0) + 1;
         acc['Total'] = (acc['Total'] || 0) + 1;
         return acc;
     }, { Total: 0 });
@@ -73,20 +74,32 @@ export async function getRecruiterStats() {
         .from('job_applications')
         .select('*', { count: 'exact', head: true })
         .eq('is_deleted', false)
-        .lt('created_at', fiveDaysAgo.toISOString()) // Temporary fallback
-        .not('status', 'in', '("Rejected","Offered")'); // Exclude terminal states
+        .lt('created_at', fiveDaysAgo.toISOString()) 
+        .not('status', 'in', '("Rejected","Offered","Hired")');
 
     if (!isAdmin) {
         staleQuery = staleQuery.eq('recruiter_id', user.id);
     }
 
-    const { count: staleCount, error: staleError } = await staleQuery;
+    const { count: staleCount } = await staleQuery;
 
-    if (staleError) console.error('Error fetching stale count:', staleError);
+    // 3. Get Real Jobs Count
+    let jobsQuery = supabase
+        .from('job_openings')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'Open');
+
+    if (!isAdmin) {
+        jobsQuery = jobsQuery.eq('recruiter_id', user.id);
+    }
+
+    const { count: activeJobsCount } = await jobsQuery;
 
     return {
         counts,
-        staleCount: staleCount || 0
+        staleCount: staleCount || 0,
+        activeJobsCount: activeJobsCount || 0,
+        hiredCount: counts['Hired'] || 0
     };
 }
 
