@@ -187,7 +187,13 @@ export async function getCandidateById(id: string) {
         .single();
 
     if (error) {
-        console.error('Error fetching candidate detail:', error);
+        console.error('Supabase Error:', {
+            code: error.code,
+            message: error.message,
+            details: error.details,
+            hint: error.hint
+        });
+        console.error('Requested ID:', id);
         return null;
     }
 
