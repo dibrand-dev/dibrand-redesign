@@ -15,9 +15,8 @@ interface Note {
     id: string;
     author_name: string;
     author_avatar_url?: string;
-    message: string;
+    note_text: string;
     created_at: string;
-    type: string;
 }
 
 export default function RecruiterNotes({ 
@@ -176,7 +175,7 @@ export default function RecruiterNotes({
                             </div>
                             <div className="bg-white border border-[#E1E2E5] hover:border-[#0040A1]/20 p-4 rounded-2xl rounded-tl-none shadow-sm transition-all group-hover:shadow-md">
                                 <p className="text-[13px] text-[#424654] leading-relaxed whitespace-pre-wrap">
-                                    {note.message.split(' ').map((word, i) => (
+                                    {note.note_text.split(' ').map((word, i) => (
                                         word.startsWith('@') ? (
                                             <span key={i} className="text-[#0040A1] font-bold bg-[#DAE2FF]/30 px-1 rounded cursor-pointer">{word} </span>
                                         ) : `${word} `

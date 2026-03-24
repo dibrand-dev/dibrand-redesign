@@ -167,6 +167,16 @@ CREATE TABLE IF NOT EXISTS job_application_logs (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- 15. Application Notes Table (Internal History)
+CREATE TABLE IF NOT EXISTS application_notes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  application_id UUID REFERENCES job_applications(id) ON DELETE CASCADE,
+  author_name TEXT NOT NULL,
+  author_avatar_url TEXT,
+  note_text TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- 12. JOB_OPENINGS Policies
 ALTER TABLE job_openings ENABLE ROW LEVEL SECURITY;
 -- 13. DATA CLEANUP: Link all current applications to the first active recruiter (for testing)

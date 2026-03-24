@@ -261,7 +261,7 @@ export async function updateCandidateNotes(id: string, notes: string) {
 
 export async function getApplicationLogs(applicationId: string) {
     const { data, error } = await supabase
-        .from('job_application_logs')
+        .from('application_notes')
         .select('*')
         .eq('application_id', applicationId)
         .order('created_at', { ascending: false });
@@ -278,13 +278,12 @@ export async function addApplicationLog(applicationId: string, noteText: string)
     const avatarUrl = user?.user_metadata?.avatar_url || null;
 
     const { error } = await supabase
-        .from('job_application_logs')
+        .from('application_notes')
         .insert([{
             application_id: applicationId,
             author_name: fullName,
             author_avatar_url: avatarUrl,
-            message: noteText,
-            type: 'NOTE'
+            note_text: noteText
         }]);
 
     if (error) throw error;
