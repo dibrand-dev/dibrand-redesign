@@ -2,19 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  FileText, 
   Users, 
   Eye, 
-  TrendingUp, 
-  PlusCircle, 
   MessageSquare, 
   Briefcase,
-  Bell,
-  ArrowUpRight,
   MousePointerClick,
   Clock,
   ExternalLink,
-  Loader2
+  Loader2,
+  Calendar,
+  Activity,
+  ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
 import { getDashboardStats, DateRange } from '@/app/admin/(dashboard)/dashboard-actions';
@@ -41,8 +39,8 @@ export default function DashboardV2() {
       label: 'Consultas de Contacto', 
       value: data?.kpis.contactLeads.value ?? '...', 
       icon: MessageSquare, 
-      color: 'text-blue-600', 
-      bg: 'bg-blue-50', 
+      color: 'text-[#0040A1]', 
+      bg: 'bg-[#DAE2FF]', 
       trend: data?.kpis.contactLeads.trend ?? '',
       isPositive: true 
     },
@@ -50,8 +48,8 @@ export default function DashboardV2() {
       label: 'Clicks en Turnos', 
       value: data?.kpis.appointmentClicks.value ?? '...', 
       icon: MousePointerClick, 
-      color: 'text-purple-600', 
-      bg: 'bg-purple-50', 
+      color: 'text-[#0040A1]', 
+      bg: 'bg-[#DAE2FF]', 
       trend: data?.kpis.appointmentClicks.trend ?? '',
       isPositive: true 
     },
@@ -59,8 +57,8 @@ export default function DashboardV2() {
       label: 'Nuevos Candidatos', 
       value: data?.kpis.newCandidates.value ?? '...', 
       icon: Users, 
-      color: 'text-emerald-600', 
-      bg: 'bg-emerald-50', 
+      color: 'text-[#0040A1]', 
+      bg: 'bg-[#DAE2FF]', 
       trend: data?.kpis.newCandidates.trend ?? '',
       isPositive: true 
     },
@@ -68,27 +66,27 @@ export default function DashboardV2() {
       label: 'Tráfico Portfolio', 
       value: data?.kpis.portfolioTraffic.value ?? '...', 
       icon: Eye, 
-      color: 'text-brand-fuchsia', 
-      bg: 'bg-brand-fuchsia/5', 
+      color: 'text-[#0040A1]', 
+      bg: 'bg-[#DAE2FF]', 
       trend: data?.kpis.portfolioTraffic.trend ?? '',
       isPositive: true 
     },
   ];
 
   return (
-    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Header section */}
+    <div className="space-y-6 animate-in fade-in duration-700 font-inter">
+      {/* Header section - ATS Sync */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-black text-admin-text-primary tracking-tight">Vista General</h2>
-          <p className="text-admin-text-secondary text-sm mt-1 font-medium italic">Estado actual de Dibrand Digital.</p>
+          <h2 className="text-2xl font-bold text-[#191C1D] tracking-tight">Vista General</h2>
+          <p className="text-[13px] text-[#737785] mt-1 font-medium">Estado actual de Dibrand Digital.</p>
         </div>
         
         <div className="flex items-center gap-3">
           <select 
             value={range}
             onChange={(e) => setRange(e.target.value as DateRange)}
-            className="bg-admin-card-bg border border-admin-border text-admin-text-primary rounded-xl px-4 py-2 text-xs font-bold focus:ring-2 focus:ring-admin-accent outline-none shadow-sm cursor-pointer"
+            className="bg-white border border-[#E2E8F0] text-[#191C1D] rounded-xl px-4 py-2 text-[12px] font-semibold focus:border-[#0040A1] outline-none shadow-sm cursor-pointer transition-all"
           >
             <option value="today">Hoy</option>
             <option value="last10">Últimos 10 días</option>
@@ -99,129 +97,92 @@ export default function DashboardV2() {
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {kpis.map((kpi) => (
-          <div key={kpi.label} className="bg-admin-card-bg p-6 rounded-2xl border border-admin-border shadow-sm flex flex-col gap-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300 group">
-            <div className="flex justify-between items-start">
-              <div className={`p-3 rounded-xl ${kpi.bg} ${kpi.color} transition-colors group-hover:scale-110 duration-300`}>
-                <kpi.icon size={22} />
+      {/* Stats Grid - EXACT ATS STYLE */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {kpis.map((stat) => (
+          <div key={stat.label} className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-sm hover:shadow-md transition-all group">
+            <div className="flex items-center justify-between mb-6">
+              <div className={`w-12 h-12 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center transition-transform shadow-sm group-hover:scale-105`}>
+                <stat.icon size={22} />
               </div>
-              <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full ${kpi.isPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
-                {kpi.trend}
-              </div>
+              <span className={`text-[11px] font-bold ${stat.isPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'} px-2 py-1 rounded-full flex items-center gap-1 uppercase tracking-wider`}>
+                {stat.trend}
+              </span>
             </div>
-            <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">{kpi.label}</p>
-              <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-black text-admin-text-primary">
-                  {loading ? <Loader2 size={24} className="animate-spin text-gray-200" /> : kpi.value}
-                </p>
-              </div>
-            </div>
+            <p className="text-[11px] font-bold text-[#737785] uppercase tracking-wider mb-1">{stat.label}</p>
+            <h4 className="text-3xl font-bold text-[#191C1D] tracking-tight">
+              {loading ? <Loader2 size={24} className="animate-spin text-[#E2E8F0]" /> : stat.value}
+            </h4>
           </div>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Main Chart Area */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Chart Card */}
-          <div className="bg-admin-card-bg p-8 rounded-2xl border border-admin-border shadow-sm space-y-6">
-             <div className="flex items-center justify-between border-b border-admin-border/50 pb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Main Content Area */}
+        <div className="lg:col-span-8 space-y-6">
+          <div className="bg-white p-8 rounded-xl border border-[#E2E8F0] shadow-sm">
+             <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#F1F5F9]">
                <div>
-                <h3 className="text-sm font-black text-admin-text-primary uppercase tracking-[0.2em] flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                  Tendencia de Conversión
-                </h3>
-                <p className="text-[10px] text-gray-400 font-bold uppercase mt-1">Últimos 7 días</p>
+                <h3 className="text-lg font-bold text-[#191C1D]">Tendencia de Conversión</h3>
+                <p className="text-[12px] text-[#737785] font-medium">Visualización de interacciones recientes</p>
                </div>
             </div>
             {loading ? (
               <div className="h-[300px] flex items-center justify-center">
-                 <Loader2 size={40} className="animate-spin text-admin-accent opacity-20" />
+                 <Loader2 size={40} className="animate-spin text-[#0040A1] opacity-20" />
               </div>
             ) : (
-              <ConversionChart data={data?.chartData || []} />
+              <div className="w-full overflow-hidden">
+                <ConversionChart data={data?.chartData || []} />
+              </div>
             )}
           </div>
-
         </div>
 
-        {/* Sidebar Activity & Actions */}
-        <div className="space-y-8">
-            {/* Recent Activity */}
-            <div className="bg-admin-card-bg p-8 rounded-2xl border border-admin-border shadow-sm space-y-6">
-                <div className="flex items-center justify-between border-b border-admin-border/50 pb-4">
-                    <h3 className="text-sm font-black text-admin-text-primary uppercase tracking-[0.2em] flex items-center gap-2">
-                        <Clock size={16} /> Actividad
-                    </h3>
-                </div>
-                <div className="space-y-6">
-                    {loading ? [1,2,3].map(i => <div key={i} className="h-10 bg-gray-50 animate-pulse rounded-lg"/>) : 
+        {/* Action Sidebar */}
+        <div className="lg:col-span-4 space-y-6">
+            <div className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-sm">
+                <h4 className="text-[13px] font-bold text-[#191C1D] uppercase tracking-widest mb-6 flex items-center gap-2">
+                    <Clock size={16} className="text-[#0040A1]" /> Actividad Reciente
+                </h4>
+                <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                    {loading ? [1,2,3].map(i => <div key={i} className="h-10 bg-[#F8FAFC] animate-pulse rounded-lg"/>) : 
                         data?.activity.length > 0 ? data.activity.map((item: any, i: number) => (
                         <div key={i} className="flex gap-4">
-                            <div className="w-8 h-8 rounded-full bg-admin-accent/10 flex items-center justify-center text-[10px] font-black text-admin-accent shrink-0 uppercase">
+                            <div className="w-8 h-8 rounded-lg bg-[#DAE2FF] flex items-center justify-center text-[10px] font-bold text-[#0040A1] shrink-0 uppercase">
                                 {item.admin_email?.[0] || 'A'}
                             </div>
                             <div className="space-y-1">
-                                <p className="text-[11px] text-admin-text-primary leading-relaxed font-medium">
-                                    <span className="font-bold text-gray-500">{item.admin_email?.split('@')[0]}</span> {item.action} <span className="font-bold text-admin-accent">{item.target_name}</span>
+                                <p className="text-[12px] text-[#191C1D] leading-relaxed font-medium">
+                                    <span className="font-bold">{item.admin_email?.split('@')[0]}</span> {item.action} <span className="font-bold text-[#0040A1]">{item.target_name}</span>
                                 </p>
-                                <p className="text-[9px] text-gray-400 uppercase tracking-wider font-bold">
-                                    {new Date(item.created_at).toLocaleDateString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                                <p className="text-[10px] text-[#737785] font-medium">
+                                    {new Date(item.created_at).toLocaleDateString()} • {new Date(item.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                 </p>
                             </div>
                         </div>
                     )) : (
-                        <p className="text-[10px] text-gray-400 italic">Sin actividad reciente.</p>
+                        <p className="text-[12px] text-[#737785] italic">Sin actividad reciente.</p>
                     )}
                 </div>
             </div>
 
-            {/* Quick Actions */}
-            <div className="bg-admin-card-bg p-8 rounded-2xl border border-admin-border shadow-sm space-y-6">
-                <div className="flex items-center justify-between border-b border-admin-border/50 pb-4">
-                    <h3 className="text-sm font-black text-admin-text-primary uppercase tracking-[0.2em]">Accesos</h3>
-                </div>
-                <div className="grid grid-cols-1 gap-4">
-                    <Link
-                        href="/admin/success-stories/new"
-                        className="p-5 border border-admin-border rounded-2xl hover:border-admin-accent/30 hover:bg-admin-accent/5 transition-all group flex items-center gap-4"
-                    >
-                        <div className="w-10 h-10 rounded-xl bg-admin-bg flex items-center justify-center text-gray-400 group-hover:bg-admin-accent/10 group-hover:text-admin-accent transition-colors">
-                            <PlusCircle size={20} />
-                        </div>
-                        <div>
-                            <p className="font-bold text-sm text-admin-text-primary">Crear Caso</p>
-                            <p className="text-[10px] text-gray-400 font-medium">Nuevo caso de éxito</p>
-                        </div>
-                    </Link>
-
-                    <Link
-                        href="/admin/jobs/new"
-                        className="p-5 border border-admin-border rounded-2xl hover:border-admin-accent/30 hover:bg-admin-accent/5 transition-all group flex items-center gap-4"
-                    >
-                        <div className="w-10 h-10 rounded-xl bg-admin-bg flex items-center justify-center text-gray-400 group-hover:bg-admin-accent/10 group-hover:text-admin-accent transition-colors">
-                            <Briefcase size={20} />
-                        </div>
-                        <div>
-                            <p className="font-bold text-sm text-admin-text-primary">Publicar Job</p>
-                            <p className="text-[10px] text-gray-400 font-medium">Búsqueda laboral</p>
-                        </div>
-                    </Link>
-                </div>
-            </div>
-
-            {/* Help / Docs Section */}
-            <div className="bg-admin-card-bg p-8 rounded-2xl border border-admin-border shadow-sm">
-                <h4 className="text-[11px] font-black text-admin-text-primary uppercase tracking-[0.2em] mb-4">Soporte y Ayuda</h4>
-                <div className="space-y-4">
-                  <Link href="/admin/docs" className="flex items-center justify-between p-4 bg-admin-bg rounded-xl hover:bg-admin-border transition-colors group">
-                    <span className="text-xs font-bold text-admin-text-primary">Guía de Administrador</span>
-                    <ExternalLink size={14} className="text-gray-400 group-hover:text-admin-accent" />
-                  </Link>
-                </div>
+            <div className="bg-[#191C1D] rounded-xl p-8 text-white relative overflow-hidden shadow-xl">
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#0040A1]/30 rounded-full blur-[40px] -mr-16 -mt-16"></div>
+                 <div className="relative z-10">
+                     <h5 className="text-xl font-bold mb-3">Accesos Directos</h5>
+                     <p className="text-[13px] text-[#E2E8F0] mb-6 leading-relaxed opacity-80">Gestiona contenidos estratégicos de forma rápida.</p>
+                     <div className="grid gap-3">
+                         <Link href="/admin/success-stories/new" className="flex items-center justify-between p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all border border-white/5 font-medium text-[13px]">
+                             <span>Nuevo Caso de Éxito</span>
+                             <ArrowRight size={16} />
+                         </Link>
+                         <Link href="/admin/jobs/new" className="flex items-center justify-between p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all border border-white/5 font-medium text-[13px]">
+                             <span>Publicar Búsqueda Laboral</span>
+                             <ArrowRight size={16} />
+                         </Link>
+                     </div>
+                 </div>
             </div>
         </div>
       </div>

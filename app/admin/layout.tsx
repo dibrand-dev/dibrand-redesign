@@ -23,7 +23,7 @@ export default function AdminRootLayout({
 }) {
     return (
         <html lang="en" data-theme="admin" className={`${outfit.variable} ${inter.variable} scroll-smooth`}>
-            <body className="font-sans antialiased">
+            <body className="font-inter antialiased overflow-hidden">
                 <ToasterProvider />
                 {children}
             </body>

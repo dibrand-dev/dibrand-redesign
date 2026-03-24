@@ -9,6 +9,7 @@ const config: Config = {
         extend: {
             fontFamily: {
                 sans: ['var(--font-outfit)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                inter: ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
             },
         },
     },
