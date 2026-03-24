@@ -1,5 +1,4 @@
-import React from 'react';
-import { getCandidateById } from '../../../actions';
+import { getCandidateById, getApplicationLogs } from '../../../actions';
 import { 
     MapPin, Mail, Phone, MessageSquare, 
     ChevronRight, Briefcase, CheckCircle2, 
@@ -12,10 +11,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import EditProfileButton from '@/components/ats/EditProfileButton';
 import ManageProcessButtons from '@/components/ats/ManageProcessButtons';
+import RecruiterNotes from '@/components/ats/RecruiterNotes';
+import MessageButton from '@/components/ats/MessageButton';
 
 export default async function CandidateDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const candidate = await getCandidateById(id);
+    const logs = await getApplicationLogs(id);
 
     if (!candidate) {
         notFound();
@@ -76,9 +78,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
 
                         <div className="flex flex-wrap items-center gap-4">
                             <EditProfileButton candidate={candidate} />
-                            <button className="px-8 py-3 rounded-xl border border-[#E1E2E5] text-[13px] font-bold text-[#191C1D] hover:bg-[#F8FAFC] transition-all bg-white shadow-sm flex items-center gap-2">
-                                <MessageSquare size={18} /> Message
-                            </button>
+                            <MessageButton />
                         </div>
                     </div>
 
@@ -133,7 +133,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                             </div>
                             
                             <div className="p-8 bg-[#FBFCFD] border border-[#E1E2E5] rounded-xl">
-                                <div className="flex items-start justify-between mb-8">
+                                <div className="flex items-start justify-between mb-0">
                                     <div className="flex items-center gap-5">
                                         <div className="w-14 h-14 rounded-2xl bg-white border border-[#E1E2E5] flex items-center justify-center text-[#0040A1] shadow-sm">
                                             <Briefcase size={24} />
@@ -148,12 +148,6 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                                         <p className="text-[14px] font-bold text-[#191C1D]">{candidate.recruiter?.full_name || 'Not assigned'}</p>
                                     </div>
                                 </div>
-                                <div className="pt-6 border-t border-[#F1F5F9]">
-                                     <h4 className="text-[11px] font-bold text-[#6B7485] uppercase tracking-widest mb-3">Recruiter Notes</h4>
-                                     <p className="text-[14px] text-[#191C1D] leading-relaxed italic">
-                                         {candidate.recruiter_notes || 'No notes added for this candidate yet.'}
-                                     </p>
-                                </div>
                             </div>
                         </section>
 
@@ -167,8 +161,8 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                                     <h3 className="text-[15px] font-bold text-[#191C1D] truncate max-w-xs">{candidate.cv_filename || `${candidate.full_name}_CV.pdf`}</h3>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                     <button className="p-2 text-[#737785] hover:text-[#191C1D]"><Download size={18} /></button>
-                                     <button className="p-2 text-[#737785] hover:text-[#191C1D]"><Maximize2 size={18} /></button>
+                                     <button className="p-2 text-[#737785] hover:text-[#191C1D] transition-colors"><Download size={18} /></button>
+                                     <button className="p-2 text-[#737785] hover:text-[#191C1D] transition-colors"><Maximize2 size={18} /></button>
                                 </div>
                             </div>
                             <div className="aspect-[4/5] bg-[#F1F5F9] flex flex-col items-center justify-center p-20 text-center">
@@ -178,7 +172,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                                             <FileText size={40} className="text-[#0040A1]" />
                                         </div>
                                         <h4 className="text-xl font-bold mb-2">Resume Preview</h4>
-                                        <p className="text-sm text-[#737785] max-w-sm mx-auto mb-8 leading-relaxed">The document has been securely processed.</p>
+                                        <p className="text-sm text-[#737785] max-w-sm mx-auto mb-8 leading-relaxed">The document has been securely processed and is ready for review.</p>
                                         <a 
                                             href={candidate.resume_url || '#'} 
                                             target="_blank" 
@@ -195,6 +189,9 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                                  )}
                             </div>
                         </section>
+
+                        {/* Recruiter Notes Section (NEW - Integrated History) */}
+                        <RecruiterNotes applicationId={candidate.id} initialNotes={logs} />
                     </div>
 
                     {/* Right Column (Sidebar/Actions) */}

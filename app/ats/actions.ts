@@ -270,6 +270,28 @@ export async function getApplicationLogs(applicationId: string) {
     return data || [];
 }
 
+export async function addApplicationLog(applicationId: string, noteText: string) {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+
+    const fullName = user?.user_metadata?.full_name || user?.email || 'Recruiter';
+    const avatarUrl = user?.user_metadata?.avatar_url || null;
+
+    const { error } = await supabase
+        .from('job_application_logs')
+        .insert([{
+            application_id: applicationId,
+            author_name: fullName,
+            author_avatar_url: avatarUrl,
+            message: noteText,
+            type: 'NOTE'
+        }]);
+
+    if (error) throw error;
+    revalidatePath(`/ats/candidates/${applicationId}`);
+    return { success: true };
+}
+
 export async function getRecruiters() {
     const { data, error } = await supabase
         .from('recruiters')
