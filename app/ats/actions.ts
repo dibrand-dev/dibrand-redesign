@@ -353,3 +353,31 @@ export async function updateCandidateSkills(id: string, skills: string[]) {
     revalidatePath(`/ats/candidates/${id}`);
     return { success: true };
 }
+
+export async function patchCandidateByEmail(email: string, patchData: any) {
+    const { error } = await supabase
+        .from('job_applications')
+        .update(patchData)
+        .eq('email', email);
+
+    if (error) throw error;
+    return { success: true };
+}
+
+export async function getCandidateNames() {
+    const { data, error } = await supabase
+        .from('job_applications')
+        .select('id, full_name, first_name, last_name, email')
+        .eq('is_deleted', false);
+
+    if (error) {
+        console.error('Error fetching candidate names:', error);
+        return [];
+    }
+
+    return (data || []).map((c: any) => ({
+        id: c.id,
+        name: c.full_name || `${c.first_name} ${c.last_name}`,
+        email: c.email
+    }));
+}

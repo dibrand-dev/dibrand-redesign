@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase-server-client';
 import Link from 'next/link';
 import CandidateCardProMax from '@/components/ats/CandidateCardProMax';
 import { Candidate } from '@/app/ats/types';
+import SearchTalentPredictive from '@/components/ats/SearchTalentPredictive';
+import { getCandidateNames } from '@/app/ats/actions';
 
 export default async function AtsCandidatesPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
     const resolvedParams = await searchParams;
@@ -16,6 +18,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const userRole = user?.user_metadata?.role || 'recruiter';
 
     const candidates = await getAllCandidates({ status, search });
+    const candidateNames = await getCandidateNames();
     return (
         <div className="max-w-[1104px] mx-auto bg-white min-h-screen p-10 shadow-sm border-x border-[#E1E2E5]">
             {/* Header Section */}
@@ -26,19 +29,10 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <form className="relative group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6B7485]" size={18} />
-                            <input
-                                name="search"
-                                type="text"
-                                defaultValue={search}
-                                placeholder="Search talent..."
-                                className="pl-12 pr-12 py-3 bg-white border border-[#E1E2E5] rounded-xl text-[13px] font-medium focus:outline-none focus:border-[#0040A1] w-64 transition-all"
-                            />
-                            <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7485] hover:text-[#010101]">
-                                <Filter size={18} />
-                            </button>
-                        </form>
+                        <SearchTalentPredictive 
+                            candidates={candidateNames} 
+                            initialQuery={search} 
+                        />
                     </div>
                 </div>
 
