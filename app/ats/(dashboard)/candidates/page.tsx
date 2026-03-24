@@ -17,10 +17,8 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
 
     const candidates = await getAllCandidates({ status, search });
     return (
-        <div className="min-h-full bg-[#E5E5E5] font-inter">
-            {/* Main Center Container - as per Figma 1024px width container within layout */}
-            <div className="max-w-[1104px] mx-auto bg-white min-h-screen p-10 shadow-sm border-x border-[#E1E2E5]">
-                {/* Header Section */}
+        <div className="max-w-[1104px] mx-auto bg-white min-h-screen p-10 shadow-sm border-x border-[#E1E2E5]">
+            {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-12">
                     <div>
                         <h1 className="text-[34px] font-bold text-[#010101] leading-tight mb-2 tracking-tight">Talent Pool</h1>
@@ -72,9 +70,9 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
                     </button>
                 </div>
 
-                {/* Candidate Grid */}
-                {Object.keys(candidates).length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
+            {/* Candidate Grid */}
+            {candidates.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
                         {candidates.map((candidate: any) => (
                             <CandidateCardProMax 
                                 key={candidate.id} 
@@ -130,7 +128,6 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
 
                 <div className="mt-8 text-center text-[12px] text-[#6B7485]">
                    Showing <span className="font-bold text-[#010101] text-[13px]">{candidates.length}</span> of <span className="font-bold text-[#010101] text-[13px]">284</span> specialized candidates
-                </div>
             </div>
         </div>
     );

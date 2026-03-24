@@ -21,7 +21,7 @@ export default function AtsLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={`${outfit.variable} ${inter.variable} scroll-smooth`} data-theme="ats">
+        <html lang="en" className={`${outfit.variable} ${inter.variable} scroll-smooth`} data-theme="ats" suppressHydrationWarning>
             <body className="font-sans antialiased">
                 <ToasterProvider />
                 {children}
