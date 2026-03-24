@@ -171,7 +171,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                         <div className="col-span-8 space-y-10">
                             <EditableCoverLetter 
                                 candidateId={candidate.id} 
-                                initialContent={candidate.cover_letter || ""} 
+                                initialContent={candidate.cover_letter || candidate.candidate_summary || ""} 
                             />
 
                             {/* Application History Module */}
