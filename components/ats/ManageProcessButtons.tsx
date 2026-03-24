@@ -6,17 +6,19 @@ import { updateCandidateStatus } from '@/app/ats/actions';
 import { useRouter } from 'next/navigation';
 
 export default function ManageProcessButtons({ candidateId, currentStatus }: { candidateId: string, currentStatus: string }) {
-    const [isUpdating, setIsUpdating] = useState<'advance' | 'reject' | null>(null);
+    const [isUpdating, setIsUpdating] = useState<'advance' | 'reject' | 'custom' | null>(null);
+    const [showDropdown, setShowDropdown] = useState(false);
     const router = useRouter();
 
     const stages = ['New', 'Applied', 'Screening', 'Interview', 'Cultural Fit', 'Final Round', 'Offered', 'Hired'];
+    const allStages = [...stages, 'Rejected'];
     const currentIndex = stages.indexOf(currentStatus);
     const nextStatus = currentIndex < stages.length - 1 ? stages[currentIndex + 1] : null;
 
-    const handleUpdate = async (type: 'advance' | 'reject') => {
+    const handleUpdate = async (statusToSet: string, type: 'advance' | 'reject' | 'custom') => {
         setIsUpdating(type);
+        setShowDropdown(false);
         try {
-            const statusToSet = type === 'reject' ? 'Rejected' : (nextStatus || 'Hired');
             await updateCandidateStatus(candidateId, statusToSet);
             router.refresh();
         } catch (error) {
@@ -36,7 +38,7 @@ export default function ManageProcessButtons({ candidateId, currentStatus }: { c
             
             {!isHired && !isRejected && nextStatus && (
                 <button 
-                    onClick={() => handleUpdate('advance')}
+                    onClick={() => handleUpdate(nextStatus, 'advance')}
                     disabled={isUpdating !== null}
                     className="w-full py-4 bg-[#DAE2FF] text-[#001D49] rounded-xl text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#C9D6FF] transition-all disabled:opacity-50 group"
                 >
@@ -47,7 +49,7 @@ export default function ManageProcessButtons({ candidateId, currentStatus }: { c
 
             {!isRejected && (
                 <button 
-                    onClick={() => handleUpdate('reject')}
+                    onClick={() => handleUpdate('Rejected', 'reject')}
                     disabled={isUpdating !== null}
                     className="w-full py-4 bg-[#FFDAD6] text-[#BA1A1A] rounded-xl text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#FFC9C4] transition-all disabled:opacity-50 group"
                 >
@@ -63,9 +65,32 @@ export default function ManageProcessButtons({ candidateId, currentStatus }: { c
                 </div>
             )}
 
-            <button className="w-full py-4 bg-white border border-[#E1E2E5] text-[#191C1D] rounded-xl text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#F8FAFC] transition-all active:scale-[0.98]">
-                <MoreVertical size={18} /> Other Actions
-            </button>
+            <div className="relative">
+                <button 
+                    onClick={() => setShowDropdown(!showDropdown)}
+                    className="w-full py-4 bg-white border border-[#E1E2E5] text-[#191C1D] rounded-xl text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#F8FAFC] transition-all active:scale-[0.98]"
+                >
+                    <MoreVertical size={18} /> Other Actions
+                </button>
+
+                {showDropdown && (
+                    <div className="absolute bottom-full left-0 right-0 mb-2 bg-white border border-[#E1E2E5] rounded-xl shadow-2xl z-20 py-2 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+                        <p className="px-4 py-2 text-[10px] font-bold text-[#A1A5B7] uppercase tracking-widest border-b border-[#F1F5F9] mb-1">Move to State</p>
+                        {allStages.map((stage) => (
+                            <button
+                                key={stage}
+                                onClick={() => handleUpdate(stage, 'custom')}
+                                className={`w-full px-4 py-2.5 text-left text-[12px] font-semibold hover:bg-[#F1F5F9] transition-colors flex items-center justify-between group ${
+                                    currentStatus === stage ? 'text-[#0040A1] bg-[#F8FAFC]' : 'text-[#191C1D]'
+                                }`}
+                            >
+                                {stage}
+                                {currentStatus === stage && <CheckCircle2 size={14} className="text-[#0040A1]" />}
+                            </button>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
