@@ -22,7 +22,7 @@ export default function AdminRootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={`${outfit.variable} ${inter.variable} scroll-smooth`}>
+        <html lang="en" data-theme="admin" className={`${outfit.variable} ${inter.variable} scroll-smooth`}>
             <body className="font-sans antialiased">
                 <ToasterProvider />
                 {children}

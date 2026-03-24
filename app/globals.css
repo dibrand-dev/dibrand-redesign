@@ -28,7 +28,29 @@
   --admin-accent: var(--figma-primary-blue);
 }
 
+[data-theme="admin"] {
+  /* Site Theme - Admin Panel (Synced with ATS aesthetic) */
+  --brand-primary: var(--figma-primary-blue);
+  --background: var(--figma-bg-page);
+  
+  /* Admin specific tokens mapped to Figma tokens */
+  --admin-bg: var(--figma-bg-page);
+  --admin-card-bg: var(--figma-bg-dashboard);
+  --admin-sidebar-bg: var(--figma-bg-sidebar);
+  --admin-border: var(--figma-border);
+  --admin-accent: var(--figma-primary-blue);
+  --admin-text-primary: var(--figma-text-primary);
+  --admin-text-secondary: var(--figma-text-secondary);
+}
+
 @theme {
+  --color-admin-bg: var(--admin-bg);
+  --color-admin-card-bg: var(--admin-card-bg);
+  --color-admin-sidebar-bg: var(--admin-sidebar-bg);
+  --color-admin-border: var(--admin-border);
+  --color-admin-accent: var(--admin-accent);
+  --color-admin-text-primary: var(--admin-text-primary);
+  --color-admin-text-secondary: var(--admin-text-secondary);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
