@@ -26,7 +26,7 @@ export default function EditableCoverLetter({ candidateId, initialContent }: Edi
         content: initialContent || '<p>Dynamic professional with a proven track record. Passionate about creating impact through high-performance engineering.</p>',
         editorProps: {
             attributes: {
-                class: 'prose prose-sm focus:outline-none max-w-none min-h-[300px] p-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl text-[14px] leading-relaxed text-[#424654] font-medium',
+                class: 'prose prose-sm focus:outline-none max-w-none min-h-[300px] p-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl text-[15px] leading-relaxed text-[#424654] font-medium whitespace-pre-wrap',
             },
         },
     });
@@ -118,7 +118,7 @@ export default function EditableCoverLetter({ candidateId, initialContent }: Edi
             {isEditing ? (
                 <EditorContent editor={editor} className="editor-container" />
             ) : (
-                <div className="p-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl min-h-[200px] text-[14px] leading-relaxed text-[#424654] font-medium prose prose-sm max-w-none">
+                <div className="p-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl min-h-[150px] text-[15px] leading-relaxed text-[#424654] font-medium prose prose-sm max-w-none whitespace-pre-wrap">
                     <div dangerouslySetInnerHTML={{ __html: initialContent || "No cover letter provided." }} />
                 </div>
             )}
