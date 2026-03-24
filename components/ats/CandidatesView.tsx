@@ -12,11 +12,25 @@ interface CandidatesViewProps {
     totalCount: number;
     page: number;
     totalPages: number;
-    getPageUrl: (p: number) => string;
+    // Pass filters to generate URLs locally
+    filters: {
+        status?: string;
+        search?: string;
+        jobId?: string;
+    };
 }
 
-export default function CandidatesView({ candidates, totalCount, page, totalPages, getPageUrl }: CandidatesViewProps) {
+export default function CandidatesView({ candidates, totalCount, page, totalPages, filters }: CandidatesViewProps) {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+    const getPageUrl = (p: number) => {
+        const params = new URLSearchParams();
+        if (filters.status) params.set('status', filters.status);
+        if (filters.search) params.set('search', filters.search);
+        if (filters.jobId) params.set('jobId', filters.jobId);
+        params.set('page', p.toString());
+        return `/ats/candidates?${params.toString()}`;
+    };
 
     return (
         <>

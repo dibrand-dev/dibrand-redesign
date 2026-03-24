@@ -27,15 +27,6 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const candidateNames = await getCandidateNames();
     const totalPages = Math.ceil(totalCount / limit);
 
-    const getPageUrl = (p: number) => {
-        const params = new URLSearchParams();
-        if (status) params.set('status', status);
-        if (search) params.set('search', search);
-        if (jobId) params.set('jobId', jobId);
-        params.set('page', p.toString());
-        return `/ats/candidates?${params.toString()}`;
-    };
-
     return (
         <div className="max-w-[1104px] mx-auto bg-white min-h-screen p-10 shadow-sm border-x border-[#E1E2E5] font-inter">
             {/* Header Section */}
@@ -86,7 +77,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
                 totalCount={totalCount}
                 page={page}
                 totalPages={totalPages}
-                getPageUrl={getPageUrl}
+                filters={{ status, search, jobId }}
             />
         </div>
     );
