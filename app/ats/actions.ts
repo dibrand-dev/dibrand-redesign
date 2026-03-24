@@ -347,6 +347,20 @@ export async function getStackNames(ids: string[]) {
     return (data || []).map(s => s.name.toUpperCase());
 }
 
+export async function getAllTechStacks() {
+    const { data, error } = await supabase
+        .from('tech_stacks')
+        .select('*')
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching tech stacks:', error);
+        return [];
+    }
+
+    return data || [];
+}
+
 export async function getRecruiters() {
     const { data, error } = await supabase
         .from('recruiters')

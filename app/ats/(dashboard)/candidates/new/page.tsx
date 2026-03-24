@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { UserPlus, Loader2, Save, Globe, Briefcase, Mail, Phone, Link as LinkIcon, FileText, Star, X, ChevronLeft } from 'lucide-react';
-import { createCandidate, getRecruiterJobs } from '@/app/ats/actions';
+import { createCandidate, getRecruiterJobs, getAllTechStacks } from '@/app/ats/actions';
 import { useRouter } from 'next/navigation';
 import { Country, State } from 'country-state-city';
 import { toast } from 'react-hot-toast';
@@ -11,6 +11,7 @@ import Link from 'next/link';
 export default function NewCandidatePage() {
     const [isSaving, setIsSaving] = useState(false);
     const [jobs, setJobs] = useState<any[]>([]);
+    const [techStacks, setTechStacks] = useState<any[]>([]);
     const [countries] = useState(Country.getAllCountries());
     const [states, setStates] = useState<any[]>([]);
     const [skills, setSkills] = useState<string[]>([]);
@@ -31,6 +32,7 @@ export default function NewCandidatePage() {
 
     useEffect(() => {
         fetchJobs();
+        fetchTechStacks();
     }, []);
 
     const fetchJobs = async () => {
@@ -39,6 +41,15 @@ export default function NewCandidatePage() {
             setJobs(data || []);
         } catch (error) {
             console.error('Error fetching jobs:', error);
+        }
+    };
+
+    const fetchTechStacks = async () => {
+        try {
+            const data = await getAllTechStacks();
+            setTechStacks(data || []);
+        } catch (error) {
+            console.error('Error fetching tech stacks:', error);
         }
     };
 
@@ -262,6 +273,7 @@ export default function NewCandidatePage() {
                                     <div className="relative">
                                         <Star size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#A1A5B7]" />
                                         <input 
+                                            list="tech-stacks"
                                             placeholder="Type skill and press Enter (e.g. React, UX Writing)"
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter') {
@@ -275,7 +287,13 @@ export default function NewCandidatePage() {
                                             }}
                                             className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 outline-none transition-all"
                                         />
+                                        <datalist id="tech-stacks">
+                                            {techStacks.map(stack => (
+                                                <option key={stack.id} value={stack.name} />
+                                            ))}
+                                        </datalist>
                                     </div>
+                                    <p className="text-[11px] text-[#A1A5B7] font-medium italic">Sugerencias cargadas automáticamente desde el catálogo de Tech Stack.</p>
                                 </div>
 
                                 {/* Resume Link */}
