@@ -30,6 +30,8 @@ import CandidateSkills from '@/components/ats/CandidateSkills';
 
 export default async function CandidateDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
+    console.log('--- ENTERING CANDIDATE DETAIL PAGE ---');
+    console.log('ID parameter:', id);
     const candidate = await getCandidateById(id);
     const logs = await getApplicationLogs(id);
 
