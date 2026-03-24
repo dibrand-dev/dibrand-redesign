@@ -20,6 +20,7 @@ export default function EditProfileButton({ candidate }: { candidate: any }) {
         email: candidate.email || '',
         phone: candidate.phone || '',
         country: candidate.country || '',
+        linkedin_url: candidate.linkedin_url || '',
         recruiter_notes: candidate.recruiter_notes || ''
     });
 
@@ -138,6 +139,16 @@ export default function EditProfileButton({ candidate }: { candidate: any }) {
                                         className="w-full px-4 py-3 rounded-xl border border-[#E1E2E5] text-[14px] focus:border-[#0040A1] outline-none transition-all"
                                     />
                                 </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[11px] font-bold text-[#6B7485] uppercase tracking-widest">LinkedIn URL</label>
+                                <input 
+                                    value={formData.linkedin_url}
+                                    onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
+                                    placeholder="https://www.linkedin.com/in/..."
+                                    className="w-full px-4 py-3 rounded-xl border border-[#E1E2E5] text-[14px] focus:border-[#0040A1] outline-none transition-all"
+                                />
                             </div>
 
                             <div className="space-y-2 relative">
