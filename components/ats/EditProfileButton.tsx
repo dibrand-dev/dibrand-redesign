@@ -6,9 +6,12 @@ import { updateCandidate } from '@/app/ats/actions';
 import { Candidate } from '@/app/ats/types';
 import { useRouter } from 'next/navigation';
 
+import { Country } from 'country-state-city';
+
 export default function EditProfileButton({ candidate }: { candidate: any }) {
     const [isOpen, setIsOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const [formData, setFormData] = useState({
         full_name: candidate.full_name || '',
         first_name: candidate.first_name || '',
@@ -20,7 +23,30 @@ export default function EditProfileButton({ candidate }: { candidate: any }) {
         recruiter_notes: candidate.recruiter_notes || ''
     });
 
+    const countries = Country.getAllCountries();
+    const [filteredCountries, setFilteredCountries] = useState<any[]>([]);
+    const [showPreview, setShowPreview] = useState(false);
+
     const router = useRouter();
+
+    const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        setFormData({...formData, location: val});
+        if (val.length > 1) {
+            const filtered = countries.filter(c => 
+                c.name.toLowerCase().includes(val.toLowerCase())
+            ).slice(0, 5);
+            setFilteredCountries(filtered);
+            setShowPreview(true);
+        } else {
+            setShowPreview(false);
+        }
+    };
+
+    const selectCountry = (name: string) => {
+        setFormData({...formData, location: name});
+        setShowPreview(false);
+    };
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -114,13 +140,30 @@ export default function EditProfileButton({ candidate }: { candidate: any }) {
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
+                            <div className="space-y-2 relative">
                                 <label className="text-[11px] font-bold text-[#6B7485] uppercase tracking-widest">Location</label>
                                 <input 
                                     value={formData.location}
-                                    onChange={(e) => setFormData({...formData, location: e.target.value})}
+                                    onChange={handleLocationChange}
+                                    placeholder="e.g. United Kingdom"
+                                    autoComplete="off"
                                     className="w-full px-4 py-3 rounded-xl border border-[#E1E2E5] text-[14px] focus:border-[#0040A1] outline-none transition-all"
                                 />
+                                {showPreview && filteredCountries.length > 0 && (
+                                    <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-[#E1E2E5] rounded-xl shadow-xl z-10 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                                        {filteredCountries.map((country: any) => (
+                                            <button
+                                                key={country.isoCode}
+                                                type="button"
+                                                onClick={() => selectCountry(country.name)}
+                                                className="w-full px-4 py-3 text-left text-[13px] hover:bg-[#F1F5F9] transition-colors flex items-center justify-between group"
+                                            >
+                                                <span className="font-medium text-[#191C1D]">{country.name}</span>
+                                                <span className="text-[10px] text-[#A1A5B7] font-bold group-hover:text-[#0040A1]">{country.isoCode}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="space-y-2">
