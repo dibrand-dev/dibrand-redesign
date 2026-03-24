@@ -69,7 +69,7 @@ export default function EditProfileButton({ candidate }: { candidate: any }) {
                 onClick={() => setIsOpen(true)}
                 className="px-8 py-3 rounded-xl border border-[#E1E2E5] text-[13px] font-bold text-[#191C1D] hover:bg-[#0040A1] hover:text-white hover:border-[#0040A1] transition-all bg-white shadow-sm flex items-center gap-2 group"
             >
-                <Edit2 size={16} className="group-hover:scale-110 transition-transform" /> Edit Profile
+                <Edit2 size={16} className="group-hover:scale-110 transition-transform" /> Edit
             </button>
 
             {isOpen && (
