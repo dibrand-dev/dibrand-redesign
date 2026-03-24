@@ -19,7 +19,8 @@ import {
     BookOpen,
     LayoutGrid,
     LogOut,
-    HelpCircle
+    HelpCircle,
+    PlusCircle
 } from 'lucide-react';
 import LogoutButton from './LogoutButton';
 
@@ -40,8 +41,8 @@ export default function Sidebar() {
     const [isCollapsed, setIsCollapsed] = React.useState(false);
 
     return (
-        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} bg-admin-sidebar-bg border-r border-admin-border flex flex-col transition-all duration-300 z-30 relative h-screen shadow-[4px_0_24px_rgba(0,0,0,0.02)]`}>
-            {/* Logo Section - ATS Style */}
+        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} bg-[#F8FAFC] border-r border-[#E2E8F0] flex flex-col transition-all duration-300 z-30 relative h-screen shadow-sm`}>
+            {/* Logo Section - EXACT ATS STYLE */}
             <div className={`p-6 flex items-center ${isCollapsed ? 'justify-center' : 'justify-start'} h-24`}>
                 {!isCollapsed && (
                     <Link href="/admin" className="flex items-center gap-3">
@@ -67,8 +68,8 @@ export default function Sidebar() {
                 )}
             </div>
 
-            {/* Navigation - ATS Style */}
-            <nav className="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar pt-4">
+            {/* Navigation - EXACT ATS STYLE */}
+            <nav className="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar pt-2">
                 {MENU_ITEMS.map((item) => {
                     const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
                     const Icon = item.icon;
@@ -78,14 +79,14 @@ export default function Sidebar() {
                             key={item.href}
                             href={item.href}
                             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative ${isActive
-                                ? 'bg-[#F1F5F9] text-admin-accent font-semibold'
-                                : 'text-admin-text-secondary hover:bg-slate-50 hover:text-admin-text-primary font-medium'
+                                ? 'bg-[#F1F5F9] text-[#0040A1] font-semibold'
+                                : 'text-[#737785] hover:bg-slate-50 hover:text-[#191C1D] font-medium'
                                 }`}
                         >
                             {isActive && (
-                                <span className="absolute left-0 top-3 bottom-3 w-1 bg-admin-accent rounded-full"></span>
+                                <span className="absolute left-0 top-3 bottom-3 w-1 bg-[#0040A1] rounded-full"></span>
                             )}
-                            <Icon size={20} className={`${isActive ? 'text-admin-accent' : 'text-admin-text-secondary group-hover:text-admin-accent'} transition-colors shrink-0`} />
+                            <Icon size={20} className={`${isActive ? 'text-[#0040A1]' : 'text-[#737785] group-hover:text-[#0040A1]'} transition-colors shrink-0`} />
                             {!isCollapsed && (
                                 <span className="text-[13px] tracking-tight">
                                     {item.label}
@@ -101,32 +102,34 @@ export default function Sidebar() {
                 })}
             </nav>
 
-            {/* Support / Bottom Menu - ATS Style */}
-            <div className="p-4 border-t border-admin-border">
-                <Link
-                    href="/admin/docs"
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${pathname === '/admin/docs'
-                            ? 'bg-admin-accent/5 font-semibold'
-                            : 'hover:bg-slate-50'
-                        } ${isCollapsed ? 'justify-center px-0' : ''}`}
-                >
-                    <HelpCircle size={20} className={`${pathname === '/admin/docs' ? 'text-admin-accent' : 'text-admin-text-secondary group-hover:text-admin-accent'}`} />
-                    {!isCollapsed && (
-                        <span className={`text-[13px] tracking-tight ${pathname === '/admin/docs' ? 'text-admin-accent' : 'text-admin-text-primary font-medium'}`}>
-                            Help & Docs
-                        </span>
-                    )}
-                </Link>
-
-                <div className="pt-2">
+            {/* Bottom Section - ATS STYLE */}
+            <div className="p-4 border-t border-[#E2E8F0]">
+                {!isCollapsed && (
+                    <Link 
+                        href="/admin/cases/new"
+                        className="w-full py-3 bg-[#0040A1] hover:bg-[#003380] text-white rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition-all shadow-sm"
+                    >
+                         <PlusCircle size={18} />
+                         Nuevo Caso
+                    </Link>
+                )}
+                {isCollapsed && (
+                    <Link 
+                        href="/admin/cases/new"
+                        className="w-10 h-10 mx-auto bg-[#0040A1] text-white rounded-xl flex items-center justify-center hover:bg-[#003380] transition-all"
+                    >
+                         <PlusCircle size={20} />
+                    </Link>
+                )}
+                <div className="mt-4">
                     <LogoutButton isCollapsed={isCollapsed} />
                 </div>
             </div>
 
-            {/* Toggle Button - Figma Style */}
+            {/* Toggle Button - EXACT ATS STYLE */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="absolute -right-4 top-28 w-8 h-8 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 hover:text-admin-accent shadow-xl shadow-slate-200/50 transition-all hover:scale-110 z-40 group"
+                className="absolute -right-4 top-28 w-8 h-8 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#0040A1] shadow-xl shadow-slate-200/50 transition-all hover:scale-110 z-40 group"
             >
                 {isCollapsed ? <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" /> : <ChevronLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />}
             </button>
