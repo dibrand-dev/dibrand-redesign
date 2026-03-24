@@ -217,19 +217,38 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                                          <button className="p-2 text-[#737785] hover:text-[#191C1D] transition-colors"><Maximize2 size={18} /></button>
                                     </div>
                                 </div>
-                                <div className="aspect-[4/5] bg-[#F1F5F9] flex flex-col items-center justify-center p-20 text-center">
-                                     <div className="w-20 h-20 rounded-xl bg-white flex items-center justify-center mb-6 shadow-xl shadow-slate-200">
-                                         <FileText size={32} className="text-[#0040A1]" />
-                                     </div>
-                                     <h4 className="text-lg font-bold mb-2">Resume Preview</h4>
-                                     <p className="text-[13px] text-[#737785] max-w-sm mx-auto mb-8 font-medium">Document verified and processed correctly.</p>
-                                     <a 
-                                         href={candidate.resume_url || '#'} 
-                                         target="_blank" 
-                                         className="px-10 py-3 bg-[#0040A1] text-white rounded-xl text-[13px] font-bold hover:bg-[#003380] transition-all"
-                                     >
-                                         Open Interactive PDF
-                                     </a>
+                                <div className="aspect-[4/5] bg-[#F1F5F9] relative overflow-hidden group">
+                                    {candidate.resume_url || candidate.cv_filename ? (
+                                        <iframe 
+                                            src={`${(candidate.resume_url || candidate.cv_filename)?.startsWith('http') 
+                                                ? (candidate.resume_url || candidate.cv_filename) 
+                                                : `https://mdvyvqphumrciekgjlfb.supabase.co/storage/v1/object/public/resumes/${encodeURIComponent(candidate.resume_url || candidate.cv_filename || '')}`
+                                            }#toolbar=0&navpanes=0`}
+                                            className="w-full h-full border-none"
+                                            title="Candidate Resume"
+                                        />
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center p-20 text-center h-full">
+                                            <div className="w-20 h-20 rounded-xl bg-white flex items-center justify-center mb-6 shadow-xl shadow-slate-200">
+                                                <FileText size={32} className="text-[#0040A1]" />
+                                            </div>
+                                            <h4 className="text-lg font-bold mb-2">Resume Preview</h4>
+                                            <p className="text-[13px] text-[#737785] max-w-sm mx-auto mb-8 font-medium">Document verified and processed correctly.</p>
+                                        </div>
+                                    )}
+                                    
+                                    <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex justify-center">
+                                        <a 
+                                            href={(candidate.resume_url || candidate.cv_filename)?.startsWith('http') 
+                                                ? (candidate.resume_url || candidate.cv_filename) 
+                                                : `https://mdvyvqphumrciekgjlfb.supabase.co/storage/v1/object/public/resumes/${encodeURIComponent(candidate.resume_url || candidate.cv_filename || '')}`
+                                            }
+                                            target="_blank" 
+                                            className="px-8 py-3 bg-[#0040A1] text-white rounded-xl text-[13px] font-bold hover:bg-[#003380] transition-all shadow-xl"
+                                        >
+                                            View Full Screen
+                                        </a>
+                                    </div>
                                 </div>
                             </section>
 
