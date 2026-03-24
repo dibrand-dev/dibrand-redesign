@@ -46,9 +46,9 @@ export default function CandidateSkills({ candidateId, initialSkills }: Candidat
                 setSkills(nextSkills);
                 setInputValue('');
                 setShowSuggestions(false);
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error adding skill:', error);
-                alert('Failed to update skills.');
+                alert(`Failed to update skills: ${error.message || 'Unknown error'}`);
             } finally {
                 setIsSaving(false);
             }
@@ -61,9 +61,9 @@ export default function CandidateSkills({ candidateId, initialSkills }: Candidat
         try {
             await updateCandidateSkills(candidateId, nextSkills);
             setSkills(nextSkills);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error removing skill:', error);
-            alert('Failed to update skills.');
+            alert(`Failed to update skills: ${error.message || 'Unknown error'}`);
         } finally {
             setIsSaving(false);
         }
