@@ -19,7 +19,7 @@ export default function EditProfileButton({ candidate }: { candidate: any }) {
         position: candidate.position || candidate.job?.title || '',
         email: candidate.email || '',
         phone: candidate.phone || '',
-        location: candidate.location || '',
+        country: candidate.country || '',
         recruiter_notes: candidate.recruiter_notes || ''
     });
 
@@ -31,7 +31,7 @@ export default function EditProfileButton({ candidate }: { candidate: any }) {
 
     const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
-        setFormData({...formData, location: val});
+        setFormData({...formData, country: val});
         if (val.length > 1) {
             const filtered = countries.filter(c => 
                 c.name.toLowerCase().includes(val.toLowerCase())
@@ -44,7 +44,7 @@ export default function EditProfileButton({ candidate }: { candidate: any }) {
     };
 
     const selectCountry = (name: string) => {
-        setFormData({...formData, location: name});
+        setFormData({...formData, country: name});
         setShowPreview(false);
     };
 
@@ -143,7 +143,7 @@ export default function EditProfileButton({ candidate }: { candidate: any }) {
                             <div className="space-y-2 relative">
                                 <label className="text-[11px] font-bold text-[#6B7485] uppercase tracking-widest">Location</label>
                                 <input 
-                                    value={formData.location}
+                                    value={formData.country}
                                     onChange={handleLocationChange}
                                     placeholder="e.g. United Kingdom"
                                     autoComplete="off"

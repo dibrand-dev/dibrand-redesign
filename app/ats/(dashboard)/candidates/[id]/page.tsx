@@ -59,7 +59,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                                 <div className="flex flex-wrap items-center gap-8 text-[14px] text-[#737785] font-medium">
                                     <div className="flex items-center gap-2">
                                         <MapPin size={18} className="text-[#A1A5B7]" />
-                                        {candidate.location || 'Not Specified'}
+                                        {candidate.country || 'Not Specified'}
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Mail size={18} className="text-[#A1A5B7]" />
