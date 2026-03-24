@@ -1,7 +1,13 @@
 import { 
     getCandidateById, 
-    getApplicationLogs 
-} from '../../../actions';
+    getRecruiterJobs, 
+    updateCandidateStatus, 
+    assignRecruiter, 
+    getRecruiters, 
+    addApplicationLog, 
+    getApplicationLogs,
+    getStackNames
+} from '@/app/ats/actions';
 import { 
     MapPin, Mail, Phone, MessageSquare, 
     ChevronRight, Briefcase, CheckCircle2, 
@@ -30,6 +36,13 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
     if (!candidate) {
         notFound();
     }
+
+    // Resolve stack names from IDs and merge with direct skills
+    const resolvedStackNames = await getStackNames(candidate.stack_ids || []);
+    const allSkills = Array.from(new Set([
+        ...resolvedStackNames,
+        ...(candidate.skills || [])
+    ])).sort();
 
     // Map DB status to Figma Pipeline Stages (Identical to 3329-24)
     const stages = [
@@ -234,7 +247,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                             {/* Core Competencies Module (Interactive) */}
                             <CandidateSkills 
                                 candidateId={candidate.id} 
-                                initialSkills={candidate.skills || []} 
+                                initialSkills={allSkills} 
                             />
 
                             {/* Personal Metadata */}

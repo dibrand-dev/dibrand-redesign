@@ -291,6 +291,22 @@ export async function addApplicationLog(applicationId: string, noteText: string)
     return { success: true };
 }
 
+export async function getStackNames(ids: string[]) {
+    if (!ids || ids.length === 0) return [];
+    
+    const { data, error } = await supabase
+        .from('tech_stacks')
+        .select('name')
+        .in('id', ids);
+
+    if (error) {
+        console.error('Error resolving stack names:', error);
+        return [];
+    }
+
+    return (data || []).map(s => s.name.toUpperCase());
+}
+
 export async function getRecruiters() {
     const { data, error } = await supabase
         .from('recruiters')
