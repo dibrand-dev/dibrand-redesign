@@ -1,10 +1,9 @@
 'use client'
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Plus, Users } from 'lucide-react';
 import Link from 'next/link';
 import CandidateCardProMax from '@/components/ats/CandidateCardProMax';
-import AddCandidateModal from '@/components/ats/AddCandidateModal';
 import { Candidate } from '@/app/ats/types';
 
 interface CandidatesViewProps {
@@ -21,8 +20,7 @@ interface CandidatesViewProps {
 }
 
 export default function CandidatesView({ candidates, totalCount, page, totalPages, filters }: CandidatesViewProps) {
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
+    
     const getPageUrl = (p: number) => {
         const params = new URLSearchParams();
         if (filters.status) params.set('status', filters.status);
@@ -36,9 +34,9 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
         <>
             {/* Candidate Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12 min-h-[400px]">
-                {/* New Potential Card FIRST */}
-                <div 
-                    onClick={() => setIsAddModalOpen(true)}
+                {/* New Potential Card FIRST - Link to Page */}
+                <Link 
+                    href="/ats/candidates/new"
                     className="bg-[#FBFCFD] border-2 border-dashed border-[#E1E2E5] rounded-[16px] flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-[#0040A1] hover:bg-white transition-all order-first"
                 >
                     <div className="w-12 h-12 rounded-xl bg-white border border-[#E1E2E5] flex items-center justify-center text-[#6B7485] mb-4 group-hover:scale-110 transition-transform">
@@ -46,7 +44,7 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                     </div>
                     <h4 className="text-[15px] font-bold text-[#010101] mb-2">New Potential</h4>
                     <p className="text-[12px] text-[#6B7485] max-w-[180px]">Manually add a high-priority candidate to the pool.</p>
-                </div>
+                </Link>
 
                 {candidates.length > 0 ? (
                     candidates.map((candidate: any) => (
@@ -75,12 +73,12 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
 
             {/* Footer Section: Pagination */}
             <div className="flex items-center justify-between pt-12 border-t border-[#F1F5F9]">
-                <button 
-                    onClick={() => setIsAddModalOpen(true)}
+                <Link 
+                    href="/ats/candidates/new"
                     className="bg-[#0040A1] text-white px-6 py-3 rounded-lg text-[13px] font-bold hover:bg-[#003380] transition-all flex items-center gap-2 shadow-sm"
                 >
                     <Plus size={18} /> Add Candidate
-                </button>
+                </Link>
 
                 <div className="flex items-center gap-6">
                     <Link 
@@ -123,11 +121,6 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
             <div className="mt-8 text-center text-[12px] text-[#6B7485]">
                 Showing <span className="font-bold text-[#010101] text-[13px]">{candidates.length}</span> of <span className="font-bold text-[#010101] text-[13px]">{totalCount}</span> specialized candidates
             </div>
-
-            <AddCandidateModal 
-                isOpen={isAddModalOpen} 
-                onClose={() => setIsAddModalOpen(false)} 
-            />
         </>
     );
 }
