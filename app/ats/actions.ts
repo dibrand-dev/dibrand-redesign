@@ -175,30 +175,43 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
 }
 
 export async function getCandidateById(id: string) {
-    const { data, error } = await supabase
-        .from('job_applications')
-        .select(`
-            *,
-            job:job_openings(title),
-            recruiter:recruiters(full_name)
-        `)
-        .eq('id', id)
-        .eq('is_deleted', false)
-        .single();
+    try {
+        console.log('Querying Supabase for Candidate ID:', id);
+        
+        // Basic UUID check
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(id)) {
+            console.error('INVALID UUID FORMAT:', id);
+            return null;
+        }
 
-    if (error) {
-        console.error('--- DETAILED SUPABASE ERROR ---');
-        console.error('Error Object:', error);
-        console.error('Error Code:', error.code);
-        console.error('Error Message:', error.message);
-        console.error('Error Details:', error.details);
-        console.error('Error Hint:', error.hint);
-        console.error('Requested ID:', id);
-        console.error('--- END ERROR ---');
+        const { data, error } = await supabase
+            .from('job_applications')
+            .select(`
+                *,
+                job:job_openings(title),
+                recruiter:recruiters(full_name)
+            `)
+            .eq('id', id)
+            .eq('is_deleted', false)
+            .single();
+
+        if (error) {
+            console.error('--- SUPABASE QUERY ERROR ---');
+            console.error('Code:', error.code);
+            console.error('Message:', error.message);
+            console.error('Details:', error.details);
+            console.error('Hint:', error.hint);
+            return null;
+        }
+
+        return data;
+    } catch (err: any) {
+        console.error('--- CRITICAL REPL ERROR ---');
+        console.error('Message:', err.message);
+        console.error('Stack:', err.stack);
         return null;
     }
-
-    return data;
 }
 
 export async function updateCandidate(id: string, updates: any) {
