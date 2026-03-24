@@ -1,6 +1,7 @@
 import { getStacks, deleteStack } from './actions';
 import { Trash2, Code } from 'lucide-react';
 import StackForm from './StackForm';
+import TechStackIcon from '@/components/admin/TechStackIcon';
 
 export default async function StacksPage() {
     const stacks = await getStacks();
@@ -35,14 +36,14 @@ export default async function StacksPage() {
                                     <tr key={stack.id} className="hover:bg-admin-bg/30 transition-colors group">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-xl bg-admin-bg flex items-center justify-center text-gray-400 group-hover:bg-admin-card-bg transition-colors border border-transparent group-hover:border-admin-border">
-                                                    {stack.icon_url ? (
-                                                        <img src={stack.icon_url} alt={stack.name} className="w-6 h-6 object-contain" />
-                                                    ) : (
-                                                        <Code size={18} />
-                                                    )}
-                                                </div>
+                                            <div className="flex items-center gap-4">
+                                                <TechStackIcon 
+                                                    name={stack.name} 
+                                                    iconUrl={stack.icon_url} 
+                                                    className="w-10 h-10 bg-admin-bg"
+                                                />
                                                 <span className="font-bold text-admin-text-primary text-sm group-hover:text-admin-accent transition-colors">{stack.name}</span>
+                                            </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-right">
