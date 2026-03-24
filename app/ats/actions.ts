@@ -6,7 +6,8 @@ import { createNotification } from '@/app/admin/(dashboard)/notifications-action
 import { revalidatePath } from 'next/cache';
 
 export async function getRecentCandidates() {
-    return getAllCandidates({ limit: 5 } as any);
+    const { data } = await getAllCandidates({ limit: 5 } as any);
+    return data;
 }
 
 export async function syncRecruiterProfile() {
@@ -139,11 +140,11 @@ export async function getRecruiterJobs() {
     }) || [];
 }
 
-export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number, jobId?: string } = {}) {
+export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number, offset?: number, jobId?: string } = {}) {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
 
-    if (!user) return [];
+    if (!user) return { data: [], count: 0 };
 
     // Robust check for both metadata and the auth role field
     const isAdmin = 
@@ -178,17 +179,19 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
     }
 
     if (filters.limit) {
-        query = query.limit(filters.limit);
+        const from = filters.offset || 0;
+        const to = from + filters.limit - 1;
+        query = query.range(from, to);
     }
 
-    const { data, error } = await query;
+    const { data, error, count } = await query;
 
     if (error) {
         console.error('Error fetching candidates:', error);
-        return [];
+        return { data: [], count: 0 };
     }
 
-    return data || [];
+    return { data: data || [], count: count || 0 };
 }
 
 export async function getCandidateById(id: string) {
