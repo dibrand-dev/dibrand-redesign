@@ -13,4 +13,5 @@ export interface Candidate {
   last_name?: string;
   location?: string;
   recruiter_notes?: string;
+  skills?: string[];
 }
