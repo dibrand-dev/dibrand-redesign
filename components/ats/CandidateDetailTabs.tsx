@@ -198,7 +198,7 @@ export default function CandidateDetailTabs({ candidate, logs, allSkills, stages
                                  <Globe size={18} className="text-[#A1A5B7] mt-0.5" />
                                  <div>
                                      <p className="text-[10px] font-bold text-[#6B7485] uppercase tracking-widest mb-1">Location</p>
-                                     <p className="text-[14px] font-bold text-[#191C1D]">{candidate.country}, {candidate.city || 'London'}</p>
+                                     <p className="text-[14px] font-bold text-[#191C1D]">{candidate.country}, {candidate.state_province || candidate.city || 'Not specified'}</p>
                                  </div>
                             </div>
                             <div className="flex items-start gap-4">

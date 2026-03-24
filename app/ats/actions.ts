@@ -432,6 +432,7 @@ export async function createCandidate(formData: {
     state_province: string;
     job_id: string;
     linkedin_url?: string;
+    skills?: string[];
 }) {
     // 1. Check for duplicate email
     const { data: existing } = await supabase
@@ -465,6 +466,7 @@ export async function createCandidate(formData: {
             state_province: formData.state_province,
             job_id: formData.job_id,
             linkedin_url: formData.linkedin_url,
+            skills: formData.skills || [],
             status: 'Applied', // Default Stage
             is_deleted: false,
             created_at: new Date().toISOString()

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { X, UserPlus, Loader2, Save, Globe, Briefcase, Mail, Phone, Link as LinkIcon, FileText, MapPin } from 'lucide-react';
+import { X, UserPlus, Loader2, Save, Globe, Briefcase, Mail, Phone, Link as LinkIcon, FileText, MapPin, Star } from 'lucide-react';
 import { createCandidate, getRecruiterJobs } from '@/app/ats/actions';
 import { useRouter } from 'next/navigation';
 import { Country, State } from 'country-state-city';
@@ -17,6 +17,7 @@ export default function AddCandidateModal({ isOpen, onClose }: AddCandidateModal
     const [jobs, setJobs] = useState<any[]>([]);
     const [countries] = useState(Country.getAllCountries());
     const [states, setStates] = useState<any[]>([]);
+    const [skills, setSkills] = useState<string[]>([]);
     
     const [formData, setFormData] = useState({
         full_name: '',
@@ -47,6 +48,7 @@ export default function AddCandidateModal({ isOpen, onClose }: AddCandidateModal
                 job_id: '',
                 linkedin_url: ''
             });
+            setSkills([]);
         }
     }, [isOpen]);
 
@@ -84,7 +86,7 @@ export default function AddCandidateModal({ isOpen, onClose }: AddCandidateModal
 
         setIsSaving(true);
         try {
-            const result = await createCandidate(formData);
+            const result = await createCandidate({ ...formData, skills });
             if (result.error) {
                 toast.error(result.error);
             } else {
@@ -104,7 +106,7 @@ export default function AddCandidateModal({ isOpen, onClose }: AddCandidateModal
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#191C1D]/60 backdrop-blur-md animate-in fade-in duration-300 p-4 sm:p-6 text-inter">
-            <div className="bg-white rounded-[24px] w-full max-w-4xl shadow-2xl border border-[#E1E2E5] overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+            <div className="bg-white rounded-[24px] w-full max-w-5xl shadow-2xl border border-[#E1E2E5] overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
                 {/* Header - Figma Style */}
                 <div className="p-8 border-b border-[#F1F5F9] flex items-center justify-between bg-white">
                     <div className="flex items-center gap-4">
@@ -261,6 +263,42 @@ export default function AddCandidateModal({ isOpen, onClose }: AddCandidateModal
                                             <option key={j.id} value={j.id}>{j.title} ({j.department})</option>
                                         ))}
                                     </select>
+                                </div>
+
+                                {/* Skills Tags */}
+                                <div className="space-y-3">
+                                    <label className="text-[11px] font-bold text-[#737785] uppercase tracking-widest">Skills / Tech Stack</label>
+                                    <div className="flex flex-wrap gap-2 mb-3">
+                                        {skills.map(skill => (
+                                            <span key={skill} className="px-3 py-1.5 bg-[#F0F4FF] text-[#0040A1] text-[12px] font-bold rounded-lg flex items-center gap-2 group animate-in zoom-in-90 duration-200">
+                                                {skill}
+                                                <button 
+                                                    type="button" 
+                                                    onClick={() => setSkills(skills.filter(s => s !== skill))}
+                                                    className="hover:text-red-500 transition-colors"
+                                                >
+                                                    <X size={12} />
+                                                </button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div className="relative">
+                                        <Star size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A1A5B7]" />
+                                        <input 
+                                            placeholder="Type a skill and press Enter..."
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    const val = e.currentTarget.value.trim();
+                                                    if (val && !skills.includes(val)) {
+                                                        setSkills([...skills, val]);
+                                                        e.currentTarget.value = '';
+                                                    }
+                                                }
+                                            }}
+                                            className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] placeholder:text-[#A1A5B7] focus:border-[#0040A1] focus:ring-4 focus:ring-[#E0E7FF]/50 outline-none transition-all"
+                                        />
+                                    </div>
                                 </div>
 
                                 {/* Resume Link */}
