@@ -2,61 +2,37 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  /* Dibrand Palette */
-  --color-dibrand-brand: #a04c97;
-  --color-corporate-grey: #212121;
+  /* Figma Design Tokens - Dibrand ATS */
+  --figma-bg-page: #E5E5E5;
+  --figma-bg-dashboard: #FFFFFF;
+  --figma-bg-sidebar: #F8FAFC;
+  --figma-border: #E2E8F0;
+  
+  --figma-primary-blue: #0040A1;
+  --figma-text-primary: #191C1D;
+  --figma-text-secondary: #737785;
+  
+  --figma-radius: 12px;
 
-  /* Modern SaaS UI Colors - Light Mode */
-  --admin-bg: #F9FAFB;
-  --admin-card-bg: #FFFFFF;
-  --admin-border: #EAECF0;
-  --admin-text-primary: #101828;
-  --admin-text-secondary: #475467;
-  --admin-accent: #a04c97;
-  --admin-accent-soft: rgba(160, 76, 151, 0.05);
-
-  /* Backgrounds */
-  --background: #ffffff;
-  --background-alt: #F9FAFB;
-
-  /* Text */
-  --foreground: var(--color-corporate-grey);
-}
-
-.dark {
-  /* Modern SaaS UI Colors - Dark Mode */
-  --admin-bg: #0B0E14;
-  --admin-card-bg: #11141D;
-  --admin-border: #1E232F;
-  --admin-text-primary: #F9FAFB;
-  --admin-text-secondary: #94A3B8;
-  --admin-accent: #C26CB9;
-  /* Slightly lighter accent for better contrast on dark */
-  --admin-accent-soft: rgba(194, 108, 185, 0.1);
-
-  --background: #0B0E14;
-  --foreground: #F9FAFB;
+  /* Legacy compatibility / Overrides */
+  --background: var(--figma-bg-page);
+  --foreground: var(--figma-text-primary);
+  --admin-bg: var(--figma-bg-page);
+  --admin-card-bg: var(--figma-bg-dashboard);
+  --admin-border: var(--figma-border);
+  --admin-accent: var(--figma-primary-blue);
 }
 
 @theme {
   --color-background: var(--background);
-  --color-background-alt: var(--background-alt);
   --color-foreground: var(--foreground);
 
-  --color-brand: var(--color-dibrand-brand);
-  --color-primary: var(--color-dibrand-brand);
-  --color-corporate-grey: var(--color-corporate-grey);
-
-  /* SaaS Theme Aliases */
-  --color-admin-bg: var(--admin-bg);
-  --color-admin-border: var(--admin-border);
-  --color-admin-accent: var(--admin-accent);
-  --color-admin-text-primary: var(--admin-text-primary);
-  --color-admin-text-secondary: var(--admin-text-secondary);
-
-  --font-outfit: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-inter), var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --color-brand: var(--figma-primary-blue);
+  --color-primary: var(--figma-primary-blue);
+  
+  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-inter);
 }
 
 @layer base {

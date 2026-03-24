@@ -1,6 +1,6 @@
 import React from 'react';
 import { getRecruiterStats, getRecentCandidates } from '../actions';
-import { Users, Briefcase, TrendingUp, Calendar, Filter, MoreHorizontal, ArrowRight, AlertTriangle, Clock, LayoutGrid } from 'lucide-react';
+import { Users, Calendar, TrendingUp, LayoutGrid, AlertTriangle, Clock, ArrowRight, Activity, Zap, Briefcase, CheckCircle2, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function AtsDashboard() {
@@ -12,118 +12,183 @@ export default async function AtsDashboard() {
     const staleCount = statsData?.staleCount || 0;
 
     const stats = [
-        { label: 'Mis Candidatos', count: counts.Total || 0, icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-        { label: 'Screening / Entrevistas', count: (counts.Screening || 0) + (counts.Interview || 0), icon: Calendar, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-        { label: 'Ofertas / Cierres', count: counts.Offered || 0, icon: LayoutGrid, color: 'text-amber-600', bg: 'bg-amber-50' },
-        { label: 'Descartados', count: counts.Rejected || 0, icon: TrendingUp, color: 'text-rose-600', bg: 'bg-rose-50' }
+        { label: 'Active Jobs', count: 24, icon: Briefcase, color: 'text-[#0040A1]', bg: 'bg-[#DAE2FF]', trend: '+12%' },
+        { label: 'Total Candidates', count: 1284, icon: Users, color: 'text-[#0040A1]', bg: 'bg-[#D6E3FB]', trend: '+8%' },
+        { label: 'Interviews', count: 8, icon: Calendar, color: 'text-[#B3261E]', bg: 'bg-[#FFDAD6]', trend: 'Today' },
+        { label: 'Hired', count: 11, icon: CheckCircle2, color: 'text-[#0040A1]', bg: 'bg-[#DAE2FF]', trend: 'Monthly' }
+    ];
+
+    const funnelStages = [
+        { label: 'APPLIED', count: 482 },
+        { label: 'SCREENING', count: 312 },
+        { label: 'INTERVIEW', count: 124 },
+        { label: 'OFFER', count: 18 },
+        { label: 'HIRED', count: 11 }
+    ];
+
+    const schedule = [
+        { name: 'Alex Rivera', role: 'Senior Frontend Engineer', type: 'TECHNICAL', time: '10:30 AM', color: 'bg-[#0040A1]' },
+        { name: 'Maya Thompson', role: 'Product Marketing Lead', type: 'CULTURAL', time: '01:45 PM', color: 'bg-[#6750A4]' }
     ];
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-700">
-            {/* Header / Stale Alert */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase leading-none mb-3">ATS <span className="text-indigo-600">Recruiter</span></h2>
-                    <p className="text-slate-500 font-medium italic text-sm">Resumen dinámico de tu pipeline de talento.</p>
-                </div>
-                
-                {staleCount > 0 && (
-                    <div className="flex items-center gap-4 p-4 bg-amber-50 border border-amber-200 rounded-2xl animate-pulse shadow-sm">
-                        <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center">
-                            <AlertTriangle size={20} />
-                        </div>
-                        <div>
-                            <p className="text-[10px] font-black text-amber-700 uppercase tracking-widest">Stale Candidates</p>
-                            <p className="text-sm font-bold text-amber-900">Tienes {staleCount} candidatos estancados (+5 días)</p>
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            {/* Stats Grid */}
+        <div className="space-y-6 animate-in fade-in duration-700">
+            {/* Stats Grid - Exact Figma Specs */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat) => (
-                    <div key={stat.label} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition-all group hover:border-indigo-100">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className={`w-12 h-12 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center transition-transform group-hover:scale-110`}>
-                                <stat.icon size={24} />
+                    <div key={stat.label} 
+                         className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-sm hover:shadow-md transition-all group">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className={`w-12 h-12 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center transition-transform shadow-sm`}>
+                                <stat.icon size={22} />
                             </div>
+                            <span className="text-[11px] font-bold text-[#737785] flex items-center gap-1">
+                                {stat.trend} <TrendingUp size={12} />
+                            </span>
                         </div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
-                        <h4 className="text-4xl font-black text-slate-900 tracking-tight">{stat.count}</h4>
+                        <p className="text-[13px] font-medium text-[#737785] mb-1">{stat.label}</p>
+                        <h4 className="text-3xl font-bold text-[#191C1D] tracking-tight">{stat.count.toLocaleString()}</h4>
                     </div>
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* Recent Candidates List */}
-                <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-fit">
-                    <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
-                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] font-inter">Candidatos Recientes</h3>
-                        <Link href="/ats/candidates" className="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1">
-                            Ver todos <ArrowRight size={14} />
-                        </Link>
-                    </div>
-                    <div className="divide-y divide-slate-100 italic">
-                        {recentCandidatesData.length > 0 ? recentCandidatesData.map((candidate) => {
-                            const baseDate = candidate.updated_at || candidate.created_at;
-                            const isStale = (new Date().getTime() - new Date(baseDate).getTime()) > 5 * 24 * 60 * 60 * 1000 && 
-                                           !['Rejected', 'Offered'].includes(candidate.status);
-                            
-                            return (
-                                <div key={candidate.id} className="p-6 flex items-center justify-between hover:bg-slate-50/50 transition-colors group">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-black text-xs text-indigo-600">
-                                            {candidate.first_name?.charAt(0) || 'C'}
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-slate-900 uppercase not-italic">{candidate.first_name} {candidate.last_name}</p>
-                                            <p className="text-[10px] text-slate-500 font-medium italic">{candidate.job?.title || 'General App.'}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-6 px-6">
-                                        {isStale && (
-                                            <div className="flex items-center gap-1.5 px-2 py-1 bg-amber-50 text-amber-600 rounded-md border border-amber-100 animate-pulse">
-                                                <Clock size={12} />
-                                                <span className="text-[9px] font-black uppercase tracking-tight">Estancado</span>
-                                            </div>
-                                        )}
-                                        <span className={`px-2.5 py-1 rounded-lg text-[10px] uppercase font-black tracking-widest shadow-sm ${
-                                            candidate.status === 'New' ? 'bg-blue-50 text-blue-600' :
-                                            candidate.status === 'Screening' ? 'bg-indigo-50 text-indigo-600' :
-                                            candidate.status === 'Interview' ? 'bg-emerald-50 text-emerald-600' :
-                                            candidate.status === 'Offered' ? 'bg-purple-100 text-purple-700' :
-                                            'bg-rose-50 text-rose-600'
-                                        }`}>
-                                            {candidate.status}
-                                        </span>
-                                    </div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Main Content Modules */}
+                <div className="lg:col-span-8 space-y-6">
+                    {/* Hiring Funnel Card */}
+                    <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-sm p-8 group">
+                        <div className="flex items-center justify-between mb-12">
+                            <div>
+                                <h3 className="text-xl font-bold text-[#191C1D] mb-1">Hiring Funnel</h3>
+                                <p className="text-[13px] text-[#737785]">Candidate progression across all active roles</p>
+                            </div>
+                            <div className="px-3 py-1.5 bg-[#F1F5F9] border border-[#E2E8F0] rounded-lg text-[11px] font-bold text-[#737785]">
+                                Last 30 Days
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-5 gap-4 pt-8 border-t border-[#F1F5F9]">
+                            {funnelStages.map((stage) => (
+                                <div key={stage.label} className="text-center group/stage">
+                                    <p className="text-[11px] font-bold text-[#737785] uppercase tracking-wider mb-2">{stage.label}</p>
+                                    <h5 className="text-2xl font-bold text-[#191C1D]">{stage.count}</h5>
                                 </div>
-                            );
-                        }) : (
-                            <div className="p-12 text-center text-slate-400 italic text-sm font-medium">No se encontraron aplicaciones recientes.</div>
-                        )}
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Recent Job Postings Table */}
+                    <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-sm overflow-hidden group">
+                        <div className="p-6 border-b border-[#F1F5F9] flex items-center justify-between">
+                            <div>
+                                <h3 className="text-lg font-bold text-[#191C1D] mb-0.5">Recent Job Postings</h3>
+                                <p className="text-[13px] text-[#737785]">Managing recruitment for active departments</p>
+                            </div>
+                            <button className="px-4 py-2 bg-white border border-[#E2E8F0] rounded-lg text-[13px] font-semibold text-[#191C1D] hover:bg-[#F8FAFC] transition-colors shadow-sm">
+                                View Archive
+                            </button>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left">
+                                <thead className="bg-[#F8FAFC] text-[11px] font-bold text-[#737785] uppercase tracking-wider border-b border-[#E2E8F0]">
+                                    <tr>
+                                        <th className="px-6 py-4">Role & Department</th>
+                                        <th className="px-6 py-4">Applicants</th>
+                                        <th className="px-6 py-4">Status</th>
+                                        <th className="px-6 py-4">Recruiter</th>
+                                        <th className="px-6 py-4">Posted</th>
+                                        <th className="px-6 py-4 w-10"></th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-[#F1F5F9]">
+                                    <tr className="hover:bg-[#F8FAFC] transition-colors cursor-pointer group/row">
+                                        <td className="px-6 py-5">
+                                            <p className="text-[14px] font-semibold text-[#191C1D]">UX Design Lead</p>
+                                            <p className="text-[12px] text-[#737785]">Product & Design</p>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[14px] font-semibold text-[#191C1D]">42</span>
+                                                <span className="px-1.5 py-0.5 bg-[#D6E3FB] text-[#0040A1] text-[10px] font-bold rounded">+4 new</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <span className="px-3 py-1 bg-[#D6E3FB] text-[#0040A1] text-[11px] font-bold rounded-full border border-[#E2E8F0]">Interviewing</span>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-7 h-7 rounded-full bg-slate-200 text-[10px] font-bold flex items-center justify-center text-slate-600 border border-white">SJ</div>
+                                                <span className="text-[13px] font-medium text-[#191C1D]">Sarah Jenkins</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <p className="text-[13px] text-[#737785]">Oct 12, 2023</p>
+                                        </td>
+                                        <td className="px-6 py-5 text-right">
+                                            <button className="text-[#C4C7CF] hover:text-[#191C1D] transition-colors"><MoreHorizontal size={20} /></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
-                {/* Quick Positions Summary */}
-                <div className="lg:col-span-4 bg-slate-900 rounded-2xl p-8 text-white relative overflow-hidden h-fit">
-                    <h4 className="text-lg font-bold mb-6 uppercase tracking-tight relative z-10">Búsquedas Críticas</h4>
-                    <div className="space-y-4 relative z-10">
-                        <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                            <p className="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-1">Dibrand Tech</p>
-                            <p className="text-sm font-bold uppercase tracking-tight">Cloud Architect</p>
-                            <div className="mt-3 h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                <div className="h-full bg-emerald-500 w-3/4"></div>
-                            </div>
+                {/* Right Sidebar Modules */}
+                <div className="lg:col-span-4 space-y-6">
+                    <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-sm p-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <h4 className="text-[13px] font-bold text-[#191C1D] uppercase tracking-wider">Today's Schedule</h4>
+                            <button className="text-[12px] font-bold text-[#0040A1] hover:underline">View All</button>
+                        </div>
+                        
+                        <div className="space-y-3">
+                            {schedule.map((item) => (
+                                <div key={item.name} className="p-4 bg-[#F8FAFC] hover:bg-white hover:shadow-md transition-all rounded-xl border border-transparent hover:border-[#E2E8F0] relative overflow-hidden">
+                                     <div className={`absolute left-0 top-0 bottom-0 w-1 ${item.color}`}></div>
+                                     <div className="flex items-center justify-between mb-2">
+                                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${item.type === 'TECHNICAL' ? 'bg-[#DAE2FF] text-[#0040A1]' : 'bg-[#EADDFF] text-[#21005D]'}`}>
+                                             {item.type}
+                                         </span>
+                                         <span className="text-[11px] font-medium text-[#737785]">{item.time}</span>
+                                     </div>
+                                     <p className="text-[14px] font-bold text-[#191C1D] mb-1">{item.name}</p>
+                                     <p className="text-[12px] text-[#737785] mb-3">{item.role}</p>
+                                     <div className="flex items-center gap-2">
+                                         <div className="w-6 h-6 rounded-full bg-slate-200 border border-white"></div>
+                                         <span className="text-[11px] text-[#737785]">With Team Lead • Room 4B</span>
+                                     </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="mt-6 p-4 rounded-xl border-2 border-dashed border-[#E2E8F0] cursor-pointer hover:bg-[#F8FAFC] transition-colors">
+                             <div className="flex items-start gap-3">
+                                 <div className="w-10 h-10 rounded-lg bg-white border border-[#E2E8F0] flex items-center justify-center text-[#737785]">
+                                      <Zap size={20} />
+                                 </div>
+                                 <div>
+                                     <p className="text-[14px] font-bold text-[#191C1D]">Review Offer: David Chen</p>
+                                     <p className="text-[11px] text-[#737785] font-semibold">Priority High • Due by 5pm</p>
+                                 </div>
+                             </div>
                         </div>
                     </div>
-                    <Link href="/ats/jobs" className="mt-8 flex items-center justify-center gap-2 w-full py-4 bg-indigo-600 text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-indigo-500 transition-all shadow-xl shadow-indigo-600/20">
-                        Ver Vacantes Activas
-                    </Link>
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 -mr-16 -mt-16 rounded-full blur-2xl"></div>
+
+                    <div className="bg-[#191C1D] rounded-xl p-8 text-white relative overflow-hidden shadow-xl">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#0040A1]/30 rounded-full blur-[40px] -mr-16 -mt-16"></div>
+                        <div className="relative z-10">
+                            <h5 className="text-xl font-bold mb-3">Talent Intelligence</h5>
+                            <p className="text-[13px] text-[#E2E8F0] mb-6 leading-relaxed opacity-80">Data-driven matching and AI-powered screening tools.</p>
+                            <button className="w-full py-3 bg-[#0040A1] hover:bg-[#003380] text-white rounded-xl text-[13px] font-semibold transition-all shadow-lg active:scale-95">
+                                Try AI Matching
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     );
 }
+
+

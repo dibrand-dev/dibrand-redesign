@@ -1,9 +1,10 @@
 import React from 'react';
-import { getAllCandidates, getRecruiters } from '../../actions';
-import { Users, Filter, Search, MoreVertical, ExternalLink, Calendar, MapPin, Building2, Briefcase } from 'lucide-react';
+import { getAllCandidates } from '../../actions';
+import { Search, Plus, Filter, Users, ChevronRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase-server-client';
 import Link from 'next/link';
-import CandidateActionMenu from './CandidateActionMenu';
+import CandidateCardProMax from '@/components/ats/CandidateCardProMax';
+import { Candidate } from '@/app/ats/types';
 
 export default async function AtsCandidatesPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
     const resolvedParams = await searchParams;
@@ -14,126 +15,126 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const { data: { user } } = await supabaseAuth.auth.getUser();
     const userRole = user?.user_metadata?.role || 'recruiter';
 
-    const [candidates, recruiters] = await Promise.all([
-        getAllCandidates({ status, search }),
-        getRecruiters()
-    ]);
-
-    const pipelineStages = ['New', 'Screening', 'Interview', 'Offered', 'Rejected'];
-
+    const candidates = await getAllCandidates({ status, search });
     return (
-        <div className="space-y-8 animate-in fade-in duration-700">
-            {/* Context Heading */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200">
-                <div>
-                    <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase leading-none mb-3">
-                        {userRole === 'admin' || userRole === 'SuperAdmin' ? 'Todos los ' : 'Mis '}
-                        <span className="text-indigo-600">Candidatos</span>
-                    </h2>
-                    <p className="text-slate-500 font-medium italic text-sm">
-                        {userRole === 'admin' || userRole === 'SuperAdmin' ? 'Supervisión global del pipeline de talentos.' : 'Gestiona el pipeline de tus talentos presentados.'}
-                    </p>
+        <div className="min-h-full bg-[#E5E5E5] font-inter">
+            {/* Main Center Container - as per Figma 1024px width container within layout */}
+            <div className="max-w-[1104px] mx-auto bg-white min-h-screen p-10 shadow-sm border-x border-[#E1E2E5]">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-12">
+                    <div>
+                        <h1 className="text-[34px] font-bold text-[#010101] leading-tight mb-2 tracking-tight">Talent Pool</h1>
+                        <p className="text-[13px] text-[#6B7485] font-medium">Curating the next generation of industry leaders.</p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <form className="relative group">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6B7485]" size={18} />
+                            <input
+                                name="search"
+                                type="text"
+                                defaultValue={search}
+                                placeholder="Search talent..."
+                                className="pl-12 pr-12 py-3 bg-white border border-[#E1E2E5] rounded-xl text-[13px] font-medium focus:outline-none focus:border-[#0040A1] w-64 transition-all"
+                            />
+                            <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7485] hover:text-[#010101]">
+                                <Filter size={18} />
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <form className="relative group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={18} />
-                    <input
-                        name="search"
-                        type="text"
-                        defaultValue={search}
-                        placeholder="Buscar candidatos..."
-                        className="pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-600 transition-all w-72"
-                    />
-                </form>
-            </div>
 
-            {/* Pipeline Tabs Summary */}
-            <div className="flex flex-wrap items-center gap-3">
-                <Link 
-                    href="/ats/candidates"
-                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${!status ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'}`}
-                >
-                    Todos ({candidates.length})
-                </Link>
-                {pipelineStages.map(stage => (
-                    <Link 
-                        key={stage} 
-                        href={`/ats/candidates?status=${stage}`}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${status === stage ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'}`}
-                    >
-                        {stage}
-                    </Link>
-                ))}
-            </div>
+                {/* Filter Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-12 py-6 border-y border-[#F1F5F9]">
+                    <div className="flex flex-wrap items-center gap-6">
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-bold text-[#6B7485] uppercase tracking-widest">Job Role</label>
+                            <button className="flex items-center gap-8 py-2 px-0 text-[13px] font-bold text-[#010101] border-b-2 border-transparent hover:border-[#0040A1] transition-all">
+                                All <ChevronRight size={14} className="rotate-90" />
+                            </button>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-bold text-[#6B7485] uppercase tracking-widest">Location</label>
+                            <button className="flex items-center gap-8 py-2 px-0 text-[13px] font-bold text-[#010101] border-b-2 border-transparent hover:border-[#0040A1] transition-all">
+                                All <ChevronRight size={14} className="rotate-90" />
+                            </button>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-bold text-[#6B7485] uppercase tracking-widest">Application Stage</label>
+                            <button className="flex items-center gap-8 py-2 px-0 text-[13px] font-bold text-[#010101] border-b-2 border-transparent hover:border-[#0040A1] transition-all">
+                                Any Stage <ChevronRight size={14} className="rotate-90" />
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button className="text-[11px] font-bold text-[#0040A1] hover:underline uppercase tracking-tight">
+                        Clear all filters
+                    </button>
+                </div>
 
-            {/* Candidates Table */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead className="bg-slate-50 border-b border-slate-200">
-                            <tr>
-                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest font-inter">Candidato</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest font-inter">Posición</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest font-inter text-center">Estado</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest font-inter">Contacto</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest font-inter text-right">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 italic">
-                            {candidates.length > 0 ? candidates.map((candidate) => (
-                                <tr key={candidate.id} className="hover:bg-slate-50/50 transition-colors group">
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-black text-xs text-indigo-600 border border-slate-200">
-                                                {candidate.first_name?.charAt(0) || 'C'}
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-bold text-slate-900 uppercase not-italic">{candidate.first_name} {candidate.last_name}</p>
-                                                <p className="text-[10px] text-slate-500 font-medium italic">{new Date(candidate.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2 text-sm font-bold text-slate-700 not-italic">
-                                            <Briefcase size={16} className="text-slate-300" />
-                                            {candidate.job?.title || 'General App.'}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5 text-center">
-                                        <span className={`px-2.5 py-1 rounded-lg text-[10px] uppercase font-black tracking-widest shadow-sm ${
-                                            candidate.status === 'New' ? 'bg-blue-50 text-blue-600 shadow-blue-100/50' :
-                                            candidate.status === 'Screening' ? 'bg-indigo-50 text-indigo-600 shadow-indigo-100/50' :
-                                            candidate.status === 'Interview' ? 'bg-emerald-50 text-emerald-600 shadow-emerald-100/50' :
-                                            candidate.status === 'Offered' ? 'bg-purple-100 text-purple-700 shadow-purple-100/50' :
-                                            'bg-rose-50 text-rose-600 shadow-rose-100/50'
-                                        }`}>
-                                            {candidate.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex flex-col gap-1 text-[10px] text-slate-500 font-medium uppercase tracking-tight">
-                                            <span className="truncate max-w-[150px]">{candidate.email}</span>
-                                            {candidate.phone && <span className="text-slate-400">{candidate.phone}</span>}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5 text-right">
-                                        <CandidateActionMenu 
-                                            candidateId={candidate.id} 
-                                            currentStatus={candidate.status}
-                                            recruiters={recruiters}
-                                            userRole={userRole}
-                                        />
-                                    </td>
-                                </tr>
-                            )) : (
-                                <tr>
-                                    <td colSpan={5} className="px-6 py-20 text-center text-slate-400 font-medium italic">No se encontraron candidatos con los filtros actuales.</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                {/* Candidate Grid */}
+                {Object.keys(candidates).length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
+                        {candidates.map((candidate: any) => (
+                            <CandidateCardProMax 
+                                key={candidate.id} 
+                                candidate={{
+                                    id: candidate.id,
+                                    full_name: `${candidate.first_name} ${candidate.last_name}`,
+                                    position: candidate.position || candidate.job?.title || 'General App',
+                                    status: candidate.status || 'Applied',
+                                    email: candidate.email,
+                                    phone: candidate.phone || 'No phone',
+                                    linkedin_url: candidate.linkedin_url || '#',
+                                    resume_url: candidate.resume_url || candidate.cv_filename || '#',
+                                    recruiter_id: candidate.recruiter_id
+                                } as Candidate} 
+                            />
+                        ))}
+                        
+                        {/* New Potential Card placeholder */}
+                        <div className="bg-[#FBFCFD] border-2 border-dashed border-[#E1E2E5] rounded-[16px] flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-[#0040A1] hover:bg-white transition-all">
+                            <div className="w-12 h-12 rounded-xl bg-white border border-[#E1E2E5] flex items-center justify-center text-[#6B7485] mb-4 group-hover:scale-110 transition-transform">
+                                <Plus size={24} />
+                            </div>
+                            <h4 className="text-[15px] font-bold text-[#010101] mb-2">New Potential</h4>
+                            <p className="text-[12px] text-[#6B7485] max-w-[180px]">Manually add a high-priority candidate to the pool.</p>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="py-24 text-center border-2 border-dashed border-[#E1E2E5] rounded-[16px]">
+                        <Users className="w-12 h-12 text-[#6B7485]/20 mx-auto mb-4" />
+                        <p className="text-[#6B7485] font-medium">No candidates found matching your criteria.</p>
+                    </div>
+                )}
+
+                {/* Footer Section: Add Candidate + Pagination */}
+                <div className="flex items-center justify-between pt-12 border-t border-[#F1F5F9]">
+                    <button className="bg-[#0040A1] text-white px-6 py-3 rounded-lg text-[13px] font-bold hover:bg-[#003380] transition-all flex items-center gap-2 shadow-sm">
+                        <Plus size={18} /> Add Candidate
+                    </button>
+
+                    <div className="flex items-center gap-6">
+                        <button className="text-[12px] font-bold text-[#6B7485] hover:text-[#010101] disabled:opacity-30">Previous</button>
+                        <div className="flex items-center gap-2">
+                            {[1, 2, 3].map(page => (
+                                <button key={page} className={`w-8 h-8 rounded-lg text-[12px] font-bold transition-all ${page === 1 ? 'bg-[#0040A1] text-white' : 'text-[#6B7485] hover:bg-[#F1F5F9]'}`}>
+                                    {page}
+                                </button>
+                            ))}
+                            <span className="text-[#6B7485]">...</span>
+                        </div>
+                        <button className="text-[12px] font-bold text-[#0040A1] hover:underline">Next</button>
+                    </div>
+                </div>
+
+                <div className="mt-8 text-center text-[12px] text-[#6B7485]">
+                   Showing <span className="font-bold text-[#010101] text-[13px]">{candidates.length}</span> of <span className="font-bold text-[#010101] text-[13px]">284</span> specialized candidates
                 </div>
             </div>
         </div>
     );
 }
+
+
 

@@ -1,0 +1,80 @@
+
+import React from 'react';
+import { Linkedin, FileText, Phone, Mail, MapPin, User, ChevronRight } from 'lucide-react';
+import { Candidate } from '@/app/ats/types';
+
+interface Props {
+  candidate: Candidate;
+}
+
+const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
+  // exact status colors from Figma Talent Pool
+  const getStatusStyles = (status: string) => {
+    switch (status.toUpperCase()) {
+      case 'HIRED':
+        return 'bg-[#DAE2FF] text-[#001D49]';
+      case 'INTERVIEW':
+      case 'INTERVIEWING':
+        return 'bg-[#EADDFF] text-[#21005D]';
+      case 'REJECTED':
+        return 'bg-[#FFDAD6] text-[#410002]';
+      case 'APPLIED':
+        return 'bg-[#E1E2E5] text-[#191C1D]';
+      case 'SCREENING':
+        return 'bg-[#F2B8B5] text-[#601410]';
+      default:
+        return 'bg-[#E1E2E5] text-[#191C1D]';
+    }
+  };
+
+  return (
+    <div className="bg-white border border-[#E1E2E5] rounded-[16px] p-6 hover:shadow-lg transition-all flex flex-col h-full font-inter relative group">
+      {/* Status Badge - Top Right */}
+      <div className={`absolute top-6 right-6 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStatusStyles(candidate.status)}`}>
+        {candidate.status}
+      </div>
+
+      {/* Header: Avatar + Info */}
+      <div className="flex items-start gap-4 mb-6">
+        <div className="w-14 h-14 rounded-xl bg-[#F8FAFC] border border-[#E1E2E5] flex items-center justify-center text-[#0040A1] font-bold text-xl shrink-0">
+          {candidate.full_name.split(' ').map(n => n[0]).join('')}
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <h3 className="text-[18px] font-bold text-[#010101] mb-1 leading-tight group-hover:text-[#0040A1] transition-colors">{candidate.full_name}</h3>
+        <p className="text-[13px] text-[#6B7485] font-medium leading-none mb-2">{candidate.position}</p>
+        <div className="flex items-center gap-1.5 text-[11px] text-[#6B7485] font-bold uppercase tracking-widest">
+            <MapPin size={12} className="shrink-0" />
+            UNITED KINGDOM
+        </div>
+      </div>
+
+      {/* Active Application Stage Box */}
+      <div className="bg-[#FBFCFD] border border-[#E1E2E5] rounded-xl p-4 mb-6">
+        <div className="flex justify-between items-center mb-1">
+            <span className="text-[10px] font-bold text-[#6B7485] uppercase tracking-widest">Active Application</span>
+            <span className="text-[10px] font-bold text-[#6B7485] uppercase tracking-widest">Stage</span>
+        </div>
+        <div className="flex justify-between items-baseline">
+            <p className="text-[12px] font-bold text-[#010101]">Creative Lead, Brand</p>
+            <span className="px-2 py-0.5 bg-[#E1E2E5] rounded text-[9px] font-bold uppercase">OFFER</span>
+        </div>
+      </div>
+
+      {/* Action Bar */}
+      <div className="mt-auto flex items-center justify-between pt-4 border-t border-[#F1F5F9]">
+         <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-[#DAE2FF] flex items-center justify-center text-[#0040A1] text-[10px] font-bold">JD</div>
+            <div className="w-7 h-7 rounded-lg bg-[#EADDFF] flex items-center justify-center text-[#21005D] text-[10px] font-bold">MK</div>
+         </div>
+         <button className="flex items-center gap-1.5 text-[12px] font-extrabold text-[#0040A1] hover:underline uppercase tracking-tight">
+             View Profile <ChevronRight size={14} className="stroke-[3px]" />
+         </button>
+      </div>
+    </div>
+  );
+};
+
+export default CandidateCardProMax;
+

@@ -174,6 +174,26 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
     return data || [];
 }
 
+export async function getCandidateById(id: string) {
+    const { data, error } = await supabase
+        .from('job_applications')
+        .select(`
+            *,
+            job:job_openings(title),
+            recruiter:recruiters(full_name)
+        `)
+        .eq('id', id)
+        .eq('is_deleted', false)
+        .single();
+
+    if (error) {
+        console.error('Error fetching candidate detail:', error);
+        return null;
+    }
+
+    return data;
+}
+
 export async function updateCandidateStatus(id: string, status: string) {
     const { error } = await supabase
         .from('job_applications')

@@ -2,16 +2,16 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
     LayoutDashboard,
     Users,
     Briefcase,
     Settings,
-    LogOut,
     ChevronLeft,
     ChevronRight,
-    Trophy
+    Search
 } from 'lucide-react';
 
 const MENU_ITEMS = [
@@ -26,26 +26,35 @@ export default function AtsSidebar() {
     const [isCollapsed, setIsCollapsed] = React.useState(false);
 
     return (
-        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} bg-white border-r border-slate-200 flex flex-col transition-all duration-300 z-30 relative h-screen`}>
+        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} bg-[#F8FAFC] border-r border-[#E2E8F0] flex flex-col transition-all duration-300 z-30 relative h-screen`}>
             {/* Logo Section */}
-            <div className="p-6 flex items-center justify-between border-b border-slate-100 h-20">
+            <div className={`p-6 flex items-center ${isCollapsed ? 'justify-center' : 'justify-start'} h-24`}>
                 {!isCollapsed && (
-                    <Link href="/ats" className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
-                            A
-                        </div>
-                        <span className="text-xl font-bold text-slate-900 tracking-tight">Dibrand <span className="text-indigo-600">ATS</span></span>
+                    <Link href="/ats" className="flex items-center gap-3">
+                        <Image 
+                            src="/logo_dibrand.png" 
+                            alt="Dibrand Logo" 
+                            width={140} 
+                            height={35} 
+                            className="h-7 w-auto object-contain"
+                        />
                     </Link>
                 )}
                 {isCollapsed && (
-                    <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center mx-auto text-white font-bold text-lg">
-                        A
+                    <div className="w-10 h-10 flex items-center justify-center">
+                        <Image 
+                            src="/logo_dibrand.png" 
+                            alt="Dibrand" 
+                            width={24} 
+                            height={24} 
+                            className="w-6 h-6 object-contain"
+                        />
                     </div>
                 )}
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+            <nav className="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar">
                 {MENU_ITEMS.map((item) => {
                     const isActive = pathname === item.href || (item.href !== '/ats' && pathname.startsWith(item.href));
                     const Icon = item.icon;
@@ -54,40 +63,49 @@ export default function AtsSidebar() {
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 group relative ${isActive
-                                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
-                                : 'text-slate-500 hover:bg-slate-50 hover:text-indigo-600'
+                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative ${isActive
+                                ? 'bg-[#F1F5F9] text-[#0040A1] font-semibold'
+                                : 'text-[#737785] hover:bg-slate-50 hover:text-[#191C1D] font-medium'
                                 }`}
                         >
-                            <Icon size={20} className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-indigo-600'} transition-colors duration-200 shrink-0`} />
+                            {isActive && (
+                                <span className="absolute left-0 top-3 bottom-3 w-1 bg-[#0040A1] rounded-full"></span>
+                            )}
+                            <Icon size={20} className={`${isActive ? 'text-[#0040A1]' : 'text-[#737785] group-hover:text-[#0040A1]'} transition-colors shrink-0`} />
                             {!isCollapsed && (
-                                <span className="text-sm font-semibold tracking-tight">
+                                <span className="text-[13px] tracking-tight">
                                     {item.label}
                                 </span>
-                            )}
-
-                            {isCollapsed && (
-                                <div className="absolute left-full ml-4 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 uppercase tracking-widest font-bold">
-                                    {item.label}
-                                </div>
                             )}
                         </Link>
                     );
                 })}
             </nav>
 
-            {/* Support section or Bottom items */}
-            <div className="p-4 border-t border-slate-100 italic text-[10px] text-slate-400 text-center">
-                {!isCollapsed && "Recruiter Panel v1.0"}
+            {/* Bottom Actions */}
+            <div className="p-4 border-t border-[#E2E8F0]">
+                {!isCollapsed && (
+                    <button className="w-full py-3.5 bg-[#0040A1] hover:bg-[#003380] text-white rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition-all shadow-sm">
+                         <Briefcase size={18} />
+                         Post New Job
+                    </button>
+                )}
+                {isCollapsed && (
+                    <button className="w-10 h-10 mx-auto bg-[#0040A1] text-white rounded-xl flex items-center justify-center hover:bg-[#003380] transition-all">
+                         <Briefcase size={20} />
+                    </button>
+                )}
             </div>
 
             {/* Toggle Button */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="absolute -right-3 top-24 w-6 h-6 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-400 hover:text-indigo-600 shadow-sm transition-all"
+                className="absolute -right-4 top-28 w-8 h-8 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 hover:text-indigo-600 shadow-xl shadow-slate-200/50 transition-all hover:scale-110 z-40 group"
             >
-                {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+                {isCollapsed ? <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" /> : <ChevronLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />}
             </button>
         </aside>
     );
 }
+
+
