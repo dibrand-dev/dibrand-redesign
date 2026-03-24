@@ -11,6 +11,7 @@ import {
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import EditProfileButton from '@/components/ats/EditProfileButton';
+import ManageProcessButtons from '@/components/ats/ManageProcessButtons';
 
 export default async function CandidateDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -199,18 +200,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                     {/* Right Column (Sidebar/Actions) */}
                     <div className="lg:col-span-4 space-y-12">
                         {/* Process Actions */}
-                        <div className="bg-white rounded-[16px] p-8 border border-[#E1E2E5] shadow-sm space-y-4">
-                            <h4 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em] mb-4">Manage Process</h4>
-                            <button className="w-full py-4 bg-[#DAE2FF] text-[#001D49] rounded-xl text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#C9D6FF] transition-all">
-                                <UserPlus size={18} /> Advance Stage
-                            </button>
-                            <button className="w-full py-4 bg-[#FFDAD6] text-[#BA1A1A] rounded-xl text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#FFC9C4] transition-all">
-                                <XCircle size={18} /> Reject Candidate
-                            </button>
-                            <button className="w-full py-4 bg-white border border-[#E1E2E5] text-[#191C1D] rounded-xl text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#F8FAFC] transition-all">
-                                <MoreVertical size={18} /> Other Actions
-                            </button>
-                        </div>
+                        <ManageProcessButtons candidateId={candidate.id} currentStatus={currentStatus} />
 
                         {/* Personal Metadata */}
                         <div className="bg-white rounded-[16px] p-8 border border-[#E1E2E5] shadow-sm">
