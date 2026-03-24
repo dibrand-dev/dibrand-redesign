@@ -18,6 +18,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const userRole = user?.user_metadata?.role || 'recruiter';
 
     const candidates = await getAllCandidates({ status, search });
+    console.log('CANDIDATES IDs PREVIEW:', candidates.slice(0, 5).map((c: any) => ({ name: c.full_name, id: c.id })));
     const candidateNames = await getCandidateNames();
     return (
         <div className="max-w-[1104px] mx-auto bg-white min-h-screen p-10 shadow-sm border-x border-[#E1E2E5]">
