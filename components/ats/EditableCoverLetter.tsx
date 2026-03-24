@@ -18,6 +18,7 @@ export default function EditableCoverLetter({ candidateId, initialContent }: Edi
     const [isSaving, setIsSaving] = useState(false);
 
     const editor = useEditor({
+        immediatelyRender: false,
         extensions: [
             StarterKit,
             Underline,
