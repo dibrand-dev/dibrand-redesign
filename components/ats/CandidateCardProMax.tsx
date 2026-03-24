@@ -29,7 +29,7 @@ const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
   };
 
   return (
-    <div className="bg-white border border-[#E1E2E5] rounded-[16px] p-6 hover:shadow-lg transition-all flex flex-col h-full font-inter relative group">
+    <div className="bg-white border border-[#E1E2E5] rounded-[12px] p-6 hover:shadow-lg transition-all flex flex-col h-full font-inter relative group">
       {/* Status Badge - Top Right */}
       <div className={`absolute top-6 right-6 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStatusStyles(candidate.status)}`}>
         {candidate.status}

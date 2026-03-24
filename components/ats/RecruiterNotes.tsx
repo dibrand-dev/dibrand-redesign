@@ -114,7 +114,7 @@ export default function RecruiterNotes({
             <h4 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">Recruiter Notes</h4>
             
             {/* Drafting Card */}
-            <div className="bg-white rounded-[24px] border border-[#E2E8F0] shadow-sm overflow-hidden focus-within:border-[#0040A1] transition-all">
+            <div className="bg-white rounded-[12px] border border-[#E2E8F0] shadow-sm overflow-hidden focus-within:border-[#0040A1] transition-all">
                 <div className="relative">
                     <textarea 
                         ref={textareaRef}

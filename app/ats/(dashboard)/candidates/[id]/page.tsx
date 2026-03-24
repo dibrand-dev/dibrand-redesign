@@ -41,7 +41,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
         <div className="min-h-full bg-[#E5E5E5] pb-20 font-inter">
             <div className="max-w-[1400px] mx-auto p-8 space-y-8">
                 {/* Header Profile Card - Figma 3329-24 Style */}
-                <div className="bg-white rounded-[24px] p-8 shadow-sm border border-[#E2E8F0]">
+                <div className="bg-white rounded-[12px] p-8 shadow-sm border border-[#E2E8F0]">
                     <div className="flex flex-col lg:flex-row justify-between items-center gap-8 mb-10">
                         <div className="flex items-center gap-6">
                             {/* Circular Avatar */}
@@ -75,10 +75,10 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
 
                         {/* Top Header Actions */}
                         <div className="flex items-center gap-3">
-                            <button className="px-8 py-2.5 bg-[#0040A1] text-white rounded-full text-[13px] font-bold hover:bg-[#003380] transition-all shadow-sm">
+                            <button className="px-8 py-2.5 bg-[#0040A1] text-white rounded-xl text-[13px] font-bold hover:bg-[#003380] transition-all shadow-sm">
                                 Interview
                             </button>
-                            <button className="px-8 py-2.5 bg-[#F1F5F9] text-[#191C1D] rounded-full text-[13px] font-bold border border-[#E2E8F0] hover:bg-[#E2E8F0] transition-all">
+                            <button className="px-8 py-2.5 bg-[#F1F5F9] text-[#191C1D] rounded-xl text-[13px] font-bold border border-[#E2E8F0] hover:bg-[#E2E8F0] transition-all">
                                 Message
                             </button>
                         </div>
@@ -148,7 +148,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                         {/* Left Column (Main Context) */}
                         <div className="col-span-8 space-y-10">
                             {/* Cover Letter Module */}
-                            <section className="bg-white rounded-[24px] p-8 border border-[#E2E8F0] shadow-sm">
+                            <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
                                 <div className="flex items-center justify-between mb-8">
                                     <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">Cover Letter</h3>
                                     <button className="text-[11px] font-bold text-[#0040A1] hover:underline uppercase tracking-widest">Edit</button>
@@ -159,7 +159,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                             </section>
 
                             {/* Application History Module */}
-                            <section className="bg-white rounded-[24px] p-8 border border-[#E2E8F0] shadow-sm">
+                            <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
                                 <div className="flex items-center justify-between mb-8">
                                     <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">Application History</h3>
                                     <button className="text-[11px] font-bold text-[#0040A1] hover:underline uppercase tracking-widest">View Archive</button>
@@ -171,7 +171,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                                     ].map((job, i) => (
                                         <div key={i} className="flex items-center justify-between p-4 bg-white border border-[#F1F5F9] rounded-2xl hover:border-[#E2E8F0] transition-all">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-[#A1A5B7]">
+                                                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-[#A1A5B7]">
                                                     <Briefcase size={18} />
                                                 </div>
                                                 <div>
@@ -186,7 +186,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                             </section>
 
                             {/* Resume Viewer */}
-                            <section className="bg-white rounded-[24px] border border-[#E2E8F0] shadow-sm overflow-hidden">
+                            <section className="bg-white rounded-[12px] border border-[#E2E8F0] shadow-sm overflow-hidden">
                                 <div className="p-6 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-lg bg-white border border-[#E2E8F0] flex items-center justify-center text-[#0040A1] shadow-sm">
@@ -200,7 +200,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                                     </div>
                                 </div>
                                 <div className="aspect-[4/5] bg-[#F1F5F9] flex flex-col items-center justify-center p-20 text-center">
-                                     <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mb-6 shadow-xl shadow-slate-200">
+                                     <div className="w-20 h-20 rounded-xl bg-white flex items-center justify-center mb-6 shadow-xl shadow-slate-200">
                                          <FileText size={32} className="text-[#0040A1]" />
                                      </div>
                                      <h4 className="text-lg font-bold mb-2">Resume Preview</h4>
@@ -208,7 +208,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                                      <a 
                                          href={candidate.resume_url || '#'} 
                                          target="_blank" 
-                                         className="px-10 py-3 bg-[#0040A1] text-white rounded-full text-[13px] font-bold hover:bg-[#003380] transition-all"
+                                         className="px-10 py-3 bg-[#0040A1] text-white rounded-xl text-[13px] font-bold hover:bg-[#003380] transition-all"
                                      >
                                          Open Interactive PDF
                                      </a>
@@ -222,7 +222,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                         {/* Right Column (Sidebar/Actions) */}
                         <div className="col-span-4 space-y-10">
                             {/* Process Actions Module */}
-                            <section className="bg-white rounded-[24px] p-8 border border-[#E2E8F0] shadow-sm">
+                            <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
                                 <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em] mb-8">Process Actions</h3>
                                 <div className="space-y-4">
                                     <button className="w-full py-4 bg-[#0040A1] text-white rounded-2xl text-[14px] font-bold hover:bg-[#003380] transition-all shadow-md active:scale-98">
@@ -235,7 +235,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                             </section>
 
                             {/* Core Competencies Module */}
-                            <section className="bg-white rounded-[24px] p-8 border border-[#E2E8F0] shadow-sm">
+                            <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
                                 <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em] mb-8">Core Competencies</h3>
                                 <div className="flex flex-wrap gap-2">
                                     {(candidate.skills || ['PRODUCT STRATEGY', 'DESIGN SYSTEMS', 'FIGMA', 'NEXT.JS', 'TAILWIND']).map((skill: string) => (
@@ -247,7 +247,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                             </section>
 
                             {/* Personal Metadata */}
-                            <div className="bg-white rounded-[24px] p-8 border border-[#E2E8F0] shadow-sm">
+                            <div className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
                                 <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em] mb-8">Personal Detail</h3>
                                 <div className="space-y-6">
                                     <div className="flex items-start gap-4">
