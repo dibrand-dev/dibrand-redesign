@@ -1,4 +1,7 @@
-import { getCandidateById, getApplicationLogs } from '../../../actions';
+import { 
+    getCandidateById, 
+    getApplicationLogs 
+} from '../../../actions';
 import { 
     MapPin, Mail, Phone, MessageSquare, 
     ChevronRight, Briefcase, CheckCircle2, 
@@ -9,11 +12,14 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
+// ATS Components
 import EditProfileButton from '@/components/ats/EditProfileButton';
 import ManageProcessButtons from '@/components/ats/ManageProcessButtons';
 import RecruiterNotes from '@/components/ats/RecruiterNotes';
 import MessageButton from '@/components/ats/MessageButton';
 import CandidateProcessActions from '@/components/ats/CandidateProcessActions';
+import EditableCoverLetter from '@/components/ats/EditableCoverLetter';
 
 export default async function CandidateDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -149,25 +155,10 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                     <div className="flex-1 grid grid-cols-12 gap-10">
                         {/* Left Column (Main Context) */}
                         <div className="col-span-8 space-y-10">
-                            {/* Cover Letter Module */}
-                            <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
-                                <div className="flex items-center justify-between mb-6">
-                                    <div className="flex flex-col gap-1">
-                                        <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">Cover Letter</h3>
-                                        <div className="flex items-center gap-4 text-[#A1A5B7] mt-2">
-                                            <button className="hover:text-[#191C1D] transition-colors font-serif font-bold italic">B</button>
-                                            <button className="hover:text-[#191C1D] transition-colors italic">I</button>
-                                            <button className="hover:text-[#191C1D] transition-colors underline">U</button>
-                                            <div className="w-px h-4 bg-[#E1E2E5]" />
-                                            <button className="hover:text-[#191C1D] transition-colors text-[10px]">LIST</button>
-                                        </div>
-                                    </div>
-                                    <button className="text-[11px] font-bold text-[#0040A1] hover:underline uppercase tracking-widest">Edit</button>
-                                </div>
-                                <div className="p-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl min-h-[200px] text-[14px] leading-relaxed text-[#424654] font-medium">
-                                    {candidate.cover_letter || "Dynamic professional with a proven track record. Passionate about creating impact through high-performance engineering."}
-                                </div>
-                            </section>
+                            <EditableCoverLetter 
+                                candidateId={candidate.id} 
+                                initialContent={candidate.cover_letter || ""} 
+                            />
 
                             {/* Application History Module */}
                             <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
