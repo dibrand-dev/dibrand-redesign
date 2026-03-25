@@ -52,7 +52,10 @@ export async function getRecruiterClient(recruiterId: string) {
     .eq('recruiter_id', recruiterId)
     .single();
 
-  if (error || !tokens) return null;
+  if (error || !tokens) {
+    console.warn('--- NO GOOGLE TOKENS FOUND FOR RECRUITER', recruiterId, '---');
+    return null;
+  }
 
   const oauth2Client = getOAuth2Client();
   oauth2Client.setCredentials({
@@ -108,11 +111,18 @@ export async function createGoogleEvent(recruiterId: string, interview: any) {
     ]
   };
 
+  console.log('--- CREATING GOOGLE CALENDAR EVENT ---');
+  console.log('Payload:', JSON.stringify(event, null, 2));
+
   const response = await calendar.events.insert({
     calendarId: 'primary',
     requestBody: event,
     conferenceDataVersion: 1,
   });
+
+  console.log('--- GOOGLE CALENDAR RESPONSE ---');
+  console.log('Status:', response.status);
+  console.log('Event Link:', response.data.htmlLink);
 
   return response.data;
 }
