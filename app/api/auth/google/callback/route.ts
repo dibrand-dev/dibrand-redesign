@@ -9,7 +9,9 @@ export async function GET(request: Request) {
     
     if (!code) {
         console.error('No code provided in Google Callback');
-        return NextResponse.redirect('/ats/interviews?error=no_code');
+        const errorUrl = new URL('/ats/interviews', request.url);
+        errorUrl.searchParams.set('error', 'no_code');
+        return NextResponse.redirect(errorUrl);
     }
 
     const oauth2Client = getOAuth2Client();
@@ -27,7 +29,9 @@ export async function GET(request: Request) {
       console.log('--- GOOGLE TOKENS SAVED FOR RECRUITER', rec.id, '---');
     }
 
-    return NextResponse.redirect('/ats/interviews?success=connected');
+    const redirectUrl = new URL('/ats/interviews', request.url);
+    redirectUrl.searchParams.set('success', 'connected');
+    return NextResponse.redirect(redirectUrl);
   } catch (err: any) {
     console.error('--- GOOGLE CALLBACK ERROR ---');
     console.error('Error message:', err.message);
