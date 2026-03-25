@@ -34,9 +34,9 @@ export default function AtsSidebar() {
                         <Image 
                             src="/logo_dibrand.png" 
                             alt="Dibrand Logo" 
-                            width={140} 
-                            height={35} 
-                            className="h-7 w-auto object-contain"
+                            width={70} 
+                            height={18} 
+                            className="h-3.5 w-auto object-contain"
                         />
                     </Link>
                 )}
