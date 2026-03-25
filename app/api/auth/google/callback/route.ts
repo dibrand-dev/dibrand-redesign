@@ -1,5 +1,6 @@
 import { getOAuth2Client, saveTokens } from '@/lib/google-calendar';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { createClient } from '@/lib/supabase-server-client';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -19,14 +20,12 @@ export async function GET(request: Request) {
     const { tokens } = await oauth2Client.getToken(code);
     console.log('--- TOKENS RECEIVED ---');
     
-    const { data: rec, error: recError } = await supabase.from('recruiters').select('id').limit(1).single(); 
-    if (recError) {
-        console.error('Error fetching recruiter for token sync:', recError);
-    }
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
     
-    if (rec) {
-      await saveTokens(rec.id, tokens);
-      console.log('--- GOOGLE TOKENS SAVED FOR RECRUITER', rec.id, '---');
+    if (user) {
+      await saveTokens(user.id, tokens);
+      console.log('--- GOOGLE TOKENS SAVED FOR RECRUITER', user.id, '---');
     }
 
     const redirectUrl = new URL('/ats/interviews', request.url);
