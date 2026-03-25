@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase-server-client';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
 import { revalidatePath } from 'next/cache';
+import { createGoogleEvent, listGoogleEvents } from '@/lib/google-calendar';
 
 export async function getRecentCandidates() {
     const { data } = await getAllCandidates({ limit: 5 } as any);
