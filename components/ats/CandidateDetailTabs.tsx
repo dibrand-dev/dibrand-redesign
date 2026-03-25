@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { 
     User, Clock, FileText, MessageSquare, Star, 
     UserPlus, Briefcase, Download, Maximize2, Globe, Linkedin, Mail, Phone
@@ -19,7 +20,27 @@ interface CandidateDetailTabsProps {
 }
 
 export default function CandidateDetailTabs({ candidate, logs, allSkills, stages, currentStatus }: CandidateDetailTabsProps) {
-    const [activeTab, setActiveTab] = useState('Overview');
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const tabParam = searchParams.get('tab');
+    
+    // Initialize state from URL or default
+    const [activeTab, setActiveTab] = useState(tabParam || 'Overview');
+
+    // Sync state if URL changes (e.g. from header buttons)
+    useEffect(() => {
+        if (tabParam && tabParam !== activeTab) {
+            setActiveTab(tabParam);
+        }
+    }, [tabParam]);
+
+    // Update URL when tab changes manually
+    const handleTabChange = (tabId: string) => {
+        setActiveTab(tabId);
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('tab', tabId);
+        router.push(`?${params.toString()}`, { scroll: false });
+    };
 
     const tabs = [
         { id: 'Overview', icon: User, label: 'Overview' },
@@ -188,7 +209,7 @@ export default function CandidateDetailTabs({ candidate, logs, allSkills, stages
                 {tabs.map((tab) => (
                     <button 
                         key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
+                        onClick={() => handleTabChange(tab.id)}
                         className={`flex flex-col items-center gap-1.5 group transition-all ${
                             activeTab === tab.id ? 'text-[#0040A1]' : 'text-[#A1A5B7] hover:text-[#0040A1]'
                         }`}

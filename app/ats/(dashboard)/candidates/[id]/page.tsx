@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { 
     getCandidateById, 
     updateCandidateStatus, 
@@ -13,6 +14,7 @@ import {
     UserPlus
 } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
 // ATS Components
 import EditProfileButton from '@/components/ats/EditProfileButton';
@@ -92,9 +94,12 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                             <button className="px-8 py-2.5 bg-[#0040A1] text-white rounded-xl text-[13px] font-bold hover:bg-[#003380] transition-all shadow-sm">
                                 Interview
                             </button>
-                            <button className="px-8 py-2.5 bg-[#F1F5F9] text-[#191C1D] rounded-xl text-[13px] font-bold border border-[#E2E8F0] hover:bg-[#E2E8F0] transition-all">
+                            <Link 
+                                href="?tab=Notes&focus=true"
+                                className="px-8 py-2.5 bg-[#F1F5F9] text-[#191C1D] rounded-xl text-[13px] font-bold border border-[#E2E8F0] hover:bg-[#E2E8F0] transition-all flex items-center justify-center"
+                            >
                                 Message
-                            </button>
+                            </Link>
                         </div>
                     </div>
 
@@ -133,13 +138,15 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                 </div>
 
                 {/* Tabbed Content Area */}
-                <CandidateDetailTabs 
-                    candidate={candidate}
-                    logs={logs}
-                    allSkills={allSkills}
-                    stages={stages}
-                    currentStatus={currentStatus}
-                />
+                <Suspense fallback={<div className="bg-white rounded-[12px] h-96 animate-pulse border border-[#E2E8F0]"></div>}>
+                    <CandidateDetailTabs 
+                        candidate={candidate}
+                        logs={logs}
+                        allSkills={allSkills}
+                        stages={stages}
+                        currentStatus={currentStatus}
+                    />
+                </Suspense>
             </div>
         </div>
     );

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, AtSign, Paperclip, MoreHorizontal, MessageSquare, Loader2, User } from 'lucide-react';
 import { addApplicationLog, getRecruiters } from '@/app/ats/actions';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Recruiter {
     id: string;
@@ -34,6 +34,7 @@ export default function RecruiterNotes({
     const [isMounted, setIsMounted] = useState(false);
     
     const router = useRouter();
+    const searchParams = useSearchParams();
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
@@ -43,7 +44,14 @@ export default function RecruiterNotes({
             setRecruiters(data);
         };
         fetchRecruiters();
-    }, []);
+
+        // Optional: Auto-focus if requested via query param
+        if (searchParams.get('focus') === 'true') {
+            setTimeout(() => {
+                textareaRef.current?.focus();
+            }, 500); // Small delay to allow tab animation
+        }
+    }, [searchParams]);
 
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = e.target.value;
