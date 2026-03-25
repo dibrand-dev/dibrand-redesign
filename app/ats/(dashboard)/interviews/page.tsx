@@ -207,15 +207,30 @@ export default function InterviewSchedulePage() {
                 <div className="col-span-9 space-y-8">
                     {/* Sub-Header / Filters */}
                     <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-[#E2E8F0] shadow-sm">
-                        <div className="flex items-center gap-6">
                             <div className="flex items-center gap-4">
-                                <button className="p-2 hover:bg-[#F1F5F9] rounded-lg text-[#737785] transition-colors"><ChevronLeft size={20}/></button>
-                                <span className="text-[15px] font-bold text-[#191C1D]">November 2024</span>
-                                <button className="p-2 hover:bg-[#F1F5F9] rounded-lg text-[#737785] transition-colors"><ChevronRight size={20}/></button>
+                                <button 
+                                    onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
+                                    className="p-2 hover:bg-[#F1F5F9] rounded-lg text-[#737785] transition-colors"
+                                >
+                                    <ChevronLeft size={20}/>
+                                </button>
+                                <span className="text-[15px] font-bold text-[#191C1D] min-w-[140px] text-center">
+                                    {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                </span>
+                                <button 
+                                    onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
+                                    className="p-2 hover:bg-[#F1F5F9] rounded-lg text-[#737785] transition-colors"
+                                >
+                                    <ChevronRight size={20}/>
+                                </button>
                             </div>
                             <div className="h-6 w-px bg-[#E2E8F0]"></div>
-                            <button className="px-4 py-2 text-[13px] font-bold text-[#0040A1] hover:bg-[#F1F5F9] rounded-lg transition-all">Today</button>
-                        </div>
+                            <button 
+                                onClick={() => setCurrentMonth(new Date())}
+                                className="px-4 py-2 text-[13px] font-bold text-[#0040A1] hover:bg-[#F1F5F9] rounded-lg transition-all"
+                            >
+                                Today
+                            </button>
 
                         <div className="flex items-center gap-3">
                             <div className="relative">

@@ -9,10 +9,15 @@ const SCOPES = [
 ];
 
 export function getOAuth2Client() {
+  const isProd = process.env.NODE_ENV === 'production';
+  const redirectUri = isProd 
+    ? process.env.GOOGLE_REDIRECT_URI_PROD || 'https://dibrand.co/api/auth/google/callback'
+    : process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3000/api/auth/google/callback';
+
   return new OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URI || `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/google/callback`
+    redirectUri
   );
 }
 

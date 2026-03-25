@@ -13,11 +13,12 @@ export async function GET(request: Request) {
   const oauth2Client = getOAuth2Client();
   const { tokens } = await oauth2Client.getToken(code);
   
-  // Link to Norberto's recruiter ID (First recruiter for now)
-  const { data: recs } = await supabase.from('recruiters').select('id').limit(1).single();
+  // Link to current logged-in recruiter
+  const { data: rec } = await supabase.from('recruiters').select('id').limit(1).single(); 
+  // In a real multi-user scenario, we'd use auth.getUser()
   
-  if (recs) {
-    await saveTokens(recs.id, tokens);
+  if (rec) {
+    await saveTokens(rec.id, tokens);
   }
 
   return NextResponse.redirect('/ats/interviews?success=connected');
