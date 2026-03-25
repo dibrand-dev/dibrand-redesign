@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { 
     ChevronLeft, ChevronRight, Search, Plus, 
-    Video, Users, Info, ArrowUpRight, Loader2
+    Video, Users, Info, ArrowUpRight, Loader2, Check, ExternalLink, Calendar,
+    X
 } from 'lucide-react';
 import { 
     getUpcomingInterviews, getRecruiters, createInterview, 
@@ -23,6 +24,7 @@ export default function InterviewSchedulePage() {
     const [loading, setLoading] = useState(true);
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [currentRecruiterId, setCurrentRecruiterId] = useState<string | null>(null);
+    const [successData, setSuccessData] = useState<any | null>(null);
 
     const loadData = async () => {
         setLoading(true);
@@ -30,7 +32,6 @@ export default function InterviewSchedulePage() {
             const startOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).toISOString();
             const endOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0, 23, 59, 59).toISOString();
             
-            // Sync/Get profile first
             const rId = await syncRecruiterProfile() || '';
             setCurrentRecruiterId(rId);
 
@@ -58,24 +59,63 @@ export default function InterviewSchedulePage() {
         loadData();
     }, [currentMonth]);
 
-    // Simple day grid logic
     const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
-    const startOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // Adjust for Monday start
+    const startOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
     const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
     const days = Array.from({ length: 42 }, (_, i) => i - startOffset + 1);
 
     const nextInterview = upcomingInterviews[0];
 
-    if (loading && interviews.length === 0) {
-        return (
-            <div className="flex items-center justify-center min-h-[600px]">
-                <Loader2 className="animate-spin text-[#0040A1]" size={40} />
-            </div>
-        );
-    }
-
     return (
-        <div className="flex flex-col gap-8 animate-in fade-in duration-700 font-inter max-w-[1600px] mx-auto pb-20">
+        <div className="flex flex-col gap-8 animate-in fade-in duration-700 font-inter max-w-[1600px] mx-auto pb-20 relative">
+            {/* Success Modal Overlay */}
+            {successData && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#191C1D]/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white rounded-[40px] shadow-2xl max-w-[500px] w-full p-10 text-center relative overflow-hidden animate-in zoom-in-95 duration-300">
+                        {/* Decorative background blobs */}
+                        <div className="absolute top-0 left-0 w-32 h-32 bg-[#0040A1]/5 rounded-full -ml-16 -mt-16 blur-2xl"></div>
+                        <div className="absolute bottom-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full -mr-16 -mb-16 blur-2xl"></div>
+                        
+                        <div className="w-20 h-20 bg-emerald-500 rounded-[28px] flex items-center justify-center text-white mx-auto shadow-xl shadow-emerald-500/20 mb-8 relative">
+                             <Check size={40} strokeWidth={3} />
+                        </div>
+
+                        <h3 className="text-[28px] font-bold text-[#191C1D] mb-4 tracking-tight">Interview Scheduled!</h3>
+                        <p className="text-[#737785] text-[15px] leading-relaxed mb-8">
+                            A Google Calendar event has been created for <span className="text-[#191C1D] font-bold">{successData.candidateName}</span>.
+                        </p>
+
+                        <div className="space-y-4 mb-10">
+                            {successData.meetLink && (
+                                <a 
+                                    href={successData.meetLink} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-center gap-3 w-full py-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl text-[14px] font-bold text-[#0040A1] hover:bg-white hover:border-[#0040A1] transition-all group"
+                                >
+                                    <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
+                                    Launch Google Meet
+                                    <ExternalLink size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                                </a>
+                            )}
+                            <button 
+                                onClick={() => setSuccessData(null)}
+                                className="w-full py-4 bg-[#0040A1] text-white rounded-2xl text-[14px] font-bold tracking-widest uppercase shadow-xl shadow-blue-900/10 hover:bg-[#003380] transition-all"
+                            >
+                                Nice! Continue
+                            </button>
+                        </div>
+                        
+                        <button 
+                            onClick={() => setSuccessData(null)}
+                            className="absolute top-6 right-6 p-2 text-[#A1A5B7] hover:text-[#191C1D] transition-colors"
+                        >
+                            <X size={24} />
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Header Section */}
             <div className="flex items-center justify-between">
                 <div>
@@ -83,7 +123,7 @@ export default function InterviewSchedulePage() {
                     <p className="text-[#737785] text-[13px] font-medium mt-1">Manage and sync all candidate evaluations.</p>
                 </div>
                 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-6">
                     <div className="flex p-1 bg-[#F1F5F9] rounded-xl border border-[#E2E8F0]">
                         {['Day', 'Week', 'Month'].map((view) => (
                             <button 
@@ -102,8 +142,8 @@ export default function InterviewSchedulePage() {
             <div className="grid grid-cols-12 gap-8 items-start">
                 {/* Left Side: Scheduling Form */}
                 <div className="col-span-3 space-y-6 sticky top-8">
-                    <div className="bg-white rounded-[32px] border border-[#E2E8F0] shadow-sm overflow-hidden text-[#191C1D]">
-                        <div className="p-8 border-b border-[#F1F5F9] bg-[#F8FAFC]">
+                    <div className="bg-white rounded-[40px] border border-[#E2E8F0] shadow-xl shadow-black/[0.02] overflow-hidden text-[#191C1D]">
+                        <div className="p-8 border-b border-[#F1F5F9] bg-[#F8FAFC]/50 backdrop-blur-sm">
                             <h3 className="text-[18px] font-bold">Quick Schedule</h3>
                             <p className="text-[12px] text-[#737785] font-medium mt-1">Set up a new session instantly.</p>
                         </div>
@@ -120,14 +160,19 @@ export default function InterviewSchedulePage() {
                             setLoading(true);
                             try {
                                 const cand = candidates.find(c => c.id === cId);
-                                await createInterview({
+                                const result = await createInterview({
                                     candidate_id: cId,
-                                    job_id: cand?.job_id || jobs[0]?.id,
-                                    recruiter_id: currentRecruiterId || recruiters[0]?.id,
+                                    job_id: cand?.job_id || (jobs.length > 0 ? jobs[0]?.id : null),
+                                    recruiter_id: currentRecruiterId || (recruiters.length > 0 ? recruiters[0]?.id : null),
                                     type,
                                     scheduled_at: new Date(date).toISOString(),
                                 });
-                                alert('Interview scheduled successfully!');
+                                
+                                setSuccessData({
+                                    candidateName: candidates.find(c => c.id === cId)?.name || 'Candidate',
+                                    meetLink: result?.video_url
+                                });
+                                
                                 loadData();
                             } catch (err) {
                                 console.error(err);
@@ -135,14 +180,14 @@ export default function InterviewSchedulePage() {
                             } finally {
                                 setLoading(false);
                             }
-                        }} className="p-8 space-y-5">
+                        }} className="p-8 space-y-6">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest">Candidate</label>
+                                <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest pl-1">Candidate</label>
                                 <select 
                                     name="candidate_id"
                                     required
                                     defaultValue={preSelectedCandidate || ""}
-                                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl py-3 px-4 text-[13px] font-medium outline-none focus:border-[#0040A1] transition-all"
+                                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-4 px-5 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 transition-all appearance-none cursor-pointer"
                                 >
                                     <option value="">Select candidate...</option>
                                     {candidates.map(c => (
@@ -152,10 +197,10 @@ export default function InterviewSchedulePage() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest">Type</label>
+                                <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest pl-1">Session Type</label>
                                 <select 
                                     name="type"
-                                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl py-3 px-4 text-[13px] font-medium outline-none focus:border-[#0040A1] transition-all"
+                                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-4 px-5 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 transition-all appearance-none cursor-pointer"
                                 >
                                     <option value="Technical Interview">Technical Interview</option>
                                     <option value="Cultural Fit">Cultural Fit</option>
@@ -164,67 +209,53 @@ export default function InterviewSchedulePage() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest">Date & Time</label>
-                                <input name="scheduled_at" type="datetime-local" required className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl py-3 px-4 text-[13px] font-medium outline-none focus:border-[#0040A1] transition-all" />
+                                <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest pl-1">Date & Time</label>
+                                <input 
+                                    name="scheduled_at" 
+                                    type="datetime-local" 
+                                    required 
+                                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-4 px-5 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 transition-all" 
+                                />
                             </div>
 
-                            <button type="submit" disabled={loading} className="w-full py-4 bg-[#0040A1] text-white rounded-2xl text-[13px] font-bold uppercase tracking-widest hover:bg-[#003380] transition-all shadow-lg shadow-blue-900/10 mt-4 flex items-center justify-center gap-2">
-                                {loading && <Loader2 className="animate-spin" size={16} />}
+                            <button type="submit" disabled={loading} className="w-full py-5 bg-[#0040A1] text-white rounded-[20px] text-[13px] font-bold uppercase tracking-[0.15em] hover:bg-[#003380] active:scale-[0.98] transition-all shadow-xl shadow-blue-900/20 mt-4 flex items-center justify-center gap-3">
+                                {loading ? <Loader2 className="animate-spin" size={20} /> : <Calendar size={18} />}
                                 Schedule Event
                             </button>
 
-                            <div className="pt-4 border-t border-[#F1F5F9]">
-                                <a href="/api/auth/google" className="w-full py-3 border border-[#E2E8F0] text-[#191C1D] rounded-xl text-[12px] font-bold flex items-center justify-center gap-2 hover:bg-[#F8FAFC] transition-all">
-                                    <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
+                            <div className="pt-6 mt-2 border-t border-[#F1F5F9]">
+                                <a href="/api/auth/google" className="w-full py-4 border-2 border-[#E2E8F0] text-[#191C1D] rounded-2xl text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#F8FAFC] hover:border-[#0040A1]/20 transition-all group">
+                                    <img src="https://www.google.com/favicon.ico" className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all" alt="Google" />
                                     Sync Google Calendar
                                 </a>
                             </div>
                         </form>
                     </div>
-
-                    <div className="bg-white p-8 rounded-[32px] border border-[#E2E8F0] shadow-sm">
-                        <div className="flex items-center justify-between mb-6">
-                            <div className="w-12 h-12 bg-[#F1F5F9] rounded-2xl flex items-center justify-center text-[#0040A1]">
-                                <Users size={22} />
-                            </div>
-                            <span className="flex items-center gap-1 text-[11px] font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl uppercase tracking-widest">
-                                <ArrowUpRight size={12} strokeWidth={3} />
-                                +12%
-                            </span>
-                        </div>
-                        <p className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em] mb-2">Total Interviews</p>
-                        <h2 className="text-[42px] font-bold text-[#191C1D] leading-none mb-4">{interviews.length}</h2>
-                        <div className="flex items-end gap-1.5 h-12 w-full pt-4">
-                            {[4, 7, 5, 8, 5, 9, 7].map((h, i) => (
-                                <div key={i} className="flex-1 bg-gradient-to-t from-[#0040A1]/20 to-[#0040A1]/5 rounded-t-lg" style={{ height: `${h * 10}%` }}></div>
-                            ))}
-                        </div>
-                    </div>
                 </div>
 
-                {/* Right Side: Calendar Section */}
+                {/* Right Side: Calendar & Dashboard */}
                 <div className="col-span-9 space-y-8">
-                    <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-[#E2E8F0] shadow-sm">
+                    <div className="flex items-center justify-between bg-white p-5 rounded-[24px] border border-[#E2E8F0] shadow-sm">
                         <div className="flex items-center gap-4">
-                            <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))} className="p-2 hover:bg-[#F1F5F9] rounded-lg text-[#737785] transition-colors"><ChevronLeft size={20}/></button>
-                            <span className="text-[15px] font-bold text-[#191C1D] min-w-[140px] text-center">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
-                            <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))} className="p-2 hover:bg-[#F1F5F9] rounded-lg text-[#737785] transition-colors"><ChevronRight size={20}/></button>
+                            <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))} className="p-3 hover:bg-[#F1F5F9] rounded-xl text-[#737785] transition-colors"><ChevronLeft size={20}/></button>
+                            <span className="text-[16px] font-bold text-[#191C1D] min-w-[160px] text-center">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                            <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))} className="p-3 hover:bg-[#F1F5F9] rounded-xl text-[#737785] transition-colors"><ChevronRight size={20}/></button>
                         </div>
-                        <div className="h-6 w-px bg-[#E2E8F0]"></div>
-                        <button onClick={() => setCurrentMonth(new Date())} className="px-4 py-2 text-[13px] font-bold text-[#0040A1] hover:bg-[#F1F5F9] rounded-lg transition-all">Today</button>
-                        <div className="flex items-center gap-3 ml-auto">
+                        <div className="h-8 w-px bg-[#E2E8F0] mx-2"></div>
+                        <button onClick={() => setCurrentMonth(new Date())} className="px-6 py-3 text-[14px] font-bold text-[#0040A1] hover:bg-[#F1F5F9] rounded-xl transition-all">Today</button>
+                        <div className="flex items-center gap-4 ml-auto">
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A1A5B7]" size={16} />
-                                <input type="text" placeholder="Filter by recruiter..." className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl py-2 pl-10 pr-4 text-[13px] font-medium outline-none focus:border-[#0040A1] transition-all w-64 shadow-inner" />
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A1A5B7]" size={18} />
+                                <input type="text" placeholder="Search sessions..." className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-3 pl-12 pr-6 text-[14px] font-medium outline-none focus:border-[#0040A1] transition-all w-72 shadow-inner" />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
-                        <div className="grid grid-cols-7 border-b border-[#E2E8F0] bg-[#F8FAFC]">
+                    <div className="bg-white rounded-[32px] border border-[#E2E8F0] shadow-xl shadow-black/[0.02] overflow-hidden">
+                        <div className="grid grid-cols-7 border-b border-[#E2E8F0] bg-[#F8FAFC]/50">
                             {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
-                                <div key={day} className="py-4 text-center">
-                                    <span className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.15em]">{day}</span>
+                                <div key={day} className="py-5 text-center">
+                                    <span className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">{day}</span>
                                 </div>
                             ))}
                         </div>
@@ -239,31 +270,32 @@ export default function InterviewSchedulePage() {
                                 });
 
                                 return (
-                                    <div key={i} className={`min-h-[140px] p-2 border-r border-b border-[#F1F5F9] last:border-r-0 relative group transition-colors hover:bg-[#FBFCFD] ${!isCurrentMonth ? 'bg-[#FDFDFD]/50 opacity-40' : ''}`}>
-                                        <div className="flex justify-between items-start mb-2 px-2 pt-1 font-inter">
-                                            <span className={`text-[12px] font-bold h-7 w-7 flex items-center justify-center transition-all ${
+                                    <div key={i} className={`min-h-[160px] p-3 border-r border-b border-[#F1F5F9] last:border-r-0 relative group transition-colors hover:bg-[#FBFCFD]/80 ${!isCurrentMonth ? 'bg-[#FDFDFD]/50 opacity-40' : ''}`}>
+                                        <div className="flex justify-between items-start mb-3 px-1 pt-1">
+                                            <span className={`text-[13px] font-bold h-8 w-8 flex items-center justify-center transition-all ${
                                                 isToday && isCurrentMonth
-                                                    ? 'bg-[#0040A1] text-white rounded-lg shadow-lg' 
+                                                    ? 'bg-[#0040A1] text-white rounded-xl shadow-lg shadow-blue-900/20' 
                                                     : isCurrentMonth ? 'text-[#191C1D]' : 'text-[#A1A5B7]'
                                             }`}>
                                                 {isCurrentMonth ? d : d <= 0 ? new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 0).getDate() + d : d - daysInMonth}
                                             </span>
                                         </div>
-                                        <div className="space-y-1.5 px-1">
+                                        <div className="space-y-2">
                                             {dayEvents.map((ev: any, idx: number) => (
                                                 <div 
                                                     key={idx} 
-                                                    className={`p-2 rounded-xl border text-[11px] cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm ${
+                                                    className={`p-3 rounded-2xl border text-[12px] cursor-pointer transition-all hover:scale-[1.03] active:scale-[0.98] shadow-sm ${
+                                                        ev.isExternal ? 'bg-white border-[#E2E8F0] text-[#191C1D]' :
                                                         ev.type?.includes('Technical') ? 'bg-[#DAE2FF] border-[#0040A1]/10 text-[#0040A1]' :
                                                         ev.type?.includes('Cultural') ? 'bg-[#E7F5E8] border-[#0A6624]/10 text-[#0A6624]' :
                                                         'bg-[#FFDAD6] border-[#93001C]/10 text-[#93001C]'
                                                     }`}
                                                 >
-                                                    <div className="flex items-center justify-between mb-0.5">
-                                                        <span className="font-extrabold uppercase text-[7px] tracking-wider opacity-80">{ev.type}</span>
-                                                        <span className="font-medium text-[9px]">{new Date(ev.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                                    <div className="flex items-center justify-between mb-1.5 opacity-80">
+                                                        <span className="font-black uppercase text-[8px] tracking-[0.15em]">{ev.type}</span>
+                                                        <span className="font-bold text-[9px]">{new Date(ev.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                     </div>
-                                                    <p className="font-bold truncate text-[11px]">{ev.candidate?.full_name || ev.candidate?.first_name || 'Event'}</p>
+                                                    <p className="font-bold truncate text-[12px] leading-tight">{ev.candidate?.full_name || ev.candidate?.first_name || 'Event'}</p>
                                                 </div>
                                             ))}
                                         </div>
@@ -273,62 +305,88 @@ export default function InterviewSchedulePage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-12 gap-8 items-stretch">
-                        <div className="col-span-8 bg-[#0040A1] p-10 rounded-[32px] shadow-2xl shadow-blue-900/20 relative overflow-hidden flex flex-col justify-between min-h-[280px]">
-                            <div className="absolute top-0 right-0 p-24 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl animate-pulse"></div>
+                    <div className="grid grid-cols-12 gap-8 items-stretch pt-2">
+                        <div className="col-span-8 bg-[#0040A1] p-12 rounded-[40px] shadow-2xl shadow-blue-900/30 relative overflow-hidden flex flex-col justify-between min-h-[320px] group">
+                            <div className="absolute top-0 right-0 p-32 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl animate-pulse"></div>
+                            <div className="absolute bottom-0 left-0 p-32 bg-blue-400/10 rounded-full -ml-28 -mb-28 blur-3xl"></div>
+                            
                             {nextInterview ? (
                                 <>
                                     <div className="relative z-10">
-                                        <span className="px-4 py-1.5 bg-white/10 text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] border border-white/20">Next Session</span>
-                                        <h3 className="text-[32px] font-bold text-white mt-6">{nextInterview.candidate?.full_name}</h3>
-                                        <div className="flex items-center gap-3 text-blue-100/80 text-[14px] font-medium mt-2">
+                                        <span className="px-5 py-2 bg-white/10 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.25em] border border-white/20 backdrop-blur-md">Next Perspective Session</span>
+                                        <h3 className="text-[38px] font-bold text-white mt-8 tracking-tight">{nextInterview.candidate?.full_name}</h3>
+                                        <div className="flex items-center gap-4 text-white/70 text-[15px] font-medium mt-3">
                                             <span>{nextInterview.job?.title}</span>
-                                            <span className="w-1 h-1 rounded-full bg-blue-300 opacity-40"></span>
-                                            <span>{nextInterview.type}</span>
-                                            <span className="text-white font-bold bg-[#B3261E] px-2 py-0.5 rounded-lg text-[10px] ml-2">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-blue-300 opacity-40"></span>
+                                            <span className="text-white font-bold">{nextInterview.type}</span>
+                                            <span className="text-[#0040A1] font-black bg-white px-3 py-1 rounded-xl text-[11px] ml-2 shadow-lg shadow-white/10">
                                                 {new Date(nextInterview.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="relative z-10 flex gap-4 mt-12">
-                                        <a href={nextInterview.video_url || '#'} target="_blank" rel="noopener noreferrer" className="flex-1 py-4 bg-white text-[#0040A1] rounded-2xl text-[14px] font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-[#F8FAFC] transition-all shadow-xl shadow-black/10">
-                                            <Video size={20} fill="currentColor" />
+                                    <div className="relative z-10 flex gap-5 mt-14">
+                                        <a href={nextInterview.video_url || '#'} target="_blank" rel="noopener noreferrer" className="flex-1 py-5 bg-white text-[#0040A1] rounded-[24px] text-[15px] font-black uppercase tracking-[0.15em] flex items-center justify-center gap-3 hover:bg-[#F8FAFC] transition-all shadow-xl shadow-black/20 group-hover:scale-[1.01]">
+                                            <Video size={22} fill="currentColor" />
                                             Launch Video Call
                                         </a>
-                                        <button className="w-14 h-14 bg-white/10 hover:bg-white/20 text-white rounded-2xl flex items-center justify-center border border-white/20 backdrop-blur-md">
-                                            <Info size={24} />
+                                        <button className="w-16 h-16 bg-white/10 hover:bg-white/20 text-white rounded-[24px] flex items-center justify-center border border-white/20 backdrop-blur-md transition-all">
+                                            <Info size={28} />
                                         </button>
                                     </div>
                                 </>
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-full text-white/50 border-2 border-dashed border-white/10 rounded-3xl p-8">
-                                    <Video size={48} className="mb-4 opacity-20" />
-                                    <p className="font-bold">No upcoming sessions</p>
+                                <div className="flex flex-col items-center justify-center h-full text-white/40 border-2 border-dashed border-white/10 rounded-[32px] p-10 backdrop-blur-sm">
+                                    <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-6">
+                                        <Video size={40} className="opacity-40" />
+                                    </div>
+                                    <p className="font-bold text-[18px]">No sessions found for today</p>
+                                    <p className="text-[13px] opacity-60 mt-2">Check the calendar or schedule a new one.</p>
                                 </div>
                             )}
                         </div>
-                        <div className="col-span-4 bg-white p-8 rounded-2xl border border-[#E2E8F0] shadow-sm flex flex-col">
-                            <p className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em] mb-10">Recruiter Workload</p>
-                            <div className="space-y-8 flex-1">
-                                {recruiters.slice(0, 3).map((r, i) => {
-                                    const count = interviews.filter(int => int.recruiter_id === r.id).length;
-                                    return (
-                                        <div key={r.id} className="space-y-3">
-                                            <div className="flex justify-between items-center text-[13px]">
-                                                <span className="font-bold text-[#191C1D]">{r.full_name}</span>
-                                                <span className="font-bold text-[#0040A1]">{count} sessions</span>
+                        
+                        <div className="col-span-4 bg-white p-10 rounded-[40px] border border-[#E2E8F0] shadow-xl shadow-black/[0.02] flex flex-col justify-between">
+                            <div>
+                                <p className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.25em] mb-12 pl-1">Recruiter Focus</p>
+                                <div className="space-y-9">
+                                    {recruiters.slice(0, 3).map((r) => {
+                                        const count = interviews.filter(int => int.recruiter_id === r.id).length;
+                                        const percentage = Math.min((count / 10) * 100, 100);
+                                        return (
+                                            <div key={r.id} className="space-y-4">
+                                                <div className="flex justify-between items-center px-1">
+                                                    <span className="font-bold text-[#191C1D] text-[14px]">{r.full_name}</span>
+                                                    <span className="font-black text-[#0040A1] text-[12px] bg-[#0040A1]/5 px-3 py-1 rounded-lg">{count} sess.</span>
+                                                </div>
+                                                <div className="h-3 w-full bg-[#F1F5F9] rounded-full overflow-hidden p-0.5 border border-[#E2E8F0]/30 shadow-inner">
+                                                    <div className="h-full bg-gradient-to-r from-[#0040A1] to-[#0040A1]/80 rounded-full transition-all duration-1000" style={{ width: `${percentage}%` }}></div>
+                                                </div>
                                             </div>
-                                            <div className="h-2.5 w-full bg-[#F1F5F9] rounded-full overflow-hidden">
-                                                <div className="h-full bg-[#0040A1] rounded-full transition-all" style={{ width: `${Math.min((count / 10) * 100, 100)}%` }}></div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                            <div className="pt-10">
+                                <button className="w-full py-4 text-[13px] font-bold text-[#737785] hover:text-[#0040A1] border border-[#E2E8F0] rounded-2xl transition-all">
+                                    View Detailed Analytics
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {loading && interviews.length === 0 && (
+                <div className="fixed inset-0 bg-white/80 backdrop-blur-xl z-[200] flex flex-col items-center justify-center">
+                    <div className="relative">
+                        <div className="w-24 h-24 border-8 border-[#F1F5F9] border-t-[#0040A1] rounded-full animate-spin"></div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-6 h-6 bg-[#0040A1] rounded-full animate-ping"></div>
+                        </div>
+                    </div>
+                    <p className="mt-8 text-[13px] font-black uppercase tracking-[0.2em] text-[#0040A1]">Syncing Calendar Space...</p>
+                </div>
+            )}
         </div>
     );
 }
