@@ -117,7 +117,7 @@ export default function InterviewSchedulePage() {
             )}
 
             {/* Header Section */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-4">
                 <div>
                     <h1 className="text-[28px] font-bold text-[#191C1D] tracking-tight">Interview Schedule</h1>
                     <p className="text-[#737785] text-[13px] font-medium mt-1">Manage and sync all candidate evaluations.</p>
@@ -128,7 +128,7 @@ export default function InterviewSchedulePage() {
                         {['Day', 'Week', 'Month'].map((view) => (
                             <button 
                                 key={view}
-                                className={`px-6 py-2 rounded-lg text-[12px] font-bold transition-all ${
+                                className={`px-6 py-2 rounded-lg text-[13px] font-bold transition-all ${
                                     view === 'Month' ? 'bg-white text-[#0040A1] shadow-sm' : 'text-[#737785] hover:text-[#191C1D]'
                                 }`}
                             >
@@ -139,13 +139,13 @@ export default function InterviewSchedulePage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-10 gap-10 items-start">
                 {/* Left Side: Scheduling Form */}
-                <div className="col-span-3 space-y-6 sticky top-8">
-                    <div className="bg-white rounded-[40px] border border-[#E2E8F0] shadow-xl shadow-black/[0.02] overflow-hidden text-[#191C1D]">
-                        <div className="p-8 border-b border-[#F1F5F9] bg-[#F8FAFC]/50 backdrop-blur-sm">
+                <div className="col-span-3 space-y-8 sticky top-8">
+                    <div className="bg-white rounded-[32px] border border-[#E2E8F0] shadow-xl shadow-black/[0.02] overflow-hidden text-[#191C1D]">
+                        <div className="p-8 border-b border-[#F1F5F9] bg-[#F8FAFC]">
                             <h3 className="text-[18px] font-bold">Quick Schedule</h3>
-                            <p className="text-[12px] text-[#737785] font-medium mt-1">Set up a new session instantly.</p>
+                            <p className="text-[12px] text-[#737785] font-medium mt-1.5">Set up a new session instantly.</p>
                         </div>
                         
                         <form onSubmit={async (e) => {
@@ -234,19 +234,19 @@ export default function InterviewSchedulePage() {
                 </div>
 
                 {/* Right Side: Calendar & Dashboard */}
-                <div className="col-span-9 space-y-8">
-                    <div className="flex items-center justify-between bg-white p-5 rounded-[24px] border border-[#E2E8F0] shadow-sm">
-                        <div className="flex items-center gap-4">
-                            <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))} className="p-3 hover:bg-[#F1F5F9] rounded-xl text-[#737785] transition-colors"><ChevronLeft size={20}/></button>
-                            <span className="text-[16px] font-bold text-[#191C1D] min-w-[160px] text-center">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
-                            <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))} className="p-3 hover:bg-[#F1F5F9] rounded-xl text-[#737785] transition-colors"><ChevronRight size={20}/></button>
-                        </div>
-                        <div className="h-8 w-px bg-[#E2E8F0] mx-2"></div>
-                        <button onClick={() => setCurrentMonth(new Date())} className="px-6 py-3 text-[14px] font-bold text-[#0040A1] hover:bg-[#F1F5F9] rounded-xl transition-all">Today</button>
+                <div className="col-span-7 space-y-10">
+                    <div className="flex items-center justify-between bg-white p-6 rounded-[32px] border border-[#E2E8F0] shadow-sm">
+                        <span className="text-[20px] font-bold text-[#191C1D] px-2">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                        
                         <div className="flex items-center gap-4 ml-auto">
-                            <div className="relative">
+                            <div className="relative mr-2">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A1A5B7]" size={18} />
-                                <input type="text" placeholder="Search sessions..." className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-3 pl-12 pr-6 text-[14px] font-medium outline-none focus:border-[#0040A1] transition-all w-72 shadow-inner" />
+                                <input type="text" placeholder="Search sessions..." className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-3 pl-12 pr-6 text-[14px] font-medium outline-none focus:border-[#0040A1] transition-all w-64 shadow-inner" />
+                            </div>
+                            <button onClick={() => setCurrentMonth(new Date())} className="px-5 py-2.5 text-[14px] font-bold text-[#191C1D] border border-[#E2E8F0] hover:bg-[#F8FAFC] rounded-xl transition-all">Today</button>
+                            <div className="flex items-center gap-1 bg-[#F8FAFC] rounded-xl p-1 border border-[#E2E8F0]">
+                                <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))} className="p-2 hover:bg-white hover:shadow-sm rounded-lg text-[#737785] transition-all"><ChevronLeft size={18}/></button>
+                                <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))} className="p-2 hover:bg-white hover:shadow-sm rounded-lg text-[#737785] transition-all"><ChevronRight size={18}/></button>
                             </div>
                         </div>
                     </div>
@@ -271,7 +271,7 @@ export default function InterviewSchedulePage() {
 
                                 return (
                                     <div key={i} className={`min-h-[160px] p-3 border-r border-b border-[#F1F5F9] last:border-r-0 relative group transition-colors hover:bg-[#FBFCFD]/80 ${!isCurrentMonth ? 'bg-[#FDFDFD]/50 opacity-40' : ''}`}>
-                                        <div className="flex justify-between items-start mb-3 px-1 pt-1">
+                                        <div className="flex justify-between items-start mb-4 px-1 pt-1">
                                             <span className={`text-[13px] font-bold h-8 w-8 flex items-center justify-center transition-all ${
                                                 isToday && isCurrentMonth
                                                     ? 'bg-[#0040A1] text-white rounded-xl shadow-lg shadow-blue-900/20' 
@@ -280,22 +280,26 @@ export default function InterviewSchedulePage() {
                                                 {isCurrentMonth ? d : d <= 0 ? new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 0).getDate() + d : d - daysInMonth}
                                             </span>
                                         </div>
-                                        <div className="space-y-2">
+                                        <div className="space-y-3">
                                             {dayEvents.map((ev: any, idx: number) => (
                                                 <div 
                                                     key={idx} 
-                                                    className={`p-3 rounded-2xl border text-[12px] cursor-pointer transition-all hover:scale-[1.03] active:scale-[0.98] shadow-sm ${
-                                                        ev.isExternal ? 'bg-white border-[#E2E8F0] text-[#191C1D]' :
-                                                        ev.type?.includes('Technical') ? 'bg-[#DAE2FF] border-[#0040A1]/10 text-[#0040A1]' :
-                                                        ev.type?.includes('Cultural') ? 'bg-[#E7F5E8] border-[#0A6624]/10 text-[#0A6624]' :
-                                                        'bg-[#FFDAD6] border-[#93001C]/10 text-[#93001C]'
+                                                    className={`p-3.5 rounded-xl bg-white border border-[#E2E8F0] border-l-4 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 ${
+                                                        ev.isExternal ? 'border-l-[#A1A5B7] text-[#191C1D]' :
+                                                        ev.type?.includes('Technical') ? 'border-l-[#0040A1] text-[#191C1D]' :
+                                                        ev.type?.includes('Cultural') ? 'border-l-emerald-500 text-[#191C1D]' :
+                                                        'border-l-rose-500 text-[#191C1D]'
                                                     }`}
                                                 >
-                                                    <div className="flex items-center justify-between mb-1.5 opacity-80">
-                                                        <span className="font-black uppercase text-[8px] tracking-[0.15em]">{ev.type}</span>
-                                                        <span className="font-bold text-[9px]">{new Date(ev.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                                    <div className="flex items-center justify-between mb-2 opacity-90">
+                                                        <span className={`font-black uppercase text-[9px] tracking-[0.1em] ${
+                                                            ev.type?.includes('Technical') ? 'text-[#0040A1]' :
+                                                            ev.type?.includes('Cultural') ? 'text-emerald-600' :
+                                                            'text-rose-600'
+                                                        }`}>{ev.type}</span>
+                                                        <span className="font-bold text-[10px] text-[#A1A5B7]">{new Date(ev.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                     </div>
-                                                    <p className="font-bold truncate text-[12px] leading-tight">{ev.candidate?.full_name || ev.candidate?.first_name || 'Event'}</p>
+                                                    <p className="font-bold truncate text-[12px] leading-tight text-[#191C1D]">{ev.candidate?.full_name || ev.candidate?.first_name || 'Event'}</p>
                                                 </div>
                                             ))}
                                         </div>

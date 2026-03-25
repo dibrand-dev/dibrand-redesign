@@ -31,18 +31,30 @@ export function getAuthUrl() {
 }
 
 export async function saveTokens(recruiterId: string, tokens: any) {
+  const dataToSave: any = {
+    recruiter_id: recruiterId,
+    access_token: tokens.access_token,
+    expires_at: tokens.expiry_date ? new Date(tokens.expiry_date).toISOString() : new Date(Date.now() + 3500 * 1000).toISOString(),
+    scope: tokens.scope,
+    token_type: tokens.token_type,
+    updated_at: new Date().toISOString()
+  };
+
+  if (tokens.refresh_token) {
+    dataToSave.refresh_token = tokens.refresh_token;
+  }
+
+  console.log('--- SAVING TOKENS FOR RECRUITER', recruiterId, '---');
+  console.log('Has Refresh Token:', !!tokens.refresh_token);
+
   const { error } = await supabase
     .from('recruiter_google_tokens')
-    .upsert({
-      recruiter_id: recruiterId,
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
-      expires_at: new Date(tokens.expiry_date).toISOString(),
-      scope: tokens.scope,
-      token_type: tokens.token_type
-    });
+    .upsert(dataToSave);
 
-  if (error) throw error;
+  if (error) {
+    console.error('Error saving tokens to Supabase:', error);
+    throw error;
+  }
 }
 
 export async function getRecruiterClient(recruiterId: string) {
@@ -131,14 +143,26 @@ export async function listGoogleEvents(recruiterId: string, minTime: string, max
     const auth = await getRecruiterClient(recruiterId);
     if (!auth) return [];
 
-    const calendar = google.calendar({ version: 'v3', auth });
-    const response = await calendar.events.list({
-        calendarId: 'primary',
-        timeMin: minTime,
-        timeMax: maxTime,
-        singleEvents: true,
-        orderBy: 'startTime',
-    });
+    try {
+        const calendar = google.calendar({ version: 'v3', auth });
+        const response = await calendar.events.list({
+            calendarId: 'primary',
+            timeMin: minTime,
+            timeMax: maxTime,
+            singleEvents: true,
+            orderBy: 'startTime',
+        });
 
-    return response.data.items || [];
+        console.log(`--- GOOGLE CALENDAR SYNC ---`);
+        console.log(`Min: ${minTime}, Max: ${maxTime}`);
+        console.log(`Found ${response.data.items?.length || 0} events.`);
+
+        return response.data.items || [];
+    } catch (err: any) {
+        console.error('--- GOOGLE LIST EVENTS ERROR ---');
+        console.error('Status:', err.response?.status);
+        console.error('Data:', err.response?.data);
+        console.error('Message:', err.message);
+        return [];
+    }
 }
