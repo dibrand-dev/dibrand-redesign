@@ -539,7 +539,6 @@ export async function getInterviews(filters: { startDate?: string, endDate?: str
     if (filters.startDate) query = query.gte('scheduled_at', filters.startDate);
     if (filters.endDate) query = query.lte('scheduled_at', filters.endDate);
     if (filters.recruiterId) query = query.eq('recruiter_id', filters.recruiterId);
-
     const { data, error } = await query;
     if (error) {
         console.error('Error fetching interviews:', error);
@@ -549,23 +548,68 @@ export async function getInterviews(filters: { startDate?: string, endDate?: str
 }
 
 export async function createInterview(data: any) {
-    const { error } = await supabase
-        .from('job_interviews')
-        .insert([{
-            candidate_id: data.candidate_id,
-            recruiter_id: data.recruiter_id,
-            job_id: data.job_id,
-            type: data.type,
-            scheduled_at: data.scheduled_at,
-            duration_minutes: data.duration_minutes || 60,
-            video_url: data.video_url,
-            notes: data.notes
-        }]);
+  const { data: interview, error } = await supabase
+    .from('job_interviews')
+    .insert([{
+      ...data,
+      status: 'Scheduled'
+    }])
+    .select('*, candidate:job_applications(full_name, email), job:job_openings(title)')
+    .single();
 
-    if (error) throw error;
-    revalidatePath('/ats/interviews');
-    revalidatePath(`/ats/candidates/${data.candidate_id}`);
-    return { success: true };
+  if (error) throw error;
+
+  // Sync with Google Calendar if possible
+  try {
+    const googleEvent = await createGoogleEvent(data.recruiter_id, {
+        id: interview.id,
+        type: data.type,
+        candidate_name: interview.candidate?.full_name,
+        candidate_email: interview.candidate?.email,
+        job_title: interview.job?.title,
+        scheduled_at: data.scheduled_at,
+        duration_minutes: data.duration_minutes || 60,
+    });
+
+    if (googleEvent?.hangoutLink) {
+        await supabase
+            .from('job_interviews')
+            .update({ video_url: googleEvent.hangoutLink })
+            .eq('id', interview.id);
+    }
+  } catch (err) {
+    console.error('Failed to sync google calendar:', err);
+  }
+
+  revalidatePath('/ats/interviews');
+  return { success: true, id: interview.id };
+}
+
+export async function getCombinedInterviews(recruiterId: string, startDate: string, endDate: string) {
+    // 1. Get ATS Interviews
+    const atsInterviews = await getInterviews({ startDate, endDate, recruiterId });
+    
+    // 2. Get Google Events
+    let googleEvents: any[] = [];
+    try {
+        googleEvents = await listGoogleEvents(recruiterId, startDate, endDate);
+    } catch (err) {
+        console.error('Failed to fetch google events:', err);
+    }
+
+    // 3. Merge or handle duplicates (simplified for now)
+    const formattedGoogle = googleEvents
+        .filter(ge => !ge.description?.includes(atsInterviews[0]?.id)) // Crude check
+        .map(ge => ({
+            id: ge.id,
+            type: 'Google',
+            isExternal: true,
+            scheduled_at: ge.start?.dateTime || ge.start?.date,
+            candidate: { full_name: ge.summary },
+            video_url: ge.hangoutLink
+        }));
+
+    return [...atsInterviews, ...formattedGoogle];
 }
 
 export async function updateInterview(id: string, updates: any) {
