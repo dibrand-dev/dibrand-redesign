@@ -91,9 +91,12 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                         {/* Top Header Actions */}
                         <div className="flex items-center gap-3">
                             <EditProfileButton candidate={candidate} />
-                            <button className="px-8 py-2.5 bg-[#0040A1] text-white rounded-xl text-[13px] font-bold hover:bg-[#003380] transition-all shadow-sm">
+                            <Link 
+                                href={`/ats/interviews?candidateId=${id}`}
+                                className="px-8 py-2.5 bg-[#0040A1] text-white rounded-xl text-[13px] font-bold hover:bg-[#003380] transition-all shadow-sm flex items-center justify-center"
+                            >
                                 Interview
-                            </button>
+                            </Link>
                             <Link 
                                 href="?tab=Notes&focus=true"
                                 className="px-8 py-2.5 bg-[#F1F5F9] text-[#191C1D] rounded-xl text-[13px] font-bold border border-[#E2E8F0] hover:bg-[#E2E8F0] transition-all flex items-center justify-center"
