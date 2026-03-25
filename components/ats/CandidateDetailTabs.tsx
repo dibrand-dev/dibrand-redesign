@@ -130,10 +130,50 @@ export default function CandidateDetailTabs({ candidate, logs, allSkills, stages
                 );
             case 'History':
                 return (
-                    <div className="bg-white rounded-xl p-8 border border-[#E2E8F0] text-center py-20 animate-in fade-in slide-in-from-left-4 duration-500">
-                        <Star size={40} className="mx-auto text-[#E2E8F0] mb-4" />
-                        <h3 className="text-lg font-bold text-[#191C1D]">Candidate History</h3>
-                        <p className="text-[#737785] text-[13px]">Full history of interactions and evaluations for this talent.</p>
+                    <div className="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
+                        <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
+                            <div className="flex items-center justify-between mb-8">
+                                <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">Full Interaction History</h3>
+                                <div className="px-3 py-1 bg-[#F1F5F9] text-[#0040A1] rounded-lg text-[9px] font-black uppercase tracking-widest">
+                                    {logs.length} Events
+                                </div>
+                            </div>
+                            
+                            {logs.length > 0 ? (
+                                <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-z-10 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-[#F1F5F9] before:via-[#F1F5F9] before:to-transparent">
+                                    {logs.map((log: any, index: number) => (
+                                        <div key={log.id} className="relative flex gap-6">
+                                            <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white border border-[#E2E8F0] shadow-sm group-hover:border-[#0040A1] transition-colors">
+                                                <div className="h-2 w-2 rounded-full bg-[#0040A1]" />
+                                            </div>
+                                            <div className="flex-1 pb-8 space-y-1">
+                                                <div className="flex items-center justify-between">
+                                                    <p className="text-[14px] font-bold text-[#191C1D]">
+                                                        {log.author_name}
+                                                    </p>
+                                                    <span className="text-[11px] font-medium text-[#737785]">
+                                                        {new Date(log.created_at).toLocaleDateString('en-US', { 
+                                                            month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' 
+                                                        })}
+                                                    </span>
+                                                </div>
+                                                <div className="bg-[#F8FAFC] border border-[#F1F5F9] p-4 rounded-xl rounded-tl-none">
+                                                    <p className="text-[13px] text-[#424654] leading-relaxed">
+                                                        {log.note_text}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-20">
+                                    <Star size={40} className="mx-auto text-[#E2E8F0] mb-4" />
+                                    <h3 className="text-lg font-bold text-[#191C1D]">No History Yet</h3>
+                                    <p className="text-[#737785] text-[13px] font-medium">Full history of interactions and evaluations will appear here.</p>
+                                </div>
+                            )}
+                        </section>
                     </div>
                 );
             default:

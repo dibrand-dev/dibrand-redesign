@@ -247,24 +247,50 @@ export async function updateCandidate(id: string, updates: any) {
 }
 
 export async function updateCandidateStatus(id: string, status: string) {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    const fullName = user?.user_metadata?.full_name || user?.email || 'Recruiter';
+
     const { error } = await supabase
         .from('job_applications')
         .update({ status, updated_at: new Date().toISOString() })
         .eq('id', id);
 
     if (error) throw error;
+
+    // Log the status change
+    await addApplicationLog(id, `Status changed to ${status} by ${fullName}`);
+
+    revalidatePath(`/ats/candidates/${id}`);
     revalidatePath('/ats/candidates');
     revalidatePath('/ats');
     return { success: true };
 }
 
 export async function assignRecruiter(candidateId: string, recruiterId: string) {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    const currentAdmin = user?.user_metadata?.full_name || user?.email || 'Admin';
+
+    // Get the recruiter name
+    const { data: recruiter } = await supabase
+        .from('recruiters')
+        .select('full_name')
+        .eq('id', recruiterId)
+        .single();
+
     const { error } = await supabase
         .from('job_applications')
         .update({ recruiter_id: recruiterId, updated_at: new Date().toISOString() })
         .eq('id', candidateId);
 
     if (error) throw error;
+
+    // Log the assignment
+    const recruiterName = recruiter?.full_name || 'a new recruiter';
+    await addApplicationLog(candidateId, `Candidate assigned to ${recruiterName} by ${currentAdmin}`);
+
+    revalidatePath(`/ats/candidates/${candidateId}`);
     revalidatePath('/ats/candidates');
     revalidatePath('/ats');
     return { success: true };
