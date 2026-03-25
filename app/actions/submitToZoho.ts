@@ -1,4 +1,5 @@
 'use server'
+import { verifyRecaptcha } from '@/lib/recaptcha';
 import { createAdminClient } from '@/lib/supabase-server';
 import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
 
@@ -12,9 +13,24 @@ interface ZohoFormData {
     Email: string;
     Company: string;
     Description?: string;
+    captchaToken?: string;
 }
 
 export async function submitToZoho(formData: FormData) {
+    const captchaToken = formData.get('captchaToken')?.toString();
+
+    if (captchaToken) {
+        const { success, score } = await verifyRecaptcha(captchaToken);
+        if (!success) {
+            console.error('reCAPTCHA failed:', score);
+            return { success: false, error: 'reCAPTCHA failed' };
+        }
+    } else {
+        console.warn('No reCAPTCHA token provided');
+        // Optional: fail if token is mandatory
+        // return { success: false, error: 'reCAPTCHA required' };
+    }
+
     const data: Record<string, string> = {
         xnQsjsdp: '6d71a7c1bbe8886135bf97dd9c30c91eca761aa888ff3e6fe19132dcf97ac9e0',
         xmIwtLD: '57f43a5dfe4852abfc956f4323ee14f3493e60c1312a16601d422007c6fb2ead4e4328ed58fe4ac23ca079d0470be156',

@@ -4,6 +4,7 @@ import "../globals.css";
 import { GTMScript, GTMNoScript } from "@/components/analytics/GTM";
 import Navbar from "@/components/layout/Navbar";
 import { getDictionary } from "@/lib/dictionaries";
+import { RecaptchaProvider } from "@/components/providers/RecaptchaProvider";
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -101,7 +102,9 @@ export default async function RootLayout({
         <GTMNoScript />
         <Navbar dict={dict} lang={lang} />
         <div className="flex min-h-screen flex-col bg-white">
-          {children}
+          <RecaptchaProvider>
+            {children}
+          </RecaptchaProvider>
         </div>
       </body>
     </html>

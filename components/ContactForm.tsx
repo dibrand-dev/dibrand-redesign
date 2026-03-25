@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 import { submitToZoho } from '@/app/actions/submitToZoho';
 import { trackContactFormSuccess } from '@/lib/gtm';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 interface ContactFormProps {
   dict: {
@@ -44,6 +45,7 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
   const subject = searchParams.get('subject');
 
   const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormData>();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   useEffect(() => {
     setMounted(true);
@@ -55,18 +57,31 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
   const onSubmit = async (data: FormData) => {
     setSubmitStatus('idle');
 
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
+    if (!executeRecaptcha) {
+      console.error('Execute recaptcha not yet available');
+      return;
+    }
 
-    const result = await submitToZoho(formData);
+    try {
+      const token = await executeRecaptcha('contact_form');
 
-    if (result.success) {
-      setSubmitStatus('success');
-      trackContactFormSuccess();
-      reset();
-    } else {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      formData.append('captchaToken', token);
+
+      const result = await submitToZoho(formData);
+
+      if (result.success) {
+        setSubmitStatus('success');
+        trackContactFormSuccess();
+        reset();
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error('Recaptcha error:', error);
       setSubmitStatus('error');
     }
   };
@@ -208,6 +223,12 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
           {submitStatus === 'error' && (
             <p className="text-red-400 text-center text-sm mt-2 col-span-1 md:col-span-2">{dict.contact.form.error}</p>
           )}
+
+          <p className={clsx("text-[10px] mt-4 col-span-1 md:col-span-2", isDark ? "text-zinc-500" : "text-zinc-400")}>
+            This site is protected by reCAPTCHA and the Google{' '}
+            <a href="https://policies.google.com/privacy" className="underline hover:text-brand">Privacy Policy</a> and{' '}
+            <a href="https://policies.google.com/terms" className="underline hover:text-brand">Terms of Service</a> apply.
+          </p>
         </form>
       )}
     </div>

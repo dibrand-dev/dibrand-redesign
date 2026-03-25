@@ -1,10 +1,21 @@
 'use server'
-
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { revalidatePath } from 'next/cache';
 import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
+import { verifyRecaptcha } from '@/lib/recaptcha';
 
 export async function submitApplication(formData: any) {
+    // 1. Verify reCAPTCHA
+    if (formData.captchaToken) {
+        const { success, score } = await verifyRecaptcha(formData.captchaToken);
+        if (!success) {
+            console.error('reCAPTCHA failed for application:', score);
+            throw new Error('reCAPTCHA verification failed. Please try again.');
+        }
+    } else {
+        console.warn('Application submitted without reCAPTCHA token');
+    }
+
     // Split full_name into first_name and last_name for DB compliance
     const nameParts = (formData.full_name || '').trim().split(/\s+/);
     const firstName = nameParts[0] || 'Unknown';

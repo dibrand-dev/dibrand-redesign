@@ -6,6 +6,7 @@ import { Country, State } from 'country-state-city';
 import { getTechStacks, uploadResume, submitApplication } from '@/app/actions/applications';
 import { CheckCircle2, Loader2, UploadCloud, Send } from 'lucide-react';
 import { trackJoinUsFormSuccess } from '@/lib/gtm';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 interface JobApplicationFormProps {
     jobId: string;
@@ -23,6 +24,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
     const [selectedCountry, setSelectedCountry] = useState<any>(null);
     const [selectedState, setSelectedState] = useState<any>(null);
     const [resumeFile, setResumeFile] = useState<File | null>(null);
+    const { executeRecaptcha } = useGoogleReCaptcha();
 
     useEffect(() => {
         async function init() {
@@ -50,6 +52,11 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
         e.preventDefault();
         const form = e.currentTarget;
 
+        if (!executeRecaptcha) {
+            console.error('Execute recaptcha not yet available');
+            return;
+        }
+
         if (!resumeFile) {
             alert(dict.attachResume || 'Please upload your resume');
             return;
@@ -62,6 +69,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
 
         setLoading(true);
         try {
+            const token = await executeRecaptcha('candidate_apply');
             const resumeUrl = await uploadResume(resumeFile);
 
             const formData = new FormData(form);
@@ -74,7 +82,8 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                 state_province: selectedState?.label,
                 linkedin_url: formData.get('linkedin_url'),
                 resume_url: resumeUrl,
-                stack_ids: selectedStacks.map((s: any) => s.value)
+                stack_ids: selectedStacks.map((s: any) => s.value),
+                captchaToken: token
             };
 
             await submitApplication(data);
@@ -264,6 +273,12 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                     </>
                 )}
             </button>
+
+            <p className="text-[10px] text-zinc-400 mt-4 text-center">
+                This site is protected by reCAPTCHA and the Google{' '}
+                <a href="https://policies.google.com/privacy" className="underline hover:text-brand">Privacy Policy</a> and{' '}
+                <a href="https://policies.google.com/terms" className="underline hover:text-brand">Terms of Service</a> apply.
+            </p>
         </form>
     );
 }
