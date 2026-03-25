@@ -139,9 +139,9 @@ export default function InterviewSchedulePage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-10 gap-10 items-start">
+            <div className="flex w-full gap-8 items-start">
                 {/* Left Side: Scheduling Form */}
-                <div className="col-span-3 space-y-8 sticky top-8">
+                <div className="w-[30%] min-w-[30%] space-y-8 sticky top-8">
                     <div className="bg-white rounded-[32px] border border-[#E2E8F0] shadow-xl shadow-black/[0.02] overflow-hidden text-[#191C1D]">
                         <div className="p-8 border-b border-[#F1F5F9] bg-[#F8FAFC]">
                             <h3 className="text-[18px] font-bold">Quick Schedule</h3>
@@ -180,8 +180,8 @@ export default function InterviewSchedulePage() {
                             } finally {
                                 setLoading(false);
                             }
-                        }} className="p-8 space-y-6">
-                            <div className="space-y-2">
+                        }} className="p-8 flex flex-col gap-y-6">
+                            <div className="flex flex-col gap-y-2">
                                 <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest pl-1">Candidate</label>
                                 <select 
                                     name="candidate_id"
@@ -196,7 +196,7 @@ export default function InterviewSchedulePage() {
                                 </select>
                             </div>
 
-                            <div className="space-y-2">
+                            <div className="flex flex-col gap-y-2">
                                 <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest pl-1">Session Type</label>
                                 <select 
                                     name="type"
@@ -208,7 +208,7 @@ export default function InterviewSchedulePage() {
                                 </select>
                             </div>
 
-                            <div className="space-y-2">
+                            <div className="flex flex-col gap-y-2">
                                 <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest pl-1">Date & Time</label>
                                 <input 
                                     name="scheduled_at" 
@@ -218,7 +218,7 @@ export default function InterviewSchedulePage() {
                                 />
                             </div>
 
-                            <button type="submit" disabled={loading} className="w-full py-5 bg-[#0040A1] text-white rounded-[20px] text-[13px] font-bold uppercase tracking-[0.15em] hover:bg-[#003380] active:scale-[0.98] transition-all shadow-xl shadow-blue-900/20 mt-4 flex items-center justify-center gap-3">
+                            <button type="submit" disabled={loading} className="w-full py-3 bg-[#0040A1] text-white rounded-lg text-[14px] font-semibold flex items-center justify-center gap-2 mt-2 hover:bg-[#003380] transition-colors">
                                 {loading ? <Loader2 className="animate-spin" size={20} /> : <Calendar size={18} />}
                                 Schedule Event
                             </button>
@@ -234,11 +234,11 @@ export default function InterviewSchedulePage() {
                 </div>
 
                 {/* Right Side: Calendar & Dashboard */}
-                <div className="col-span-7 space-y-10">
+                <div className="w-[70%] space-y-10">
                     <div className="flex items-center justify-between bg-white p-6 rounded-[32px] border border-[#E2E8F0] shadow-sm">
-                        <span className="text-[20px] font-bold text-[#191C1D] px-2">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                        <span className="text-2xl font-bold text-[#191C1D] text-left px-2">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
                         
-                        <div className="flex items-center gap-4 ml-auto">
+                        <div className="flex justify-end items-center gap-2 ml-auto">
                             <div className="relative mr-2">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A1A5B7]" size={18} />
                                 <input type="text" placeholder="Search sessions..." className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-3 pl-12 pr-6 text-[14px] font-medium outline-none focus:border-[#0040A1] transition-all w-64 shadow-inner" />
@@ -284,22 +284,21 @@ export default function InterviewSchedulePage() {
                                             {dayEvents.map((ev: any, idx: number) => (
                                                 <div 
                                                     key={idx} 
-                                                    className={`p-3.5 rounded-xl bg-white border border-[#E2E8F0] border-l-4 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 ${
-                                                        ev.isExternal ? 'border-l-[#A1A5B7] text-[#191C1D]' :
-                                                        ev.type?.includes('Technical') ? 'border-l-[#0040A1] text-[#191C1D]' :
-                                                        ev.type?.includes('Cultural') ? 'border-l-emerald-500 text-[#191C1D]' :
-                                                        'border-l-rose-500 text-[#191C1D]'
+                                                    className={`p-3 rounded-lg bg-blue-50 border-l-4 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-1 ${
+                                                        ev.isExternal ? 'border-l-[#A1A5B7]' :
+                                                        ev.type?.includes('Technical') ? 'border-l-blue-500' :
+                                                        ev.type?.includes('Cultural') ? 'border-l-emerald-500' :
+                                                        'border-l-rose-500'
                                                     }`}
                                                 >
-                                                    <div className="flex items-center justify-between mb-2 opacity-90">
-                                                        <span className={`font-black uppercase text-[9px] tracking-[0.1em] ${
-                                                            ev.type?.includes('Technical') ? 'text-[#0040A1]' :
-                                                            ev.type?.includes('Cultural') ? 'text-emerald-600' :
-                                                            'text-rose-600'
-                                                        }`}>{ev.type}</span>
-                                                        <span className="font-bold text-[10px] text-[#A1A5B7]">{new Date(ev.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                                    </div>
-                                                    <p className="font-bold truncate text-[12px] leading-tight text-[#191C1D]">{ev.candidate?.full_name || ev.candidate?.first_name || 'Event'}</p>
+                                                    <span className={`font-semibold text-[10px] uppercase tracking-wider ${
+                                                        ev.isExternal ? 'text-[#A1A5B7]' :
+                                                        ev.type?.includes('Technical') ? 'text-[#0040A1]' :
+                                                        ev.type?.includes('Cultural') ? 'text-emerald-700' :
+                                                        'text-rose-700'
+                                                    }`}>{ev.type}</span>
+                                                    <p className="font-bold truncate text-[13px] leading-tight text-[#191C1D]">{ev.candidate?.full_name || ev.candidate?.first_name || 'Event'}</p>
+                                                    <span className="font-medium text-[11px] text-[#737785]">{new Date(ev.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                 </div>
                                             ))}
                                         </div>
