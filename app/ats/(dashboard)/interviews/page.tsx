@@ -170,7 +170,7 @@ export default function InterviewSchedulePage() {
                                 
                                 setSuccessData({
                                     candidateName: candidates.find(c => c.id === cId)?.name || 'Candidate',
-                                    meetLink: result?.video_url
+                                    meetLink: (result as any)?.video_url
                                 });
                                 
                                 loadData();

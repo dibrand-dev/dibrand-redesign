@@ -560,9 +560,11 @@ export async function createInterview(data: any) {
 
   if (error) throw error;
 
+  let googleEvent: any;
+
   // Sync with Google Calendar if possible
   try {
-    const googleEvent = await createGoogleEvent(data.recruiter_id, {
+    googleEvent = await createGoogleEvent(data.recruiter_id, {
         id: interview.id,
         type: data.type,
         candidate_name: interview.candidate?.full_name,
@@ -583,7 +585,11 @@ export async function createInterview(data: any) {
   }
 
   revalidatePath('/ats/interviews');
-  return { success: true, id: interview.id };
+  return { 
+    success: true, 
+    id: interview.id, 
+    video_url: googleEvent?.hangoutLink || null 
+  };
 }
 
 export async function getCombinedInterviews(recruiterId: string, startDate: string, endDate: string) {
