@@ -524,3 +524,78 @@ export async function createCandidate(formData: {
     
     return { success: true, id: data.id };
 }
+
+// INTERVIEW ACTIONS
+export async function getInterviews(filters: { startDate?: string, endDate?: string, recruiterId?: string } = {}) {
+    let query = supabase
+        .from('job_interviews')
+        .select(`
+            *,
+            candidate:job_applications(id, first_name, last_name, full_name, email),
+            job:job_openings(id, title)
+        `)
+        .order('scheduled_at', { ascending: true });
+
+    if (filters.startDate) query = query.gte('scheduled_at', filters.startDate);
+    if (filters.endDate) query = query.lte('scheduled_at', filters.endDate);
+    if (filters.recruiterId) query = query.eq('recruiter_id', filters.recruiterId);
+
+    const { data, error } = await query;
+    if (error) {
+        console.error('Error fetching interviews:', error);
+        return [];
+    }
+    return data || [];
+}
+
+export async function createInterview(data: any) {
+    const { error } = await supabase
+        .from('job_interviews')
+        .insert([{
+            candidate_id: data.candidate_id,
+            recruiter_id: data.recruiter_id,
+            job_id: data.job_id,
+            type: data.type,
+            scheduled_at: data.scheduled_at,
+            duration_minutes: data.duration_minutes || 60,
+            video_url: data.video_url,
+            notes: data.notes
+        }]);
+
+    if (error) throw error;
+    revalidatePath('/ats/interviews');
+    revalidatePath(`/ats/candidates/${data.candidate_id}`);
+    return { success: true };
+}
+
+export async function updateInterview(id: string, updates: any) {
+    const { error } = await supabase
+        .from('job_interviews')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) throw error;
+    revalidatePath('/ats/interviews');
+    return { success: true };
+}
+
+export async function getUpcomingInterviews(limit = 10) {
+    const now = new Date().toISOString();
+    const { data, error } = await supabase
+        .from('job_interviews')
+        .select(`
+            *,
+            candidate:job_applications(id, full_name, first_name, last_name),
+            job:job_openings(id, title)
+        `)
+        .gte('scheduled_at', now)
+        .eq('status', 'Scheduled')
+        .order('scheduled_at', { ascending: true })
+        .limit(limit);
+
+    if (error) {
+        console.error('Error fetching upcoming interviews:', error);
+        return [];
+    }
+    return data || [];
+}
