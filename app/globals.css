@@ -43,6 +43,63 @@
   --admin-text-secondary: var(--figma-text-secondary);
 }
 
+/* -------------------------------------------------------------
+   URGENT: LANDING PAGE CONTRAST & LEGIBILIDAD
+   Exclusively for .landing-page to ensure AA compliance
+   ------------------------------------------------------------- */
+.landing-page {
+  /* Eliminate any implicit opacity across the landing */
+  & :is(p, span, li, h1, h2, h3, h4, h5, h6, a, div) {
+    opacity: 1 !important;
+  }
+
+  /* Force solid Hexadecimals for Navigation and Titles */
+  & :is(h1, h2, h3, h4, h5, h6, .text-zinc-950, .text-slate-950, .text-zinc-900, .text-slate-900):not([class*="text-white"]):not([class*="text-zinc-100"]) {
+    color: #111827 !important; /* slate-950 user preference */
+  }
+
+  /* Navigation elements (specifically hamburger lines and logo links when not inverted) */
+  & nav :is(span[class*="bg-zinc"], button[class*="bg-zinc"]) {
+    background-color: #111827 !important;
+  }
+
+  /* Subtitles and Paragraphs Legibility */
+  & :is(p, li, .text-zinc-500, .text-zinc-600, .text-slate-500, .text-slate-600, .text-gray-500, .text-gray-600):not([class*="text-white"]):not([class*="text-zinc-100"]) {
+    color: #374151 !important; /* gray-700 user preference */
+  }
+
+  /* Fix Font Weight: Change from Light (300) to Regular (400) or Medium (500) */
+  & :is(.font-light, .font-extralight) {
+    font-weight: 400 !important;
+  }
+  
+  /* Make subheadings and body text even more robust if they were light */
+  & :is(p, span, .text-sm, .text-base).font-light {
+    font-weight: 400 !important;
+  }
+
+  /* Specific override for components using extra-light typography */
+  & .font-outfit.font-light {
+    font-weight: 400 !important;
+  }
+
+  /* Strengthening CTAs on the landing page */
+  & .bg-brand {
+    font-weight: 600 !important;
+    letter-spacing: -0.01em;
+    box-shadow: 0 4px 6px -1px rgb(158 77 151 / 0.15), 0 2px 4px -2px rgb(158 77 151 / 0.15);
+    
+    &:hover {
+      box-shadow: 0 12px 20px -5px rgb(158 77 151 / 0.3);
+      transform: translateY(-1.5px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
 @theme {
   --color-admin-bg: var(--admin-bg);
   --color-admin-card-bg: var(--admin-card-bg);

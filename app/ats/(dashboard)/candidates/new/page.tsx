@@ -15,7 +15,7 @@ export default function NewCandidatePage() {
     const [countries] = useState(Country.getAllCountries());
     const [states, setStates] = useState<any[]>([]);
     const [skills, setSkills] = useState<string[]>([]);
-    
+
     const [formData, setFormData] = useState({
         full_name: '',
         email: '',
@@ -55,10 +55,10 @@ export default function NewCandidatePage() {
 
     const handleCountryChange = (countryCode: string) => {
         const country = countries.find(c => c.isoCode === countryCode);
-        setFormData({ 
-            ...formData, 
-            country: country?.name || '', 
-            state_province: '' 
+        setFormData({
+            ...formData,
+            country: country?.name || '',
+            state_province: ''
         });
         if (countryCode) {
             setStates(State.getStatesOfCountry(countryCode));
@@ -69,7 +69,7 @@ export default function NewCandidatePage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Validation
         if (!formData.full_name || !formData.email || !formData.resume_url || !formData.country || !formData.state_province || !formData.job_id) {
             toast.error('Por favor completa todos los campos obligatorios.');
@@ -98,8 +98,8 @@ export default function NewCandidatePage() {
         <div className="max-w-[1104px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 font-inter">
             {/* Navigation Header */}
             <div className="flex items-center gap-4 mb-8">
-                <Link 
-                    href="/ats/candidates" 
+                <Link
+                    href="/ats/candidates"
                     className="w-10 h-10 rounded-xl bg-white border border-[#E1E2E5] flex items-center justify-center text-[#737785] hover:text-[#0040A1] hover:border-[#0040A1] transition-all shadow-sm group"
                 >
                     <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
@@ -116,7 +116,7 @@ export default function NewCandidatePage() {
                 {/* Form Body */}
                 <div className="p-10 lg:p-12 space-y-12">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-                        
+
                         {/* Left Column: Personal Info */}
                         <div className="space-y-10">
                             <div className="flex items-center gap-3 pb-3 border-b border-[#F1F5F9]">
@@ -130,11 +130,11 @@ export default function NewCandidatePage() {
                                     <label className="text-[11px] font-bold text-[#737785] uppercase tracking-widest flex items-center gap-2">
                                         Full Name <span className="text-[#B3261E]">*</span>
                                     </label>
-                                    <input 
+                                    <input
                                         required
                                         placeholder="e.g. Julian Vance"
                                         value={formData.full_name}
-                                        onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                                         className="w-full px-5 py-3.5 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] placeholder:text-[#A1A5B7] focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 outline-none transition-all shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]"
                                     />
                                 </div>
@@ -147,12 +147,12 @@ export default function NewCandidatePage() {
                                         </label>
                                         <div className="relative">
                                             <Mail size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#A1A5B7]" />
-                                            <input 
+                                            <input
                                                 type="email"
                                                 required
                                                 placeholder="julian.v@example.com"
                                                 value={formData.email}
-                                                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                                 className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 outline-none transition-all"
                                             />
                                         </div>
@@ -161,10 +161,10 @@ export default function NewCandidatePage() {
                                         <label className="text-[11px] font-bold text-[#737785] uppercase tracking-widest">Phone Number</label>
                                         <div className="relative">
                                             <Phone size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#A1A5B7]" />
-                                            <input 
+                                            <input
                                                 placeholder="+1 (555) 000-0000"
                                                 value={formData.phone}
-                                                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                                 className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 outline-none transition-all"
                                             />
                                         </div>
@@ -177,7 +177,7 @@ export default function NewCandidatePage() {
                                         <label className="text-[11px] font-bold text-[#737785] uppercase tracking-widest flex items-center gap-2">
                                             Country <span className="text-[#B3261E]">*</span>
                                         </label>
-                                        <select 
+                                        <select
                                             required
                                             onChange={(e) => handleCountryChange(e.target.value)}
                                             className="w-full px-5 py-3.5 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] bg-white focus:border-[#0040A1] outline-none transition-all appearance-none cursor-pointer"
@@ -192,13 +192,13 @@ export default function NewCandidatePage() {
                                         <label className="text-[11px] font-bold text-[#737785] uppercase tracking-widest flex items-center gap-2">
                                             State / Province <span className="text-[#B3261E]">*</span>
                                         </label>
-                                        <select 
+                                        <select
                                             required
                                             disabled={!states.length}
                                             value={states.find(s => s.name === formData.state_province)?.isoCode || ''}
                                             onChange={(e) => {
                                                 const s = states.find(st => st.isoCode === e.target.value);
-                                                setFormData({...formData, state_province: s?.name || ''});
+                                                setFormData({ ...formData, state_province: s?.name || '' });
                                             }}
                                             className="w-full px-5 py-3.5 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] bg-white focus:border-[#0040A1] outline-none transition-all appearance-none cursor-pointer disabled:bg-[#F8FAFC] disabled:cursor-not-allowed"
                                         >
@@ -215,10 +215,10 @@ export default function NewCandidatePage() {
                                     <label className="text-[11px] font-bold text-[#737785] uppercase tracking-widest">LinkedIn Profile URL</label>
                                     <div className="relative">
                                         <LinkIcon size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#A1A5B7]" />
-                                        <input 
+                                        <input
                                             placeholder="https://linkedin.com/in/username"
                                             value={formData.linkedin_url}
-                                            onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
+                                            onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
                                             className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 outline-none transition-all"
                                         />
                                     </div>
@@ -239,10 +239,10 @@ export default function NewCandidatePage() {
                                     <label className="text-[11px] font-bold text-[#737785] uppercase tracking-widest flex items-center gap-2">
                                         Target Role / Open Vacancy <span className="text-[#B3261E]">*</span>
                                     </label>
-                                    <select 
+                                    <select
                                         required
                                         value={formData.job_id}
-                                        onChange={(e) => setFormData({...formData, job_id: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, job_id: e.target.value })}
                                         className="w-full px-5 py-3.5 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] bg-white focus:border-[#0040A1] outline-none transition-all appearance-none cursor-pointer"
                                     >
                                         <option value="">Select an active vacancy</option>
@@ -259,8 +259,8 @@ export default function NewCandidatePage() {
                                         {skills.map(skill => (
                                             <span key={skill} className="px-3.5 py-1.5 bg-[#F0F4FF] text-[#0040A1] text-[12px] font-bold rounded-lg flex items-center gap-2 group animate-in zoom-in-90 duration-200">
                                                 {skill}
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     onClick={() => setSkills(skills.filter(s => s !== skill))}
                                                     className="hover:text-red-500 transition-colors"
                                                 >
@@ -272,7 +272,7 @@ export default function NewCandidatePage() {
                                     </div>
                                     <div className="relative">
                                         <Star size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#A1A5B7]" />
-                                        <input 
+                                        <input
                                             list="tech-stacks"
                                             placeholder="Type skill and press Enter (e.g. React, UX Writing)"
                                             onKeyDown={(e) => {
@@ -303,11 +303,11 @@ export default function NewCandidatePage() {
                                     </label>
                                     <div className="relative">
                                         <FileText size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#A1A5B7]" />
-                                        <input 
+                                        <input
                                             required
                                             placeholder="https://drive.google.com/file/..."
                                             value={formData.resume_url}
-                                            onChange={(e) => setFormData({...formData, resume_url: e.target.value})}
+                                            onChange={(e) => setFormData({ ...formData, resume_url: e.target.value })}
                                             className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 outline-none transition-all"
                                         />
                                     </div>
@@ -317,11 +317,11 @@ export default function NewCandidatePage() {
                                 {/* Summary */}
                                 <div className="space-y-2.5">
                                     <label className="text-[11px] font-bold text-[#737785] uppercase tracking-widest">Cover Letter / Professional Summary</label>
-                                    <textarea 
+                                    <textarea
                                         rows={6}
                                         placeholder="Type or paste the candidate's professional profile here..."
                                         value={formData.candidate_summary}
-                                        onChange={(e) => setFormData({...formData, candidate_summary: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, candidate_summary: e.target.value })}
                                         className="w-full px-5 py-4 rounded-xl border border-[#E1E2E5] text-[14px] font-medium text-[#191C1D] focus:border-[#0040A1] outline-none transition-all resize-none leading-relaxed whitespace-pre-wrap"
                                     ></textarea>
                                 </div>
@@ -336,13 +336,13 @@ export default function NewCandidatePage() {
                         All information will be stored securely and linked to your recruiter profile.
                     </p>
                     <div className="flex items-center gap-4">
-                        <Link 
+                        <Link
                             href="/ats/candidates"
                             className="px-8 py-3.5 rounded-xl text-[13px] font-bold text-[#737785] hover:bg-white hover:text-[#191C1D] transition-all"
                         >
                             Cancel
                         </Link>
-                        <button 
+                        <button
                             type="submit"
                             disabled={isSaving}
                             className="px-10 py-3.5 rounded-xl bg-[#0040A1] text-white text-[13px] font-bold hover:bg-[#003380] transition-all shadow-xl shadow-[#0040A1]/20 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"

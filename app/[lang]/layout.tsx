@@ -97,7 +97,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased pt-16" suppressHydrationWarning>
+      <body className="font-sans antialiased pt-16 landing-page" suppressHydrationWarning>
         <GTMNoScript />
         <Navbar dict={dict} lang={lang} />
         <div className="flex min-h-screen flex-col bg-white">
