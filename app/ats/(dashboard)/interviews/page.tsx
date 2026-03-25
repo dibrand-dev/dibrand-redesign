@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { 
     getUpcomingInterviews, getRecruiters, createInterview, 
-    getCandidateNames, getRecruiterJobs, getCombinedInterviews 
+    getCandidateNames, getRecruiterJobs, getCombinedInterviews, syncRecruiterProfile 
 } from '@/app/ats/actions';
 
 export default function InterviewSchedulePage() {
@@ -22,6 +22,7 @@ export default function InterviewSchedulePage() {
     const [jobs, setJobs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentMonth, setCurrentMonth] = useState(new Date());
+    const [currentRecruiterId, setCurrentRecruiterId] = useState<string | null>(null);
 
     const loadData = async () => {
         setLoading(true);
@@ -29,8 +30,12 @@ export default function InterviewSchedulePage() {
             const startOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).toISOString();
             const endOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0, 23, 59, 59).toISOString();
             
+            // Sync/Get profile first
+            const rId = await syncRecruiterProfile() || '';
+            setCurrentRecruiterId(rId);
+
             const [intData, upcomingData, recruiterData, candData, jobData] = await Promise.all([
-                getCombinedInterviews('', startOfMonth, endOfMonth),
+                getCombinedInterviews(rId, startOfMonth, endOfMonth),
                 getUpcomingInterviews(5),
                 getRecruiters(),
                 getCandidateNames(),
@@ -118,7 +123,7 @@ export default function InterviewSchedulePage() {
                                 await createInterview({
                                     candidate_id: cId,
                                     job_id: cand?.job_id || jobs[0]?.id,
-                                    recruiter_id: recruiters[0]?.id,
+                                    recruiter_id: currentRecruiterId || recruiters[0]?.id,
                                     type,
                                     scheduled_at: new Date(date).toISOString(),
                                 });
