@@ -284,11 +284,11 @@ export default function InterviewSchedulePage() {
                                             {dayEvents.map((ev: any, idx: number) => (
                                                 <div 
                                                     key={idx} 
-                                                    className={`p-3 rounded-lg bg-blue-50 border-l-4 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-1 ${
-                                                        ev.isExternal ? 'border-l-[#A1A5B7]' :
-                                                        ev.type?.includes('Technical') ? 'border-l-blue-500' :
-                                                        ev.type?.includes('Cultural') ? 'border-l-emerald-500' :
-                                                        'border-l-rose-500'
+                                                    className={`p-3 rounded-r-lg bg-blue-50 border-l-4 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-1 ${
+                                                        ev.isExternal ? 'border-[#A1A5B7]' :
+                                                        ev.type?.includes('Technical') ? 'border-blue-500' :
+                                                        ev.type?.includes('Cultural') ? 'border-emerald-500' :
+                                                        'border-rose-500'
                                                     }`}
                                                 >
                                                     <span className={`font-semibold text-[10px] uppercase tracking-wider ${
