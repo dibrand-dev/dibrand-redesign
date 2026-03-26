@@ -93,11 +93,6 @@ export default async function CandidateDetailPage({
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><MapPin size={16} className="text-slate-400" /> {candidate.country || 'Sin especificar'}</div>
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><Mail size={16} className="text-slate-400" /> {candidate.email}</div>
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><Phone size={16} className="text-slate-400" /> {candidate.phone || 'Sin número'}</div>
-                                    <div className="flex items-center gap-1.5 pl-6 border-l border-slate-200 whitespace-nowrap bg-blue-50/50 px-3 py-1 rounded-lg border border-blue-100/50">
-                                        <User size={16} className="text-[#0B4FEA]" /> 
-                                        <span className="text-slate-900 font-bold text-[11px] tracking-widest uppercase">RECLUTADOR:</span> 
-                                        <span className="text-[#0B4FEA] font-black">{candidate.recruiter?.full_name || 'Sin asignar'}</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -257,6 +252,24 @@ export default async function CandidateDetailPage({
 
                         {/* Right Column */}
                         <div className="space-y-8">
+                            {/* Assigned Recruiter Card */}
+                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6 animate-in slide-in-from-right-4 duration-500">
+                                <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Reclutador Asignado</h3>
+                                <div className="flex items-center gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-slate-100">
+                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0B4FEA] to-blue-700 text-white flex items-center justify-center font-black text-sm shadow-md">
+                                        {(candidate.recruiter?.full_name || 'SA')[0].toUpperCase()}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-[14px] font-black text-slate-900 leading-tight truncate px-1">
+                                            {candidate.recruiter?.full_name || 'Sin asignar'}
+                                        </p>
+                                        <p className="text-[11px] font-semibold text-slate-500 mt-0.5 px-1 truncate capitalize">
+                                            Managing Recruiter
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* Process Actions */}
                             <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
                                 <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Process Actions</h3>
