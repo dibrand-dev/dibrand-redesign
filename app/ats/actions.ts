@@ -143,7 +143,7 @@ export async function getRecruiterJobs() {
     }) || [];
 }
 
-export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number, offset?: number, jobId?: string } = {}) {
+export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number, offset?: number, jobId?: string, country?: string } = {}) {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
 
@@ -175,6 +175,10 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
 
     if (filters.jobId) {
         query = query.eq('job_id', filters.jobId);
+    }
+
+    if (filters.country) {
+        query = query.eq('country', filters.country);
     }
 
     if (filters.search) {
@@ -406,6 +410,37 @@ export async function getRecruiters() {
 
     if (error) throw error;
     return data || [];
+}
+
+export async function getJobs() {
+    const { data, error } = await supabase
+        .from('job_openings')
+        .select('id, title')
+        .order('title');
+
+    if (error) {
+        console.error('Error fetching jobs:', error);
+        return [];
+    }
+
+    return data || [];
+}
+
+export async function getCountries() {
+    const { data, error } = await supabase
+        .from('job_applications')
+        .select('country')
+        .not('country', 'is', null)
+        .neq('country', '');
+
+    if (error) {
+        console.error('Error fetching countries:', error);
+        return [];
+    }
+
+    // De-duplicate countries
+    const unique = Array.from(new Set(data.map(d => d.country))).sort();
+    return unique;
 }
 
 export async function getGlobalSkills() {
