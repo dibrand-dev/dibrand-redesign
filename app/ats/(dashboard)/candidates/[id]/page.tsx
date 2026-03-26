@@ -7,6 +7,7 @@ import {
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ScheduleInterviewModal from '@/components/ats/ScheduleInterviewModal';
+import EditCandidateModal from '@/components/ats/EditCandidateModal';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -18,6 +19,7 @@ export default async function CandidateDetailPage({
     const { id } = await params;
     const sParams = await searchParams;
     const showSchedule = sParams.schedule === 'true';
+    const showEdit = sParams.edit === 'true';
     
     const candidate = await getCandidateById(id);
     const logs = await getApplicationLogs(id);
@@ -87,14 +89,18 @@ export default async function CandidateDetailPage({
                                 <h1 className="text-[34px] font-black text-slate-900 leading-tight mb-3 tracking-tight">
                                     {candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}
                                 </h1>
-                                <div className="flex items-center gap-5 text-[14px] text-slate-500 font-semibold">
-                                    <div className="flex items-center gap-1.5"><MapPin size={16} className="text-slate-400" /> {candidate.country || 'UK'}</div>
+                                <div className="flex flex-wrap items-center gap-y-2 gap-x-5 text-[14px] text-slate-500 font-semibold">
+                                    <div className="flex items-center gap-1.5"><MapPin size={16} className="text-slate-400" /> {candidate.country || 'Sin especificar'}</div>
                                     <div className="flex items-center gap-1.5"><Mail size={16} className="text-slate-400" /> {candidate.email}</div>
-                                    <div className="flex items-center gap-1.5"><Phone size={16} className="text-slate-400" /> {candidate.phone || '+44 7700 900123'}</div>
+                                    <div className="flex items-center gap-1.5"><Phone size={16} className="text-slate-400" /> {candidate.phone || 'Sin número'}</div>
+                                    <div className="flex items-center gap-1.5 pl-5 border-l border-slate-200"><User size={16} className="text-[#0B4FEA]" /> <span className="text-slate-900 font-bold">RECLUTADOR:</span> {candidate.recruiter?.full_name || 'Sin asignar'}</div>
                                 </div>
                             </div>
                         </div>
                         <div className="flex items-center gap-3 pt-2">
+                            <Link href={`/ats/candidates/${id}?edit=true`} className="px-6 py-2.5 border border-slate-200 bg-white rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
+                                <Pencil size={14} /> Editar
+                            </Link>
                             <button className="px-6 py-2.5 border border-slate-200 bg-white rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Message</button>
                             <Link href={`/ats/candidates/${id}?schedule=true`} className="px-6 py-2.5 bg-[#0B4FEA] text-white rounded-xl text-[14px] font-bold hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center">Interview</Link>
                         </div>
@@ -317,6 +323,10 @@ export default async function CandidateDetailPage({
             
             {showSchedule && (
                 <ScheduleInterviewModal candidate={candidate} recruiterId={recruiterId || null} />
+            )}
+
+            {showEdit && (
+                <EditCandidateModal candidate={candidate} />
             )}
         </div>
     );

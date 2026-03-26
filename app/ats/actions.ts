@@ -229,10 +229,8 @@ export async function getCandidateById(id: string) {
         }
 
         return data;
-    } catch (err: any) {
-        console.error('--- CRITICAL REPL ERROR ---');
-        console.error('Message:', err.message);
-        console.error('Stack:', err.stack);
+    } catch (e) {
+        console.error('CRITICAL ERROR IN getCandidateById:', e);
         return null;
     }
 }
