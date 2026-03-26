@@ -592,6 +592,21 @@ export async function createInterview(data: any) {
   };
 }
 
+export async function disconnectGoogleCalendar() {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    
+    if (user) {
+        await supabase
+            .from('recruiter_google_tokens')
+            .delete()
+            .eq('recruiter_id', user.id);
+        
+        revalidatePath('/ats/settings');
+        revalidatePath('/ats/interviews');
+    }
+}
+
 export async function getCombinedInterviews(recruiterId: string, startDate: string, endDate: string) {
     // 1. Get ATS Interviews
     const atsInterviews = await getInterviews({ startDate, endDate, recruiterId });
@@ -650,3 +665,40 @@ export async function getUpcomingInterviews(limit = 10) {
     }
     return data || [];
 }
+
+export async function updateRecruiterProfile(data: { fullName: string, jobTitle: string, phone: string, avatarUrl?: string }) {
+    const supabaseClient = await createClient();
+    const { data: { user } } = await supabaseClient.auth.getUser();
+
+    if (!user) throw new Error('Not authenticated');
+
+    // 1. Update Auth Metadata
+    const { error: authError } = await supabaseClient.auth.updateUser({
+        data: {
+            full_name: data.fullName,
+            job_title: data.jobTitle,
+            phone: data.phone,
+            avatar_url: data.avatarUrl || user.user_metadata?.avatar_url
+        }
+    });
+
+    if (authError) throw authError;
+
+    // 2. Update recruiters table
+    const { error: dbError } = await supabase
+        .from('recruiters')
+        .update({
+            full_name: data.fullName,
+            phone: data.phone,
+            avatar_url: data.avatarUrl || user.user_metadata?.avatar_url
+        })
+        .eq('id', user.id);
+
+    if (dbError) throw dbError;
+
+    revalidatePath('/ats/settings');
+    revalidatePath('/ats');
+    
+    return { success: true };
+}
+

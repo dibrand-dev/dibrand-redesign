@@ -19,6 +19,7 @@ export default async function AtsDashboardLayout({
 
     const name = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Recruiter';
     const initials = name[0].toUpperCase();
+    const avatarUrl = user?.user_metadata?.avatar_url;
 
     return (
         <div className="min-h-screen bg-[#E5E5E5] flex font-inter text-[#191C1D] antialiased overflow-hidden h-screen">
@@ -60,8 +61,12 @@ export default async function AtsDashboardLayout({
                                 <p className="text-[11px] font-medium text-[#737785] leading-none">Senior Recruiter</p>
                             </div>
                             <div className="relative">
-                                <div className="w-10 h-10 rounded-xl bg-[#0040A1] text-white flex items-center justify-center font-bold text-sm shadow-sm">
-                                     {initials}
+                                <div className="w-10 h-10 rounded-xl bg-[#0040A1] text-white flex items-center justify-center font-bold text-sm shadow-sm overflow-hidden">
+                                    {avatarUrl ? (
+                                        <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        initials
+                                    )}
                                 </div>
                                 <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></div>
                             </div>
