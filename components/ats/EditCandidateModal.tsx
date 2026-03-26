@@ -87,16 +87,26 @@ export default function EditCandidateModal({ candidate }: { candidate: any }) {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await updateCandidate(candidate.id, {
-                ...formData,
+            // Ensure fields are properly formatted for Supabase
+            const updatePayload = {
+                first_name: formData.first_name,
+                last_name: formData.last_name,
                 full_name: `${formData.first_name} ${formData.last_name}`.trim(),
+                email: formData.email,
+                phone: formData.phone || null,
+                country: formData.country || null,
+                linkedin_url: formData.linkedin_url || null,
+                recruiter_id: formData.recruiter_id === '' ? null : formData.recruiter_id,
+                avatar_url: formData.avatar_url || null,
                 skills: formData.skills.split(',').map(s => s.trim()).filter(s => s !== '')
-            });
+            };
+
+            await updateCandidate(candidate.id, updatePayload);
             closeModal();
             router.refresh();
         } catch (error) {
             console.error('Failed to update candidate:', error);
-            alert('Error al actualizar el candidato');
+            alert('Error al actualizar el candidato. Verifica los campos.');
         } finally {
             setIsSubmitting(false);
         }

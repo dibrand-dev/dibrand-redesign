@@ -236,12 +236,21 @@ export async function getCandidateById(id: string) {
 }
 
 export async function updateCandidate(id: string, updates: any) {
+    console.log('UPDATING CANDIDATE:', id, updates);
     const { error } = await supabase
         .from('job_applications')
         .update({ ...updates, updated_at: new Date().toISOString() })
         .eq('id', id);
 
-    if (error) throw error;
+    if (error) {
+        console.error('--- UPDATE CANDIDATE ERROR ---');
+        console.error('Code:', error.code);
+        console.error('Message:', error.message);
+        console.error('Details:', error.details);
+        console.error('Hint:', error.hint);
+        throw new Error(error.message);
+    }
+
     revalidatePath(`/ats/candidates/${id}`);
     revalidatePath('/ats/candidates');
     return { success: true };
