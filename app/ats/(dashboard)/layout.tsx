@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { Bell, Search, HelpCircle } from 'lucide-react';
 import LogoutButton from '@/app/admin/(dashboard)/LogoutButton';
 import { syncRecruiterProfile } from '../actions';
+import ProfileMenu from '@/components/ats/ProfileMenu';
 
 export default async function AtsDashboardLayout({
     children,
@@ -67,23 +68,14 @@ export default async function AtsDashboardLayout({
                             </button>
                         </div>
 
-                        {/* Profile Section */}
-                        <div className="flex items-center gap-4 group cursor-pointer">
-                            <div className="text-right hidden xl:block">
-                                <p className="text-[13px] font-bold text-[#191C1D] leading-none mb-1">{name}</p>
-                                <p className="text-[11px] font-medium text-[#737785] leading-none">Senior Recruiter</p>
-                            </div>
-                            <div className="relative">
-                                <div className="w-10 h-10 rounded-xl bg-[#0040A1] text-white flex items-center justify-center font-bold text-sm shadow-sm overflow-hidden">
-                                    {avatarUrl ? (
-                                        <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
-                                    ) : (
-                                        initials
-                                    )}
-                                </div>
-                                <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></div>
-                            </div>
-                        </div>
+                        {/* Profile Section - Integrated with Menu */}
+                        <ProfileMenu 
+                            name={name} 
+                            role={role || 'Recruiter'} 
+                            initials={initials} 
+                            avatarUrl={avatarUrl} 
+                            isAdmin={false}
+                        />
                     </div>
                 </header>
 
