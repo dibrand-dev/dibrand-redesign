@@ -141,7 +141,7 @@ export default function InterviewSchedulePage() {
 
             <div className="flex w-full gap-8 items-start">
                 {/* Left Side: Scheduling Form */}
-                <div className="w-[30%] min-w-[30%] space-y-8 sticky top-8">
+                <div className="w-[256px] min-w-[256px] space-y-8 sticky top-8">
                     <div className="bg-white rounded-[32px] border border-[#E2E8F0] shadow-xl shadow-black/[0.02] overflow-hidden text-[#191C1D]">
                         <div className="p-8 border-b border-[#F1F5F9] bg-[#F8FAFC]">
                             <h3 className="text-[18px] font-bold">Quick Schedule</h3>
@@ -187,7 +187,7 @@ export default function InterviewSchedulePage() {
                                     name="candidate_id"
                                     required
                                     defaultValue={preSelectedCandidate || ""}
-                                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-4 px-5 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 transition-all appearance-none cursor-pointer"
+                                    className="w-full h-10 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-2 focus:ring-[#0040A1]/5 transition-all appearance-none cursor-pointer"
                                 >
                                     <option value="">Select candidate...</option>
                                     {candidates.map(c => (
@@ -200,7 +200,7 @@ export default function InterviewSchedulePage() {
                                 <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest pl-1">Session Type</label>
                                 <select 
                                     name="type"
-                                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-4 px-5 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 transition-all appearance-none cursor-pointer"
+                                    className="w-full h-10 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-2 focus:ring-[#0040A1]/5 transition-all appearance-none cursor-pointer"
                                 >
                                     <option value="Technical Interview">Technical Interview</option>
                                     <option value="Cultural Fit">Cultural Fit</option>
@@ -214,17 +214,17 @@ export default function InterviewSchedulePage() {
                                     name="scheduled_at" 
                                     type="datetime-local" 
                                     required 
-                                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-4 px-5 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-4 focus:ring-[#0040A1]/5 transition-all" 
+                                    className="w-full h-10 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-2 focus:ring-[#0040A1]/5 transition-all" 
                                 />
                             </div>
 
-                            <button type="submit" disabled={loading} className="w-full py-3 bg-[#0040A1] text-white rounded-lg text-[14px] font-semibold flex items-center justify-center gap-2 mt-2 hover:bg-[#003380] transition-colors">
+                            <button type="submit" disabled={loading} className="w-full h-10 bg-[#0040A1] text-white rounded-lg text-[14px] font-semibold flex items-center justify-center gap-2 mt-2 hover:bg-[#003380] transition-colors">
                                 {loading ? <Loader2 className="animate-spin" size={20} /> : <Calendar size={18} />}
                                 Schedule Event
                             </button>
 
                             <div className="pt-6 mt-2 border-t border-[#F1F5F9]">
-                                <a href="/api/auth/google" className="w-full py-4 border-2 border-[#E2E8F0] text-[#191C1D] rounded-2xl text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#F8FAFC] hover:border-[#0040A1]/20 transition-all group">
+                                <a href="/api/auth/google" className="w-full h-10 border border-[#E2E8F0] text-[#191C1D] rounded-lg text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#F8FAFC] transition-all group">
                                     <img src="https://www.google.com/favicon.ico" className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all" alt="Google" />
                                     Sync Google Calendar
                                 </a>
@@ -234,9 +234,9 @@ export default function InterviewSchedulePage() {
                 </div>
 
                 {/* Right Side: Calendar & Dashboard */}
-                <div className="w-[70%] space-y-10">
+                <div className="flex-1 space-y-10">
                     <div className="flex items-center justify-between bg-white p-6 rounded-[32px] border border-[#E2E8F0] shadow-sm">
-                        <span className="text-2xl font-bold text-[#191C1D] text-left px-2">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                        <span className="text-[24px] font-bold text-[#191C1D] text-left px-2">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
                         
                         <div className="flex justify-end items-center gap-2 ml-auto">
                             <div className="relative mr-2">
@@ -284,11 +284,11 @@ export default function InterviewSchedulePage() {
                                             {dayEvents.map((ev: any, idx: number) => (
                                                 <div 
                                                     key={idx} 
-                                                    className={`p-3 rounded-r-lg bg-blue-50 border-l-4 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-1 ${
-                                                        ev.isExternal ? 'border-[#A1A5B7]' :
-                                                        ev.type?.includes('Technical') ? 'border-blue-500' :
-                                                        ev.type?.includes('Cultural') ? 'border-emerald-500' :
-                                                        'border-rose-500'
+                                                    className={`p-3 rounded-r-lg border-l-4 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-1 ${
+                                                        ev.isExternal ? 'bg-[#F1F1F1] border-[#A1A5B7]' :
+                                                        ev.type?.includes('Technical') ? 'bg-[#E1E9F4] border-[#0040A1]' :
+                                                        ev.type?.includes('Cultural') ? 'bg-[#F1F1F1] border-emerald-500' :
+                                                        'bg-[#FFF4F4] border-[#e11d48]'
                                                     }`}
                                                 >
                                                     <span className={`font-semibold text-[10px] uppercase tracking-wider ${
