@@ -44,9 +44,13 @@ export default function EditCandidateModal({ candidate }: { candidate: any }) {
 
         setIsUploading(true);
         try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('No authenticated user');
+
             const fileExt = file.name.split('.').pop();
             const fileName = `${candidate.id}-${Math.random()}.${fileExt}`;
-            const filePath = `candidates/${fileName}`;
+            // Use user.id as the first folder to satisfy existing RLS policy
+            const filePath = `${user.id}/candidates/${fileName}`;
 
             const { error: uploadError } = await supabase.storage
                 .from('avatars')
@@ -61,7 +65,7 @@ export default function EditCandidateModal({ candidate }: { candidate: any }) {
             setFormData(prev => ({ ...prev, avatar_url: publicUrl }));
         } catch (error) {
             console.error('Error uploading image:', error);
-            alert('Error al subir la imagen');
+            alert('Error al subir la imagen. Verifica los permisos de storage.');
         } finally {
             setIsUploading(false);
         }
