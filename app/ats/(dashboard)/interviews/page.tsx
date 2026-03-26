@@ -236,7 +236,7 @@ export default function InterviewSchedulePage() {
                 {/* Right Side: Calendar & Dashboard */}
                 <div className="flex-1 space-y-10">
                     <div className="flex items-center justify-between bg-white p-6 rounded-[32px] border border-[#E2E8F0] shadow-sm">
-                        <span className="text-[24px] font-bold text-[#191C1D] text-left px-2">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                        <span className="text-[24px] font-bold text-[#191C1D] text-left px-2" suppressHydrationWarning>{currentMonth.toLocaleString('en-US', { month: 'long', year: 'numeric' })}</span>
                         
                         <div className="flex justify-end items-center gap-2 ml-auto">
                             <div className="relative mr-2">
@@ -298,7 +298,7 @@ export default function InterviewSchedulePage() {
                                                         'text-rose-700'
                                                     }`}>{ev.type}</span>
                                                     <p className="font-bold truncate text-[13px] leading-tight text-[#191C1D]">{ev.candidate?.full_name || ev.candidate?.first_name || 'Event'}</p>
-                                                    <span className="font-medium text-[11px] text-[#737785]">{new Date(ev.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                                    <span className="font-medium text-[11px] text-[#737785]" suppressHydrationWarning>{new Date(ev.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -322,8 +322,8 @@ export default function InterviewSchedulePage() {
                                             <span>{nextInterview.job?.title}</span>
                                             <span className="w-1.5 h-1.5 rounded-full bg-blue-300 opacity-40"></span>
                                             <span className="text-white font-bold">{nextInterview.type}</span>
-                                            <span className="text-[#0040A1] font-black bg-white px-3 py-1 rounded-xl text-[11px] ml-2 shadow-lg shadow-white/10">
-                                                {new Date(nextInterview.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            <span className="text-[#0040A1] font-black bg-white px-3 py-1 rounded-xl text-[11px] ml-2 shadow-lg shadow-white/10" suppressHydrationWarning>
+                                                {new Date(nextInterview.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                                             </span>
                                         </div>
                                     </div>
