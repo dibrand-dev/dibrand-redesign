@@ -37,8 +37,12 @@ const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
 
       {/* Header: Avatar + Info */}
       <div className="flex items-start gap-4 mb-6">
-        <div className="w-14 h-14 rounded-xl bg-[#F8FAFC] border border-[#E1E2E5] flex items-center justify-center text-[#0040A1] font-bold text-xl shrink-0">
-          {candidate.full_name?.split(' ').map(n => n[0]).join('')}
+        <div className="w-14 h-14 rounded-xl bg-[#F8FAFC] border border-[#E1E2E5] flex items-center justify-center text-[#0040A1] font-bold text-xl shrink-0 overflow-hidden">
+          {candidate.avatar_url ? (
+            <img src={candidate.avatar_url} alt={candidate.full_name} className="w-full h-full object-cover" />
+          ) : (
+            candidate.full_name?.split(' ').map(n => n[0]).join('')
+          )}
         </div>
       </div>
 

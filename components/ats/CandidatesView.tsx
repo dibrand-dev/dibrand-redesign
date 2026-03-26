@@ -60,7 +60,8 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                                 linkedin_url: candidate.linkedin_url || '#',
                                 resume_url: candidate.resume_url || candidate.cv_filename || '#',
                                 recruiter_id: candidate.recruiter_id,
-                                country: candidate.country || 'N/A'
+                                country: candidate.country || 'N/A',
+                                avatar_url: candidate.avatar_url
                             } as Candidate} 
                         />
                     ))

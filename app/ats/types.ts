@@ -16,4 +16,5 @@ export interface Candidate {
   location?: string;
   recruiter_notes?: string;
   skills?: string[];
+  avatar_url?: string;
 }
