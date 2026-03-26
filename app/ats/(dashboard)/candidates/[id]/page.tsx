@@ -89,11 +89,15 @@ export default async function CandidateDetailPage({
                                 <h1 className="text-[34px] font-black text-slate-900 leading-tight mb-3 tracking-tight">
                                     {candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}
                                 </h1>
-                                <div className="flex flex-wrap items-center gap-y-2 gap-x-5 text-[14px] text-slate-500 font-semibold">
-                                    <div className="flex items-center gap-1.5"><MapPin size={16} className="text-slate-400" /> {candidate.country || 'Sin especificar'}</div>
-                                    <div className="flex items-center gap-1.5"><Mail size={16} className="text-slate-400" /> {candidate.email}</div>
-                                    <div className="flex items-center gap-1.5"><Phone size={16} className="text-slate-400" /> {candidate.phone || 'Sin número'}</div>
-                                    <div className="flex items-center gap-1.5 pl-5 border-l border-slate-200"><User size={16} className="text-[#0B4FEA]" /> <span className="text-slate-900 font-bold">RECLUTADOR:</span> {candidate.recruiter?.full_name || 'Sin asignar'}</div>
+                                <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-[14px] text-slate-500 font-semibold">
+                                    <div className="flex items-center gap-1.5 whitespace-nowrap"><MapPin size={16} className="text-slate-400" /> {candidate.country || 'Sin especificar'}</div>
+                                    <div className="flex items-center gap-1.5 whitespace-nowrap"><Mail size={16} className="text-slate-400" /> {candidate.email}</div>
+                                    <div className="flex items-center gap-1.5 whitespace-nowrap"><Phone size={16} className="text-slate-400" /> {candidate.phone || 'Sin número'}</div>
+                                    <div className="flex items-center gap-1.5 pl-6 border-l border-slate-200 whitespace-nowrap bg-blue-50/50 px-3 py-1 rounded-lg border border-blue-100/50">
+                                        <User size={16} className="text-[#0B4FEA]" /> 
+                                        <span className="text-slate-900 font-bold text-[11px] tracking-widest uppercase">RECLUTADOR:</span> 
+                                        <span className="text-[#0B4FEA] font-black">{candidate.recruiter?.full_name || 'Sin asignar'}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
