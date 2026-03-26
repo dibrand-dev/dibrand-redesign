@@ -79,9 +79,13 @@ export default async function CandidateDetailPage({
                     {/* Header */}
                     <div className="flex justify-between items-start mb-10">
                         <div className="flex items-center gap-8">
-                            <div className="w-[110px] h-[110px] rounded-[24px] bg-slate-200 overflow-hidden shadow-sm shrink-0 border border-slate-200/60 ring-4 ring-white relative">
-                                <img src={candidate.avatar_url || 'https://i.pravatar.cc/150'} alt="Avatar" className="w-full h-full object-cover" />
-                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-600 outline outline-4 outline-white rounded-full flex items-center justify-center text-white text-[10px]">
+                            <div className="w-[110px] h-[110px] rounded-[24px] bg-slate-200 overflow-hidden shadow-sm shrink-0 border border-slate-200/60 ring-4 ring-white relative group">
+                                <img 
+                                    src={candidate.avatar_url || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'} 
+                                    alt="Avatar" 
+                                    className="w-full h-full object-cover" 
+                                />
+                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-600 outline outline-4 outline-white rounded-full flex items-center justify-center text-white text-[10px] shadow-sm">
                                     <Briefcase size={12} fill="currentColor" className="text-white" />
                                 </div>
                             </div>
@@ -200,7 +204,9 @@ export default async function CandidateDetailPage({
                                         </div>
                                         <div className="flex items-center gap-5 sm:ml-auto">
                                             <div className="flex items-center gap-2.5 text-[12px] font-bold text-slate-700">
-                                                <img src="https://i.pravatar.cc/100?img=11" className="w-6 h-6 rounded-full ring-2 ring-white shadow-sm" alt="Recruiter" /> James W.
+                                                <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
+                                                    <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="Recruiter" />
+                                                </div> James W.
                                             </div>
                                             <span className="px-3.5 py-1.5 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg tracking-widest uppercase shadow-sm">ACTIVE</span>
                                         </div>
@@ -300,7 +306,9 @@ export default async function CandidateDetailPage({
 
                                 <div className="space-y-4">
                                     <div className="bg-slate-50 p-5 rounded-xl flex gap-3.5 border border-slate-100">
-                                        <img src="https://i.pravatar.cc/120?img=5" className="w-8 h-8 rounded-full shrink-0 shadow-sm ring-2 ring-white" alt="Avatar" />
+                                        <div className="w-8 h-8 rounded-full shrink-0 shadow-sm ring-2 ring-white bg-slate-200 overflow-hidden">
+                                            <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="Avatar" />
+                                        </div>
                                         <div>
                                             <div className="flex justify-between items-center mb-1.5">
                                                 <span className="text-[13px] font-extrabold text-slate-900">Maria Garcia</span>

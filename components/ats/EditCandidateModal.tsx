@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
     X, User, Mail, Phone, MapPin, Linkedin, Briefcase, 
-    ChevronDown, Save, Loader2 
+    ChevronDown, Save, Loader2, Camera, Upload
 } from 'lucide-react';
 import { updateCandidate, getRecruiters } from '@/app/ats/actions';
+import { createBrowserClient } from '@supabase/ssr';
 
 interface Recruiter {
     id: string;
@@ -17,6 +18,7 @@ export default function EditCandidateModal({ candidate }: { candidate: any }) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [recruiters, setRecruiters] = useState<Recruiter[]>([]);
+    const [isUploading, setIsUploading] = useState(false);
     
     const [formData, setFormData] = useState({
         first_name: candidate.first_name || '',
@@ -27,8 +29,43 @@ export default function EditCandidateModal({ candidate }: { candidate: any }) {
         country: candidate.country || '',
         linkedin_url: candidate.linkedin_url || '',
         recruiter_id: candidate.recruiter_id || '',
-        skills: candidate.skills?.join(', ') || ''
+        skills: candidate.skills?.join(', ') || '',
+        avatar_url: candidate.avatar_url || ''
     });
+
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${candidate.id}-${Math.random()}.${fileExt}`;
+            const filePath = `candidates/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('avatars')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('avatars')
+                .getPublicUrl(filePath);
+
+            setFormData(prev => ({ ...prev, avatar_url: publicUrl }));
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Error al subir la imagen');
+        } finally {
+            setIsUploading(false);
+        }
+    };
 
     useEffect(() => {
         async function fetchRecruiters() {
@@ -77,6 +114,32 @@ export default function EditCandidateModal({ candidate }: { candidate: any }) {
 
                 {/* Body - Scrollable */}
                 <form onSubmit={handleSubmit} className="overflow-y-auto custom-scrollbar flex-1 p-8 space-y-6">
+                    {/* AVATAR UPLOAD */}
+                    <div className="flex flex-col items-center justify-center p-6 bg-slate-50 border border-dashed border-slate-200 rounded-3xl mb-8 group relative overflow-hidden transition-all hover:bg-slate-100/80">
+                         <div className="relative group/avatar">
+                            <div className="w-24 h-24 rounded-2xl bg-white shadow-xl overflow-hidden border-4 border-white transition-all group-hover/avatar:scale-105">
+                                <img 
+                                    src={formData.avatar_url || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'} 
+                                    className={`w-full h-full object-cover transition-opacity ${isUploading ? 'opacity-40' : 'opacity-100'}`}
+                                    alt="Preview" 
+                                />
+                                {isUploading && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <Loader2 size={24} className="animate-spin text-blue-600" />
+                                    </div>
+                                )}
+                            </div>
+                            <label className="absolute -bottom-2 -right-2 w-10 h-10 bg-[#0B4FEA] text-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer hover:bg-blue-700 hover:scale-110 transition-all border-4 border-white">
+                                <Camera size={18} />
+                                <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+                            </label>
+                         </div>
+                         <div className="text-center mt-5">
+                             <p className="text-[14px] font-black text-slate-900 mb-1">Foto de Perfil</p>
+                             <p className="text-[11px] font-semibold text-slate-500">JPG, PNG o WEBP. Máx 5MB.</p>
+                         </div>
+                    </div>
+
                     <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest pl-1">Nombre</label>
