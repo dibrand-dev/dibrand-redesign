@@ -669,39 +669,54 @@ export async function getUpcomingInterviews(limit = 10) {
 }
 
 export async function updateRecruiterProfile(data: { fullName: string, jobTitle: string, phone: string, avatarUrl?: string }) {
-    const supabaseClient = await createClient();
-    const { data: { user } } = await supabaseClient.auth.getUser();
+    try {
+        const supabaseAuth = await createClient();
+        const { data: { user } } = await supabaseAuth.auth.getUser();
 
-    if (!user) throw new Error('Not authenticated');
+        if (!user) throw new Error('Not authenticated');
 
-    // 1. Update Auth Metadata
-    const { error: authError } = await supabaseClient.auth.updateUser({
-        data: {
-            full_name: data.fullName,
-            job_title: data.jobTitle,
-            phone: data.phone,
-            avatar_url: data.avatarUrl || user.user_metadata?.avatar_url
+        // 1. Update Auth Metadata using Admin Client (More robust)
+        const { error: authError } = await supabase.auth.admin.updateUserById(user.id, {
+            user_metadata: {
+                full_name: data.fullName,
+                job_title: data.jobTitle,
+                phone: data.phone,
+                avatar_url: data.avatarUrl || user.user_metadata?.avatar_url
+            }
+        });
+
+        if (authError) {
+            console.error('AUTH METADATA UPDATE ERROR:', authError);
+            throw authError;
         }
-    });
 
-    if (authError) throw authError;
+        // 2. Update recruiters table (using UPSERT to be safe)
+        const { error: dbError } = await supabase
+            .from('recruiters')
+            .upsert({
+                id: user.id,
+                full_name: data.fullName,
+                job_title: data.jobTitle,
+                phone: data.phone,
+                avatar_url: data.avatarUrl || user.user_metadata?.avatar_url,
+                email: user.email,
+                updated_at: new Date().toISOString()
+            }, { 
+                onConflict: 'id' 
+            });
 
-    // 2. Update recruiters table
-    const { error: dbError } = await supabase
-        .from('recruiters')
-        .update({
-            full_name: data.fullName,
-            job_title: data.jobTitle,
-            phone: data.phone,
-            avatar_url: data.avatarUrl || user.user_metadata?.avatar_url
-        })
-        .eq('id', user.id);
+        if (dbError) {
+            console.error('DATABASE UPDATE ERROR:', dbError);
+            throw dbError;
+        }
 
-    if (dbError) throw dbError;
-
-    revalidatePath('/ats/settings');
-    revalidatePath('/ats');
-    
-    return { success: true };
+        revalidatePath('/ats/settings');
+        revalidatePath('/ats');
+        
+        return { success: true };
+    } catch (error: any) {
+        console.error('CATCH BLOCK ERROR:', error);
+        throw error;
+    }
 }
 

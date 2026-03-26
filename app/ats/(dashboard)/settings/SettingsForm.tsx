@@ -28,9 +28,10 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
         try {
             await updateRecruiterProfile(formData);
             alert('Perfil actualizado con éxito');
-        } catch (error) {
-            console.error('Error updating profile:', error);
-            alert('Error al actualizar el perfil: ' + (error as Error).message);
+        } catch (error: any) {
+            console.error('CRITICAL ERROR UPDATING PROFILE:', error);
+            const errorMessage = error.message || JSON.stringify(error);
+            alert('Error al actualizar el perfil: ' + errorMessage);
         } finally {
             setIsLoading(false);
         }
