@@ -1,6 +1,7 @@
 import Sidebar from './Sidebar';
 import { Search, Bell, HelpCircle } from 'lucide-react';
 import { createClient } from '@/lib/supabase-server-client';
+import { redirect } from 'next/navigation';
 
 export default async function DashboardLayout({
     children,
@@ -10,9 +11,19 @@ export default async function DashboardLayout({
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
+    if (!user) {
+        redirect('/login');
+    }
+
     const meta = user?.user_metadata || {};
-    const name = meta.full_name || meta.first_name ? `${meta.first_name} ${meta.last_name || ''}` : user?.email?.split('@')[0] || 'Admin';
-    const role = meta.role || 'Administrator';
+    const role = meta.role;
+
+    // Strict Security: ONLY SuperAdmin can access Admin Dashboard
+    if (role !== 'SuperAdmin') {
+        redirect('/ats');
+    }
+
+    const name = meta.full_name || (meta.first_name ? `${meta.first_name} ${meta.last_name || ''}` : null) || user?.email?.split('@')[0] || 'Admin';
     const initials = name[0].toUpperCase();
 
     return (

@@ -1,5 +1,6 @@
 import AtsSidebar from './Sidebar';
 import { createClient } from '@/lib/supabase-server-client';
+import { redirect } from 'next/navigation';
 import { Bell, Search, HelpCircle } from 'lucide-react';
 import LogoutButton from '@/app/admin/(dashboard)/LogoutButton';
 import { syncRecruiterProfile } from '../actions';
@@ -16,6 +17,18 @@ export default async function AtsDashboardLayout({
     }
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        redirect('/login');
+    }
+
+    const role = user?.user_metadata?.role;
+    // Authorized roles for ATS
+    const isAuthorized = role === 'recruiter' || role === 'admin' || role === 'SuperAdmin';
+    
+    if (!isAuthorized) {
+        redirect('/login');
+    }
 
     const name = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Recruiter';
     const initials = name[0].toUpperCase();
