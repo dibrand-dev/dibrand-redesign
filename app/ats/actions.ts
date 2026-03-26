@@ -31,7 +31,9 @@ export async function syncRecruiterProfile() {
                 id: user.id,
                 full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Recruiter',
                 email: user.email,
-                avatar_url: user.user_metadata?.avatar_url || null
+                avatar_url: user.user_metadata?.avatar_url || null,
+                job_title: user.user_metadata?.job_title || null,
+                phone: user.user_metadata?.phone || null
             }]);
         
         if (insertError) console.error('Error auto-creating recruiter:', insertError);
@@ -689,6 +691,7 @@ export async function updateRecruiterProfile(data: { fullName: string, jobTitle:
         .from('recruiters')
         .update({
             full_name: data.fullName,
+            job_title: data.jobTitle,
             phone: data.phone,
             avatar_url: data.avatarUrl || user.user_metadata?.avatar_url
         })
