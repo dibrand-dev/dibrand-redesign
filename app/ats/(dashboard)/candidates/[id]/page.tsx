@@ -1,156 +1,323 @@
 import { Suspense } from 'react';
+import { getCandidateById, getApplicationLogs, getStackNames, syncRecruiterProfile } from '@/app/ats/actions';
 import { 
-    getCandidateById, 
-    updateCandidateStatus, 
-    assignRecruiter, 
-    getRecruiters, 
-    addApplicationLog, 
-    getApplicationLogs,
-    getStackNames
-} from '@/app/ats/actions';
-import { 
-    MapPin, Mail, Phone,
-    CheckCircle2, 
-    UserPlus
+    MapPin, Mail, Phone, Calendar, FileText, StickyNote, Clock,
+    Check, X, ArrowRight, Bold, Italic, Underline, List, ListOrdered, Link as LinkIcon, Download, Maximize2, User, Pencil, Users, Briefcase
 } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import ScheduleInterviewModal from '@/components/ats/ScheduleInterviewModal';
 
-// ATS Components
-import EditProfileButton from '@/components/ats/EditProfileButton';
-import CandidateDetailTabs from '@/components/ats/CandidateDetailTabs';
-
-export default async function CandidateDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function CandidateDetailPage({ 
+    params,
+    searchParams 
+}: { 
+    params: Promise<{ id: string }>,
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
     const { id } = await params;
-    console.log('--- ENTERING CANDIDATE DETAIL PAGE ---');
-    console.log('ID parameter:', id);
+    const sParams = await searchParams;
+    const showSchedule = sParams.schedule === 'true';
+    
     const candidate = await getCandidateById(id);
     const logs = await getApplicationLogs(id);
+    const recruiterId = await syncRecruiterProfile();
 
-    if (!candidate) {
-        notFound();
-    }
+    if (!candidate) notFound();
 
-    // Resolve stack names from IDs and merge with direct skills
     const resolvedStackNames = await getStackNames(candidate.stack_ids || []);
-    const allSkills = Array.from(new Set([
-        ...resolvedStackNames,
-        ...(candidate.skills || [])
-    ])).sort();
-
-    // Map DB status to Figma Pipeline Stages (Identical to 3329-24)
-    const stages = [
-        { label: 'APPLIED', key: ['Applied', 'New'] },
-        { label: 'PHONE SCREEN', key: ['Screening', 'Phone Screen'] },
-        { label: 'TECHNICAL', key: ['Interview', 'Technical Interview'] },
-        { label: 'CULTURE', key: ['Culture', 'Cultural Fit'] },
-        { label: 'FINAL', key: ['Final Round'] },
-        { label: 'OFFER', key: ['Offered', 'Offer'] }
-    ];
-
-    const currentStatus = candidate.status || 'Applied';
-    const activeIndex = stages.findIndex(s => s.key.includes(currentStatus));
-    const effectiveIndex = activeIndex === -1 ? 0 : activeIndex;
+    const allSkills = Array.from(new Set([...resolvedStackNames, ...(candidate.skills || [])])).sort();
 
     return (
-        <div className="min-h-full bg-[#E5E5E5] pb-20 font-inter">
-            <div className="max-w-[1400px] mx-auto p-8 space-y-8">
-                {/* Header Profile Card - Figma 3329-24 Style */}
-                <div className="bg-white rounded-[12px] p-8 shadow-sm border border-[#E2E8F0]">
-                    <div className="flex flex-col lg:flex-row justify-between items-center gap-8 mb-10">
-                        <div className="flex items-center gap-6">
-                            {/* Circular Avatar */}
-                            <div className="relative">
-                                <div className="w-[80px] h-[80px] rounded-full bg-[#F1F5F9] border border-[#E2E8F0] flex items-center justify-center text-2xl font-bold text-[#0040A1] overflow-hidden uppercase shadow-inner">
-                                     {candidate.full_name?.charAt(0) || candidate.first_name?.charAt(0) || 'C'}
-                                     {candidate.last_name?.charAt(0)}
+        <div className="-m-10 min-h-[calc(100vh-80px)] flex bg-[#FAFAFA] font-inter">
+            {/* Secondary Sidebar */}
+            <div className="w-56 bg-white border-r border-[#E2E8F0] shrink-0 flex flex-col justify-between hidden lg:flex">
+                <div>
+                   <div className="p-6">
+                       <div className="flex items-center gap-3 text-[10px] font-black text-slate-500 tracking-widest uppercase mb-6 mt-2">
+                           <div className="w-4 h-4 bg-slate-900 rounded-sm"></div>
+                           Recruitment Hub
+                       </div>
+                       
+                       <nav className="space-y-1 relative mt-4">
+                           {/* Active marker right edge */}
+                           <div className="absolute right-[-24px] top-0 bottom-0 w-[4px] bg-transparent">
+                               <div className="absolute top-0 right-0 h-[44px] w-[4px] bg-[#0B4FEA] rounded-l-full"></div>
+                           </div>
+
+                           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-[#0B4FEA] bg-[#EEF2FF] rounded-xl text-[13px] font-bold">
+                               <User size={16} /> Overview
+                           </Link>
+                           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 text-[13px] font-semibold transition-colors">
+                               <Calendar size={16} /> Timeline
+                           </Link>
+                           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 text-[13px] font-semibold transition-colors">
+                               <FileText size={16} /> Resume
+                           </Link>
+                           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 text-[13px] font-semibold transition-colors">
+                               <StickyNote size={16} /> Notes
+                           </Link>
+                           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 text-[13px] font-semibold transition-colors">
+                               <Clock size={16} /> History
+                           </Link>
+                       </nav>
+                   </div>
+                </div>
+                
+                <div className="p-6 border-t border-slate-100">
+                    <button className="w-full py-3 bg-[#0B4FEA] text-white rounded-xl text-[13px] font-bold shadow-md shadow-blue-600/20 hover:bg-blue-800 transition-colors">
+                        Hire Candidate
+                    </button>
+                </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="flex-1 overflow-y-auto p-12 custom-scrollbar">
+                <div className="max-w-6xl mx-auto">
+                    {/* Header */}
+                    <div className="flex justify-between items-start mb-10">
+                        <div className="flex items-center gap-8">
+                            <div className="w-[110px] h-[110px] rounded-[24px] bg-slate-200 overflow-hidden shadow-sm shrink-0 border border-slate-200/60 ring-4 ring-white relative">
+                                <img src={candidate.avatar_url || 'https://i.pravatar.cc/150'} alt="Avatar" className="w-full h-full object-cover" />
+                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-600 outline outline-4 outline-white rounded-full flex items-center justify-center text-white text-[10px]">
+                                    <Briefcase size={12} fill="currentColor" className="text-white" />
                                 </div>
                             </div>
-                            
                             <div>
-                                <h1 className="text-[28px] font-bold text-[#191C1D] leading-tight mb-2">
+                                <h1 className="text-[34px] font-black text-slate-900 leading-tight mb-3 tracking-tight">
                                     {candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}
                                 </h1>
-                                <div className="flex flex-wrap items-center gap-6 text-[13px] text-[#737785] font-medium">
-                                    <div className="flex items-center gap-1.5">
-                                        <MapPin size={16} className="text-[#A1A5B7]" />
-                                        {candidate.country || 'UK'}
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <Mail size={16} className="text-[#A1A5B7]" />
-                                        {candidate.email}
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <Phone size={16} className="text-[#A1A5B7]" />
-                                        {candidate.phone || 'No phone'}
-                                    </div>
+                                <div className="flex items-center gap-5 text-[14px] text-slate-500 font-semibold">
+                                    <div className="flex items-center gap-1.5"><MapPin size={16} className="text-slate-400" /> {candidate.country || 'UK'}</div>
+                                    <div className="flex items-center gap-1.5"><Mail size={16} className="text-slate-400" /> {candidate.email}</div>
+                                    <div className="flex items-center gap-1.5"><Phone size={16} className="text-slate-400" /> {candidate.phone || '+44 7700 900123'}</div>
                                 </div>
                             </div>
                         </div>
-
-                        {/* Top Header Actions */}
-                        <div className="flex items-center gap-3">
-                            <EditProfileButton candidate={candidate} />
-                            <Link 
-                                href={`/ats/interviews?candidateId=${id}`}
-                                className="px-8 py-2.5 bg-[#0040A1] text-white rounded-xl text-[13px] font-bold hover:bg-[#003380] transition-all shadow-sm flex items-center justify-center"
-                            >
-                                Interview
-                            </Link>
-                            <Link 
-                                href="?tab=Notes&focus=true"
-                                className="px-8 py-2.5 bg-[#F1F5F9] text-[#191C1D] rounded-xl text-[13px] font-bold border border-[#E2E8F0] hover:bg-[#E2E8F0] transition-all flex items-center justify-center"
-                            >
-                                Message
-                            </Link>
+                        <div className="flex items-center gap-3 pt-2">
+                            <button className="px-6 py-2.5 border border-slate-200 bg-white rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Message</button>
+                            <Link href={`/ats/candidates/${id}?schedule=true`} className="px-6 py-2.5 bg-[#0B4FEA] text-white rounded-xl text-[14px] font-bold hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center">Interview</Link>
                         </div>
                     </div>
 
-                    {/* Horizontal Pipeline Stepper (Exact Figma Colors) */}
-                    <div className="pt-8 border-t border-[#F1F5F9]">
-                         <div className="relative flex items-center justify-between w-full px-4">
-                             {/* Connecting Line Background */}
-                             <div className="absolute left-10 right-10 top-1/2 -translate-y-1/2 h-[2px] bg-[#F1F5F9] -z-0"></div>
-                             {/* Active Line Progress */}
-                             <div 
-                                className="absolute left-10 top-1/2 -translate-y-1/2 h-[2px] bg-[#0040A1] transition-all duration-1000 -z-0" 
-                                style={{ width: `calc(${(effectiveIndex / (stages.length - 1)) * 100}% - 40px)` }}
-                             ></div>
+                    {/* Progress Tracker Widget */}
+                    <div className="bg-white rounded-[20px] p-10 shadow-sm border border-slate-200/60 mb-8 relative">
+                        <div className="absolute left-16 right-16 top-[54px] h-[3px] bg-slate-100 rounded-full"></div>
+                        {/* Active Line (To Technical) */}
+                        <div className="absolute left-16 top-[54px] h-[3px] bg-[#0B4FEA] w-[45%] rounded-full shadow-[0_0_10px_rgba(11,79,234,0.4)]"></div>
+                        
+                        <div className="relative z-10 flex justify-between">
+                            {/* 1. Applied */}
+                            <div className="flex flex-col items-center gap-4 w-20">
+                                <div className="w-8 h-8 bg-[#0B4FEA] rounded-full flex items-center justify-center text-white ring-8 ring-white"><Check size={16} strokeWidth={3} /></div>
+                                <span className="text-[10px] font-black text-[#0B4FEA] tracking-widest uppercase">Applied</span>
+                            </div>
+                            {/* 2. Phone Screen */}
+                            <div className="flex flex-col items-center gap-4 w-28">
+                                <div className="w-8 h-8 bg-[#0B4FEA] rounded-full flex items-center justify-center text-white ring-8 ring-white"><Check size={16} strokeWidth={3} /></div>
+                                <span className="text-[10px] font-black text-[#0B4FEA] tracking-widest uppercase">Phone Screen</span>
+                            </div>
+                            {/* 3. Technical (Active) */}
+                            <div className="flex flex-col items-center gap-4 w-24">
+                                <div className="w-10 h-10 bg-[#0B4FEA] rounded-xl flex items-center justify-center text-white ring-8 ring-white shadow-lg transform -translate-y-1">
+                                    <div className="w-4 h-4 border-[2.5px] border-white rounded-sm"></div>
+                                </div>
+                                <span className="text-[10px] font-black text-slate-900 tracking-widest uppercase mt-[-4px]">Technical</span>
+                            </div>
+                            {/* 4. Culture */}
+                            <div className="flex flex-col items-center gap-4 w-20 text-slate-400">
+                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center ring-8 ring-white text-slate-400">
+                                    <Users size={14} />
+                                </div>
+                                <span className="text-[10px] font-black tracking-widest uppercase">Culture</span>
+                            </div>
+                            {/* 5. Final */}
+                            <div className="flex flex-col items-center gap-4 w-20 text-slate-400">
+                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center ring-8 ring-white text-slate-400">
+                                <MapPin size={14} />
+                                </div>
+                                <span className="text-[10px] font-black tracking-widest uppercase">Final</span>
+                            </div>
+                            {/* 6. Offer */}
+                            <div className="flex flex-col items-center gap-4 w-20 text-slate-400">
+                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center ring-8 ring-white text-slate-400">
+                                <FileText size={14} />
+                                </div>
+                                <span className="text-[10px] font-black tracking-widest uppercase">Offer</span>
+                            </div>
+                        </div>
+                    </div>
 
-                             {/* Stepper Dots */}
-                             {stages.map((step, idx) => {
-                                const isDone = idx < effectiveIndex;
-                                const isActive = idx === effectiveIndex;
-                                return (
-                                    <div key={step.label} className="relative z-10 flex flex-col items-center">
-                                        <div className={`w-8 h-8 rounded-full border-4 border-white flex items-center justify-center shadow-md transition-all duration-500 ${
-                                            isDone || isActive ? 'bg-[#0040A1] text-white' : 'bg-[#F1F5F9] text-[#A1A5B7]'
-                                        }`}>
-                                            {isDone ? <CheckCircle2 size={14} strokeWidth={3} /> : 
-                                             isActive ? <div className="w-2 h-2 rounded-full bg-white"></div> : 
-                                             <div className="w-1.5 h-1.5 rounded-full bg-[#A1A5B7]"></div>}
+                    {/* Subgrid layout */}
+                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                        <div className="xl:col-span-2 space-y-8">
+                            {/* Cover Letter */}
+                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-8">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h3 className="text-[18px] font-extrabold text-slate-900">Cover Letter</h3>
+                                    <button className="flex items-center gap-2 text-blue-600 text-[13px] font-bold hover:text-blue-800 transition-colors"><Pencil size={14} /> Edit</button>
+                                </div>
+                                {/* Editor Toolbar */}
+                                <div className="flex gap-4 p-2.5 bg-slate-100 rounded-xl mb-6 text-slate-500 items-center shrink-0">
+                                    <button className="p-1 rounded hover:bg-slate-200 text-slate-700"><Bold size={16} /></button>
+                                    <button className="p-1 rounded hover:bg-slate-200"><Italic size={16} /></button>
+                                    <button className="p-1 rounded hover:bg-slate-200"><Underline size={16} /></button>
+                                    <div className="w-px h-5 bg-slate-300 mx-2"></div>
+                                    <button className="p-1 rounded hover:bg-slate-200"><List size={16} /></button>
+                                    <button className="p-1 rounded hover:bg-slate-200"><ListOrdered size={16} /></button>
+                                    <div className="w-px h-5 bg-slate-300 mx-2"></div>
+                                    <button className="p-1 rounded hover:bg-slate-200"><LinkIcon size={16} /></button>
+                                </div>
+                                <div className="p-8 bg-slate-50 rounded-2xl text-[14px] text-slate-700 leading-chill font-medium">
+                                    <p className="mb-5">Dear Hiring Team,</p>
+                                    <p className="mb-5">I am writing to express my strong interest in the Senior Product Designer position at Editorial Intelligence. With over 8 years of experience in creating user-centered digital experiences and leading design systems for complex SaaS products, I am confident in my ability to contribute significantly to your team.</p>
+                                    <p className="mb-5">In my recent roles, I have specialized in bridging the gap between design and engineering, ensuring that high-fidelity prototypes are not only visually stunning but also technically feasible and accessible. My approach is deeply rooted in user research and data-driven iteration.</p>
+                                    <p className="mb-6">I have long admired Editorial Intelligence's commitment to quality journalism and innovative digital storytelling. I look forward to the possibility of discussing how my background in strategic design can support your mission.</p>
+                                    <p className="mb-1">Best regards,</p>
+                                    <p className="font-bold text-slate-900">Eleanor Vance</p>
+                                </div>
+                            </div>
+
+                            {/* Application History */}
+                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-8">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h3 className="text-[18px] font-extrabold text-slate-900">Application History</h3>
+                                    <button className="text-blue-600 text-[13px] font-bold hover:underline">View Archive</button>
+                                </div>
+                                <div className="space-y-4">
+                                    <div className="flex flex-col sm:flex-row sm:items-center p-5 bg-slate-50 rounded-2xl border border-slate-100 gap-4">
+                                        <div className="w-12 h-12 bg-[#EEF2FF] rounded-xl flex items-center justify-center text-blue-600 shrink-0 shadow-sm border border-blue-100">
+                                            <Briefcase size={20} fill="currentColor" className="text-blue-600/20" />
                                         </div>
-                                        <span className={`absolute top-12 whitespace-nowrap text-[9px] font-black uppercase tracking-[0.15em] ${
-                                            isDone || isActive ? 'text-[#0040A1]' : 'text-[#A1A5B7]'
-                                        }`}>{step.label}</span>
+                                        <div className="flex-1">
+                                            <h4 className="text-[15px] font-extrabold text-slate-900 leading-tight mb-1">Senior Product Designer</h4>
+                                            <p className="text-[12px] text-slate-500 font-semibold">Editorial Intelligence • Aug 2023</p>
+                                        </div>
+                                        <div className="flex items-center gap-5 sm:ml-auto">
+                                            <div className="flex items-center gap-2.5 text-[12px] font-bold text-slate-700">
+                                                <img src="https://i.pravatar.cc/100?img=11" className="w-6 h-6 rounded-full ring-2 ring-white shadow-sm" alt="Recruiter" /> James W.
+                                            </div>
+                                            <span className="px-3.5 py-1.5 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg tracking-widest uppercase shadow-sm">ACTIVE</span>
+                                        </div>
                                     </div>
-                                );
-                             })}
-                         </div>
+                                    
+                                    <div className="flex flex-col sm:flex-row sm:items-center p-5 bg-slate-50/50 rounded-2xl border border-slate-100 gap-4 opacity-80">
+                                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-slate-400 shrink-0 border border-slate-200 shadow-sm">
+                                            <FileText size={20} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="text-[15px] font-bold text-slate-600 leading-tight mb-1">UX Strategy Lead</h4>
+                                            <p className="text-[12px] text-slate-400 font-medium">Future Media Group • Mar 2023</p>
+                                        </div>
+                                        <div className="flex items-center gap-5 sm:ml-auto">
+                                            <span className="px-3.5 py-1.5 bg-red-50 text-red-600 text-[10px] font-black rounded-lg tracking-widest uppercase">WITHDRAWN</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Resume / CV */}
+                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-8">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h3 className="text-[18px] font-extrabold text-slate-900">Resume / CV</h3>
+                                    <div className="flex gap-4 text-slate-400">
+                                        <button className="hover:text-slate-700 transition-colors"><Download size={18} /></button>
+                                        <button className="hover:text-slate-700 transition-colors"><Maximize2 size={18} /></button>
+                                    </div>
+                                </div>
+                                <div className="border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 flex flex-col items-center justify-center py-20 mb-6 h-[400px] relative overflow-hidden group">
+                                    <div className="w-72 bg-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] rounded-sm p-8 absolute transform transition-transform duration-500 group-hover:-translate-y-2">
+                                        <div className="h-5 bg-slate-200 w-1/3 mb-6 rounded-sm"></div>
+                                        <div className="h-2.5 bg-slate-100 w-full mb-3 rounded-full"></div>
+                                        <div className="h-2.5 bg-slate-100 w-full mb-3 rounded-full"></div>
+                                        <div className="h-2.5 bg-slate-100 w-4/5 mb-6 rounded-full"></div>
+                                        <div className="h-2.5 bg-slate-200 w-1/4 mb-3 rounded-full"></div>
+                                        <div className="h-2.5 bg-slate-100 w-full mb-3 rounded-full"></div>
+                                        <div className="h-2.5 bg-slate-100 w-2/3 mb-3 rounded-full"></div>
+                                    </div>
+                                    <div className="absolute inset-0 bg-slate-900/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                        <button className="px-6 py-3 bg-white text-slate-900 font-extrabold text-[13px] rounded-xl shadow-xl flex items-center gap-2 hover:scale-105 transition-transform">
+                                            <Maximize2 size={16}/> View Full Document
+                                        </button>
+                                    </div>
+                                </div>
+                                <p className="text-center text-[12px] font-bold text-slate-500">Eleanor_Vance_Resume_2024.pdf (2.4 MB)</p>
+                            </div>
+                        </div>
+
+                        {/* Right Column */}
+                        <div className="space-y-8">
+                            {/* Process Actions */}
+                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
+                                <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Process Actions</h3>
+                                <button className="w-full flex justify-between items-center p-4 bg-[#EEF2FF] hover:bg-blue-100 text-blue-700 rounded-xl font-extrabold text-[13px] transition-colors mb-3 group shadow-sm border border-blue-100">
+                                    Advance Stage <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                </button>
+                                <button className="w-full flex justify-between items-center p-4 border border-red-200 hover:bg-red-50 text-red-600 rounded-xl font-extrabold text-[13px] transition-colors group">
+                                    Reject Candidate <X size={16} className="group-hover:scale-110 transition-transform" />
+                                </button>
+                            </div>
+
+                            {/* Recruiter Notes */}
+                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
+                                <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Recruiter Notes</h3>
+                                <div className="bg-white border border-slate-200 rounded-xl p-4 mb-6 focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-blue-500 transition-all shadow-sm">
+                                    <textarea 
+                                        placeholder="Add a private note..." 
+                                        className="w-full text-[14px] text-slate-700 resize-none outline-none placeholder:text-slate-400 min-h-[80px]"
+                                    ></textarea>
+                                    <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-100">
+                                        <div className="flex gap-4 text-slate-400">
+                                            <button className="hover:text-slate-700 transition-colors"><LinkIcon size={16} /></button>
+                                            <button className="hover:text-slate-700 transition-colors"><span className="font-extrabold font-serif text-[16px]">@</span></button>
+                                        </div>
+                                        <button className="px-6 py-2 bg-[#0B4FEA] text-white rounded-lg text-[12px] font-bold shadow-sm hover:bg-blue-800 transition-colors">POST</button>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="bg-slate-50 p-5 rounded-xl flex gap-3.5 border border-slate-100">
+                                        <img src="https://i.pravatar.cc/120?img=5" className="w-8 h-8 rounded-full shrink-0 shadow-sm ring-2 ring-white" alt="Avatar" />
+                                        <div>
+                                            <div className="flex justify-between items-center mb-1.5">
+                                                <span className="text-[13px] font-extrabold text-slate-900">Maria Garcia</span>
+                                                <span className="text-[11px] font-semibold text-slate-400">2h ago</span>
+                                            </div>
+                                            <p className="text-[13px] text-slate-600 font-medium leading-relaxed">
+                                                Strong technical foundation. Explained the intricate state management logic perfectly.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Core Competencies */}
+                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
+                                <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Core Competencies</h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {allSkills.length > 0 ? allSkills.slice(0, 5).map(skill => (
+                                         <span key={skill} className="px-3 py-1.5 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">
+                                            {skill}
+                                         </span>
+                                    )) : (
+                                        <>
+                                            <span className="px-3.5 py-2 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">PRODUCT STRATEGY</span>
+                                            <span className="px-3.5 py-2 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">DESIGN SYSTEMS</span>
+                                            <span className="px-3.5 py-2 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">FIGMA</span>
+                                            <span className="px-3.5 py-2 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">USER RESEARCH</span>
+                                            <span className="px-3.5 py-2 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">REACT/TS</span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                {/* Tabbed Content Area */}
-                <Suspense fallback={<div className="bg-white rounded-[12px] h-96 animate-pulse border border-[#E2E8F0]"></div>}>
-                    <CandidateDetailTabs 
-                        candidate={candidate}
-                        logs={logs}
-                        allSkills={allSkills}
-                        stages={stages}
-                        currentStatus={currentStatus}
-                    />
-                </Suspense>
             </div>
+            
+            {showSchedule && (
+                <ScheduleInterviewModal candidate={candidate} recruiterId={recruiterId || null} />
+            )}
         </div>
     );
 }

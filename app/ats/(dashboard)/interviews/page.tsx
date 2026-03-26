@@ -2,20 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { 
-    ChevronLeft, ChevronRight, Search, Plus, 
+import {
+    ChevronLeft, ChevronRight, Search, Plus,
     Video, Users, Info, ArrowUpRight, Loader2, Check, ExternalLink, Calendar,
-    X
+    X, Bell, CalendarX, Ban, TrendingUp, LineChart
 } from 'lucide-react';
-import { 
-    getUpcomingInterviews, getRecruiters, createInterview, 
-    getCandidateNames, getRecruiterJobs, getCombinedInterviews, syncRecruiterProfile 
+import {
+    getUpcomingInterviews, getRecruiters, createInterview,
+    getCandidateNames, getRecruiterJobs, getCombinedInterviews, syncRecruiterProfile
 } from '@/app/ats/actions';
 
 export default function InterviewSchedulePage() {
     const searchParams = useSearchParams();
     const preSelectedCandidate = searchParams.get('candidateId');
-    
+
     const [interviews, setInterviews] = useState<any[]>([]);
     const [upcomingInterviews, setUpcomingInterviews] = useState<any[]>([]);
     const [recruiters, setRecruiters] = useState<any[]>([]);
@@ -24,14 +24,15 @@ export default function InterviewSchedulePage() {
     const [loading, setLoading] = useState(true);
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [currentRecruiterId, setCurrentRecruiterId] = useState<string | null>(null);
-    const [successData, setSuccessData] = useState<any | null>(null);
+    const [currentView, setCurrentView] = useState<'Día'|'Semana'|'Mes'>('Mes');
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     const loadData = async () => {
         setLoading(true);
         try {
             const startOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).toISOString();
             const endOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0, 23, 59, 59).toISOString();
-            
+
             const rId = await syncRecruiterProfile() || '';
             setCurrentRecruiterId(rId);
 
@@ -43,11 +44,11 @@ export default function InterviewSchedulePage() {
                 getRecruiterJobs()
             ]);
 
-            setInterviews(intData);
-            setUpcomingInterviews(upcomingData);
-            setRecruiters(recruiterData);
-            setCandidates(candData);
-            setJobs(jobData);
+            setInterviews(intData || []);
+            setUpcomingInterviews(upcomingData || []);
+            setRecruiters(recruiterData || []);
+            setCandidates(candData || []);
+            setJobs(jobData || []);
         } catch (error) {
             console.error('Error loading dashboard data:', error);
         } finally {
@@ -60,336 +61,437 @@ export default function InterviewSchedulePage() {
     }, [currentMonth]);
 
     const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
+    // Monday as start of week: 
+    // Sunday is 0 -> 6. Monday is 1 -> 0. Tuesday 2 -> 1
     const startOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
     const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+    // Display full 5 or 6 weeks depending on offset (usually 6 weeks max = 42 days)
     const days = Array.from({ length: 42 }, (_, i) => i - startOffset + 1);
 
     const nextInterview = upcomingInterviews[0];
 
     return (
-        <div className="flex flex-col gap-8 animate-in fade-in duration-700 font-inter max-w-[1600px] mx-auto pb-20 relative">
-            {/* Success Modal Overlay */}
-            {successData && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#191C1D]/60 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white rounded-[40px] shadow-2xl max-w-[500px] w-full p-10 text-center relative overflow-hidden animate-in zoom-in-95 duration-300">
-                        {/* Decorative background blobs */}
-                        <div className="absolute top-0 left-0 w-32 h-32 bg-[#0040A1]/5 rounded-full -ml-16 -mt-16 blur-2xl"></div>
-                        <div className="absolute bottom-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full -mr-16 -mb-16 blur-2xl"></div>
-                        
-                        <div className="w-20 h-20 bg-emerald-500 rounded-[28px] flex items-center justify-center text-white mx-auto shadow-xl shadow-emerald-500/20 mb-8 relative">
-                             <Check size={40} strokeWidth={3} />
-                        </div>
-
-                        <h3 className="text-[28px] font-bold text-[#191C1D] mb-4 tracking-tight">Interview Scheduled!</h3>
-                        <p className="text-[#737785] text-[15px] leading-relaxed mb-8">
-                            A Google Calendar event has been created for <span className="text-[#191C1D] font-bold">{successData.candidateName}</span>.
-                        </p>
-
-                        <div className="space-y-4 mb-10">
-                            {successData.meetLink && (
-                                <a 
-                                    href={successData.meetLink} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="flex items-center justify-center gap-3 w-full py-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl text-[14px] font-bold text-[#0040A1] hover:bg-white hover:border-[#0040A1] transition-all group"
-                                >
-                                    <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
-                                    Launch Google Meet
-                                    <ExternalLink size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </a>
-                            )}
-                            <button 
-                                onClick={() => setSuccessData(null)}
-                                className="w-full py-4 bg-[#0040A1] text-white rounded-2xl text-[14px] font-bold tracking-widest uppercase shadow-xl shadow-blue-900/10 hover:bg-[#003380] transition-all"
-                            >
-                                Nice! Continue
-                            </button>
-                        </div>
-                        
-                        <button 
-                            onClick={() => setSuccessData(null)}
-                            className="absolute top-6 right-6 p-2 text-[#A1A5B7] hover:text-[#191C1D] transition-colors"
-                        >
-                            <X size={24} />
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* Header Section */}
-            <div className="flex items-center justify-between mb-4">
+        <div className="bg-white font-body text-slate-900 -m-10 min-h-[calc(100vh-80px)] flex flex-col pt-0">
+            {/* Page Title Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between px-10 pt-10 pb-8">
                 <div>
-                    <h1 className="text-[28px] font-bold text-[#191C1D] tracking-tight">Interview Schedule</h1>
-                    <p className="text-[#737785] text-[13px] font-medium mt-1">Manage and sync all candidate evaluations.</p>
+                    <h2 className="font-headline font-extrabold text-[28px] tracking-tight text-slate-900 mb-1">Interview Schedule</h2>
+                    <p className="text-[13px] text-slate-500 font-medium">Manage your talent acquisition timeline</p>
                 </div>
                 
-                <div className="flex items-center gap-6">
-                    <div className="flex p-1 bg-[#F1F5F9] rounded-xl border border-[#E2E8F0]">
-                        {['Day', 'Week', 'Month'].map((view) => (
-                            <button 
-                                key={view}
-                                className={`px-6 py-2 rounded-lg text-[13px] font-bold transition-all ${
-                                    view === 'Month' ? 'bg-white text-[#0040A1] shadow-sm' : 'text-[#737785] hover:text-[#191C1D]'
-                                }`}
-                            >
-                                {view}
-                            </button>
-                        ))}
+                <div className="flex items-center gap-6 mt-6 md:mt-0">
+                    {/* Toggle Group: Día, Semana, Mes */}
+                    <div className="flex bg-slate-50 p-1 rounded-xl">
+                        <button onClick={() => setCurrentView('Día')} className={`px-6 py-2 text-[13px] rounded-lg transition-colors ${currentView === 'Día' ? 'font-bold bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] text-blue-600' : 'font-semibold text-slate-500 hover:text-blue-600'}`}>Día</button>
+                        <button onClick={() => setCurrentView('Semana')} className={`px-6 py-2 text-[13px] rounded-lg transition-colors ${currentView === 'Semana' ? 'font-bold bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] text-blue-600' : 'font-semibold text-slate-500 hover:text-blue-600'}`}>Semana</button>
+                        <button onClick={() => setCurrentView('Mes')} className={`px-6 py-2 text-[13px] rounded-lg transition-colors ${currentView === 'Mes' ? 'font-bold bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] text-blue-600' : 'font-semibold text-slate-500 hover:text-blue-600'}`}>Mes</button>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                            <input 
+                                className="pl-10 pr-4 py-2.5 bg-slate-50 border-none rounded-xl text-[13px] font-medium focus:ring-2 focus:ring-blue-600 w-64 outline-none transition-all placeholder:text-slate-400 text-slate-800" 
+                                placeholder="Filter by recruiter..." 
+                                type="text" 
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex w-full gap-8 items-start">
-                {/* Left Side: Scheduling Form */}
-                <div className="w-[256px] min-w-[256px] space-y-8 sticky top-8">
-                    <div className="bg-white rounded-[32px] border border-[#E2E8F0] shadow-xl shadow-black/[0.02] overflow-hidden text-[#191C1D]">
-                        <div className="p-8 border-b border-[#F1F5F9] bg-[#F8FAFC]">
-                            <h3 className="text-[18px] font-bold">Quick Schedule</h3>
-                            <p className="text-[12px] text-[#737785] font-medium mt-1.5">Set up a new session instantly.</p>
-                        </div>
-                        
-                        <form onSubmit={async (e) => {
-                            e.preventDefault();
-                            const formData = new FormData(e.currentTarget);
-                            const cId = formData.get('candidate_id') as string;
-                            const type = formData.get('type') as string;
-                            const date = formData.get('scheduled_at') as string;
-                            
-                            if (!cId || !date) return;
-                            
-                            setLoading(true);
-                            try {
-                                const cand = candidates.find(c => c.id === cId);
-                                const result = await createInterview({
-                                    candidate_id: cId,
-                                    job_id: cand?.job_id || (jobs.length > 0 ? jobs[0]?.id : null),
-                                    recruiter_id: currentRecruiterId || (recruiters.length > 0 ? recruiters[0]?.id : null),
-                                    type,
-                                    scheduled_at: new Date(date).toISOString(),
-                                });
-                                
-                                setSuccessData({
-                                    candidateName: candidates.find(c => c.id === cId)?.name || 'Candidate',
-                                    meetLink: (result as any)?.video_url
-                                });
-                                
-                                loadData();
-                            } catch (err) {
-                                console.error(err);
-                                alert('Failed to schedule interview.');
-                            } finally {
-                                setLoading(false);
+            {currentView === 'Mes' && (
+                <section className="px-10 pb-12 flex-1 flex flex-col min-h-0">
+                    <div className="grid grid-cols-7 mb-4">
+                        {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                           <div key={day} className="text-center text-[11px] font-bold uppercase tracking-[0.15em] text-slate-500">{day}</div>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-7 flex-1 auto-rows-[minmax(140px,1fr)] bg-slate-200 rounded-[28px] overflow-hidden gap-[1px] border border-slate-200 shadow-sm">
+                        {days.map((d, i) => {
+                            const isCurrentMonth = d > 0 && d <= daysInMonth;
+                            const dateObj = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), d);
+                            const isToday = new Date().toDateString() === dateObj.toDateString();
+                            const dayEvents = interviews.filter(e => {
+                                const date = new Date(e.scheduled_at);
+                                return date.getDate() === d && date.getMonth() === currentMonth.getMonth() && date.getFullYear() === currentMonth.getFullYear();
+                            });
+
+                            const displayDate = isCurrentMonth 
+                                ? d 
+                                : d <= 0 
+                                    ? new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 0).getDate() + d 
+                                    : d - daysInMonth;
+
+                            if (!isCurrentMonth) {
+                                return (
+                                    <div key={i} className="bg-slate-50 p-4 opacity-70">
+                                        <span className="text-[12px] font-medium text-slate-400">{displayDate < 10 ? `0${displayDate}` : displayDate}</span>
+                                    </div>
+                                );
                             }
-                        }} className="p-8 flex flex-col gap-y-6">
-                            <div className="flex flex-col gap-y-2">
-                                <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest pl-1">Candidate</label>
-                                <select 
-                                    name="candidate_id"
-                                    required
-                                    defaultValue={preSelectedCandidate || ""}
-                                    className="w-full h-10 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-2 focus:ring-[#0040A1]/5 transition-all appearance-none cursor-pointer"
-                                >
-                                    <option value="">Select candidate...</option>
-                                    {candidates.map(c => (
-                                        <option key={c.id} value={c.id}>{c.name}</option>
-                                    ))}
-                                </select>
-                            </div>
 
-                            <div className="flex flex-col gap-y-2">
-                                <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest pl-1">Session Type</label>
-                                <select 
-                                    name="type"
-                                    className="w-full h-10 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-2 focus:ring-[#0040A1]/5 transition-all appearance-none cursor-pointer"
-                                >
-                                    <option value="Technical Interview">Technical Interview</option>
-                                    <option value="Cultural Fit">Cultural Fit</option>
-                                    <option value="Final Review">Final Review</option>
-                                </select>
-                            </div>
+                            const hasEvents = dayEvents.length > 0;
+                            const dayTextColor = isToday || hasEvents ? 'text-blue-600 font-bold' : 'text-slate-900 font-bold';
 
-                            <div className="flex flex-col gap-y-2">
-                                <label className="text-[10px] font-black text-[#6B7485] uppercase tracking-widest pl-1">Date & Time</label>
-                                <input 
-                                    name="scheduled_at" 
-                                    type="datetime-local" 
-                                    required 
-                                    className="w-full h-10 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 text-[13px] font-bold outline-none focus:border-[#0040A1] focus:ring-2 focus:ring-[#0040A1]/5 transition-all" 
-                                />
-                            </div>
+                            return (
+                                <div key={i} onClick={() => { setSelectedDate(dateObj); setCurrentView('Día'); }} className={`bg-white transition-colors p-4 hover:bg-slate-50 flex flex-col min-h-[140px] relative cursor-pointer ${isToday ? 'ring-inset ring-2 ring-blue-500/10' : ''}`}>
+                                    <span className={`text-[12px] mb-3 leading-none ${dayTextColor}`}>
+                                        {displayDate < 10 ? `0${displayDate}` : displayDate} {isToday && '(Today)'}
+                                    </span>
+                                    
+                                    {hasEvents && (
+                                        <div className="space-y-2 flex-1 flex flex-col">
+                                            {dayEvents.slice(0, 2).map((ev: any, idx: number) => {
+                                                const isTechnical = ev.type?.toLowerCase().includes('technical');
+                                                const isCultural = ev.type?.toLowerCase().includes('cultural');
+                                                const isFinal = ev.type?.toLowerCase().includes('final');
+                                                const candidateName = ev.candidate?.full_name || ev.candidate?.first_name || 'Event';
+                                                const timeString = new Date(ev.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                                                
+                                                let bgClass = "bg-emerald-50 border-emerald-500";
+                                                let titleClass = "text-emerald-900";
+                                                let timeClass = "text-emerald-700";
 
-                            <button type="submit" disabled={loading} className="w-full h-10 bg-[#0040A1] text-white rounded-lg text-[14px] font-semibold flex items-center justify-center gap-2 mt-2 hover:bg-[#003380] transition-colors">
-                                {loading ? <Loader2 className="animate-spin" size={20} /> : <Calendar size={18} />}
-                                Schedule Event
-                            </button>
+                                                if (isTechnical || ev.type === 'Google') {
+                                                    bgClass = "bg-blue-50 border-blue-600";
+                                                    titleClass = "text-blue-900";
+                                                    timeClass = "text-blue-700";
+                                                } else if (isCultural) {
+                                                    bgClass = "bg-slate-100 border-slate-400";
+                                                    titleClass = "text-slate-900";
+                                                    timeClass = "text-slate-600";
+                                                } else if (isFinal) {
+                                                    bgClass = "bg-red-50 border-red-500";
+                                                    titleClass = "text-red-900";
+                                                    timeClass = "text-red-700";
+                                                }
 
-                            <div className="pt-6 mt-2 border-t border-[#F1F5F9]">
-                                <a href="/api/auth/google" className="w-full h-10 border border-[#E2E8F0] text-[#191C1D] rounded-lg text-[13px] font-bold flex items-center justify-center gap-3 hover:bg-[#F8FAFC] transition-all group">
-                                    <img src="https://www.google.com/favicon.ico" className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all" alt="Google" />
-                                    Sync Google Calendar
-                                </a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                {/* Right Side: Calendar & Dashboard */}
-                <div className="flex-1 space-y-10">
-                    <div className="flex items-center justify-between bg-white p-6 rounded-[32px] border border-[#E2E8F0] shadow-sm">
-                        <span className="text-[24px] font-bold text-[#191C1D] text-left px-2" suppressHydrationWarning>{currentMonth.toLocaleString('en-US', { month: 'long', year: 'numeric' })}</span>
-                        
-                        <div className="flex justify-end items-center gap-2 ml-auto">
-                            <div className="relative mr-2">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A1A5B7]" size={18} />
-                                <input type="text" placeholder="Search sessions..." className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl py-3 pl-12 pr-6 text-[14px] font-medium outline-none focus:border-[#0040A1] transition-all w-64 shadow-inner" />
-                            </div>
-                            <button onClick={() => setCurrentMonth(new Date())} className="px-5 py-2.5 text-[14px] font-bold text-[#191C1D] border border-[#E2E8F0] hover:bg-[#F8FAFC] rounded-xl transition-all">Today</button>
-                            <div className="flex items-center gap-1 bg-[#F8FAFC] rounded-xl p-1 border border-[#E2E8F0]">
-                                <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))} className="p-2 hover:bg-white hover:shadow-sm rounded-lg text-[#737785] transition-all"><ChevronLeft size={18}/></button>
-                                <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))} className="p-2 hover:bg-white hover:shadow-sm rounded-lg text-[#737785] transition-all"><ChevronRight size={18}/></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-[32px] border border-[#E2E8F0] shadow-xl shadow-black/[0.02] overflow-hidden">
-                        <div className="grid grid-cols-7 border-b border-[#E2E8F0] bg-[#F8FAFC]/50">
-                            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
-                                <div key={day} className="py-5 text-center">
-                                    <span className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">{day}</span>
+                                                return (
+                                                    <div key={idx} className={`p-2 rounded-lg border-l-4 ${bgClass} hover:shadow-sm hover:-translate-y-[1px] transition-all`}>
+                                                        <p className={`text-[11px] font-bold ${titleClass} truncate leading-tight`}>
+                                                            {candidateName}
+                                                        </p>
+                                                        <p className={`text-[9px] font-medium mt-0.5 ${timeClass} truncate`} suppressHydrationWarning>
+                                                            {timeString} • {ev.type === 'Google' ? 'Google' : ev.type?.split(' ')[0]}
+                                                        </p>
+                                                    </div>
+                                                );
+                                            })}
+                                            
+                                            {dayEvents.length > 2 && (
+                                                <div className="mt-auto py-1.5 rounded-md bg-slate-100 text-[10px] font-bold text-center text-slate-500 hover:bg-slate-200 transition-colors">
+                                                    +{dayEvents.length - 2} more events
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
-                            ))}
+                            );
+                        })}
+                    </div>
+                </section>
+            )}
+
+            {currentView === 'Día' && (
+                <section className="px-10 pb-12 flex-1 flex flex-col min-h-0">
+                    <div className="bg-white rounded-[28px] border border-slate-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col flex-1">
+                        {/* Day Header */}
+                        <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                            <div className="flex items-center gap-5">
+                                <div className="w-14 h-14 rounded-2xl bg-blue-100 flex flex-col items-center justify-center text-blue-600 shadow-inner">
+                                    <span className="text-[10px] font-bold uppercase tracking-wider">{selectedDate.toLocaleString('en-US', { weekday: 'short' })}</span>
+                                    <span className="text-xl font-black leading-none">{selectedDate.getDate()}</span>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-extrabold text-slate-900">{selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h3>
+                                    <p className="text-[13px] font-medium text-slate-500 mt-0.5">Today's Schedule View</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <button onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() - 1); setSelectedDate(d); }} className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:bg-white hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm"><ChevronLeft size={18} /></button>
+                                <button onClick={() => setSelectedDate(new Date())} className="px-5 py-2 bg-white border border-slate-200 rounded-xl text-[13px] font-bold text-slate-700 shadow-sm hover:text-blue-600 hover:border-blue-200 transition-all">Today</button>
+                                <button onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() + 1); setSelectedDate(d); }} className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:bg-white hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm"><ChevronRight size={18} /></button>
+                            </div>
                         </div>
-                        <div className="grid grid-cols-7">
-                            {days.map((d, i) => {
-                                const isCurrentMonth = d > 0 && d <= daysInMonth;
-                                const dateObj = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), d);
-                                const isToday = new Date().toDateString() === dateObj.toDateString();
-                                const dayEvents = interviews.filter(e => {
-                                    const date = new Date(e.scheduled_at);
-                                    return date.getDate() === d && date.getMonth() === currentMonth.getMonth() && date.getFullYear() === currentMonth.getFullYear();
+                        
+                        {/* Day Timeline */}
+                        <div className="flex-1 overflow-y-auto p-2 pb-10 relative">
+                            {Array.from({ length: 13 }, (_, i) => i + 7).map(hour => {
+                                const ampm = hour >= 12 ? 'PM' : 'AM';
+                                const displayHour = hour > 12 ? hour === 12 ? 12 : hour - 12 : hour;
+                                const timeLabel = `${displayHour}:00 ${ampm}`;
+
+                                const hourEvents = interviews.filter(e => {
+                                    const evDate = new Date(e.scheduled_at);
+                                    return evDate.getDate() === selectedDate.getDate() && evDate.getMonth() === selectedDate.getMonth() && evDate.getFullYear() === selectedDate.getFullYear() && evDate.getHours() === hour;
                                 });
 
                                 return (
-                                    <div key={i} className={`min-h-[160px] p-3 border-r border-b border-[#F1F5F9] last:border-r-0 relative group transition-colors hover:bg-[#FBFCFD]/80 ${!isCurrentMonth ? 'bg-[#FDFDFD]/50 opacity-40' : ''}`}>
-                                        <div className="flex justify-between items-start mb-4 px-1 pt-1">
-                                            <span className={`text-[13px] font-bold h-8 w-8 flex items-center justify-center transition-all ${
-                                                isToday && isCurrentMonth
-                                                    ? 'bg-[#0040A1] text-white rounded-xl shadow-lg shadow-blue-900/20' 
-                                                    : isCurrentMonth ? 'text-[#191C1D]' : 'text-[#A1A5B7]'
-                                            }`}>
-                                                {isCurrentMonth ? d : d <= 0 ? new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 0).getDate() + d : d - daysInMonth}
-                                            </span>
+                                    <div key={hour} className="flex min-h-[90px] group">
+                                        <div className="w-24 flex flex-col items-end pr-6 text-[12px] font-bold text-slate-400 group-hover:text-blue-600 transition-colors pt-4">
+                                            {timeLabel}
                                         </div>
-                                        <div className="space-y-3">
-                                            {dayEvents.map((ev: any, idx: number) => (
-                                                <div 
-                                                    key={idx} 
-                                                    className={`p-3 rounded-r-lg border-l-4 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-1 ${
-                                                        ev.isExternal ? 'bg-[#F1F1F1] border-[#A1A5B7]' :
-                                                        ev.type?.includes('Technical') ? 'bg-[#E1E9F4] border-[#0040A1]' :
-                                                        ev.type?.includes('Cultural') ? 'bg-[#F1F1F1] border-emerald-500' :
-                                                        'bg-[#FFF4F4] border-[#e11d48]'
-                                                    }`}
-                                                >
-                                                    <span className={`font-semibold text-[10px] uppercase tracking-wider ${
-                                                        ev.isExternal ? 'text-[#A1A5B7]' :
-                                                        ev.type?.includes('Technical') ? 'text-[#0040A1]' :
-                                                        ev.type?.includes('Cultural') ? 'text-emerald-700' :
-                                                        'text-rose-700'
-                                                    }`}>{ev.type}</span>
-                                                    <p className="font-bold truncate text-[13px] leading-tight text-[#191C1D]">{ev.candidate?.full_name || ev.candidate?.first_name || 'Event'}</p>
-                                                    <span className="font-medium text-[11px] text-[#737785]" suppressHydrationWarning>{new Date(ev.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+                                        <div className="flex-1 border-t border-slate-100 relative pb-2 group-hover:border-blue-100 transition-colors">
+                                            {hourEvents.length === 0 && (
+                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-[11px] text-slate-300 font-medium pt-4 pl-4">No events scheduled</div>
+                                            )}
+                                            
+                                            {hourEvents.length > 0 && (
+                                                <div className="flex flex-col gap-3 mt-4 pl-4 pr-10">
+                                                    {hourEvents.map((ev: any, idx: number) => {
+                                                            const isTechnical = ev.type?.toLowerCase().includes('technical');
+                                                            const isCultural = ev.type?.toLowerCase().includes('cultural');
+                                                            const isFinal = ev.type?.toLowerCase().includes('final');
+                                                            const candidateName = ev.candidate?.full_name || ev.candidate?.first_name || 'Event';
+                                                            
+                                                            let bgClass = "bg-emerald-50 border-emerald-500";
+                                                            let titleClass = "text-emerald-900";
+                                                            let timeClass = "text-emerald-700";
+
+                                                            if (isTechnical || ev.type === 'Google') {
+                                                                bgClass = "bg-blue-50 border-blue-600";
+                                                                titleClass = "text-blue-900";
+                                                                timeClass = "text-blue-700";
+                                                            } else if (isCultural) {
+                                                                bgClass = "bg-slate-100 border-slate-400";
+                                                                titleClass = "text-slate-900";
+                                                                timeClass = "text-slate-600";
+                                                            } else if (isFinal) {
+                                                                bgClass = "bg-red-50 border-red-500";
+                                                                titleClass = "text-red-900";
+                                                                timeClass = "text-red-700";
+                                                            }
+
+                                                            return (
+                                                                <div key={idx} className={`p-4 rounded-xl border-l-[4px] ${bgClass} hover:shadow-md hover:-translate-y-[2px] transition-all cursor-pointer flex justify-between items-center`}>
+                                                                    <div>
+                                                                        <p className={`text-[14px] font-extrabold ${titleClass} leading-tight`}>
+                                                                            {candidateName}
+                                                                        </p>
+                                                                        <p className={`text-[12px] font-semibold mt-1.5 ${timeClass}`} suppressHydrationWarning>
+                                                                            {new Date(ev.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} — {new Date(new Date(ev.scheduled_at).getTime() + (ev.duration_minutes || 60) * 60000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} • {ev.type === 'Google' ? 'Google Meet Entry' : ev.type}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="flex items-center gap-3">
+                                                                        {ev.video_url && (
+                                                                            <a href={ev.video_url} target="_blank" rel="noopener noreferrer" className={`w-9 h-9 rounded-full bg-white flex items-center justify-center ${titleClass} hover:scale-110 shadow-sm transition-transform`}>
+                                                                                <Video size={16} />
+                                                                            </a>
+                                                                        )}
+                                                                        <div className={`w-9 h-9 rounded-full bg-white flex items-center justify-center ${timeClass} font-black text-[11px] shadow-sm`}>
+                                                                            {candidateName.charAt(0)}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                    })}
                                                 </div>
-                                            ))}
+                                            )}
                                         </div>
                                     </div>
                                 );
                             })}
                         </div>
                     </div>
+                </section>
+            )}
 
-                    <div className="grid grid-cols-12 gap-8 items-stretch pt-2">
-                        <div className="col-span-8 bg-[#0040A1] p-12 rounded-[40px] shadow-2xl shadow-blue-900/30 relative overflow-hidden flex flex-col justify-between min-h-[320px] group">
-                            <div className="absolute top-0 right-0 p-32 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl animate-pulse"></div>
-                            <div className="absolute bottom-0 left-0 p-32 bg-blue-400/10 rounded-full -ml-28 -mb-28 blur-3xl"></div>
-                            
-                            {nextInterview ? (
-                                <>
-                                    <div className="relative z-10">
-                                        <span className="px-5 py-2 bg-white/10 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.25em] border border-white/20 backdrop-blur-md">Next Perspective Session</span>
-                                        <h3 className="text-[38px] font-bold text-white mt-8 tracking-tight">{nextInterview.candidate?.full_name}</h3>
-                                        <div className="flex items-center gap-4 text-white/70 text-[15px] font-medium mt-3">
-                                            <span>{nextInterview.job?.title}</span>
-                                            <span className="w-1.5 h-1.5 rounded-full bg-blue-300 opacity-40"></span>
-                                            <span className="text-white font-bold">{nextInterview.type}</span>
-                                            <span className="text-[#0040A1] font-black bg-white px-3 py-1 rounded-xl text-[11px] ml-2 shadow-lg shadow-white/10" suppressHydrationWarning>
-                                                {new Date(nextInterview.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="relative z-10 flex gap-5 mt-14">
-                                        <a href={nextInterview.video_url || '#'} target="_blank" rel="noopener noreferrer" className="flex-1 py-5 bg-white text-[#0040A1] rounded-[24px] text-[15px] font-black uppercase tracking-[0.15em] flex items-center justify-center gap-3 hover:bg-[#F8FAFC] transition-all shadow-xl shadow-black/20 group-hover:scale-[1.01]">
-                                            <Video size={22} fill="currentColor" />
-                                            Launch Video Call
-                                        </a>
-                                        <button className="w-16 h-16 bg-white/10 hover:bg-white/20 text-white rounded-[24px] flex items-center justify-center border border-white/20 backdrop-blur-md transition-all">
-                                            <Info size={28} />
-                                        </button>
-                                    </div>
-                                </>
-                            ) : (
-                                <div className="flex flex-col items-center justify-center h-full text-white/40 border-2 border-dashed border-white/10 rounded-[32px] p-10 backdrop-blur-sm">
-                                    <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-6">
-                                        <Video size={40} className="opacity-40" />
-                                    </div>
-                                    <p className="font-bold text-[18px]">No sessions found for today</p>
-                                    <p className="text-[13px] opacity-60 mt-2">Check the calendar or schedule a new one.</p>
+            {currentView === 'Semana' && (
+                <section className="px-10 pb-12 flex-1 flex flex-col min-h-0">
+                    <div className="bg-white rounded-[28px] border border-slate-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col flex-1">
+                        {/* Week Header */}
+                        <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                            <div className="flex items-center gap-5">
+                                <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600 shadow-inner">
+                                    <Calendar size={24} />
                                 </div>
-                            )}
+                                <div>
+                                    <h3 className="text-xl font-extrabold text-slate-900">
+                                        {(() => {
+                                            const start = new Date(selectedDate);
+                                            const day = start.getDay();
+                                            start.setDate(start.getDate() - day + (day === 0 ? -6 : 1));
+                                            const end = new Date(start);
+                                            end.setDate(start.getDate() + 6);
+                                            
+                                            // Format nicely
+                                            if (start.getMonth() === end.getMonth()) {
+                                                return `${start.toLocaleDateString('en-US', { month: 'long' })} ${start.getDate()} - ${end.getDate()}, ${start.getFullYear()}`;
+                                            } else {
+                                                return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+                                            }
+                                        })()}
+                                    </h3>
+                                    <p className="text-[13px] font-medium text-slate-500 mt-0.5">Week Schedule View</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <button onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() - 7); setSelectedDate(d); }} className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:bg-white hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm"><ChevronLeft size={18} /></button>
+                                <button onClick={() => setSelectedDate(new Date())} className="px-5 py-2 bg-white border border-slate-200 rounded-xl text-[13px] font-bold text-slate-700 shadow-sm hover:text-blue-600 hover:border-blue-200 transition-all">Today</button>
+                                <button onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() + 7); setSelectedDate(d); }} className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:bg-white hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm"><ChevronRight size={18} /></button>
+                            </div>
                         </div>
                         
-                        <div className="col-span-4 bg-white p-10 rounded-[40px] border border-[#E2E8F0] shadow-xl shadow-black/[0.02] flex flex-col justify-between">
-                            <div>
-                                <p className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.25em] mb-12 pl-1">Recruiter Focus</p>
-                                <div className="space-y-9">
-                                    {recruiters.slice(0, 3).map((r) => {
-                                        const count = interviews.filter(int => int.recruiter_id === r.id).length;
-                                        const percentage = Math.min((count / 10) * 100, 100);
-                                        return (
-                                            <div key={r.id} className="space-y-4">
-                                                <div className="flex justify-between items-center px-1">
-                                                    <span className="font-bold text-[#191C1D] text-[14px]">{r.full_name}</span>
-                                                    <span className="font-black text-[#0040A1] text-[12px] bg-[#0040A1]/5 px-3 py-1 rounded-lg">{count} sess.</span>
-                                                </div>
-                                                <div className="h-3 w-full bg-[#F1F5F9] rounded-full overflow-hidden p-0.5 border border-[#E2E8F0]/30 shadow-inner">
-                                                    <div className="h-full bg-gradient-to-r from-[#0040A1] to-[#0040A1]/80 rounded-full transition-all duration-1000" style={{ width: `${percentage}%` }}></div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                            <div className="pt-10">
-                                <button className="w-full py-4 text-[13px] font-bold text-[#737785] hover:text-[#0040A1] border border-[#E2E8F0] rounded-2xl transition-all">
-                                    View Detailed Analytics
-                                </button>
-                            </div>
+                        {/* Week Grid Header */}
+                        <div className="flex border-b border-slate-200 bg-slate-50/30">
+                            <div className="w-16 sm:w-20 border-r border-slate-100 flex-shrink-0"></div>
+                            {Array.from({ length: 7 }).map((_, i) => {
+                                const d = new Date(selectedDate);
+                                const day = d.getDay();
+                                const diff = d.getDate() - day + (day === 0 ? -6 : 1) + i;
+                                const weekDay = new Date(d.setDate(diff));
+                                const isToday = weekDay.toDateString() === new Date().toDateString();
+                                
+                                return (
+                                    <div key={i} onClick={() => { setSelectedDate(weekDay); setCurrentView('Día'); }} className="flex-1 py-3 border-r border-slate-100 flex flex-col items-center justify-center cursor-pointer hover:bg-white transition-colors group">
+                                        <span className={`text-[10px] font-bold uppercase tracking-wider ${isToday ? 'text-blue-600' : 'text-slate-500'}`}>{weekDay.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                                        <div className={`mt-1 w-8 h-8 flex items-center justify-center rounded-full text-[15px] transition-colors ${isToday ? 'bg-blue-600 text-white font-black shadow-md' : 'text-slate-900 font-extrabold group-hover:bg-slate-200'}`}>
+                                            {weekDay.getDate()}
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            {loading && interviews.length === 0 && (
-                <div className="fixed inset-0 bg-white/80 backdrop-blur-xl z-[200] flex flex-col items-center justify-center">
-                    <div className="relative">
-                        <div className="w-24 h-24 border-8 border-[#F1F5F9] border-t-[#0040A1] rounded-full animate-spin"></div>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-6 h-6 bg-[#0040A1] rounded-full animate-ping"></div>
+                        {/* Week Timeline */}
+                        <div className="flex-1 overflow-y-auto relative bg-slate-50/10 min-h-[400px]">
+                            {Array.from({ length: 12 }, (_, i) => i + 8).map(hour => {
+                                const ampm = hour >= 12 ? 'PM' : 'AM';
+                                const displayHour = hour > 12 ? hour === 12 ? 12 : hour - 12 : hour;
+                                const timeLabel = `${displayHour}:00`;
+
+                                return (
+                                    <div key={hour} className="flex min-h-[85px] group/row">
+                                        {/* Time Axis */}
+                                        <div className="w-16 sm:w-20 flex-shrink-0 border-r border-b border-slate-100 flex flex-col items-center justify-start pt-2 bg-slate-50/50 group-hover/row:bg-white transition-colors">
+                                            <span className="text-[11px] font-bold text-slate-400 group-hover/row:text-blue-600 transition-colors">{timeLabel}</span>
+                                            <span className="text-[9px] font-bold text-slate-300">{ampm}</span>
+                                        </div>
+                                        
+                                        {/* Week Days Grid */}
+                                        {Array.from({ length: 7 }).map((_, dayIndex) => {
+                                            const d = new Date(selectedDate);
+                                            const day = d.getDay();
+                                            const diff = d.getDate() - day + (day === 0 ? -6 : 1) + dayIndex;
+                                            const weekDayDate = new Date(d.setDate(diff));
+
+                                            const hourEvents = interviews.filter(e => {
+                                                const evDate = new Date(e.scheduled_at);
+                                                return evDate.getDate() === weekDayDate.getDate() && evDate.getMonth() === weekDayDate.getMonth() && evDate.getFullYear() === weekDayDate.getFullYear() && evDate.getHours() === hour;
+                                            });
+
+                                            return (
+                                                <div key={dayIndex} className="flex-1 border-r border-b border-slate-100/70 relative p-1.5 hover:bg-slate-50/50 transition-colors flex flex-col gap-1.5 group/cell">
+                                                    {hourEvents.map((ev: any, idx: number) => {
+                                                        const isTechnical = ev.type?.toLowerCase().includes('technical');
+                                                        const isCultural = ev.type?.toLowerCase().includes('cultural');
+                                                        const isFinal = ev.type?.toLowerCase().includes('final');
+                                                        const candidateName = ev.candidate?.first_name || ev.candidate?.full_name?.split(' ')[0] || 'Event';
+                                                        
+                                                        let bgClass = "bg-emerald-50 border-emerald-500 text-emerald-900";
+                                                        
+                                                        if (isTechnical || ev.type === 'Google') {
+                                                            bgClass = "bg-blue-50 border-blue-600 text-blue-900";
+                                                        } else if (isCultural) {
+                                                            bgClass = "bg-slate-100 border-slate-400 text-slate-900";
+                                                        } else if (isFinal) {
+                                                            bgClass = "bg-red-50 border-red-500 text-red-900";
+                                                        }
+
+                                                        return (
+                                                            <div key={idx} className={`p-1.5 rounded-lg border-l-[3px] ${bgClass} hover:-translate-y-[1px] hover:shadow-md shadow-sm transition-all cursor-pointer`} title={ev.candidate?.full_name}>
+                                                                <p className="text-[10px] xl:text-[11px] font-bold leading-tight truncate">
+                                                                    {candidateName}
+                                                                </p>
+                                                                <p className="text-[9px] font-semibold opacity-80 mt-0.5 truncate" suppressHydrationWarning>
+                                                                    {new Date(ev.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                                                                </p>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
-                    <p className="mt-8 text-[13px] font-black uppercase tracking-[0.2em] text-[#0040A1]">Syncing Calendar Space...</p>
-                </div>
+                </section>
             )}
+
+            {/* Schedule Intelligence */}
+            <section className="px-10 pb-20">
+                <h3 className="font-headline font-bold text-lg mb-6 flex items-center gap-2 text-slate-900">
+                    <LineChart className="text-blue-600" size={24} />
+                    Schedule Intelligence
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="p-6 bg-slate-50 rounded-[24px] flex flex-col justify-between h-44">
+                        <span className="text-label text-sm font-semibold text-slate-500">Total Interviews</span>
+                        <div>
+                            <span className="font-headline text-[52px] font-black text-blue-600 leading-none">{interviews.length}</span>
+                            <p className="text-[12px] text-slate-500 mt-2 flex items-center gap-1 font-medium">
+                                <TrendingUp size={14} />
+                                +12% from last month
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-6 bg-[#0040A1] text-white rounded-[24px] flex flex-col justify-between h-44 shadow-lg shadow-blue-900/10">
+                        <span className="text-label text-sm font-semibold opacity-80">Next Session</span>
+                        {nextInterview ? (
+                            <>
+                                <div>
+                                    <p className="font-bold text-xl leading-tight">{nextInterview.candidate?.full_name}</p>
+                                    <p className="text-[13px] opacity-90 mt-1" suppressHydrationWarning>
+                                        {nextInterview.job?.title} • {new Date(nextInterview.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                                    </p>
+                                </div>
+                                <a 
+                                    href={nextInterview.video_url || '#'} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="bg-white/20 hover:bg-white/30 transition-colors py-2 rounded-xl text-sm font-bold backdrop-blur-sm text-center block mt-2"
+                                >
+                                    Launch Video Call
+                                </a>
+                            </>
+                        ) : (
+                             <div>
+                                <p className="font-bold text-xl">No Sessions</p>
+                                <p className="text-sm opacity-90 mt-1">Take a break</p>
+                             </div>
+                        )}
+                    </div>
+                    
+                    <div className="p-6 bg-slate-50 rounded-[24px] h-44 flex flex-col justify-between overflow-hidden relative">
+                        <div className="relative z-10">
+                            <span className="text-label text-sm font-semibold text-slate-500">Recruiter Workload</span>
+                            <div className="mt-6 flex -space-x-3">
+                                {recruiters.slice(0, 3).map((r, idx) => (
+                                    <div key={idx} className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs ring-2 ring-white z-10 relative">
+                                        {r.full_name?.charAt(0) || 'R'}
+                                    </div>
+                                ))}
+                                {recruiters.length > 3 && (
+                                     <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold ring-2 ring-white text-slate-500 relative z-0">
+                                        +{recruiters.length - 3}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Floating Action Button (for Scheduling) */}
+            <button className="fixed bottom-10 right-10 w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group">
+                <Plus className="text-3xl group-hover:rotate-90 transition-transform duration-300" size={32} />
+            </button>
         </div>
     );
 }

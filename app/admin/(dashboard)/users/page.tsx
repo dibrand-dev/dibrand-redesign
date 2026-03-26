@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getUsers } from './actions';
 import { Plus, Edit } from 'lucide-react';
 import DeleteUserButton from './DeleteUserButton';
+import VerifyUserActions from './VerifyUserActions';
 
 export default async function UsersPage() {
     const users = await getUsers();
@@ -37,6 +38,7 @@ export default async function UsersPage() {
                         <tr>
                             <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Nombre</th>
                             <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Email</th>
+                            <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Estado</th>
                             <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest text-right">Acciones</th>
                         </tr>
                     </thead>
@@ -50,6 +52,9 @@ export default async function UsersPage() {
                                 </td>
                                 <td className="px-6 py-4 text-admin-text-secondary font-medium italic">
                                     {user.email}
+                                </td>
+                                <td className="px-6 py-4">
+                                    <VerifyUserActions id={user.id} email={user.email!} isVerified={!!(user.email_confirmed_at || user.identities?.some(id => id.identity_data?.email_verified))} />
                                 </td>
                                 <td className="px-6 py-4 text-right">
                                     <div className="flex justify-end gap-2 text-right">
@@ -66,7 +71,7 @@ export default async function UsersPage() {
                         ))}
                         {users.length === 0 && (
                             <tr>
-                                <td colSpan={3} className="px-6 py-10 text-center text-admin-text-secondary italic font-medium">
+                                <td colSpan={4} className="px-6 py-10 text-center text-admin-text-secondary italic font-medium">
                                     No hay administradores registrados
                                 </td>
                             </tr>

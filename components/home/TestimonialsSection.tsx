@@ -55,7 +55,7 @@ export default function TestimonialsSection({ testimonials, dict, lang }: Testim
                         {dict.testimonials.title}
                     </h2>
                     <div className="mt-6 h-1 w-24 bg-brand mb-6" />
-                    <p className="text-base md:text-lg text-gray-400 font-outfit font-light leading-relaxed max-w-2xl">
+                    <p className="text-base md:text-lg text-gray-300 font-outfit font-light leading-relaxed max-w-2xl">
                         {dict.testimonials.subtitle}
                     </p>
                 </div>
@@ -85,7 +85,7 @@ export default function TestimonialsSection({ testimonials, dict, lang }: Testim
                                 >
                                     <Quote className="h-8 w-8 text-brand opacity-40 mb-6 group-hover:scale-110 transition-transform" />
 
-                                    <p className="text-gray-300 text-lg leading-relaxed mb-10 font-outfit italic">
+                                    <p className="text-white text-lg leading-relaxed mb-10 font-outfit italic">
                                         "{lang === 'en' ? (t.content_en || t.content_es) : t.content_es}"
                                     </p>
 
@@ -108,7 +108,7 @@ export default function TestimonialsSection({ testimonials, dict, lang }: Testim
                                             <div className="text-white font-bold font-outfit leading-none mb-1">
                                                 {t.name}
                                             </div>
-                                            <div className="text-gray-500 text-sm font-outfit">
+                                            <div className="text-gray-300 text-sm font-outfit">
                                                 {lang === 'en' ? (t.role_en || t.role_es) : t.role_es}, <span className="text-brand/80">{t.company}</span>
                                             </div>
                                         </div>

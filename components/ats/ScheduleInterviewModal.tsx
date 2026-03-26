@@ -1,183 +1,259 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react';
-import { X, Calendar, Clock, Video, User, Briefcase, FileText, Loader2 } from 'lucide-react';
-import { getCandidateNames, getRecruiterJobs, createInterview } from '@/app/ats/actions';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { 
+    X, Phone, Video, Users, Lock, Calendar, Clock, ChevronDown, 
+    Plus, Bold, Italic, List, Link as LinkIcon, Paperclip 
+} from 'lucide-react';
+import { createInterview } from '@/app/ats/actions';
 
-export default function ScheduleInterviewModal({ 
-    isOpen, 
-    onClose,
-    onSuccess 
-}: { 
-    isOpen: boolean; 
-    onClose: () => void;
-    onSuccess: () => void;
-}) {
-    const [loading, setLoading] = useState(false);
-    const [candidates, setCandidates] = useState<any[]>([]);
-    const [jobs, setJobs] = useState<any[]>([]);
-    const [formData, setFormData] = useState({
-        candidate_id: '',
-        job_id: '',
-        recruiter_id: '',
-        type: 'Technical',
-        scheduled_at: '',
-        duration_minutes: 60,
-        video_url: '',
-        notes: ''
-    });
+interface Candidate {
+    id: string;
+    full_name?: string;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    avatar_url?: string;
+    job_id?: string;
+}
 
-    useEffect(() => {
-        if (isOpen) {
-            async function loadData() {
-                const [cands, jobList] = await Promise.all([
-                    getCandidateNames(),
-                    getRecruiterJobs()
-                ]);
-                setCandidates(cands);
-                setJobs(jobList);
-            }
-            loadData();
-        }
-    }, [isOpen]);
+export default function ScheduleInterviewModal({ candidate, recruiterId }: { candidate: Candidate, recruiterId: string | null }) {
+    const router = useRouter();
+    const [eventType, setEventType] = useState('Call');
+    
+    const candidateName = candidate.full_name || `${candidate.first_name} ${candidate.last_name}`;
+    const [title, setTitle] = useState(`Call with ${candidateName} - Senior Product Designer`);
+    const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+    const [time, setTime] = useState('14:00');
+    const [notes, setNotes] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
+    const closeModal = () => {
+        router.push(`/ats/candidates/${candidate.id}`);
+    };
+
+    const handleCreate = async () => {
+        setIsSubmitting(true);
         try {
-            await createInterview(formData);
-            onSuccess();
-            onClose();
+            const scheduledAt = new Date(`${date}T${time}:00`).toISOString();
+            
+            // Map the UI categories to the DB CHECK constraint valid enumerations
+            const typeMapping: Record<string, string> = {
+                'Call': 'Cultural',
+                'Interview': 'Technical',
+                'Meeting': 'Final Review',
+                'Internal': 'Case Study'
+            };
+            
+            await createInterview({
+                candidate_id: candidate.id,
+                recruiter_id: recruiterId,
+                job_id: candidate.job_id,
+                scheduled_at: scheduledAt,
+                duration_minutes: 60,
+                type: typeMapping[eventType] || 'Technical',
+                notes: notes
+            });
+
+            closeModal();
+            router.refresh(); // Refresh the calendar UI context
         } catch (error) {
-            console.error('Error scheduling interview:', error);
-            alert('Failed to schedule interview');
+            console.error('Failed to create interview:', error);
+            alert('Failed to schedule interview. Please ensure you are logged in and connected.');
         } finally {
-            setLoading(false);
+            setIsSubmitting(false);
         }
     };
 
-    if (!isOpen) return null;
-
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#191C1D]/40 backdrop-blur-sm animate-in fade-in duration-300">
-            <div className="bg-white rounded-[32px] w-full max-w-xl shadow-2xl border border-[#E2E8F0] overflow-hidden animate-in zoom-in-95 duration-300">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/30 backdrop-blur-sm px-4 animate-in fade-in duration-200">
+            {/* Modal Container */}
+            <div className="bg-white rounded-[16px] w-full max-w-[640px] shadow-2xl flex flex-col font-inter max-h-[95vh] animate-in zoom-in-95 duration-200">
                 {/* Header */}
-                <div className="px-8 py-6 border-b border-[#F1F5F9] flex items-center justify-between bg-[#F8FAFC]">
-                    <div>
-                        <h3 className="text-[20px] font-bold text-[#191C1D]">Schedule New Session</h3>
-                        <p className="text-[12px] text-[#737785] font-medium mt-0.5">Define the evaluation details for this candidate.</p>
-                    </div>
-                    <button onClick={onClose} className="p-2 hover:bg-white rounded-xl text-[#A1A5B7] transition-all border border-transparent hover:border-[#E2E8F0] shadow-sm">
+                <div className="flex justify-between items-center px-6 py-5 border-b border-slate-100">
+                    <h2 className="text-[18px] font-extrabold text-slate-900">Schedule Interview</h2>
+                    <button onClick={closeModal} className="text-slate-400 hover:text-slate-700 transition-colors">
                         <X size={20} />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                    <div className="grid grid-cols-2 gap-6">
-                        {/* Candidate Selection */}
-                        <div className="col-span-2 space-y-2">
-                            <label className="text-[11px] font-black text-[#6B7485] uppercase tracking-widest flex items-center gap-2">
-                                <User size={14} className="text-[#0040A1]" />
-                                Candidate
-                            </label>
-                            <select 
-                                required
-                                value={formData.candidate_id}
-                                onChange={(e) => setFormData({...formData, candidate_id: e.target.value})}
-                                className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl py-3 px-4 text-[13px] font-medium outline-none focus:border-[#0040A1] transition-all"
+                {/* Body - Scrollable */}
+                <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-6">
+                    
+                    {/* EVENT TYPE */}
+                    <div>
+                        <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Event Type</label>
+                        <div className="flex gap-2 p-1.5 bg-slate-50/80 rounded-[12px] border border-slate-100">
+                            <button 
+                                onClick={() => setEventType('Call')}
+                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[13px] font-bold transition-all shadow-sm ${eventType === 'Call' ? 'bg-[#0B4FEA] text-white' : 'text-slate-600 hover:bg-slate-100'}`}
                             >
-                                <option value="">Select a candidate...</option>
-                                {candidates.map(c => (
-                                    <option key={c.id} value={c.id}>{c.name} ({c.email})</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Job Position */}
-                        <div className="space-y-2">
-                            <label className="text-[11px] font-black text-[#6B7485] uppercase tracking-widest flex items-center gap-2">
-                                <Briefcase size={14} className="text-[#0040A1]" />
-                                Job Position
-                            </label>
-                            <select 
-                                required
-                                value={formData.job_id}
-                                onChange={(e) => setFormData({...formData, job_id: e.target.value})}
-                                className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl py-3 px-4 text-[13px] font-medium outline-none focus:border-[#0040A1] transition-all"
+                                <Phone size={16} fill={eventType === 'Call' ? 'currentColor' : 'none'} /> Call
+                            </button>
+                            <button 
+                                onClick={() => setEventType('Interview')}
+                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[13px] font-bold transition-all shadow-sm ${eventType === 'Interview' ? 'bg-[#0B4FEA] text-white' : 'text-slate-600 hover:bg-slate-100'}`}
                             >
-                                <option value="">Select job...</option>
-                                {jobs.map(j => (
-                                    <option key={j.id} value={j.id}>{j.title}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Interview Type */}
-                        <div className="space-y-2">
-                            <label className="text-[11px] font-black text-[#6B7485] uppercase tracking-widest flex items-center gap-2">
-                                <FileText size={14} className="text-[#0040A1]" />
-                                Session Type
-                            </label>
-                            <select 
-                                required
-                                value={formData.type}
-                                onChange={(e) => setFormData({...formData, type: e.target.value})}
-                                className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl py-3 px-4 text-[13px] font-medium outline-none focus:border-[#0040A1] transition-all"
+                                <Video size={16} fill={eventType === 'Interview' ? 'currentColor' : 'none'} /> Interview
+                            </button>
+                            <button 
+                                onClick={() => setEventType('Meeting')}
+                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[13px] font-bold transition-all shadow-sm ${eventType === 'Meeting' ? 'bg-[#0B4FEA] text-white' : 'text-slate-600 hover:bg-slate-100'}`}
                             >
-                                <option value="Technical">Technical</option>
-                                <option value="Cultural">Cultural</option>
-                                <option value="Final Review">Final Review</option>
-                            </select>
-                        </div>
-
-                        {/* Date & Time */}
-                        <div className="space-y-2">
-                            <label className="text-[11px] font-black text-[#6B7485] uppercase tracking-widest flex items-center gap-2">
-                                <Calendar size={14} className="text-[#0040A1]" />
-                                Date & Time
-                            </label>
-                            <input 
-                                type="datetime-local" 
-                                required
-                                value={formData.scheduled_at}
-                                onChange={(e) => setFormData({...formData, scheduled_at: e.target.value})}
-                                className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl py-3 px-4 text-[13px] font-medium outline-none focus:border-[#0040A1] transition-all"
-                            />
-                        </div>
-
-                        {/* Video URL */}
-                        <div className="space-y-2">
-                            <label className="text-[11px] font-black text-[#6B7485] uppercase tracking-widest flex items-center gap-2">
-                                <Video size={14} className="text-[#0040A1]" />
-                                Video Link
-                            </label>
-                            <input 
-                                type="url" 
-                                placeholder="Google Meet / Zoom URL"
-                                value={formData.video_url}
-                                onChange={(e) => setFormData({...formData, video_url: e.target.value})}
-                                className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl py-3 px-4 text-[13px] font-medium outline-none focus:border-[#0040A1] transition-all"
-                            />
+                                <Users size={16} fill={eventType === 'Meeting' ? 'currentColor' : 'none'} /> Meeting
+                            </button>
+                            <button 
+                                onClick={() => setEventType('Internal')}
+                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[13px] font-bold transition-all shadow-sm ${eventType === 'Internal' ? 'bg-[#0B4FEA] text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+                            >
+                                <Lock size={16} fill={eventType === 'Internal' ? 'currentColor' : 'none'} /> Internal
+                            </button>
                         </div>
                     </div>
 
-                    <div className="pt-4 flex gap-4">
-                        <button 
-                            type="button"
-                            onClick={onClose}
-                            className="flex-1 py-4 text-[#737785] font-bold text-[13px] uppercase tracking-widest hover:text-[#191C1D] transition-colors"
-                        >
+                    {/* EVENT TITLE */}
+                    <div>
+                        <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Event Title</label>
+                        <input 
+                            type="text" 
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 text-[14px] font-semibold rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow"
+                        />
+                    </div>
+
+                    {/* DATE & TIME */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Date</label>
+                            <div className="relative">
+                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0B4FEA] pointer-events-none">
+                                    <Calendar size={18} />
+                                </div>
+                                <style dangerouslySetInnerHTML={{__html: `
+                                    input[type="date"]::-webkit-calendar-picker-indicator, input[type="time"]::-webkit-calendar-picker-indicator {
+                                        opacity: 0;
+                                        position: absolute;
+                                        right: 10px;
+                                        cursor: pointer;
+                                        width: 100%;
+                                        height: 100%;
+                                    }
+                                `}} />
+                                <input 
+                                    type="date" 
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-100 text-slate-900 text-[13px] font-bold rounded-lg pl-11 pr-4 py-3 outline-none cursor-pointer focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Time</label>
+                            <div className="relative">
+                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0B4FEA] pointer-events-none">
+                                    <Clock size={18} />
+                                </div>
+                                <input 
+                                    type="time" 
+                                    value={time}
+                                    onChange={(e) => setTime(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-100 text-slate-900 text-[13px] font-bold rounded-lg pl-11 pr-10 py-3 outline-none cursor-pointer focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-shadow"
+                                />
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                                    <ChevronDown size={16} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ATTENDEES */}
+                    <div>
+                        <div className="flex justify-between items-center mb-3">
+                            <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Attendees</label>
+                            <button className="flex items-center gap-1.5 text-[12px] font-bold text-[#0B4FEA] hover:text-blue-800 transition-colors">
+                                <Plus size={14} strokeWidth={3} /> Add attendee
+                            </button>
+                        </div>
+                        <div className="space-y-2">
+                            {/* Candidate Attendee */}
+                            <div className="flex justify-between items-center p-3 border border-slate-200 rounded-[12px] shadow-sm bg-white">
+                                <div className="flex items-center gap-3">
+                                    <img src={candidate.avatar_url || 'https://i.pravatar.cc/150'} alt="Candidate" className="w-9 h-9 rounded-full object-cover" />
+                                    <div>
+                                        <p className="text-[13px] font-bold text-slate-900 leading-tight">{candidateName}</p>
+                                        <p className="text-[11px] font-medium text-slate-500">Candidate • {candidate.email || 'eleanor.v@design.com'}</p>
+                                    </div>
+                                </div>
+                                <button className="text-slate-400 hover:text-slate-700 transition-colors p-1">
+                                    <X size={16} />
+                                </button>
+                            </div>
+                            
+                            {/* Organizer Attendee */}
+                            <div className="flex justify-between items-center p-3 border border-slate-200 rounded-[12px] shadow-sm bg-slate-50/50">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-9 h-9 rounded-full bg-blue-100 text-[#0B4FEA] flex items-center justify-center font-bold text-[13px]">
+                                        JD
+                                    </div>
+                                    <div>
+                                        <p className="text-[13px] font-bold text-slate-900 leading-tight">James Miller</p>
+                                        <p className="text-[11px] font-medium text-slate-500">Organizer • james.m@nexustalent.com</p>
+                                    </div>
+                                </div>
+                                <span className="px-2.5 py-1 bg-slate-200 text-slate-600 text-[10px] font-bold rounded uppercase tracking-wider">
+                                    YOU
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* DESCRIPTION */}
+                    <div>
+                        <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Description</label>
+                        <div className="border border-slate-200 rounded-[12px] overflow-hidden focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent transition-shadow">
+                            {/* Toolbar */}
+                            <div className="flex items-center gap-3 px-3 py-2.5 bg-slate-50 border-b border-slate-100">
+                                <button className="p-1 hover:bg-slate-200 rounded text-slate-700 transition-colors"><Bold size={14} strokeWidth={3} /></button>
+                                <button className="p-1 hover:bg-slate-200 rounded text-slate-700 transition-colors"><Italic size={14} /></button>
+                                <button className="p-1 hover:bg-slate-200 rounded text-slate-700 transition-colors"><List size={14} /></button>
+                                <div className="flex-1"></div>
+                                <button className="p-1 hover:bg-slate-200 rounded text-slate-700 transition-colors"><LinkIcon size={14} /></button>
+                            </div>
+                            {/* Textarea */}
+                            <textarea 
+                                value={notes}
+                                onChange={(e) => setNotes(e.target.value)}
+                                placeholder="Add meeting notes, agenda, or dial-in instructions..."
+                                className="w-full h-24 p-4 text-[13px] text-slate-700 resize-none outline-none font-medium placeholder:text-slate-400"
+                            ></textarea>
+                            {/* Resize handle visual hint */}
+                            <div className="h-4 bg-white flex justify-end px-1 pb-1">
+                                <div className="w-3 h-3 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cGF0aCBkPSJNOS42IDBMNiAwTDEuMiAxLjdMNCA0LjVMNiA2LjVMOS42IDBaIiBmaWxsPSIjQzRDMEMwIiAvPgo8L3N2Zz4=')] bg-no-repeat bg-right-bottom opacity-50 cursor-se-resize"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="px-6 py-4 border-t border-slate-100 flex justify-between items-center bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.02)] z-10">
+                    <button className="flex items-center gap-2 text-[13px] font-bold text-slate-600 hover:text-slate-900 transition-colors">
+                        <Paperclip size={16} /> Upload a file
+                    </button>
+                    <div className="flex gap-4 items-center">
+                        <button onClick={closeModal} className="text-[13px] font-bold text-slate-600 hover:text-slate-900 transition-colors">
                             Cancel
                         </button>
                         <button 
-                            type="submit"
-                            disabled={loading}
-                            className="flex-[2] py-4 bg-[#0040A1] text-white rounded-2xl text-[13px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#003380] transition-all shadow-xl shadow-blue-900/10 disabled:opacity-50"
+                            onClick={handleCreate}
+                            disabled={isSubmitting}
+                            className="px-6 py-2.5 bg-[#0B4FEA] text-white text-[13px] font-bold rounded-xl shadow-md shadow-blue-600/20 hover:bg-blue-800 transition-all flex items-center justify-center min-w-[120px]"
                         >
-                            {loading ? <Loader2 className="animate-spin" size={18} /> : 'Confirm Schedule'}
+                            {isSubmitting ? 'Scheduling...' : 'Create event'}
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     );

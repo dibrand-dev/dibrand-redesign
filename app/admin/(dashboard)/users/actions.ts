@@ -84,3 +84,35 @@ export async function inviteRecruiter(formData: FormData) {
     revalidatePath('/admin/users');
     return { success: true, data };
 }
+
+export async function forceVerifyUser(id: string) {
+    const { data, error } = await supabaseAdmin.auth.admin.updateUserById(id, {
+        email_confirm: true
+    });
+
+    if (error) throw error;
+
+    revalidatePath('/admin/users');
+    return { success: true, data };
+}
+
+export async function resendVerification(email: string) {
+    const { error } = await supabaseAdmin.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+            emailRedirectTo: 'https://www.dibrand.co/ats/set-password'
+        }
+    });
+
+    if (error) {
+        // Fallback to invite if signup resend fails (e.g., if the user was invited, not self-signed-up)
+        const fallback = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+             redirectTo: 'https://www.dibrand.co/ats/set-password'
+        });
+        if (fallback.error) throw new Error(fallback.error.message);
+        return { success: true };
+    }
+    
+    return { success: true };
+}
