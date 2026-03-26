@@ -26,7 +26,7 @@ export default function ProfileMenu({ name, role, initials, avatarUrl, isAdmin }
     const handleLogout = async () => {
         setLoading(true);
         await supabase.auth.signOut();
-        window.location.href = isAdmin ? '/admin/login' : '/login';
+        window.location.href = isAdmin ? '/admin/login' : '/ats/login';
     };
 
     // Close menu when clicking outside

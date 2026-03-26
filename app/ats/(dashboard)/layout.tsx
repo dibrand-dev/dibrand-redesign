@@ -20,7 +20,7 @@ export default async function AtsDashboardLayout({
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-        redirect('/login');
+        redirect('/ats/login');
     }
 
     const role = user?.user_metadata?.role;
@@ -28,7 +28,7 @@ export default async function AtsDashboardLayout({
     const isAuthorized = role === 'recruiter' || role === 'admin' || role === 'SuperAdmin';
     
     if (!isAuthorized) {
-        redirect('/login');
+        redirect('/ats/login');
     }
 
     const name = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Recruiter';
