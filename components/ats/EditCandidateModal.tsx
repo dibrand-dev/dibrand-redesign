@@ -98,7 +98,7 @@ export default function EditCandidateModal({ candidate }: { candidate: any }) {
                 linkedin_url: formData.linkedin_url || null,
                 recruiter_id: formData.recruiter_id === '' ? null : formData.recruiter_id,
                 avatar_url: formData.avatar_url || null,
-                skills: formData.skills.split(',').map(s => s.trim()).filter(s => s !== '')
+                skills: formData.skills.split(',').map((s: string) => s.trim()).filter((s: string) => s !== '')
             };
 
             await updateCandidate(candidate.id, updatePayload);
