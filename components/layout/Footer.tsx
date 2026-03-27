@@ -42,12 +42,12 @@ export default function Footer({ dict, lang }: FooterProps) {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
                         <div>
-                            <h4 className="font-bold text-white uppercase text-[10px] tracking-widest mb-1.5 opacity-50">USA</h4>
-                            <p className="text-zinc-200 font-medium">Sheridan, Wyoming</p>
+                            <h4 className="font-bold text-white/70 uppercase text-[11px] tracking-[0.1em] mb-1.5">USA</h4>
+                            <p className="text-white text-[15px] font-bold">Sheridan, Wyoming</p>
                         </div>
                         <div>
-                            <h4 className="font-bold text-white uppercase text-[10px] tracking-widest mb-1.5 opacity-50">Argentina</h4>
-                            <p className="text-zinc-200 font-medium">Escobar, Buenos Aires</p>
+                            <h4 className="font-bold text-white/70 uppercase text-[11px] tracking-[0.1em] mb-1.5">Argentina</h4>
+                            <p className="text-white text-[15px] font-bold">Escobar, Buenos Aires</p>
                         </div>
                     </div>
 
