@@ -13,6 +13,7 @@ import {
     CheckCircle2, Globe, Plus, Clock, MessageSquare,
     Link2, Eye, Save, Settings2, Sparkles, RefreshCcw
 } from 'lucide-react';
+import { createClient } from '@/lib/supabase-client';
 
 interface JobData {
     id: string;
@@ -26,10 +27,10 @@ interface JobData {
     seniority?: string;
     stats?: {
         totalApplicants: number;
-        newCount: number;
-        screenedCount: number;
-        interviewingCount: number;
-        offerCount: number;
+        new: number;
+        screened: number;
+        interviewing: number;
+        offer: number;
         hiredCount: number;
         daysOpen: number;
     };
@@ -39,6 +40,18 @@ interface JobData {
 
 export default function JobViewClient({ job }: { job: JobData | null }) {
     const [activeTab, setActiveTab] = useState('Candidates');
+    const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+
+    // Fetch user role
+    React.useEffect(() => {
+        const fetchRole = async () => {
+            const supabaseAuth = await createClient();
+            const { data: { user } } = await supabaseAuth.auth.getUser();
+            const role = user?.user_metadata?.role || user?.role;
+            setIsSuperAdmin(role === 'SuperAdmin');
+        };
+        fetchRole();
+    }, []);
     
     // Default mock info to match the design precisely
     const title = job?.title || 'Senior Product Designer';
@@ -125,24 +138,24 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                         <div className="grid grid-cols-4 w-full rounded-2xl overflow-hidden h-24 shadow-sm border border-[#E2E8F0]">
                             <div className="bg-[#0040A1] p-4 flex flex-col justify-between relative">
                                 <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">NEW</span>
-                                <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.newCount || 0}</span>
+                                <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.new || 0}</span>
                             </div>
                             <div className="bg-[#0060F0] p-4 flex flex-col justify-between -ml-2 skew-x-[-10deg] border-l border-[#0040A1]/20 z-10">
                                 <div className="skew-x-[10deg] flex flex-col h-full justify-between">
                                     <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">SCREENED</span>
-                                    <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.screenedCount || 0}</span>
+                                    <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.screened || 0}</span>
                                 </div>
                             </div>
                             <div className="bg-[#5A6376] p-4 flex flex-col justify-between -ml-4 skew-x-[-10deg] border-l border-[#0040A1]/20 z-20">
                                 <div className="skew-x-[10deg] flex flex-col h-full justify-between pl-2">
                                     <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">INTERVIEWING</span>
-                                    <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.interviewingCount || 0}</span>
+                                    <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.interviewing || 0}</span>
                                 </div>
                             </div>
                             <div className="bg-[#D6E3FB] p-4 flex flex-col justify-between -ml-6 skew-x-[-10deg] border-l border-white/20 z-30">
                                 <div className="skew-x-[10deg] flex flex-col h-full justify-between pl-4">
                                     <span className="text-[10px] font-bold text-[#0040A1] tracking-widest uppercase">OFFER</span>
-                                    <span className="text-[28px] font-bold text-[#0040A1] leading-none">{job?.stats?.offerCount || 0}</span>
+                                    <span className="text-[28px] font-bold text-[#0040A1] leading-none">{job?.stats?.offer || 0}</span>
                                 </div>
                             </div>
                         </div>

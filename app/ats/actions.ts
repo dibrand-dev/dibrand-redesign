@@ -320,6 +320,11 @@ export async function assignRecruiter(candidateId: string, recruiterId: string) 
         .eq('id', recruiterId)
         .single();
 
+    // Verify permission: only SuperAdmin can reassign
+    const isSuperAdmin = user?.user_metadata?.role === 'SuperAdmin' || user?.role === 'SuperAdmin';
+    if (!isSuperAdmin) {
+        throw new Error('Only SuperAdmin can reassign candidates to another recruiter');
+    }
     const { error } = await supabase
         .from('job_applications')
         .update({ recruiter_id: recruiterId, updated_at: new Date().toISOString() })
@@ -563,7 +568,10 @@ export async function createCandidate(formData: {
     const first_name = names[0];
     const last_name = names.length > 1 ? names.slice(1).join(' ') : '';
 
-    // 3. Insert into DB
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    if (!user) return { error: 'User not authenticated' };
+    // 3. Insert into DB with default recruiter association
     const { data, error } = await supabase
         .from('job_applications')
         .insert([{
@@ -577,6 +585,7 @@ export async function createCandidate(formData: {
             country: formData.country,
             state_province: formData.state_province,
             job_id: formData.job_id,
+            recruiter_id: user.id, // associate to creator
             linkedin_url: formData.linkedin_url,
             skills: formData.skills || [],
             status: 'Applied', // Default Stage
