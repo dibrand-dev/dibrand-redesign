@@ -37,7 +37,7 @@ export default function Footer({ dict, lang }: FooterProps) {
                     </p>
 
                     <p className="text-white/90 mb-8 font-medium">
-                        PHONES: <a href="tel:+5491124522696" className="hover:text-white transition-colors underline underline-offset-4 decoration-white/20 hover:decoration-white">+54 9 11 2452 2696</a> &nbsp;{" "}&nbsp; <a href="tel:+5491165939115" className="hover:text-white transition-colors underline underline-offset-4 decoration-white/20 hover:decoration-white">+54 9 11 6593 9115</a>
+                        {(dict.footer.phones || 'PHONES').toUpperCase()}: <a href="tel:+5491124522696" className="hover:text-white transition-colors underline underline-offset-4 decoration-white/20 hover:decoration-white">+54 9 11 2452 2696</a> &nbsp;{" "}&nbsp; <a href="tel:+5491165939115" className="hover:text-white transition-colors underline underline-offset-4 decoration-white/20 hover:decoration-white">+54 9 11 6593 9115</a>
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
