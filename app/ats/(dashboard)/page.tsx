@@ -99,7 +99,7 @@ export default async function AtsDashboard() {
                                             <td className="px-6 py-5">
                                                 <Link href={`/ats/candidates?jobId=${job.id}`}>
                                                     <p className="text-[14px] font-semibold text-[#191C1D] group-hover/row:text-[#0040A1] transition-colors">{job.title}</p>
-                                                    <p className="text-[12px] text-[#737785]">{job.department}</p>
+                                                    <p className="text-[12px] text-[#737785]">{job.industry}</p>
                                                 </Link>
                                             </td>
                                             <td className="px-6 py-5">
@@ -109,7 +109,7 @@ export default async function AtsDashboard() {
                                             </td>
                                             <td className="px-6 py-5">
                                                 <span className="px-3 py-1 bg-[#D6E3FB] text-[#0040A1] text-[11px] font-bold rounded-full border border-[#E2E8F0]">
-                                                    {job.status}
+                                                    {job.is_active ? 'Open' : 'Paused'}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-5">

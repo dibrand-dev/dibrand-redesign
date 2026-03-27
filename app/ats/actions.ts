@@ -91,7 +91,7 @@ export async function getRecruiterStats() {
     let jobsQuery = supabase
         .from('job_openings')
         .select('*', { count: 'exact', head: true })
-        .eq('status', 'Open');
+        .eq('is_active', true);
 
     if (!isAdmin) {
         jobsQuery = jobsQuery.eq('recruiter_id', user.id);
@@ -115,14 +115,13 @@ export async function getRecruiterJobs() {
 
     const isAdmin = user.user_metadata?.role === 'admin' || user.user_metadata?.role === 'SuperAdmin';
 
-    // Fetch jobs and include candidate counts
+    // Fetch jobs and include candidate counts with statuses
     const { data: jobs, error: jobsError } = await supabase
         .from('job_openings')
         .select(`
             *,
-            candidates:job_applications(id, recruiter_id, is_deleted)
-        `)
-        .eq('is_active', true);
+            candidates:job_applications(id, recruiter_id, status, is_deleted)
+        `);
 
     if (jobsError) {
         console.error('Error fetching jobs:', jobsError);
@@ -134,11 +133,36 @@ export async function getRecruiterJobs() {
         const activeCandidates = allCandidates.filter((c: any) => !c.is_deleted);
         const recruiterCandidates = activeCandidates.filter((c: any) => c.recruiter_id === user.id);
         
+        // Count statuses for pipeline visualization
+        const countsByStatus = (isAdmin ? activeCandidates : recruiterCandidates).reduce((acc: any, curr: any) => {
+            const status = curr.status || 'Applied';
+            acc[status] = (acc[status] || 0) + 1;
+            return acc;
+        }, {
+            'Applied': 0,
+            'Interview': 0,
+            'Offer': 0,
+            'Hired': 0,
+            'Rejected': 0,
+            'Withdrawn': 0
+        });
+
+        // Map statuses to the UI buckets in the design (NEW, INTERVIEWING, OFFER)
+        const uiCounts = {
+            new: (countsByStatus['Applied'] || 0) + (countsByStatus['Screening'] || 0),
+            interviewing: (countsByStatus['Interview'] || 0) + (countsByStatus['Technical'] || 0) + (countsByStatus['Culture'] || 0),
+            offer: (countsByStatus['Offer'] || 0) + (countsByStatus['Contract'] || 0),
+            total: isAdmin ? activeCandidates.length : recruiterCandidates.length
+        };
+
         return {
             ...job,
             myCandidatesCount: recruiterCandidates.length,
-            totalCandidatesCount: isAdmin ? activeCandidates.length : recruiterCandidates.length,
-            targetHires: job.target_hires || 1
+            totalCandidatesCount: uiCounts.total,
+            targetHires: job.target_hires || 1,
+            countsByStatus: uiCounts,
+            // Mock avatars for now as they aren't readily available in this query without an extra join
+            avatars: ['https://i.pravatar.cc/150?u=1', 'https://i.pravatar.cc/150?u=2', 'https://i.pravatar.cc/150?u=3']
         };
     }) || [];
 }

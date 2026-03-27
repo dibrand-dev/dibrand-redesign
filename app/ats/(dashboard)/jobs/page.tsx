@@ -1,4 +1,17 @@
+'use client';
+
 import React from 'react';
+import { 
+    MapPin, 
+    Clock, 
+    MoreVertical, 
+    Briefcase, 
+    Search, 
+    ChevronDown, 
+    TrendingUp, 
+    Play,
+    Plus
+} from 'lucide-react';
 import { getRecruiterJobs } from '../../actions';
 
 interface Job {
@@ -9,86 +22,267 @@ interface Job {
     location_es?: string;
     salary_range?: string;
     seniority?: string;
-    myCandidatesCount: number;
-    totalCandidatesCount: number;
-    targetHires: number;
+    status: string; // 'Open', 'Paused', 'Closed', 'Draft'
+    department?: string;
+    type?: string; // 'Full-time', 'Part-time', etc.
+    countsByStatus: {
+        new: number;
+        interviewing: number;
+        offer: number;
+        total: number;
+    };
+    posted_at?: string;
+    days_open?: number;
+    avatars: string[];
 }
-import { Briefcase, MapPin, Building2, Globe, ChevronRight, TrendingUp, Users, Target } from 'lucide-react';
-import Link from 'next/link';
 
-export default async function AtsJobsPage() {
-    const jobs = await getRecruiterJobs();
+export default function AtsJobsPage() {
+    const [jobs, setJobs] = React.useState<Job[]>([]);
+    const [loading, setLoading] = React.useState(true);
+    const [activeTab, setActiveTab] = React.useState('All Jobs');
+
+    React.useEffect(() => {
+        const fetchJobs = async () => {
+            const data = await getRecruiterJobs();
+            // Transform data as needed to match the UI expectations
+            const transformed : Job[] = data.map((j: any) => ({
+                ...j,
+                status: j.is_active ? 'Open' : 'Paused', // Fallback
+                department: j.industry || 'ENGINEERING', // Map from DB
+                type: j.employment_type?.replace('_', ' ') || 'Full-time',
+                posted_at: j.created_at,
+                days_open: Math.floor((Date.now() - new Date(j.created_at).getTime()) / (1000 * 60 * 60 * 24)) || 0,
+            }));
+            setJobs(transformed);
+            setLoading(false);
+        };
+        fetchJobs();
+    }, []);
+
+    const tabs = ['All Jobs', 'Drafts', 'Archived'];
+    
+    // Derived stats
+    const activeSearchesCount = jobs.filter(j => j.status === 'Open').length;
+
+    const filteredJobs = jobs.filter(job => {
+        if (activeTab === 'All Jobs') return true;
+        if (activeTab === 'Drafts') return job.status === 'Paused';
+        if (activeTab === 'Archived') return job.status === 'Closed' || job.status === 'Archived'; 
+        return true;
+    });
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-700">
-            {/* Header */}
-            <div className="pb-6 border-b border-slate-200">
-                <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase leading-none mb-3">Vacantes <span className="text-indigo-600">Disponibles</span></h2>
-                <p className="text-slate-500 font-medium italic text-sm">Explora las posiciones abiertas y el progreso hacia el objetivo de contratación.</p>
+        <div className="flex-1 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Page Header & Tabs Row */}
+            <div className="flex flex-col gap-6 mb-8">
+                <div className="flex items-end justify-between border-b border-[#E2E8F0]">
+                    <div className="flex items-center gap-12">
+                        <h1 className="text-[28px] font-bold text-[#191C1D] tracking-tight pb-4">Job Openings</h1>
+                        <div className="flex items-center gap-8 h-full">
+                            {tabs.map(tab => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab)}
+                                    className={`text-[14px] font-bold tracking-tight pb-4 transition-all relative ${
+                                        activeTab === tab ? 'text-[#0040A1]' : 'text-[#737785] hover:text-[#191C1D]'
+                                    }`}
+                                >
+                                    {tab}
+                                    {activeTab === tab && (
+                                        <div className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-[#0040A1] rounded-full"></div>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Filters Row */}
+                <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                        <FilterButton label="DEPARTMENT" value="All Departments" />
+                        <FilterButton label="LOCATION" value="Remote & Office" />
+                        <FilterButton label="STATUS" value="Active" />
+                    </div>
+
+                    {/* Summary Box */}
+                    <div className="bg-[#F1F5F9] rounded-xl px-5 py-3 flex items-center gap-3 border border-transparent hover:border-[#E2E8F0] transition-all cursor-default">
+                        <div className="w-8 h-8 bg-[#0040A1] rounded-lg flex items-center justify-center">
+                            <TrendingUp size={16} className="text-white" />
+                        </div>
+                        <div className="flex items-center gap-2">
+                             <span className="text-[13px] font-semibold text-[#737785]">Showing</span>
+                             <span className="text-[14px] font-bold text-[#191C1D]">{activeSearchesCount} Active Searches</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {/* Jobs Cards Feed */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                {jobs.length > 0 ? jobs.map((job: Job) => {
-                    const progress = Math.min((job.totalCandidatesCount / (job.targetHires * 5)) * 100, 100); // 5 is arbitrary for visualization
-                    
-                    return (
-                        <div key={job.id} className="bg-white rounded-2xl border border-slate-200 p-8 hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 group cursor-pointer relative overflow-hidden h-fit">
-                            <div className="flex items-center justify-between mb-6">
-                                <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-black italic text-2xl shadow-lg shadow-indigo-600/20 group-hover:scale-105 transition-transform duration-500">
-                                    di
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="flex flex-col items-end">
-                                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-100 mb-1">
-                                            <Target size={12} />
-                                            {job.myCandidatesCount} / {job.targetHires} Hires
-                                        </div>
-                                        <span className={`px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-indigo-100`}>
-                                            {job.seniority}
-                                        </span>
-                                    </div>
-                                    <div className="p-2 text-slate-300 group-hover:text-indigo-600 transition-colors">
-                                        <ChevronRight size={20} />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="mb-6">
-                                <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight group-hover:text-indigo-600 transition-colors mb-2">{job.title_es || job.title}</h3>
-                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                                    <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium italic">
-                                        <MapPin size={14} className="text-slate-400" />
-                                        {job.location_es || job.location || 'Remoto'}
-                                    </div>
-                                    <div className="flex items-center gap-1.5 text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-100 text-xs">
-                                        <Globe size={14} />
-                                        U$S {job.salary_range}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
-                                <div className="flex flex-col gap-2 w-full">
-                                    <div className="flex items-center justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest italic">
-                                        <span>Candidatos Presentados</span>
-                                        <span>{job.totalCandidatesCount} Total</span>
-                                    </div>
-                                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-indigo-600 transition-all duration-1000" style={{ width: `${progress}%` }}></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Decor */}
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 -mr-16 -mt-16 rounded-full group-hover:bg-indigo-600/10 transition-colors"></div>
-                        </div>
-                    );
-                }) : (
-                    <div className="col-span-full p-20 text-center bg-white rounded-2xl border border-dashed border-slate-200 text-slate-400 italic font-medium uppercase text-sm">
-                        No hay vacantes activas en este momento.
-                    </div>
+            {/* Jobs Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-20">
+                {loading ? (
+                    Array(4).fill(0).map((_, i) => <JobSkeleton key={i} />)
+                ) : (
+                    <>
+                        {filteredJobs.map((job) => (
+                            <JobCard key={job.id} job={job} />
+                        ))}
+                        {/* If no jobs, show placeholder or create new */}
+                        {filteredJobs.length === 0 && (
+                             <div className="col-span-full py-32 flex flex-col items-center justify-center bg-white rounded-3xl border-2 border-dashed border-[#E2E8F0] text-[#737785]">
+                                 <Briefcase size={48} className="mb-4 opacity-20" />
+                                 <p className="font-semibold">No jobs found matches your criteria</p>
+                             </div>
+                        )}
+                    </>
                 )}
+            </div>
+        </div>
+    );
+}
+
+function FilterButton({ label, value }: { label: string, value: string }) {
+    return (
+        <div className="flex flex-col gap-1.5">
+            <span className="text-[10px] font-bold text-[#737785] tracking-widest pl-1">{label}</span>
+            <button className="flex items-center gap-6 px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-xl text-[13px] font-semibold text-[#191C1D] hover:bg-[#F8FAFC] transition-all min-w-[200px] justify-between group">
+                {value}
+                <ChevronDown size={16} className="text-[#737785] group-hover:text-[#0040A1] transition-transform group-hover:translate-y-0.5" />
+            </button>
+        </div>
+    );
+}
+
+function JobCard({ job }: { job: Job }) {
+    const isPaused = job.status === 'Paused';
+    
+    return (
+        <div className={`rounded-3xl p-8 transition-all duration-300 relative group overflow-hidden h-fit ${
+            isPaused 
+            ? 'bg-[#F8FAFC] border-2 border-dashed border-[#E2E8F0] opacity-80' 
+            : 'bg-white border border-[#E2E8F0] hover:shadow-2xl hover:shadow-[#0040A1]/5 hover:translate-y-[-4px]'
+        }`}>
+            {/* Header Content */}
+            <div className="flex justify-between items-start mb-4">
+                <span className="px-3 py-1 bg-[#E8F0FF] text-[#0040A1] text-[10px] font-black tracking-widest rounded-lg uppercase">
+                    {job.department || 'ENGINEERING'}
+                </span>
+                <button className="p-1.5 text-[#737785] hover:bg-slate-50 hover:text-[#191C1D] rounded-full transition-all">
+                    <MoreVertical size={20} />
+                </button>
+            </div>
+
+            <h3 className="text-[22px] font-bold text-[#191C1D] mb-4 group-hover:text-[#0040A1] transition-colors">
+                {job.title_es || job.title}
+            </h3>
+
+            <div className="flex items-center gap-4 mb-8">
+                <div className="flex items-center gap-1.5 text-[#737785]">
+                    <MapPin size={16} />
+                    <span className="text-[13px] font-semibold">{job.location_es || job.location || 'Remote'}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[#737785]">
+                    <Clock size={16} />
+                    <span className="text-[13px] font-semibold">{job.type || 'Full-time'}</span>
+                </div>
+            </div>
+
+            {/* Pipeline Section */}
+            <div className="bg-[#F8FAFC] rounded-2xl p-6 relative">
+                 <div className="flex items-center justify-between mb-6">
+                    {/* Avatars */}
+                    <div className="flex -space-x-3 overflow-hidden">
+                        {[1, 2, 3].map((i) => (
+                            <img
+                                key={i}
+                                className="inline-block h-10 w-10 rounded-full ring-4 ring-[#F8FAFC] object-cover"
+                                src={`https://i.pravatar.cc/100?u=${job.id + i}`}
+                                alt="Candidate"
+                            />
+                        ))}
+                        {job.countsByStatus.total > 3 && (
+                            <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#E2E8F0] text-[11px] font-bold text-[#737785] ring-4 ring-[#F8FAFC]">
+                                +{job.countsByStatus.total - 3}
+                            </div>
+                        )}
+                    </div>
+                    <span className="text-[9px] font-black tracking-widest text-[#737785] uppercase">Candidate Pipeline</span>
+                 </div>
+
+                 <div className="grid grid-cols-3 gap-4 border-t border-[#E2E8F0] pt-6">
+                    <PipelineStat label="NEW" count={job.countsByStatus.new} />
+                    <PipelineStat label="INTERVIEWING" count={job.countsByStatus.interviewing} />
+                    <PipelineStat label="OFFER" count={job.countsByStatus.offer} />
+                 </div>
+            </div>
+
+            {/* Footer Row */}
+            {!isPaused ? (
+                 <div className="mt-8 pt-8 flex items-center justify-between border-t border-[#F1F5F9]">
+                    <div className="text-[12px] font-medium text-[#737785] flex items-center gap-1.5">
+                        <span>Posted {job.days_open || 0} days ago</span>
+                        <span className="w-1 h-1 bg-[#E2E8F0] rounded-full"></span>
+                        <span>Days Open: {(job.days_open || 0) + 12}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all">
+                            Edit
+                        </button>
+                        <button className="px-5 py-2.5 bg-[#0040A1] hover:bg-[#003380] text-white text-[13px] font-bold rounded-xl transition-all shadow-lg shadow-[#0040A1]/10">
+                            View Candidates
+                        </button>
+                    </div>
+                 </div>
+            ) : (
+                <div className="mt-6 border-t border-[#E2E8F0] pt-6">
+                    <div className="flex items-center gap-2 mb-4 text-[#737785]">
+                         <div className="w-8 h-8 rounded-full bg-[#E2E8F0] flex items-center justify-center">
+                            <Play size={14} fill="currentColor" />
+                         </div>
+                         <span className="text-[14px] font-bold">Status: Paused</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                         <span className="text-[12px] font-medium text-[#737785]">Paused 1 day ago • Days Open: 45</span>
+                         <button className="px-6 py-2.5 bg-[#E1E7EF] hover:bg-[#D1D5DB] text-[#475569] text-[13px] font-bold rounded-xl transition-all">
+                            Resume Search
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Background elements to match the "Paused" feel */}
+            {isPaused && (
+                <div className="absolute inset-0 bg-white/10 pointer-events-none"></div>
+            )}
+        </div>
+    );
+}
+
+function PipelineStat({ label, count }: { label: string, count: number }) {
+    return (
+        <div className="flex flex-col items-center gap-1">
+            <span className="text-[20px] font-black text-[#191C1D]">{count}</span>
+            <span className="text-[9px] font-black text-[#737785] tracking-widest uppercase">{label}</span>
+        </div>
+    );
+}
+
+function JobSkeleton() {
+    return (
+        <div className="bg-white border border-[#E2E8F0] rounded-3xl p-8 animate-pulse">
+            <div className="flex justify-between mb-6">
+                <div className="h-6 w-20 bg-slate-100 rounded-lg"></div>
+                <div className="h-6 w-6 bg-slate-100 rounded-full"></div>
+            </div>
+            <div className="h-8 w-64 bg-slate-100 rounded-lg mb-4"></div>
+            <div className="h-5 w-40 bg-slate-100 rounded-lg mb-8"></div>
+            <div className="h-32 bg-slate-50 rounded-2xl mb-8"></div>
+            <div className="flex justify-between items-center">
+                <div className="h-5 w-32 bg-slate-50 rounded-lg"></div>
+                <div className="flex gap-3">
+                    <div className="h-10 w-20 bg-slate-50 rounded-xl"></div>
+                    <div className="h-10 w-32 bg-slate-100 rounded-xl"></div>
+                </div>
             </div>
         </div>
     );

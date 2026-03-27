@@ -43,32 +43,31 @@ export default async function AtsDashboardLayout({
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden relative">
 
-                {/* Header - Exact Figma Specs */}
+                {/* Header - Refined for Pixel Perfect search and profile area */}
                 <header className="h-20 bg-white border-b border-[#E2E8F0] flex items-center justify-between px-10 shrink-0 z-20">
-                    {/* Search Bar - Figma Style */}
-                    <div className="flex-1 max-w-2xl">
-                        <div className="relative group">
-                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-[#737785] group-focus-within:text-[#0040A1] transition-colors" size={18} />
-                            <input 
-                                type="text" 
-                                placeholder="Search candidates, jobs, or tasks..." 
-                                className="w-full bg-[#F1F5F9] border border-transparent focus:bg-white focus:border-[#0040A1] rounded-xl py-3 pl-14 pr-6 text-[13px] font-medium transition-all outline-none text-[#191C1D]"
-                            />
-                        </div>
+                    <div className="flex-1">
+                        {/* Title area can be empty here if page handles it, or used for shared elements */}
                     </div>
 
-                    <div className="flex items-center gap-8 ml-8">
-                        <div className="flex items-center gap-4 text-[#737785] border-r border-[#E2E8F0] pr-8">
+                    <div className="flex items-center gap-6">
+                        {/* Search Bar - Moved to the right to match image */}
+                        <div className="relative group w-80">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#737785] group-focus-within:text-[#0040A1] transition-colors" size={16} />
+                            <input 
+                                type="text" 
+                                placeholder="Search roles..." 
+                                className="w-full bg-[#F1F5F9] border border-transparent focus:bg-white focus:border-[#0040A1] rounded-xl py-2.5 pl-11 pr-4 text-[13px] font-medium transition-all outline-none text-[#191C1D]"
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-4 text-[#737785]">
                             <button className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#F1F5F9] hover:text-[#191C1D] transition-all relative">
                                 <Bell size={20} />
                                 <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#B3261E] rounded-full border-2 border-white"></span>
                             </button>
-                            <button className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#F1F5F9] hover:text-[#191C1D] transition-all">
-                                <HelpCircle size={20} />
-                            </button>
                         </div>
 
-                        {/* Profile Section - Integrated with Menu */}
+                        {/* Profile Section */}
                         <ProfileMenu 
                             name={name} 
                             role={role || 'Recruiter'} 
