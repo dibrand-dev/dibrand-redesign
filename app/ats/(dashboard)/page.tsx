@@ -27,7 +27,9 @@ export default async function AtsDashboard() {
     ];
 
     const jobs = await getRecruiterJobs();
-    const recentJobs = jobs.slice(0, 5);
+    const recentJobs = jobs
+        .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .slice(0, 5);
 
     return (
         <div className="space-y-6 animate-in fade-in duration-700">
@@ -97,7 +99,7 @@ export default async function AtsDashboard() {
                                     {recentJobs.length > 0 ? recentJobs.map((job: any) => (
                                         <tr key={job.id} className="hover:bg-[#F8FAFC] transition-colors cursor-pointer group/row">
                                             <td className="px-6 py-5">
-                                                <Link href={`/ats/candidates?jobId=${job.id}`}>
+                                                <Link href={`/ats/jobs/${job.id}`}>
                                                     <p className="text-[14px] font-semibold text-[#191C1D] group-hover/row:text-[#0040A1] transition-colors">{job.title}</p>
                                                     <p className="text-[12px] text-[#737785]">{job.industry}</p>
                                                 </Link>

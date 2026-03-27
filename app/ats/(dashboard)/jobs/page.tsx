@@ -12,6 +12,7 @@ import {
     Play,
     Plus
 } from 'lucide-react';
+import Link from 'next/link';
 import { getRecruiterJobs } from '../../actions';
 
 interface Job {
@@ -172,9 +173,11 @@ function JobCard({ job }: { job: Job }) {
                 </button>
             </div>
 
-            <h3 className="text-[22px] font-bold text-[#191C1D] mb-4 group-hover:text-[#0040A1] transition-colors">
-                {job.title_es || job.title}
-            </h3>
+            <Link href={`/ats/jobs/${job.id}`}>
+                <h3 className="text-[22px] font-bold text-[#191C1D] mb-4 group-hover:text-[#0040A1] transition-colors">
+                    {job.title_es || job.title}
+                </h3>
+            </Link>
 
             <div className="flex items-center gap-4 mb-8">
                 <div className="flex items-center gap-1.5 text-[#737785]">
@@ -228,9 +231,9 @@ function JobCard({ job }: { job: Job }) {
                         <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all">
                             Edit
                         </button>
-                        <button className="px-5 py-2.5 bg-[#0040A1] hover:bg-[#003380] text-white text-[13px] font-bold rounded-xl transition-all shadow-lg shadow-[#0040A1]/10">
+                        <Link href={`/ats/jobs/${job.id}`} className="px-5 py-2.5 bg-[#0040A1] hover:bg-[#003380] text-white text-[13px] font-bold rounded-xl transition-all shadow-lg shadow-[#0040A1]/10">
                             View Candidates
-                        </button>
+                        </Link>
                     </div>
                  </div>
             ) : (

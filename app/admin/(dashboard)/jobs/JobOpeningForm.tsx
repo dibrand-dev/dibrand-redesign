@@ -38,7 +38,7 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
     const modalities = ['Remoto', 'Híbrido', 'Presencial'];
     const industries = [
         'Fintech', 'Pharma', 'eCommerce', 'Big Tech', 'Automotive',
-        'Energy', 'SaaS', 'Retail', 'Entertainment & Media', 'Other'
+        'Energy', 'SaaS', 'Retail', 'Entertainment & Media', 'Tolling', 'Other'
     ];
     const seniorities = ['Trainee', 'Junior', 'Semi Senior', 'Senior'];
 
