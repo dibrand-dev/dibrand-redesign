@@ -53,7 +53,7 @@ export default function Footer({ dict, lang }: FooterProps) {
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 mb-12">
                         <div className="flex flex-col gap-2">
-                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Expertise</span>
+                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">{dict.footer.expertise || 'Expertise'}</span>
                             <a href={`/${lang}/software-development`} className="text-zinc-200 hover:text-white transition-colors text-sm font-medium">
                                 {dict.navigation.softwareDevelopment}
                             </a>
@@ -65,7 +65,7 @@ export default function Footer({ dict, lang }: FooterProps) {
                             </a>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Company</span>
+                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">{dict.footer.company || 'Company'}</span>
                             <a href={`/${lang}/about`} className="text-zinc-200 hover:text-white transition-colors text-sm font-medium">
                                 {dict.navigation.aboutUs}
                             </a>
@@ -74,7 +74,7 @@ export default function Footer({ dict, lang }: FooterProps) {
                             </a>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Work</span>
+                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">{dict.footer.work || 'Work'}</span>
                             <a href={`/${lang}/success-stories`} className="text-zinc-200 hover:text-white transition-colors text-sm font-medium">
                                 {dict.navigation.portfolio}
                             </a>

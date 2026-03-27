@@ -20,7 +20,10 @@
         "title1": "Hablemos",
         "title2": "sobre tu próximo desafío.",
         "subtitle": "Cuéntanos cómo te podemos ayudar.",
-        "phones": "Teléfonos"
+        "phones": "Teléfonos",
+        "expertise": "Experiencia",
+        "company": "Empresa",
+        "work": "Trabajo"
     },
     "home": {
         "hero": {
@@ -53,7 +56,7 @@
             ]
         },
         "services": {
-            "title": "Dibrand solution ecosystem",
+            "title": "Ecosistema de soluciones",
             "subtitle": "Una infraestructura integral de ejecución diseñada para eliminar la fricción técnica y maximizar el retorno de inversión en cada etapa del desarrollo.",
             "items": [
                 {

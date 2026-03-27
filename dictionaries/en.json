@@ -20,7 +20,10 @@
         "title1": "Let's talk",
         "title2": "about your next project.",
         "subtitle": "Tell us how we can help you.",
-        "phones": "Phones"
+        "phones": "Phones",
+        "expertise": "Expertise",
+        "company": "Company",
+        "work": "Work"
     },
     "home": {
         "hero": {

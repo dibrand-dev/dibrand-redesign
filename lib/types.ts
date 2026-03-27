@@ -21,6 +21,10 @@ export interface Dictionary {
         title1: string;
         title2: string;
         subtitle: string;
+        phones?: string;
+        expertise?: string;
+        company?: string;
+        work?: string;
     };
     home: {
         hero: {
