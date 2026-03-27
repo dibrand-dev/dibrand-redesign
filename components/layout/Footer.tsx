@@ -82,7 +82,7 @@ export default function Footer({ dict, lang }: FooterProps) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Follow us</span>
+                        <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">{dict.footer.followUs || 'Follow us'}</span>
                         <div className="flex items-center gap-4 mt-2">
                             <a href="https://www.linkedin.com/company/dibrand/" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors">
                                 <FaLinkedin size={28} />

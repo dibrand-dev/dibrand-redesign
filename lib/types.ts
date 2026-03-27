@@ -25,6 +25,7 @@ export interface Dictionary {
         expertise?: string;
         company?: string;
         work?: string;
+        followUs?: string;
     };
     home: {
         hero: {
