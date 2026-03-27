@@ -120,7 +120,7 @@ export async function getRecruiterJobs() {
         .from('job_openings')
         .select(`
             *,
-            candidates:job_applications(id, recruiter_id, status, is_deleted)
+            candidates:job_applications(id, recruiter_id, status, is_deleted, avatar_url)
         `);
 
     if (jobsError) {
@@ -161,8 +161,11 @@ export async function getRecruiterJobs() {
             totalCandidatesCount: uiCounts.total,
             targetHires: job.target_hires || 1,
             countsByStatus: uiCounts,
-            // Mock avatars for now as they aren't readily available in this query without an extra join
-            avatars: ['https://i.pravatar.cc/150?u=1', 'https://i.pravatar.cc/150?u=2', 'https://i.pravatar.cc/150?u=3']
+            // Real avatars from candidates (limit to 3)
+            avatars: (isAdmin ? activeCandidates : recruiterCandidates)
+                .map((c: any) => c.avatar_url)
+                .filter((url: string) => !!url)
+                .slice(0, 3)
         };
     }) || [];
 }

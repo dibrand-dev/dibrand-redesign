@@ -34,6 +34,7 @@ interface Job {
     };
     posted_at?: string;
     days_open?: number;
+    totalCandidatesCount: number; // total candidates assigned to this job
     avatars: string[];
 }
 
@@ -54,7 +55,8 @@ export default function AtsJobsPage() {
                 posted_at: j.created_at,
                 days_open: Math.floor((Date.now() - new Date(j.created_at).getTime()) / (1000 * 60 * 60 * 24)) || 0,
             }));
-            setJobs(transformed);
+            const sorted = transformed.sort((a, b) => new Date(b.posted_at!).getTime() - new Date(a.posted_at!).getTime());
+            setJobs(sorted);
             setLoading(false);
         };
         fetchJobs();
@@ -174,9 +176,13 @@ function JobCard({ job }: { job: Job }) {
             </div>
 
             <Link href={`/ats/jobs/${job.id}`}>
-                <h3 className="text-[22px] font-bold text-[#191C1D] mb-4 group-hover:text-[#0040A1] transition-colors">
-                    {job.title_es || job.title}
-                </h3>
+                    <h3 className="text-[22px] font-bold text-[#191C1D] mb-4 group-hover:text-[#0040A1] transition-colors">
+                        {(() => {
+                            const fullTitle = job.title_es || job.title || '';
+                            const maxChars = 40;
+                            return fullTitle.length > maxChars ? `${fullTitle.slice(0, maxChars - 3)}...` : fullTitle;
+                        })()}
+                    </h3>
             </Link>
 
             <div className="flex items-center gap-4 mb-8">
@@ -194,21 +200,23 @@ function JobCard({ job }: { job: Job }) {
             <div className="bg-[#F8FAFC] rounded-2xl p-6 relative">
                  <div className="flex items-center justify-between mb-6">
                     {/* Avatars */}
-                    <div className="flex -space-x-3 overflow-hidden">
-                        {[1, 2, 3].map((i) => (
-                            <img
-                                key={i}
-                                className="inline-block h-10 w-10 rounded-full ring-4 ring-[#F8FAFC] object-cover"
-                                src={`https://i.pravatar.cc/100?u=${job.id + i}`}
-                                alt="Candidate"
-                            />
-                        ))}
-                        {job.countsByStatus.total > 3 && (
-                            <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#E2E8F0] text-[11px] font-bold text-[#737785] ring-4 ring-[#F8FAFC]">
-                                +{job.countsByStatus.total - 3}
-                            </div>
-                        )}
-                    </div>
+                    {job.avatars && job.avatars.length > 0 ? (
+                        <div className="flex -space-x-3 overflow-hidden">
+                            {job.avatars.map((url: string, idx: number) => (
+                                <img
+                                    key={idx}
+                                    className="inline-block h-10 w-10 rounded-full ring-4 ring-[#F8FAFC] object-cover"
+                                    src={url}
+                                    alt="Candidate"
+                                />
+                            ))}
+                            {job.totalCandidatesCount > job.avatars.length && (
+                                <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#E2E8F0] text-[11px] font-bold text-[#737785] ring-4 ring-[#F8FAFC]">
+                                    +{job.totalCandidatesCount - job.avatars.length}
+                                </div>
+                            )}
+                        </div>
+                    ) : null}
                     <span className="text-[9px] font-black tracking-widest text-[#737785] uppercase">Candidate Pipeline</span>
                  </div>
 
@@ -222,11 +230,11 @@ function JobCard({ job }: { job: Job }) {
             {/* Footer Row */}
             {!isPaused ? (
                  <div className="mt-8 pt-8 flex items-center justify-between border-t border-[#F1F5F9]">
-                    <div className="text-[12px] font-medium text-[#737785] flex items-center gap-1.5">
-                        <span>Posted {job.days_open || 0} days ago</span>
-                        <span className="w-1 h-1 bg-[#E2E8F0] rounded-full"></span>
-                        <span>Days Open: {(job.days_open || 0) + 12}</span>
-                    </div>
+                        <span className="text-[12px] font-medium text-[#737785] flex items-center gap-1.5">
+                            <span>Posted {job.days_open || 0} days ago</span>
+                            <span className="w-1 h-1 bg-[#E2E8F0] rounded-full" />
+                            <span>Days Open: {Math.max(0, 30 - (job.days_open || 0))}</span>
+                        </span>
                     <div className="flex items-center gap-3">
                         <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all">
                             Edit

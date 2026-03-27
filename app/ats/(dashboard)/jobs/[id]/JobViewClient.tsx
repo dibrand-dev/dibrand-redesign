@@ -10,7 +10,8 @@ import {
     Calendar as CalendarIcon, 
     CornerUpRight,
     Bold, Italic, List, Link as LinkIcon, Heading1, Heading2,
-    CheckCircle2, Globe, Plus, Clock, MessageSquare
+    CheckCircle2, Globe, Plus, Clock, MessageSquare,
+    Link2, Eye, Save, Settings2, Sparkles, RefreshCcw
 } from 'lucide-react';
 
 interface JobData {
@@ -151,7 +152,7 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
 
             {/* Tabs Row */}
             <div className="flex items-center gap-8 border-b border-[#E2E8F0] mb-8">
-                {['Candidates', 'Job Description', 'Team', 'Settings'].map(tab => (
+                {['Candidates', 'Job Description', 'Team', 'Questionnaire'].map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
@@ -477,6 +478,245 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                             </div>
                         </div>
                     </>
+                )}
+
+                {/* QUESTIONNAIRE TAB */}
+                {activeTab === 'Questionnaire' && (
+                    <div className="col-span-full">
+                        {/* Tab Header specific to Questionnaire */}
+                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8 pt-2">
+                            <div>
+                                <h2 className="text-[28px] font-bold text-[#191C1D] mb-1 tracking-tight">Job Questionnaire</h2>
+                                <p className="text-[14px] text-[#475569] font-medium">Standard vetting form for {title} applicants.</p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <button className="flex items-center gap-2 text-[#0040A1] font-bold text-[13px] hover:bg-[#F8FAFC] px-4 py-2 rounded-lg transition-colors">
+                                    <Link2 size={16} /> Copy Link to Questionnaire
+                                </button>
+                                <button className="flex items-center gap-2 text-[#0040A1] font-bold text-[13px] hover:bg-[#F8FAFC] px-4 py-2 rounded-lg transition-colors">
+                                    <Eye size={16} /> Preview Form
+                                </button>
+                                <button className="flex items-center gap-2 bg-[#0040A1] hover:bg-[#003380] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-colors">
+                                    <Save size={16} /> Save Questionnaire
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                            {/* Editor Area (Left 8 cols) */}
+                            <div className="lg:col-span-8">
+                                <div className="bg-white rounded-2xl shadow-sm border border-[#E2E8F0] overflow-hidden">
+                                    {/* Toolbar */}
+                                    <div className="flex items-center justify-between px-8 py-4 bg-[#F8FAFC] border-b border-[#E2E8F0]">
+                                        <div className="flex items-center gap-6 text-[#191C1D]">
+                                            <button className="hover:text-[#0040A1] transition-colors"><Bold size={16} /></button>
+                                            <button className="hover:text-[#0040A1] transition-colors"><Italic size={16} /></button>
+                                            <button className="hover:text-[#0040A1] transition-colors"><List size={16} /></button>
+                                            <button className="hover:text-[#0040A1] transition-colors"><LinkIcon size={16} /></button>
+                                        </div>
+                                        <span className="text-[10px] font-black text-[#737785] tracking-widest uppercase">EDITING MODE</span>
+                                    </div>
+                                    
+                                    {/* Editor Content Area */}
+                                    <div className="p-10 font-serif text-[#191C1D]">
+                                        {/* Intro Section */}
+                                        <div className="mb-10">
+                                            <h3 className="text-[13px] font-black tracking-widest uppercase mb-6 font-sans border-b border-[#E2E8F0] pb-2 text-[#191C1D]">CONTACT INFORMATION</h3>
+                                            
+                                            <div className="space-y-6">
+                                                <div className="flex items-baseline gap-4">
+                                                    <span className="font-bold whitespace-nowrap text-[15px]">Name:</span>
+                                                    <div className="flex-1 border-b border-[#E2E8F0] h-5"></div>
+                                                </div>
+                                                <div className="flex items-baseline gap-4">
+                                                    <span className="font-bold whitespace-nowrap text-[15px]">Personal email:</span>
+                                                    <div className="flex-1 border-b border-[#E2E8F0] h-5"></div>
+                                                </div>
+                                                <div className="flex items-baseline gap-4">
+                                                    <span className="font-bold whitespace-nowrap text-[15px]">Phone:</span>
+                                                    <div className="flex-1 border-b border-[#E2E8F0] h-5"></div>
+                                                </div>
+                                                <div className="flex items-baseline gap-4">
+                                                    <span className="font-bold whitespace-nowrap text-[15px]">LinkedIn:</span>
+                                                    <div className="flex-1 border-b border-[#E2E8F0] h-5"></div>
+                                                </div>
+                                                <div className="flex items-baseline gap-4">
+                                                    <span className="font-bold whitespace-nowrap text-[15px]">Country:</span>
+                                                    <div className="flex-1 border-b border-[#E2E8F0] h-5"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Questions Section */}
+                                        <div>
+                                            <h3 className="text-[13px] font-black tracking-widest uppercase mb-6 font-sans border-b border-[#E2E8F0] pb-2 text-[#191C1D]">ABOUT YOUR EXPERIENCE</h3>
+                                            
+                                            <div className="space-y-10">
+                                                {/* Q1 */}
+                                                <div>
+                                                    <p className="font-bold text-[15px] mb-4 leading-relaxed tracking-tight">
+                                                        1. How many years of experience do you have with .NET Development (C#, ASP.NET, .NET Core)? *
+                                                    </p>
+                                                    <div className="flex items-baseline gap-4">
+                                                        <span className="text-[15px]">Answer:</span>
+                                                        <div className="flex-1 border-b border-[#E2E8F0]"></div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Q2 */}
+                                                <div className="pt-2">
+                                                    <p className="font-bold text-[15px] mb-4 leading-relaxed tracking-tight">
+                                                        2. How many years of experience do you have with the following technologies?
+                                                    </p>
+                                                    <div className="space-y-4 pl-4 text-[15px]">
+                                                        <div className="flex items-baseline gap-3">
+                                                            <span className="text-[#64748B]">•</span>
+                                                            <span className="whitespace-nowrap">SQL Server (Advanced queries, optimization):</span>
+                                                            <div className="flex-1 border-b border-[#E2E8F0]"></div>
+                                                        </div>
+                                                        <div className="flex items-baseline gap-3">
+                                                            <span className="text-[#64748B]">•</span>
+                                                            <span className="whitespace-nowrap">Microservices Architecture:</span>
+                                                            <div className="flex-1 border-b border-[#E2E8F0]"></div>
+                                                        </div>
+                                                        <div className="flex items-baseline gap-3">
+                                                            <span className="text-[#64748B]">•</span>
+                                                            <span className="whitespace-nowrap">Frontend Frameworks (React, Angular or similar):</span>
+                                                            <div className="flex-1 border-b border-[#E2E8F0]"></div>
+                                                        </div>
+                                                        <div className="flex items-baseline gap-3">
+                                                            <span className="text-[#64748B]">•</span>
+                                                            <span className="whitespace-nowrap">Cloud Platforms (Azure/AWS):</span>
+                                                            <div className="flex-1 border-b border-[#E2E8F0]"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Q3 */}
+                                                <div className="pt-2">
+                                                    <p className="font-bold text-[15px] mb-3 leading-relaxed tracking-tight">
+                                                        3. Have you worked as a contractor remotely for international clients? *
+                                                    </p>
+                                                    <div className="flex items-center gap-6 font-sans text-[14px]">
+                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> Yes</label>
+                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> No</label>
+                                                    </div>
+                                                </div>
+
+                                                {/* Q4 */}
+                                                <div className="pt-2">
+                                                    <p className="font-bold text-[15px] mb-4 leading-relaxed tracking-tight">
+                                                        4. Are you currently working? If yes, please describe your current role. *
+                                                    </p>
+                                                    <div className="w-full border-b border-dashed border-[#E2E8F0] mt-8"></div>
+                                                    <div className="w-full border-b border-dashed border-[#E2E8F0] mt-8"></div>
+                                                </div>
+
+                                                {/* Q5 */}
+                                                <div className="pt-2">
+                                                    <p className="font-bold text-[15px] mb-2 leading-relaxed tracking-tight">
+                                                        5. Do you have experience designing or maintaining Microservices?
+                                                    </p>
+                                                    <p className="text-[13px] text-[#64748B] italic mb-4">
+                                                        Please elaborate on your role and the tools used (e.g., Docker, Kubernetes, Service Bus).
+                                                    </p>
+                                                    <div className="w-full border-b border-dashed border-[#E2E8F0] mt-8"></div>
+                                                    <div className="w-full border-b border-dashed border-[#E2E8F0] mt-8"></div>
+                                                </div>
+
+                                                {/* Q6 */}
+                                                <div className="pt-2">
+                                                    <p className="font-bold text-[15px] mb-1 leading-relaxed tracking-tight">
+                                                        6. Do you have an advanced level of spoken English (B2 or higher)? *
+                                                    </p>
+                                                    <p className="text-[9px] font-sans font-black tracking-widest text-[#737785] uppercase mb-4">
+                                                        NOTE: A TECHNICAL INTERVIEW IN ENGLISH WILL BE REQUIRED.
+                                                    </p>
+                                                    <div className="flex items-center gap-6 font-sans text-[14px]">
+                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> Yes</label>
+                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> No</label>
+                                                    </div>
+                                                </div>
+
+                                                {/* Q7 - Box */}
+                                                <div className="border border-[#CBD5E1] rounded-lg p-6 my-6 bg-white shadow-sm">
+                                                    <p className="font-bold text-[15px] mb-4 leading-relaxed tracking-tight">
+                                                        7. The client requires a background check (Criminal Records Certificate) and a drug test. Are you willing to provide/undergo these? *
+                                                    </p>
+                                                    <div className="flex items-center gap-6 font-sans text-[14px]">
+                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> Yes</label>
+                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> No</label>
+                                                    </div>
+                                                </div>
+
+                                                {/* Q8 */}
+                                                <div className="pt-2">
+                                                    <p className="font-bold text-[15px] mb-4 leading-relaxed tracking-tight">
+                                                        8. Do you have any planned vacations or time off in the next 6 months? *
+                                                    </p>
+                                                    <div className="flex items-baseline gap-4">
+                                                        <span className="text-[15px]">Answer:</span>
+                                                        <div className="flex-1 border-b border-[#E2E8F0]"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Sidebar Area (Right 4 cols) */}
+                            <div className="lg:col-span-4 space-y-6">
+                                {/* Settings Card */}
+                                <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm">
+                                    <div className="flex items-center gap-2 mb-6 text-[#191C1D] font-bold text-[15px]">
+                                        <Settings2 size={18} className="text-[#0040A1]" /> Questionnaire Settings
+                                    </div>
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center text-[13px] border-b border-[#F1F5F9] pb-4">
+                                            <span className="text-[#737785]">Estimated Time</span>
+                                            <span className="font-bold text-[#191C1D]">12-15 mins</span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-[13px] border-b border-[#F1F5F9] pb-4">
+                                            <span className="text-[#737785]">Required Questions</span>
+                                            <span className="font-bold text-[#191C1D]">8 of 14</span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-[13px] pt-1">
+                                            <span className="text-[#737785]">Language</span>
+                                            <span className="font-bold text-[#191C1D] flex items-center gap-1.5"><Globe size={14} /> English (US)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* AI Vetting Card */}
+                                <div className="bg-[#0060F0] rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
+                                    {/* background glow */}
+                                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 blur-3xl rounded-full"></div>
+                                    <div className="relative z-10">
+                                        <Sparkles size={24} className="mb-4" />
+                                        <h3 className="text-[16px] font-bold mb-2">AI-Powered Vetting</h3>
+                                        <p className="text-[13px] font-medium leading-relaxed max-w-[90%] text-white/90 mb-6 font-sans">
+                                            Let our system automatically rank candidates based on these questionnaire answers to save your team 15+ hours per week.
+                                        </p>
+                                        <button className="bg-white hover:bg-[#F8FAFC] text-[#0040A1] text-[12px] font-black uppercase tracking-widest px-5 py-3 rounded-lg w-full transition-colors shadow-sm">
+                                            ENABLE AUTO-VETTING
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Status Card */}
+                                <div className="bg-[#E8F0FF] rounded-2xl p-5 border border-[#D6E3FB] shadow-sm flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-[#0040A1] shadow-sm shrink-0">
+                                        <RefreshCcw size={18} />
+                                    </div>
+                                    <div>
+                                        <span className="text-[9px] font-black uppercase tracking-widest text-[#737785] block mb-0.5">STATUS</span>
+                                        <span className="text-[14px] font-bold text-[#191C1D]">Draft - Not Live</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 )}
             </div>
         </div>
