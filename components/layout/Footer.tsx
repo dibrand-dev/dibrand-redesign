@@ -32,68 +32,68 @@ export default function Footer({ dict, lang }: FooterProps) {
                         </span>
                     </h2>
 
-                    <p className="text-xl text-gray-400 mb-8">
+                    <p className="text-xl text-zinc-100 mb-8">
                         {dict.footer.subtitle}
                     </p>
 
-                    <p className="text-gray-300 mb-8">
-                        PHONES: <a href="tel:+5491124522696" className="hover:text-white transition-colors">+54 9 11 2452 2696</a> &nbsp;{" "}&nbsp; <a href="tel:+5491165939115" className="hover:text-white transition-colors">+54 9 11 6593 9115</a>
+                    <p className="text-white/90 mb-8 font-medium">
+                        PHONES: <a href="tel:+5491124522696" className="hover:text-white transition-colors underline underline-offset-4 decoration-white/20 hover:decoration-white">+54 9 11 2452 2696</a> &nbsp;{" "}&nbsp; <a href="tel:+5491165939115" className="hover:text-white transition-colors underline underline-offset-4 decoration-white/20 hover:decoration-white">+54 9 11 6593 9115</a>
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
                         <div>
-                            <h4 className="font-bold text-white">USA</h4>
-                            <p className="text-gray-400">Sheridan, Wyoming</p>
+                            <h4 className="font-bold text-white uppercase text-[10px] tracking-widest mb-1.5 opacity-50">USA</h4>
+                            <p className="text-zinc-200 font-medium">Sheridan, Wyoming</p>
                         </div>
                         <div>
-                            <h4 className="font-bold text-white">Argentina</h4>
-                            <p className="text-gray-400">Escobar, Buenos Aires</p>
+                            <h4 className="font-bold text-white uppercase text-[10px] tracking-widest mb-1.5 opacity-50">Argentina</h4>
+                            <p className="text-zinc-200 font-medium">Escobar, Buenos Aires</p>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 mb-12">
                         <div className="flex flex-col gap-2">
-                            <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-2">Expertise</span>
-                            <a href={`/${lang}/software-development`} className="text-gray-400 hover:text-brand transition-colors text-sm">
+                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Expertise</span>
+                            <a href={`/${lang}/software-development`} className="text-zinc-200 hover:text-white transition-colors text-sm font-medium">
                                 {dict.navigation.softwareDevelopment}
                             </a>
-                            <a href={`/${lang}/software-outsourcing`} className="text-gray-400 hover:text-brand transition-colors text-sm">
+                            <a href={`/${lang}/software-outsourcing`} className="text-zinc-200 hover:text-white transition-colors text-sm font-medium">
                                 {dict.navigation.softwareOutsourcing}
                             </a>
-                            <a href={`/${lang}/staff-augmentation`} className="text-gray-400 hover:text-brand transition-colors text-sm">
+                            <a href={`/${lang}/staff-augmentation`} className="text-zinc-200 hover:text-white transition-colors text-sm font-medium">
                                 {dict.navigation.staffAugmentation}
                             </a>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-2">Company</span>
-                            <a href={`/${lang}/about`} className="text-gray-400 hover:text-brand transition-colors text-sm">
+                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Company</span>
+                            <a href={`/${lang}/about`} className="text-zinc-200 hover:text-white transition-colors text-sm font-medium">
                                 {dict.navigation.aboutUs}
                             </a>
-                            <a href={`/${lang}/join-us`} className="text-gray-400 hover:text-brand transition-colors text-sm">
+                            <a href={`/${lang}/join-us`} className="text-zinc-200 hover:text-white transition-colors text-sm font-medium">
                                 {dict.navigation.careers}
                             </a>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-2">Work</span>
-                            <a href={`/${lang}/success-stories`} className="text-gray-400 hover:text-brand transition-colors text-sm">
+                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Work</span>
+                            <a href={`/${lang}/success-stories`} className="text-zinc-200 hover:text-white transition-colors text-sm font-medium">
                                 {dict.navigation.portfolio}
                             </a>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <span className="text-white font-medium">Follow us</span>
+                        <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Follow us</span>
                         <div className="flex items-center gap-4 mt-2">
-                            <a href="https://www.linkedin.com/company/dibrand/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <a href="https://www.linkedin.com/company/dibrand/" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors">
                                 <FaLinkedin size={28} />
                             </a>
-                            <a href="https://www.facebook.com/dibrand.ok" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <a href="https://www.facebook.com/dibrand.ok" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors">
                                 <FaFacebook size={28} />
                             </a>
-                            <a href="https://www.instagram.com/dibrand.ok/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <a href="https://www.instagram.com/dibrand.ok/" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors">
                                 <FaInstagram size={28} />
                             </a>
-                            <a href="https://x.com/Dibrand_ok" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                            <a href="https://x.com/Dibrand_ok" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors">
                                 <FaXTwitter size={28} />
                             </a>
                         </div>
@@ -107,8 +107,8 @@ export default function Footer({ dict, lang }: FooterProps) {
             </div>
 
             {/* Copyright & Legal Links */}
-            <div className="max-w-7xl mx-auto px-6 relative z-10 mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-400">
-                <p>© {new Date().getFullYear()} Dibrand LLC. {lang === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
+            <div className="max-w-7xl mx-auto px-6 relative z-10 mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] font-medium text-zinc-400 tracking-wide uppercase">
+                <p className="opacity-60">© {new Date().getFullYear()} Dibrand LLC. {lang === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
                 <div className="flex items-center gap-6">
                     <a href={lang === 'es' ? '/es/terminos-del-servicio' : '/terms-of-service'} className="hover:text-white transition-colors">
                         {lang === 'es' ? 'Términos y Condiciones' : 'Terms of Service'}
