@@ -57,43 +57,83 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "SoftwareBusiness",
-              "name": "Dibrand",
-              "alternateName": "Dibrand Engineering",
-              "url": "https://dibrand.co/",
-              "logo": "https://dibrand.co/logo.png",
-              "description": "Agencia boutique de ingeniería de software de élite. Especialistas en desarrollo de productos digitales, Staff Augmentation con el top 3% de talento de LATAM y flujos de trabajo potenciados por IA.",
-              "address": [
+              "@graph": [
                 {
-                  "@type": "PostalAddress",
-                  "streetAddress": "1309 Coffen Ave STE 1200",
-                  "addressLocality": "Sheridan",
-                  "addressRegion": "WY",
-                  "postalCode": "82801",
-                  "addressCountry": "USA"
+                  "@type": "ProfessionalService",
+                  "@id": "https://www.dibrand.co/#organization",
+                  "name": "Dibrand",
+                  "url": "https://www.dibrand.co/",
+                  "logo": "https://www.dibrand.co/logo.png", 
+                  "description": "Agencia global de ingeniería de software especializada en el desarrollo a medida de aplicaciones web y móviles de alta complejidad. Expertos en Software Outsourcing y Staff Augmentation desde el hub tecnológico Flytech en Escobar, Argentina.",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Belén de Escobar",
+                    "addressRegion": "Buenos Aires",
+                    "addressCountry": "AR",
+                    "streetAddress": "Puertos del Lago"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": "-34.3475",
+                    "longitude": "-58.7914"
+                  },
+                  "memberOf": {
+                    "@type": "Organization",
+                    "name": "Polo Tecnológico de Escobar Flytech",
+                    "url": "https://flytech.escobar.gob.ar/" 
+                  },
+                  "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "Servicios de Dibrand",
+                    "itemListElement": [
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Service",
+                          "name": "Desarrollo de Software a Medida",
+                          "description": "Diseño y construcción de aplicaciones web y móviles personalizadas escalables."
+                        }
+                      },
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Service",
+                          "name": "Software Outsourcing",
+                          "description": "Gestión integral de proyectos de desarrollo con equipos dedicados de ingeniería."
+                        }
+                      },
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Service",
+                          "name": "Staff Augmentation",
+                          "description": "Integración de talento técnico senior para escalar capacidades de desarrollo internas."
+                        }
+                      }
+                    ]
+                  },
+                  "sameAs": [
+                    "https://www.linkedin.com/company/dibrand/",
+                    "https://www.facebook.com/dibrand.ok",
+                    "https://www.instagram.com/dibrand.ok/",
+                    "https://x.com/Dibrand_ok",
+                    "https://maps.app.goo.gl/ds8jGdsN1Cri5CTL6"
+                  ]
                 },
                 {
-                  "@type": "PostalAddress",
-                  "streetAddress": "Avenida de los lagos 100, Puertos",
-                  "addressLocality": "Belén de Escobar",
-                  "addressRegion": "Buenos Aires",
-                  "postalCode": "1625",
-                  "addressCountry": "Argentina"
+                  "@type": "Organization",
+                  "name": "Dibrand LLC",
+                  "legalName": "Dibrand LLC",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressRegion": "Wyoming",
+                    "addressCountry": "US"
+                  },
+                  "parentOrganization": {
+                    "@id": "https://www.dibrand.co/#organization"
+                  }
                 }
-              ],
-              "knowsAbout": [
-                "Software Development",
-                "AI-Augmented Engineering",
-                "Staff Augmentation",
-                "Software Outsourcing",
-                "Custom AI Workflows",
-                "Strategic Architecture"
-              ],
-              "brand": {
-                "@type": "Brand",
-                "name": "Dibrand",
-                "slogan": "Elite Talent Only"
-              }
+              ]
             })
           }}
         />

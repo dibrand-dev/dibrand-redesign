@@ -66,42 +66,8 @@ export default async function Home(props: { params: Promise<{ lang: "en" | "es" 
 
   // 4. JSON-LD Organization
   // 4. JSON-LD Organization (Extended Authority)
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Dibrand",
-    "url": "https://dibrand.co",
-    "foundingDate": "2017",
-    "description": params.lang === 'es'
-      ? "Boutique de ingeniería de software y staff augmentation especializada en startups y productos digitales de alto rendimiento."
-      : "Software engineering boutique and staff augmentation specialized in startups and high-performance digital products.",
-    "logo": "https://dibrand.co/logo.png",
-    "sameAs": [
-      "https://www.linkedin.com/company/dibrand/",
-      "https://github.com/dibrand",
-      "https://twitter.com/dibrand",
-      "https://clutch.co/profile/dibrand"
-    ],
-    "knowsAbout": [
-      "Software Engineering",
-      "IT Staff Augmentation",
-      "MVP Development",
-      "Web & Mobile Applications",
-      "Fintech & Web3 Solutions"
-    ],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "sales",
-      "email": "hola@dibrand.co"
-    }
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
       <main>
         {/* 1. Hero Section (Reinvención del Valor) */}
         <HeroSection dict={dict.home} />
