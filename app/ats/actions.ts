@@ -161,11 +161,13 @@ export async function getRecruiterJobs() {
             totalCandidatesCount: uiCounts.total,
             targetHires: job.target_hires || 1,
             countsByStatus: uiCounts,
-            // Real avatars from candidates (limit to 3)
+            // Real avatars/initials from candidates (limit to 3 for UI)
             avatars: (isAdmin ? activeCandidates : recruiterCandidates)
-                .map((c: any) => c.avatar_url)
-                .filter((url: string) => !!url)
                 .slice(0, 3)
+                .map((c: any) => ({
+                    url: c.avatar_url,
+                    initials: `${c.first_name?.charAt(0) || ''}${c.last_name?.charAt(0) || ''}`
+                }))
         };
     }) || [];
 }

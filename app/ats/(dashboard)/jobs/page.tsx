@@ -35,7 +35,7 @@ interface Job {
     posted_at?: string;
     days_open?: number;
     totalCandidatesCount: number; // total candidates assigned to this job
-    avatars: string[];
+    avatars: { url?: string, initials: string }[];
 }
 
 export default function AtsJobsPage() {
@@ -202,13 +202,20 @@ function JobCard({ job }: { job: Job }) {
                     {/* Avatars */}
                     {job.avatars && job.avatars.length > 0 ? (
                         <div className="flex -space-x-3 overflow-hidden">
-                            {job.avatars.map((url: string, idx: number) => (
-                                <img
-                                    key={idx}
-                                    className="inline-block h-10 w-10 rounded-full ring-4 ring-[#F8FAFC] object-cover"
-                                    src={url}
-                                    alt="Candidate"
-                                />
+                            {job.avatars.map((av: any, idx: number) => (
+                                <div key={idx} className="relative inline-block h-10 w-10">
+                                    {av.url ? (
+                                        <img
+                                            className="h-full w-full rounded-full ring-4 ring-[#F8FAFC] object-cover"
+                                            src={av.url}
+                                            alt="Candidate"
+                                        />
+                                    ) : (
+                                        <div className="h-full w-full rounded-full bg-[#0040A1] ring-4 ring-[#F8FAFC] flex items-center justify-center text-white text-[11px] font-bold">
+                                            {av.initials}
+                                        </div>
+                                    )}
+                                </div>
                             ))}
                             {job.totalCandidatesCount > job.avatars.length && (
                                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#E2E8F0] text-[11px] font-bold text-[#737785] ring-4 ring-[#F8FAFC]">

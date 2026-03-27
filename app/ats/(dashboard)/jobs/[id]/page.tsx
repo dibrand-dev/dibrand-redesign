@@ -25,9 +25,10 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
                 requirements,
                 employment_type,
                 seniority,
+                salary_range,
                 created_at,
                 candidates:job_applications(
-                    id, first_name, last_name, email, status, created_at, is_deleted,
+                    id, first_name, last_name, email, status, created_at, is_deleted, avatar_url,
                     recruiter:recruiters(id, full_name, role, avatar_url)
                 )
             `)

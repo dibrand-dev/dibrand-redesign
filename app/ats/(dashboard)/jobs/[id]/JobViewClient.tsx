@@ -27,10 +27,10 @@ interface JobData {
     seniority?: string;
     stats?: {
         totalApplicants: number;
-        new: number;
-        screened: number;
-        interviewing: number;
-        offer: number;
+        newCount: number;
+        screenedCount: number;
+        interviewingCount: number;
+        offerCount: number;
         hiredCount: number;
         daysOpen: number;
     };
@@ -104,12 +104,11 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                         </>
                     ) : (
                         <>
-                            <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all flex items-center gap-2">
-                                <Share2 size={16} /> Share Job
-                            </button>
-                            <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all flex items-center gap-2">
-                                <Edit2 size={16} /> Edit
-                            </button>
+                            {isSuperAdmin && (
+                                <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all flex items-center gap-2">
+                                    <Edit2 size={16} /> Edit
+                                </button>
+                            )}
                         </>
                     )}
                 </div>
@@ -138,25 +137,23 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                         <div className="grid grid-cols-4 w-full rounded-2xl overflow-hidden h-24 shadow-sm border border-[#E2E8F0]">
                             <div className="bg-[#0040A1] p-4 flex flex-col justify-between relative">
                                 <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">NEW</span>
-                                <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.new || 0}</span>
+                                <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.newCount || 0}</span>
                             </div>
                             <div className="bg-[#0060F0] p-4 flex flex-col justify-between -ml-2 skew-x-[-10deg] border-l border-[#0040A1]/20 z-10">
                                 <div className="skew-x-[10deg] flex flex-col h-full justify-between">
                                     <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">SCREENED</span>
-                                    <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.screened || 0}</span>
+                                    <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.screenedCount || 0}</span>
                                 </div>
                             </div>
                             <div className="bg-[#5A6376] p-4 flex flex-col justify-between -ml-4 skew-x-[-10deg] border-l border-[#0040A1]/20 z-20">
                                 <div className="skew-x-[10deg] flex flex-col h-full justify-between pl-2">
                                     <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">INTERVIEWING</span>
-                                    <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.interviewing || 0}</span>
+                                    <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.interviewingCount || 0}</span>
                                 </div>
                             </div>
-                            <div className="bg-[#D6E3FB] p-4 flex flex-col justify-between -ml-6 skew-x-[-10deg] border-l border-white/20 z-30">
-                                <div className="skew-x-[10deg] flex flex-col h-full justify-between pl-4">
-                                    <span className="text-[10px] font-bold text-[#0040A1] tracking-widest uppercase">OFFER</span>
-                                    <span className="text-[28px] font-bold text-[#0040A1] leading-none">{job?.stats?.offer || 0}</span>
-                                </div>
+                            <div className="bg-[#191C1D] p-4 flex flex-col justify-between -ml-4 z-30">
+                                <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">OFFER</span>
+                                <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.offerCount || 0}</span>
                             </div>
                         </div>
                     </div>
@@ -201,9 +198,13 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                                     return (
                                         <div key={candidate.id} className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm flex items-center justify-between mb-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-xl bg-[#0040A1] flex items-center justify-center text-white font-bold text-[18px]">
-                                                    {candidate.first_name.charAt(0)}{candidate.last_name?.charAt(0)}
-                                                </div>
+                                                {candidate.avatar_url ? (
+                                                    <img src={candidate.avatar_url} alt="Avatar" className="w-12 h-12 rounded-xl object-cover" />
+                                                ) : (
+                                                    <div className="w-12 h-12 rounded-xl bg-[#0040A1] flex items-center justify-center text-white font-bold text-[18px]">
+                                                        {candidate.first_name.charAt(0)}{candidate.last_name?.charAt(0)}
+                                                    </div>
+                                                )}
                                                 <div>
                                                     <h4 className="text-[15px] font-bold text-[#191C1D] mb-1">{shortName}</h4>
                                                     <p className="text-[13px] text-[#737785]">Applied {timeAgo} • Candidate</p>
@@ -308,6 +309,7 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                     <>
                         <div className="lg:col-span-8 bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
                             {/* Editor Toolbar */}
+                          {isSuperAdmin && (
                             <div className="flex items-center gap-6 px-6 py-4 border-b border-[#E2E8F0] text-[#191C1D]">
                                 <button className="hover:text-[#0040A1] transition-colors"><Bold size={16} /></button>
                                 <button className="hover:text-[#0040A1] transition-colors"><Italic size={16} /></button>
@@ -317,6 +319,7 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                                 <button className="text-[13px] font-bold hover:text-[#0040A1] transition-colors">H1</button>
                                 <button className="text-[13px] font-bold hover:text-[#0040A1] transition-colors">H2</button>
                             </div>
+                          )}
                             
                             <div className="p-8">
                                 {job?.description ? (
@@ -387,47 +390,14 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                                 </div>
                             </div>
 
-                            {/* Visibility Card */}
-                            <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">VISIBILITY</h3>
-                                    <Globe size={16} className="text-[#0040A1]" />
-                                </div>
-                                
-                                <div className="space-y-3">
-                                    <div className="flex items-center justify-between bg-[#F8FAFC] p-3 rounded-xl border border-[#E2E8F0]">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 bg-[#0077B5] rounded flex items-center justify-center text-white font-bold text-[10px]">in</div>
-                                            <span className="text-[13px] font-bold text-[#191C1D]">LinkedIn</span>
-                                        </div>
-                                        <span className="px-2 py-0.5 bg-[#E8F0FF] text-[#0040A1] text-[9px] font-black tracking-widest rounded uppercase flex items-center gap-1">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#0040A1]"></span> LIVE
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center justify-between bg-[#F8FAFC] p-3 rounded-xl border border-[#E2E8F0]">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 bg-[#0CAA41] rounded flex items-center justify-center text-white font-bold text-[10px]">G</div>
-                                            <span className="text-[13px] font-bold text-[#191C1D]">Glassdoor</span>
-                                        </div>
-                                        <span className="px-2 py-0.5 bg-[#E8F0FF] text-[#0040A1] text-[9px] font-black tracking-widest rounded uppercase flex items-center gap-1">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#0040A1]"></span> LIVE
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center justify-between bg-[#F8FAFC] p-3 rounded-xl border border-[#E2E8F0]">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 bg-[#2164F4] rounded flex items-center justify-center text-white font-bold text-[10px]">I</div>
-                                            <span className="text-[13px] font-bold text-[#191C1D]">Indeed</span>
-                                        </div>
-                                        <span className="px-2 py-0.5 bg-[#E8F0FF] text-[#0040A1] text-[9px] font-black tracking-widest rounded uppercase flex items-center gap-1">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#0040A1]"></span> LIVE
-                                        </span>
-                                    </div>
-                                    
-                                    <button className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#E2E8F0] rounded-xl text-[#737785] text-[12px] font-bold hover:bg-[#F8FAFC] hover:text-[#0040A1] hover:border-[#0040A1]/30 transition-colors mt-2">
-                                        <Plus size={14} /> Add More Channels
-                                    </button>
-                                </div>
-                            </div>
+                             {/* Visibility Card */}
+                             <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm">
+                                 <div className="flex items-center justify-between mb-2">
+                                     <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">VISIBILITY</h3>
+                                     <span className="px-2 py-0.5 bg-[#F1F5F9] text-[#737785] text-[10px] font-bold rounded uppercase">OFFLINE</span>
+                                 </div>
+                                 <p className="text-[12px] text-[#737785] italic">This job listing is currently hidden from external boards.</p>
+                             </div>
 
                             {/* AI Tip Block */}
                             <div className="bg-[#0040A1] rounded-2xl p-6 text-white relative overflow-hidden">
@@ -509,6 +479,11 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                                 <button className="flex items-center gap-2 text-[#0040A1] font-bold text-[13px] hover:bg-[#F8FAFC] px-4 py-2 rounded-lg transition-colors">
                                     <Eye size={16} /> Preview Form
                                 </button>
+                                {isSuperAdmin && (
+                                    <button className="flex items-center gap-2 bg-[#0040A1] hover:bg-[#003380] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-colors">
+                                        <Edit2 size={16} /> Edit Questionnaire
+                                    </button>
+                                )}
                                 <button className="flex items-center gap-2 bg-[#0040A1] hover:bg-[#003380] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-colors">
                                     <Save size={16} /> Save Questionnaire
                                 </button>
