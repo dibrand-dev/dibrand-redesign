@@ -28,8 +28,7 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
                 salary_range,
                 created_at,
                 candidates:job_applications(
-                    id, first_name, last_name, email, status, created_at, is_deleted, avatar_url,
-                    recruiter:recruiters(id, full_name, role, avatar_url)
+                    id, first_name, last_name, email, status, created_at, is_deleted, avatar_url, recruiter_id
                 )
             `)
             .eq('id', params.id)
@@ -38,52 +37,55 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
         if (error) {
             console.error('Error fetching job details:', error);
         } else {
-            // Process candidates correctly
             const activeCandidates = (job.candidates || []).filter((c: any) => !c.is_deleted);
-            const totalApplicants = activeCandidates.length;
 
-            const countsByStatus = activeCandidates.reduce((acc: any, curr: any) => {
+            // Fetch all recruiters using service role to bypass RLS
+            const { createClient: createSupabase } = await import('@supabase/supabase-js');
+            const adminClient = createSupabase(
+                process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                process.env.SUPABASE_SERVICE_ROLE_KEY!
+            );
+            const { data: allRecruiters } = await adminClient.from('recruiters').select('id, full_name, role, avatar_url');
+            const recruiterMap: Record<string, any> = {};
+            (allRecruiters || []).forEach((r: any) => { recruiterMap[r.id] = r; });
+
+            // Inject recruiter data into candidates using direct map lookup
+            const candidatesWithRecruiters = activeCandidates.map((c: any) => ({
+                ...c,
+                recruiter: recruiterMap[c.recruiter_id] || null
+            }));
+
+            const totalApplicants = candidatesWithRecruiters.length;
+            const countsByStatus = candidatesWithRecruiters.reduce((acc: any, curr: any) => {
                 const status = curr.status || 'Applied';
                 acc[status] = (acc[status] || 0) + 1;
                 return acc;
             }, {});
 
-            // Extract unique recruiters for this job
+            // Extract unique recruiters for hiring team
             const teamMap = new Map();
-            activeCandidates.forEach((c: any) => {
-                const rec = Array.isArray(c.recruiter) ? c.recruiter[0] : c.recruiter;
-                if (rec && rec.id && !teamMap.has(rec.id)) {
-                    teamMap.set(rec.id, rec);
+            candidatesWithRecruiters.forEach((c: any) => {
+                if (c.recruiter?.id && !teamMap.has(c.recruiter.id)) {
+                    teamMap.set(c.recruiter.id, c.recruiter);
                 }
             });
             const team = Array.from(teamMap.values());
 
-            // Group into UI buckets
             const newCount = (countsByStatus['Applied'] || 0) + (countsByStatus['New'] || 0);
             const screenedCount = countsByStatus['Screening'] || 0;
-            const interviewingCount = countsByStatus['Interview'] || 0 + countsByStatus['Technical'] || 0;
+            const interviewingCount = (countsByStatus['Interview'] || 0) + (countsByStatus['Technical'] || 0);
             const offerCount = countsByStatus['Offered'] || 0;
             const hiredCount = countsByStatus['Hired'] || 0;
-
             const daysOpen = Math.floor((Date.now() - new Date(job.created_at).getTime()) / (1000 * 60 * 60 * 24)) || 0;
-            
-            // Sort to get recent activity
-            const recentActivity = activeCandidates
-                .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+            const recentActivity = candidatesWithRecruiters
+                .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                 .slice(0, 5);
 
             jobData = {
                 ...job,
                 team,
-                stats: {
-                    totalApplicants,
-                    newCount,
-                    screenedCount,
-                    interviewingCount,
-                    offerCount,
-                    hiredCount,
-                    daysOpen
-                },
+                stats: { totalApplicants, newCount, screenedCount, interviewingCount, offerCount, hiredCount, daysOpen },
                 recentActivity
             };
         }

@@ -191,13 +191,16 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                                 </button>
                             </div>
                             
-                            {job?.recentActivity && job.recentActivity.length > 0 ? (
+                             {job?.recentActivity && job.recentActivity.length > 0 ? (
                                 job.recentActivity.map((candidate: any, idx: number) => {
                                     const timeAgo = Math.floor((Date.now() - new Date(candidate.created_at).getTime()) / (1000 * 60 * 60)) + 'h ago';
                                     const shortName = `${candidate.first_name} ${candidate.last_name?.charAt(0) || ''}.`;
+                                    const recruiterData = Array.isArray(candidate.recruiter) ? candidate.recruiter[0] : candidate.recruiter;
+                                    const recruiterName = recruiterData?.full_name || 'Unassigned';
                                     return (
-                                        <div key={candidate.id} className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm flex items-center justify-between mb-4">
-                                            <div className="flex items-center gap-4">
+                                        <div key={candidate.id} className="group/card relative bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md hover:border-[#0040A1]/30 transition-all flex items-center justify-between mb-4">
+                                            <Link href={`/ats/candidates/${candidate.id}`} className="absolute inset-0 z-10" />
+                                            <div className="flex items-center gap-4 relative z-20 pointer-events-none">
                                                 {candidate.avatar_url ? (
                                                     <img src={candidate.avatar_url} alt="Avatar" className="w-12 h-12 rounded-xl object-cover" />
                                                 ) : (
@@ -207,17 +210,17 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                                                 )}
                                                 <div>
                                                     <h4 className="text-[15px] font-bold text-[#191C1D] mb-1">{shortName}</h4>
-                                                    <p className="text-[13px] text-[#737785]">Applied {timeAgo} • Candidate</p>
+                                                    <p className="text-[13px] text-[#737785]">Applied {timeAgo} • {recruiterName}</p>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-4">
+                                            <div className="flex items-center gap-4 relative z-30">
                                                 <span className="px-3 py-1 bg-[#E2E8F0] text-[#0040A1] text-[9px] font-black tracking-widest rounded-full uppercase">
-                                                    {candidate.status || 'NEW'}
+                                                    {candidate.status || 'Applied'}
                                                 </span>
-                                                <button className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F8FAFC] text-[#0040A1] hover:bg-[#E2E8F0] transition-colors">
+                                                <button className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F8FAFC] text-[#0040A1] hover:bg-[#E2E8F0] transition-colors pointer-events-auto">
                                                     <CalendarIcon size={16} />
                                                 </button>
-                                                <Link href={`/ats/candidates?cv=${candidate.id}`} className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F8FAFC] text-[#0040A1] hover:bg-[#E2E8F0] transition-colors">
+                                                <Link href={`/ats/candidates/${candidate.id}`} className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F8FAFC] text-[#0040A1] hover:bg-[#E2E8F0] transition-colors pointer-events-auto">
                                                     <CornerUpRight size={16} />
                                                 </Link>
                                             </div>
