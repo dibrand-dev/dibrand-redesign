@@ -11,6 +11,7 @@ import EditCandidateModal from '@/components/ats/EditCandidateModal';
 import ProcessActionsWidget from '@/components/ats/ProcessActionsWidget';
 import CandidatePipelineTracker from '@/components/ats/CandidatePipelineTracker';
 import CoverLetterCard from '@/components/ats/CoverLetterCard';
+import DisqualifiedTag from '@/components/ats/DisqualifiedTag';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -27,6 +28,9 @@ export default async function CandidateDetailPage({
     const candidate = await getCandidateById(id);
     const logs = await getApplicationLogs(id);
     const recruiterId = await syncRecruiterProfile();
+
+    const rejectionLog = (logs || []).find(log => log.note_text?.startsWith('RECHAZADO: '));
+    const rejectionReason = rejectionLog ? rejectionLog.note_text.split(' (Por ')[0].replace('RECHAZADO: ', '') : null;
 
     if (!candidate) notFound();
 
@@ -93,22 +97,23 @@ export default async function CandidateDetailPage({
                                 </div>
                             </div>
                             <div>
-                                <h1 className="text-[34px] font-black text-slate-900 leading-tight mb-3 tracking-tight">
+                                {candidate.status === 'Rejected' && <DisqualifiedTag reason={rejectionReason} />}
+                                <h1 className="text-[26px] font-black text-slate-900 leading-tight mb-2 tracking-tight">
                                     {candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}
                                 </h1>
-                                <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-[14px] text-slate-500 font-semibold">
+                                <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-[13px] text-slate-500 font-semibold">
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><MapPin size={16} className="text-slate-400" /> {candidate.country || 'Sin especificar'}</div>
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><Mail size={16} className="text-slate-400" /> {candidate.email}</div>
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><Phone size={16} className="text-slate-400" /> {candidate.phone || 'Sin número'}</div>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3 pt-2">
-                            <Link href={`/ats/candidates/${id}?edit=true`} className="px-6 py-2.5 border border-slate-200 bg-white rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
+                        <div className="flex items-center gap-3">
+                            <Link href={`/ats/candidates/${id}?edit=true`} className="h-[42px] px-6 border border-slate-200 bg-white rounded-xl text-[13px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
                                 <Pencil size={14} /> Editar
                             </Link>
-                            <button className="px-6 py-2.5 border border-slate-200 bg-white rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Message</button>
-                            <Link href={`/ats/candidates/${id}?schedule=true`} className="px-6 py-2.5 bg-[#0B4FEA] text-white rounded-xl text-[14px] font-bold hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center">Interview</Link>
+                            <button className="h-[42px] px-6 border border-slate-200 bg-white rounded-xl text-[13px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Message</button>
+                            <Link href={`/ats/candidates/${id}?schedule=true`} className="h-[42px] px-6 bg-[#0B4FEA] text-white rounded-xl text-[13px] font-bold hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center">Interview</Link>
                         </div>
                     </div>
 
