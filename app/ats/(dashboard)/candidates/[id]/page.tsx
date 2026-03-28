@@ -98,7 +98,7 @@ export default async function CandidateDetailPage({
                             </div>
                             <div>
                                 {candidate.status === 'Rejected' && <DisqualifiedTag reason={rejectionReason} />}
-                                <h1 className="text-[26px] font-black text-slate-900 leading-tight mb-2 tracking-tight">
+                                <h1 className="text-[24px] font-black text-slate-900 leading-tight mb-2 tracking-tight">
                                     {candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}
                                 </h1>
                                 <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-[13px] text-slate-500 font-semibold">
@@ -108,7 +108,7 @@ export default async function CandidateDetailPage({
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 -mt-5">
                             <Link href={`/ats/candidates/${id}?edit=true`} className="h-[42px] px-6 border border-slate-200 bg-white rounded-xl text-[13px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
                                 <Pencil size={14} /> Editar
                             </Link>
