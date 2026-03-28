@@ -9,6 +9,7 @@ import Link from 'next/link';
 import ScheduleInterviewModal from '@/components/ats/ScheduleInterviewModal';
 import EditCandidateModal from '@/components/ats/EditCandidateModal';
 import ProcessActionsWidget from '@/components/ats/ProcessActionsWidget';
+import CandidatePipelineTracker from '@/components/ats/CandidatePipelineTracker';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -111,52 +112,7 @@ export default async function CandidateDetailPage({
                     </div>
 
                     {/* Progress Tracker Widget */}
-                    <div className="bg-white rounded-[20px] p-10 shadow-sm border border-slate-200/60 mb-8 relative">
-                        <div className="absolute left-16 right-16 top-[54px] h-[3px] bg-slate-100 rounded-full"></div>
-                        {/* Active Line (To Technical) */}
-                        <div className="absolute left-16 top-[54px] h-[3px] bg-[#0B4FEA] w-[45%] rounded-full shadow-[0_0_10px_rgba(11,79,234,0.4)]"></div>
-                        
-                        <div className="relative z-10 flex justify-between">
-                            {/* 1. Applied */}
-                            <div className="flex flex-col items-center gap-4 w-20">
-                                <div className="w-8 h-8 bg-[#0B4FEA] rounded-full flex items-center justify-center text-white ring-8 ring-white"><Check size={16} strokeWidth={3} /></div>
-                                <span className="text-[10px] font-black text-[#0B4FEA] tracking-widest uppercase">Applied</span>
-                            </div>
-                            {/* 2. Phone Screen */}
-                            <div className="flex flex-col items-center gap-4 w-28">
-                                <div className="w-8 h-8 bg-[#0B4FEA] rounded-full flex items-center justify-center text-white ring-8 ring-white"><Check size={16} strokeWidth={3} /></div>
-                                <span className="text-[10px] font-black text-[#0B4FEA] tracking-widest uppercase">Phone Screen</span>
-                            </div>
-                            {/* 3. Technical (Active) */}
-                            <div className="flex flex-col items-center gap-4 w-24">
-                                <div className="w-10 h-10 bg-[#0B4FEA] rounded-xl flex items-center justify-center text-white ring-8 ring-white shadow-lg transform -translate-y-1">
-                                    <div className="w-4 h-4 border-[2.5px] border-white rounded-sm"></div>
-                                </div>
-                                <span className="text-[10px] font-black text-slate-900 tracking-widest uppercase mt-[-4px]">Technical</span>
-                            </div>
-                            {/* 4. Culture */}
-                            <div className="flex flex-col items-center gap-4 w-20 text-slate-400">
-                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center ring-8 ring-white text-slate-400">
-                                    <Users size={14} />
-                                </div>
-                                <span className="text-[10px] font-black tracking-widest uppercase">Culture</span>
-                            </div>
-                            {/* 5. Final */}
-                            <div className="flex flex-col items-center gap-4 w-20 text-slate-400">
-                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center ring-8 ring-white text-slate-400">
-                                <MapPin size={14} />
-                                </div>
-                                <span className="text-[10px] font-black tracking-widest uppercase">Final</span>
-                            </div>
-                            {/* 6. Offer */}
-                            <div className="flex flex-col items-center gap-4 w-20 text-slate-400">
-                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center ring-8 ring-white text-slate-400">
-                                <FileText size={14} />
-                                </div>
-                                <span className="text-[10px] font-black tracking-widest uppercase">Offer</span>
-                            </div>
-                        </div>
-                    </div>
+                    <CandidatePipelineTracker currentStatus={candidate.status || 'Applied'} />
 
                     {/* Subgrid layout */}
                     <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
