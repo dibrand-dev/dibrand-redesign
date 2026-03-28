@@ -86,7 +86,10 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
                                     <span className="text-[13px] font-extrabold text-slate-900 truncate">
                                         {log.author_name}
                                     </span>
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight whitespace-nowrap">
+                                    <span 
+                                        suppressHydrationWarning
+                                        className="text-[10px] font-black text-slate-400 uppercase tracking-tight whitespace-nowrap"
+                                    >
                                         {new Date(log.created_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
                                     </span>
                                 </div>

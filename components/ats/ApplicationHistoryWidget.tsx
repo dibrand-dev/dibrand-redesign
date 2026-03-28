@@ -67,7 +67,10 @@ export default function ApplicationHistoryWidget({ candidate, logs }: Props) {
                                 }`}>
                                     {event.title}
                                 </h4>
-                                <span className="text-[11px] font-black text-slate-400 uppercase tracking-tighter">
+                                <span 
+                                    suppressHydrationWarning
+                                    className="text-[10px] font-black text-slate-400 uppercase tracking-tight whitespace-nowrap"
+                                >
                                     {new Date(event.date).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
                                 </span>
                             </div>
