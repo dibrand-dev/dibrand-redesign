@@ -310,6 +310,21 @@ export async function updateCandidateStatus(id: string, status: string) {
     return { success: true };
 }
 
+export async function updateCoverLetter(id: string, coverLetter: string) {
+    const { error } = await supabase
+        .from('job_applications')
+        .update({ cover_letter: coverLetter, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) {
+        console.error('Error updating cover letter:', error);
+        throw error;
+    }
+
+    revalidatePath(`/ats/candidates/${id}`);
+    return { success: true };
+}
+
 export async function assignRecruiter(candidateId: string, recruiterId: string) {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();

@@ -10,6 +10,7 @@ import ScheduleInterviewModal from '@/components/ats/ScheduleInterviewModal';
 import EditCandidateModal from '@/components/ats/EditCandidateModal';
 import ProcessActionsWidget from '@/components/ats/ProcessActionsWidget';
 import CandidatePipelineTracker from '@/components/ats/CandidatePipelineTracker';
+import CoverLetterCard from '@/components/ats/CoverLetterCard';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -118,31 +119,10 @@ export default async function CandidateDetailPage({
                     <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                         <div className="xl:col-span-2 space-y-8">
                             {/* Cover Letter */}
-                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-8">
-                                <div className="flex justify-between items-center mb-6">
-                                    <h3 className="text-[18px] font-extrabold text-slate-900">Cover Letter</h3>
-                                    <button className="flex items-center gap-2 text-blue-600 text-[13px] font-bold hover:text-blue-800 transition-colors"><Pencil size={14} /> Edit</button>
-                                </div>
-                                {/* Editor Toolbar */}
-                                <div className="flex gap-4 p-2.5 bg-slate-100 rounded-xl mb-6 text-slate-500 items-center shrink-0">
-                                    <button className="p-1 rounded hover:bg-slate-200 text-slate-700"><Bold size={16} /></button>
-                                    <button className="p-1 rounded hover:bg-slate-200"><Italic size={16} /></button>
-                                    <button className="p-1 rounded hover:bg-slate-200"><Underline size={16} /></button>
-                                    <div className="w-px h-5 bg-slate-300 mx-2"></div>
-                                    <button className="p-1 rounded hover:bg-slate-200"><List size={16} /></button>
-                                    <button className="p-1 rounded hover:bg-slate-200"><ListOrdered size={16} /></button>
-                                    <div className="w-px h-5 bg-slate-300 mx-2"></div>
-                                    <button className="p-1 rounded hover:bg-slate-200"><LinkIcon size={16} /></button>
-                                </div>
-                                <div className="p-8 bg-slate-50 rounded-2xl text-[14px] text-slate-700 leading-chill font-medium">
-                                    <p className="mb-5">Dear Hiring Team,</p>
-                                    <p className="mb-5">I am writing to express my strong interest in the Senior Product Designer position at Editorial Intelligence. With over 8 years of experience in creating user-centered digital experiences and leading design systems for complex SaaS products, I am confident in my ability to contribute significantly to your team.</p>
-                                    <p className="mb-5">In my recent roles, I have specialized in bridging the gap between design and engineering, ensuring that high-fidelity prototypes are not only visually stunning but also technically feasible and accessible. My approach is deeply rooted in user research and data-driven iteration.</p>
-                                    <p className="mb-6">I have long admired Editorial Intelligence's commitment to quality journalism and innovative digital storytelling. I look forward to the possibility of discussing how my background in strategic design can support your mission.</p>
-                                    <p className="mb-1">Best regards,</p>
-                                    <p className="font-bold text-slate-900">Eleanor Vance</p>
-                                </div>
-                            </div>
+                            <CoverLetterCard 
+                                candidateId={id} 
+                                initialContent={candidate.cover_letter} 
+                            />
 
                             {/* Application History */}
                             <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-8">
