@@ -15,6 +15,9 @@ export const ATS_STAGES = [
 export type ATSStageValue = typeof ATS_STAGES[number]['value'];
 
 export function getStageStyle(status: string) {
+    if (status?.toLowerCase() === 'rejected') {
+        return { value: 'Rejected', label: 'Rejected', color: '#dc2626', bg: '#fef2f2' };
+    }
     const stage = ATS_STAGES.find(s => s.value.toLowerCase() === status?.toLowerCase());
     return stage || { color: '#191C1D', bg: '#E1E2E5', label: status };
 }

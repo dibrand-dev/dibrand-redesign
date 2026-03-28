@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { ChevronDown, Check, Loader2 } from 'lucide-react';
+import { ChevronDown, Check, Loader2, X, AlertCircle } from 'lucide-react';
 import { ATS_STAGES } from '@/lib/ats-constants';
-import { updateCandidateStatus } from '@/app/ats/actions';
+import { updateCandidateStatus, rejectCandidate } from '@/app/ats/actions';
 import { useRouter } from 'next/navigation';
 
 interface Props {
@@ -13,11 +13,14 @@ interface Props {
 
 export default function ProcessActionsWidget({ candidateId, currentStatus }: Props) {
     const [open, setOpen] = useState(false);
+    const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+    const [rejectionReason, setRejectionReason] = useState('');
     const [selected, setSelected] = useState(currentStatus);
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
 
-    const currentStage = ATS_STAGES.find(s => s.value.toLowerCase() === selected?.toLowerCase()) || ATS_STAGES[1];
+    const currentStage = ATS_STAGES.find(s => s.value.toLowerCase() === selected?.toLowerCase()) || 
+                       (selected === 'Rejected' ? { value: 'Rejected', label: 'Rejected', color: '#dc2626', bg: '#fef2f2' } : ATS_STAGES[1]);
 
     function handleSelect(stageValue: string) {
         if (stageValue === selected) {
@@ -31,6 +34,17 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
             router.refresh();
         });
     }
+
+    const handleReject = () => {
+        if (!rejectionReason.trim()) return;
+        setIsRejectModalOpen(false);
+        startTransition(async () => {
+            setSelected('Rejected');
+            await rejectCandidate(candidateId, rejectionReason);
+            setRejectionReason('');
+            router.refresh();
+        });
+    };
 
     return (
         <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
@@ -50,57 +64,113 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
                 </div>
             </div>
 
-            {/* Stage Selector */}
-            <div className="relative mb-3">
-                <button
-                    onClick={() => setOpen(!open)}
-                    disabled={isPending}
-                    className="w-full flex items-center justify-between px-4 py-3 bg-[#EEF2FF] hover:bg-blue-100 border border-blue-100 text-[#0040A1] rounded-xl font-extrabold text-[13px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            <div className="space-y-3">
+                {/* Stage Selector */}
+                <div className="relative">
+                    <button
+                        onClick={() => setOpen(!open)}
+                        disabled={isPending}
+                        className="w-full flex items-center justify-between px-4 py-3 bg-[#EEF2FF] hover:bg-blue-100 border border-blue-100 text-[#0040A1] rounded-xl font-extrabold text-[13px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                        <span className="flex items-center gap-2">
+                            {isPending && selected !== 'Rejected' ? (
+                                <Loader2 size={14} className="animate-spin" />
+                            ) : null}
+                            Move to Stage
+                        </span>
+                        <ChevronDown size={16} className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {open && (
+                        <div className="absolute z-50 left-0 right-0 mt-2 bg-white rounded-xl border border-slate-200 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                            {ATS_STAGES.map((stage) => {
+                                const isActive = stage.value.toLowerCase() === selected?.toLowerCase();
+                                return (
+                                    <button
+                                        key={stage.value}
+                                        onClick={() => handleSelect(stage.value)}
+                                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 transition-colors text-left group"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div
+                                                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                                                style={{ backgroundColor: stage.color }}
+                                            />
+                                            <span
+                                                className="text-[13px] font-bold"
+                                                style={{ color: isActive ? stage.color : '#191C1D' }}
+                                            >
+                                                {stage.label}
+                                            </span>
+                                        </div>
+                                        {isActive && (
+                                            <Check size={14} style={{ color: stage.color }} />
+                                        )}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+
+                {/* Reject Button */}
+                <button 
+                    onClick={() => setIsRejectModalOpen(true)}
+                    disabled={isPending || selected === 'Rejected'}
+                    className="w-full flex items-center justify-between px-4 py-3 border border-red-200 hover:bg-red-50 text-red-600 rounded-xl font-extrabold text-[13px] transition-colors h-[46px] disabled:opacity-50"
                 >
                     <span className="flex items-center gap-2">
-                        {isPending ? (
-                            <Loader2 size={14} className="animate-spin" />
-                        ) : null}
-                        Move to Stage
+                        {isPending && selected === 'Rejected' && <Loader2 size={14} className="animate-spin" />}
+                        Reject Candidate
                     </span>
-                    <ChevronDown size={16} className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+                    <X size={16} />
                 </button>
-
-                {open && (
-                    <div className="absolute z-50 left-0 right-0 mt-2 bg-white rounded-xl border border-slate-200 shadow-xl overflow-hidden">
-                        {ATS_STAGES.map((stage) => {
-                            const isActive = stage.value.toLowerCase() === selected?.toLowerCase();
-                            return (
-                                <button
-                                    key={stage.value}
-                                    onClick={() => handleSelect(stage.value)}
-                                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 transition-colors text-left group"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div
-                                            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                                            style={{ backgroundColor: stage.color }}
-                                        />
-                                        <span
-                                            className="text-[13px] font-bold"
-                                            style={{ color: isActive ? stage.color : '#191C1D' }}
-                                        >
-                                            {stage.label}
-                                        </span>
-                                    </div>
-                                    {isActive && (
-                                        <Check size={14} style={{ color: stage.color }} />
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </div>
-                )}
             </div>
 
             {/* Backdrop to close dropdown */}
             {open && (
                 <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+            )}
+
+            {/* Reject Reason Modal */}
+            {isRejectModalOpen && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+                    <div className="bg-white rounded-[24px] w-full max-w-[400px] shadow-2xl p-8 animate-in zoom-in-95 duration-200">
+                        <div className="flex items-center gap-3 text-red-600 mb-6">
+                            <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
+                                <AlertCircle size={24} />
+                            </div>
+                            <div>
+                                <h4 className="text-[18px] font-black leading-none mb-1">Rechazar Candidato</h4>
+                                <p className="text-[12px] font-bold text-red-400">Por favor, explica el motivo</p>
+                            </div>
+                        </div>
+
+                        <textarea
+                            autoFocus
+                            value={rejectionReason}
+                            onChange={(e) => setRejectionReason(e.target.value)}
+                            placeholder="Ej: No cumple con el seniority técnico requerido para el rol..."
+                            className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-[14px] font-medium text-slate-700 focus:ring-4 focus:ring-red-100 focus:border-red-600 outline-none min-h-[120px] resize-none mb-6"
+                        />
+
+                        <div className="flex justify-end gap-3">
+                            <button 
+                                onClick={() => setIsRejectModalOpen(false)}
+                                className="px-6 py-2.5 text-[14px] font-black text-slate-500 hover:text-slate-900 transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                onClick={handleReject}
+                                disabled={!rejectionReason.trim()}
+                                className="px-8 py-2.5 bg-red-600 text-white rounded-xl text-[14px] font-black shadow-lg shadow-red-600/20 hover:bg-red-700 transition-all disabled:opacity-50"
+                            >
+                                Rechazar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

@@ -325,6 +325,27 @@ export async function updateCoverLetter(id: string, coverLetter: string) {
     return { success: true };
 }
 
+export async function rejectCandidate(id: string, reason: string) {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    const fullName = user?.user_metadata?.full_name || user?.email || 'Recruiter';
+
+    const { error } = await supabase
+        .from('job_applications')
+        .update({ status: 'Rejected', updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) throw error;
+
+    // Log the rejection as a special note
+    await addApplicationLog(id, `RECHAZADO: ${reason} (Por ${fullName})`);
+
+    revalidatePath(`/ats/candidates/${id}`);
+    revalidatePath('/ats/candidates');
+    revalidatePath('/ats');
+    return { success: true };
+}
+
 export async function assignRecruiter(candidateId: string, recruiterId: string) {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
