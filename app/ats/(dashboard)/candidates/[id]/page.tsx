@@ -2,12 +2,13 @@ import { Suspense } from 'react';
 import { getCandidateById, getApplicationLogs, getStackNames, syncRecruiterProfile } from '@/app/ats/actions';
 import { 
     MapPin, Mail, Phone, Calendar, FileText, StickyNote, Clock,
-    Check, X, ArrowRight, Bold, Italic, Underline, List, ListOrdered, Link as LinkIcon, Download, Maximize2, User, Pencil, Users, Briefcase
+    Check, Bold, Italic, Underline, List, ListOrdered, Link as LinkIcon, Download, Maximize2, User, Pencil, Users, Briefcase
 } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ScheduleInterviewModal from '@/components/ats/ScheduleInterviewModal';
 import EditCandidateModal from '@/components/ats/EditCandidateModal';
+import ProcessActionsWidget from '@/components/ats/ProcessActionsWidget';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -277,15 +278,10 @@ export default async function CandidateDetailPage({
                             </div>
 
                             {/* Process Actions */}
-                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
-                                <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Process Actions</h3>
-                                <button className="w-full flex justify-between items-center p-4 bg-[#EEF2FF] hover:bg-blue-100 text-blue-700 rounded-xl font-extrabold text-[13px] transition-colors mb-3 group shadow-sm border border-blue-100">
-                                    Advance Stage <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                </button>
-                                <button className="w-full flex justify-between items-center p-4 border border-red-200 hover:bg-red-50 text-red-600 rounded-xl font-extrabold text-[13px] transition-colors group">
-                                    Reject Candidate <X size={16} className="group-hover:scale-110 transition-transform" />
-                                </button>
-                            </div>
+                            <ProcessActionsWidget 
+                                candidateId={id} 
+                                currentStatus={candidate.status || 'Applied'} 
+                            />
 
                             {/* Recruiter Notes */}
                             <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">

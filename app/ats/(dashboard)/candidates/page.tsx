@@ -7,6 +7,7 @@ import SearchTalentPredictive from '@/components/ats/SearchTalentPredictive';
 import { getCandidateNames, getJobs, getCountries } from '@/app/ats/actions';
 import CandidatesView from '@/components/ats/CandidatesView';
 import CandidateFilters from '@/components/ats/CandidateFilters';
+import { ATS_STAGES } from '@/lib/ats-constants';
 
 export default async function AtsCandidatesPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
     const resolvedParams = await searchParams;
@@ -35,7 +36,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     ]);
 
     const filterJobs = jobs.map(j => ({ id: j.id, label: j.title }));
-    const filterStatuses = ['Applied', 'Phone Screen', 'Technical', 'Culture', 'Final', 'Offer', 'Rejected', 'Hired'];
+    const filterStatuses = ATS_STAGES.map(s => s.value);
     const totalPages = Math.ceil(totalCount / limit);
 
     return (
