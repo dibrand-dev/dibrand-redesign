@@ -13,6 +13,7 @@ import CandidatePipelineTracker from '@/components/ats/CandidatePipelineTracker'
 import CoverLetterCard from '@/components/ats/CoverLetterCard';
 import DisqualifiedTag from '@/components/ats/DisqualifiedTag';
 import RecruiterNotesWidget from '@/components/ats/RecruiterNotesWidget';
+import ApplicationHistoryWidget from '@/components/ats/ApplicationHistoryWidget';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -131,44 +132,10 @@ export default async function CandidateDetailPage({
                             />
 
                             {/* Application History */}
-                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-8">
-                                <div className="flex justify-between items-center mb-6">
-                                    <h3 className="text-[18px] font-extrabold text-slate-900">Application History</h3>
-                                    <button className="text-blue-600 text-[13px] font-bold hover:underline">View Archive</button>
-                                </div>
-                                <div className="space-y-4">
-                                    <div className="flex flex-col sm:flex-row sm:items-center p-5 bg-slate-50 rounded-2xl border border-slate-100 gap-4">
-                                        <div className="w-12 h-12 bg-[#EEF2FF] rounded-xl flex items-center justify-center text-blue-600 shrink-0 shadow-sm border border-blue-100">
-                                            <Briefcase size={20} fill="currentColor" className="text-blue-600/20" />
-                                        </div>
-                                        <div className="flex-1">
-                                            <h4 className="text-[15px] font-extrabold text-slate-900 leading-tight mb-1">Senior Product Designer</h4>
-                                            <p className="text-[12px] text-slate-500 font-semibold">Editorial Intelligence • Aug 2023</p>
-                                        </div>
-                                        <div className="flex items-center gap-5 sm:ml-auto">
-                                            <div className="flex items-center gap-2.5 text-[12px] font-bold text-slate-700">
-                                                <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
-                                                    <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="Recruiter" />
-                                                </div> James W.
-                                            </div>
-                                            <span className="px-3.5 py-1.5 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg tracking-widest uppercase shadow-sm">ACTIVE</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="flex flex-col sm:flex-row sm:items-center p-5 bg-slate-50/50 rounded-2xl border border-slate-100 gap-4 opacity-80">
-                                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-slate-400 shrink-0 border border-slate-200 shadow-sm">
-                                            <FileText size={20} />
-                                        </div>
-                                        <div className="flex-1">
-                                            <h4 className="text-[15px] font-bold text-slate-600 leading-tight mb-1">UX Strategy Lead</h4>
-                                            <p className="text-[12px] text-slate-400 font-medium">Future Media Group • Mar 2023</p>
-                                        </div>
-                                        <div className="flex items-center gap-5 sm:ml-auto">
-                                            <span className="px-3.5 py-1.5 bg-red-50 text-red-600 text-[10px] font-black rounded-lg tracking-widest uppercase">WITHDRAWN</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <ApplicationHistoryWidget 
+                                candidate={candidate} 
+                                logs={logs || []} 
+                            />
 
                             {/* Resume / CV */}
                             <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-8">

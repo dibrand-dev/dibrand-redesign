@@ -21,6 +21,9 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
     const [note, setNote] = useState('');
     const [isPending, startTransition] = useTransition();
 
+    // Filter out systemic logs like rejection reasons, showing only real notes
+    const manualNotes = initialLogs.filter(log => !log.note_text.startsWith('RECHAZADO: '));
+
     const handlePost = () => {
         if (!note.trim()) return;
         
@@ -68,8 +71,8 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
             </div>
 
             <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-                {initialLogs.length > 0 ? (
-                    initialLogs.map((log) => (
+                {manualNotes.length > 0 ? (
+                    manualNotes.map((log) => (
                         <div key={log.id} className="bg-slate-50 p-5 rounded-xl flex gap-3.5 border border-slate-100 animate-in fade-in slide-in-from-bottom-2 duration-300">
                             <div className="w-8 h-8 rounded-full shrink-0 shadow-sm ring-2 ring-white bg-gradient-to-br from-slate-200 to-slate-300 overflow-hidden flex items-center justify-center font-bold text-[10px] text-slate-500">
                                 {log.author_avatar_url ? (
@@ -88,12 +91,7 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
                                     </span>
                                 </div>
                                 <p className="text-[13px] text-slate-600 font-medium leading-relaxed whitespace-pre-wrap break-words">
-                                    {log.note_text.startsWith('RECHAZADO: ') ? (
-                                        <span className="flex flex-col gap-1">
-                                            <span className="text-red-600 font-black text-[10px] uppercase tracking-widest bg-red-50 w-fit px-2 py-0.5 rounded border border-red-100">Candidato Rechazado</span>
-                                            {log.note_text.replace('RECHAZADO: ', '')}
-                                        </span>
-                                    ) : log.note_text}
+                                    {log.note_text}
                                 </p>
                             </div>
                         </div>
