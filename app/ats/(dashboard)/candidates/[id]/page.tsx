@@ -12,6 +12,7 @@ import ProcessActionsWidget from '@/components/ats/ProcessActionsWidget';
 import CandidatePipelineTracker from '@/components/ats/CandidatePipelineTracker';
 import CoverLetterCard from '@/components/ats/CoverLetterCard';
 import DisqualifiedTag from '@/components/ats/DisqualifiedTag';
+import RecruiterNotesWidget from '@/components/ats/RecruiterNotesWidget';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -84,8 +85,8 @@ export default async function CandidateDetailPage({
             <div className="flex-1 overflow-y-auto p-12 custom-scrollbar">
                 <div className="max-w-6xl mx-auto">
                     {/* Header */}
-                    <div className="flex justify-between items-start mb-10">
-                        <div className="flex items-center gap-8">
+                    <div className="flex justify-between items-start mb-10 gap-8">
+                        <div className="flex items-start gap-6 min-w-0 flex-1">
                             <div className="w-[110px] h-[110px] rounded-[24px] bg-slate-200 overflow-hidden shadow-sm shrink-0 border border-slate-200/60 ring-4 ring-white relative group">
                                 <img 
                                     src={candidate.avatar_url || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'} 
@@ -96,9 +97,9 @@ export default async function CandidateDetailPage({
                                     <Briefcase size={12} fill="currentColor" className="text-white" />
                                 </div>
                             </div>
-                            <div>
+                            <div className="min-w-0 flex-1 pt-1">
                                 {candidate.status === 'Rejected' && <DisqualifiedTag reason={rejectionReason} />}
-                                <h1 className="text-[24px] font-black text-slate-900 leading-tight mb-2 tracking-tight">
+                                <h1 className="text-[22px] font-black text-slate-900 leading-none mb-3 tracking-tight truncate" title={candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}>
                                     {candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}
                                 </h1>
                                 <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-[13px] text-slate-500 font-semibold">
@@ -108,7 +109,7 @@ export default async function CandidateDetailPage({
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3 -mt-5">
+                        <div className="flex items-center gap-3 shrink-0">
                             <Link href={`/ats/candidates/${id}?edit=true`} className="h-[42px] px-6 border border-slate-200 bg-white rounded-xl text-[13px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
                                 <Pencil size={14} /> Editar
                             </Link>
@@ -224,40 +225,10 @@ export default async function CandidateDetailPage({
                                 currentStatus={candidate.status || 'Applied'} 
                             />
 
-                            {/* Recruiter Notes */}
-                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
-                                <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Recruiter Notes</h3>
-                                <div className="bg-white border border-slate-200 rounded-xl p-4 mb-6 focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-blue-500 transition-all shadow-sm">
-                                    <textarea 
-                                        placeholder="Add a private note..." 
-                                        className="w-full text-[14px] text-slate-700 resize-none outline-none placeholder:text-slate-400 min-h-[80px]"
-                                    ></textarea>
-                                    <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-100">
-                                        <div className="flex gap-4 text-slate-400">
-                                            <button className="hover:text-slate-700 transition-colors"><LinkIcon size={16} /></button>
-                                            <button className="hover:text-slate-700 transition-colors"><span className="font-extrabold font-serif text-[16px]">@</span></button>
-                                        </div>
-                                        <button className="px-6 py-2 bg-[#0B4FEA] text-white rounded-lg text-[12px] font-bold shadow-sm hover:bg-blue-800 transition-colors">POST</button>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <div className="bg-slate-50 p-5 rounded-xl flex gap-3.5 border border-slate-100">
-                                        <div className="w-8 h-8 rounded-full shrink-0 shadow-sm ring-2 ring-white bg-slate-200 overflow-hidden">
-                                            <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="Avatar" />
-                                        </div>
-                                        <div>
-                                            <div className="flex justify-between items-center mb-1.5">
-                                                <span className="text-[13px] font-extrabold text-slate-900">Maria Garcia</span>
-                                                <span className="text-[11px] font-semibold text-slate-400">2h ago</span>
-                                            </div>
-                                            <p className="text-[13px] text-slate-600 font-medium leading-relaxed">
-                                                Strong technical foundation. Explained the intricate state management logic perfectly.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <RecruiterNotesWidget 
+                                candidateId={id} 
+                                initialLogs={logs || []} 
+                            />
 
                             {/* Core Competencies */}
                             <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
