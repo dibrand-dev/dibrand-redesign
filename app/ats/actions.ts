@@ -5,6 +5,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
 import { revalidatePath } from 'next/cache';
 import { createGoogleEvent, listGoogleEvents } from '@/lib/google-calendar';
+import { capitalizeName as capitalizeEachWord } from '@/lib/utils';
 
 export async function getRecentCandidates() {
     const { data } = await getAllCandidates({ limit: 5 } as any);
@@ -172,7 +173,7 @@ export async function getRecruiterJobs() {
     }) || [];
 }
 
-export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number, offset?: number, jobId?: string, country?: string } = {}) {
+export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number, offset?: number, jobId?: string, country?: string, recruiterId?: string } = {}) {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
 
@@ -196,6 +197,8 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
 
     if (!isAdmin) {
         query = query.eq('recruiter_id', user.id);
+    } else if (filters.recruiterId && filters.recruiterId !== 'all') {
+        query = query.eq('recruiter_id', filters.recruiterId);
     }
 
     if (filters.status) {
@@ -245,7 +248,7 @@ export async function getCandidateById(id: string) {
             .from('job_applications')
             .select(`
                 *,
-                job:job_openings(title),
+                job:job_openings(title, questionnaire),
                 recruiter:recruiters(full_name)
             `)
             .eq('id', id)
@@ -295,9 +298,21 @@ export async function getApplicationsByEmail(email: string) {
 
 export async function updateCandidate(id: string, updates: any) {
     console.log('UPDATING CANDIDATE:', id, updates);
+    
+    // Normalize names if present
+    const normalizedUpdates = { ...updates };
+    if (normalizedUpdates.full_name) {
+        normalizedUpdates.full_name = capitalizeEachWord(normalizedUpdates.full_name);
+        
+        // Split for sync if they aren't provided
+        const names = normalizedUpdates.full_name.trim().split(' ');
+        normalizedUpdates.first_name = names[0];
+        normalizedUpdates.last_name = names.length > 1 ? names.slice(1).join(' ') : '';
+    }
+
     const { error } = await supabase
         .from('job_applications')
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        .update({ ...normalizedUpdates, updated_at: new Date().toISOString() })
         .eq('id', id);
 
     if (error) {
@@ -615,21 +630,24 @@ export async function createCandidate(formData: {
     job_id: string;
     linkedin_url?: string;
     skills?: string[];
+    questionnaire_answers?: any[];
 }) {
-    // 1. Check for duplicate email
+    // 1. Check for duplicate email (case-insensitive)
     const { data: existing } = await supabase
         .from('job_applications')
-        .select('id')
-        .eq('email', formData.email)
+        .select('id, full_name, phone, linkedin_url')
+        .ilike('email', formData.email.trim())
         .eq('is_deleted', false)
-        .single();
+        .maybeSingle();
 
     if (existing) {
-        return { error: 'Este email ya pertenece a otro candidato.' };
+        console.warn('--- DUPLICATE CANDIDATE BLOCKED ---', formData.email);
+        return { error: `Este email ya pertenece a otro candidato: ${existing.full_name}.` };
     }
 
-    // 2. Name Splitting
-    const names = formData.full_name.trim().split(' ');
+    // 2. Name Splitting & Capitalization
+    const capitalizedName = capitalizeEachWord(formData.full_name);
+    const names = capitalizedName.trim().split(' ');
     const first_name = names[0];
     const last_name = names.length > 1 ? names.slice(1).join(' ') : '';
 
@@ -640,7 +658,7 @@ export async function createCandidate(formData: {
     const { data, error } = await supabase
         .from('job_applications')
         .insert([{
-            full_name: formData.full_name,
+            full_name: capitalizedName,
             first_name,
             last_name,
             email: formData.email,
@@ -655,6 +673,7 @@ export async function createCandidate(formData: {
             recruiter_id: user.id, // associate to creator
             linkedin_url: formData.linkedin_url,
             skills: formData.skills || [],
+            questionnaire_answers: formData.questionnaire_answers || [],
             status: 'Applied', // Default Stage
             is_deleted: false,
             created_at: new Date().toISOString()
@@ -865,3 +884,36 @@ export async function updateRecruiterProfile(data: { fullName: string, jobTitle:
     }
 }
 
+export async function updateJobQuestionnaire(jobId: string, questionnaireData: any) {
+    const { error } = await supabase
+        .from('job_openings')
+        .update({ questionnaire: questionnaireData })
+        .eq('id', jobId);
+
+    if (error) {
+        console.error('Error updating job questionnaire:', error);
+        throw new Error(error.message);
+    }
+
+    revalidatePath(`/ats/jobs/${jobId}`);
+    return { success: true };
+}
+
+export async function updateJobDescription(jobId: string, description: string, requirements: string) {
+    const { error } = await supabase
+        .from('job_openings')
+        .update({ 
+            description: description,
+            requirements: requirements,
+            updated_at: new Date().toISOString()
+        })
+        .eq('id', jobId);
+
+    if (error) {
+        console.error('Error updating job description:', error);
+        throw new Error(error.message);
+    }
+
+    revalidatePath(`/ats/jobs/${jobId}`);
+    return { success: true };
+}

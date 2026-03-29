@@ -16,6 +16,8 @@ interface CandidatesViewProps {
         status?: string;
         search?: string;
         jobId?: string;
+        country?: string;
+        recruiterId?: string;
     };
 }
 
@@ -26,6 +28,8 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
         if (filters.status) params.set('status', filters.status);
         if (filters.search) params.set('search', filters.search);
         if (filters.jobId) params.set('jobId', filters.jobId);
+        if (filters.country) params.set('country', filters.country);
+        if (filters.recruiterId) params.set('recruiterId', filters.recruiterId);
         params.set('page', p.toString());
         return `/ats/candidates?${params.toString()}`;
     };

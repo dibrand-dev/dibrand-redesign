@@ -11,6 +11,7 @@ import {
     getUpcomingInterviews, getRecruiters, createInterview,
     getCandidateNames, getRecruiterJobs, getCombinedInterviews, syncRecruiterProfile
 } from '@/app/ats/actions';
+import { capitalizeName } from '@/lib/utils';
 
 export default function InterviewSchedulePage() {
     const searchParams = useSearchParams();
@@ -147,7 +148,7 @@ export default function InterviewSchedulePage() {
                                                 const isTechnical = ev.type?.toLowerCase().includes('technical');
                                                 const isCultural = ev.type?.toLowerCase().includes('cultural');
                                                 const isFinal = ev.type?.toLowerCase().includes('final');
-                                                const candidateName = ev.candidate?.full_name || ev.candidate?.first_name || 'Event';
+                                                const candidateName = ev.candidate?.full_name ? capitalizeName(ev.candidate.full_name) : (ev.candidate?.first_name ? capitalizeName(ev.candidate.first_name) : 'Event');
                                                 const timeString = new Date(ev.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                                                 
                                                 let bgClass = "bg-emerald-50 border-emerald-500";
@@ -244,7 +245,7 @@ export default function InterviewSchedulePage() {
                                                             const isTechnical = ev.type?.toLowerCase().includes('technical');
                                                             const isCultural = ev.type?.toLowerCase().includes('cultural');
                                                             const isFinal = ev.type?.toLowerCase().includes('final');
-                                                            const candidateName = ev.candidate?.full_name || ev.candidate?.first_name || 'Event';
+                                                            const candidateName = ev.candidate?.full_name ? capitalizeName(ev.candidate.full_name) : (ev.candidate?.first_name ? capitalizeName(ev.candidate.first_name) : 'Event');
                                                             
                                                             let bgClass = "bg-emerald-50 border-emerald-500";
                                                             let titleClass = "text-emerald-900";
@@ -446,7 +447,7 @@ export default function InterviewSchedulePage() {
                         {nextInterview ? (
                             <>
                                 <div>
-                                    <p className="font-bold text-xl leading-tight">{nextInterview.candidate?.full_name}</p>
+                                    <p className="font-bold text-xl leading-tight">{nextInterview.candidate?.full_name ? capitalizeName(nextInterview.candidate.full_name) : 'Candidato'}</p>
                                     <p className="text-[13px] opacity-90 mt-1" suppressHydrationWarning>
                                         {nextInterview.job?.title} • {new Date(nextInterview.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                                     </p>
@@ -474,7 +475,7 @@ export default function InterviewSchedulePage() {
                             <div className="mt-6 flex -space-x-3">
                                 {recruiters.slice(0, 3).map((r, idx) => (
                                     <div key={idx} className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs ring-2 ring-white z-10 relative">
-                                        {r.full_name?.charAt(0) || 'R'}
+                                        {r.full_name ? capitalizeName(r.full_name).charAt(0) : 'R'}
                                     </div>
                                 ))}
                                 {recruiters.length > 3 && (

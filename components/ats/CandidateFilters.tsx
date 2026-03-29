@@ -13,9 +13,11 @@ interface CandidateFiltersProps {
     jobs: FilterOption[];
     countries: string[];
     statuses: string[];
+    recruiters: any[];
+    currentUser?: any;
 }
 
-export default function CandidateFilters({ jobs, countries, statuses }: CandidateFiltersProps) {
+export default function CandidateFilters({ jobs, countries, statuses, recruiters, currentUser }: CandidateFiltersProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     
@@ -27,6 +29,9 @@ export default function CandidateFilters({ jobs, countries, statuses }: Candidat
     const currentJob = searchParams.get('jobId') || '';
     const currentCountry = searchParams.get('country') || '';
     const currentStatus = searchParams.get('status') || '';
+    const currentRecruiter = searchParams.get('recruiterId') || '';
+
+    const isAdmin = currentUser?.user_metadata?.role === 'admin' || currentUser?.user_metadata?.role === 'SuperAdmin';
 
     // Close when clicking outside
     useEffect(() => {
@@ -58,7 +63,21 @@ export default function CandidateFilters({ jobs, countries, statuses }: Candidat
 
     const Dropdown = ({ label, current, options, filterKey, type = 'list' }: any) => {
         const isOpen = openDropdown === filterKey;
-        const displayLabel = current ? (type === 'jobs' ? options.find((o: any) => o.id === current)?.label : current) : 'All';
+        
+        // Complex label logic for Recruiter Initialization
+        let displayLabel = 'All';
+        if (current) {
+            if (type === 'jobs') {
+                displayLabel = options.find((o: any) => o.id === current)?.label || 'All';
+            } else if (type === 'recruiters') {
+                displayLabel = options.find((o: any) => o.id === current)?.full_name || 'All';
+            } else {
+                displayLabel = current;
+            }
+        } else if (type === 'recruiters' && !isAdmin && currentUser) {
+            // Default to current recruiter name if not admin and no filter set
+            displayLabel = currentUser.user_metadata?.full_name || currentUser.email;
+        }
 
         return (
             <div className="relative">
@@ -84,8 +103,8 @@ export default function CandidateFilters({ jobs, countries, statuses }: Candidat
                                 {!current && <Check size={14} className="text-[#0040A1]" />}
                             </button>
                             {options.map((opt: any) => {
-                                const id = typeof opt === 'string' ? opt : opt.id;
-                                const label = typeof opt === 'string' ? opt : opt.label;
+                                const id = typeof opt === 'string' ? opt : (opt.id || opt.user_id);
+                                const label = typeof opt === 'string' ? opt : (opt.label || opt.full_name);
                                 const isSelected = current === id;
                                 
                                 return (
@@ -130,9 +149,17 @@ export default function CandidateFilters({ jobs, countries, statuses }: Candidat
                     options={statuses} 
                     filterKey="status" 
                 />
+
+                <Dropdown 
+                    label="Recruiter" 
+                    current={currentRecruiter} 
+                    options={recruiters} 
+                    filterKey="recruiterId"
+                    type="recruiters"
+                />
             </div>
             
-            {(currentJob || currentCountry || currentStatus) && (
+            {(currentJob || currentCountry || currentStatus || currentRecruiter) && (
                 <button 
                     onClick={clearFilters}
                     className="flex items-center gap-1.5 text-[11px] font-black text-[#6B7485] hover:text-red-500 transition-colors uppercase tracking-widest py-2"

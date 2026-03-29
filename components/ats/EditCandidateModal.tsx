@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { updateCandidate, getRecruiters } from '@/app/ats/actions';
 import { createBrowserClient } from '@supabase/ssr';
+import { capitalizeName } from '@/lib/utils';
 
 interface Recruiter {
     id: string;
@@ -257,7 +258,7 @@ export default function EditCandidateModal({ candidate }: { candidate: any }) {
                             >
                                 <option value="">Sin asignar</option>
                                 {recruiters.map(r => (
-                                    <option key={r.id} value={r.id}>{r.full_name}</option>
+                                    <option key={r.id} value={r.id}>{capitalizeName(r.full_name)}</option>
                                 ))}
                             </select>
                             <ChevronDown size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />

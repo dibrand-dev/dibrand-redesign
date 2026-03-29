@@ -1,5 +1,5 @@
 import { getRecruiterStats, getRecentCandidates, getRecruiterJobs } from '../actions';
-import { Users, Calendar, TrendingUp, LayoutGrid, AlertTriangle, Clock, ArrowRight, Activity, Zap, Briefcase, CheckCircle2, MoreHorizontal } from 'lucide-react';
+import { Users, Calendar, TrendingUp, LayoutGrid, AlertTriangle, Clock, ArrowRight, Activity, Zap, Briefcase, CheckCircle2, MoreHorizontal, ListChecks } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function AtsDashboard() {
@@ -100,7 +100,14 @@ export default async function AtsDashboard() {
                                         <tr key={job.id} className="hover:bg-[#F8FAFC] transition-colors cursor-pointer group/row">
                                             <td className="px-6 py-5">
                                                 <Link href={`/ats/jobs/${job.id}`}>
-                                                    <p className="text-[14px] font-semibold text-[#191C1D] group-hover/row:text-[#0040A1] transition-colors">{job.title}</p>
+                                                    <p className="text-[14px] font-semibold text-[#191C1D] group-hover/row:text-[#0040A1] transition-colors flex items-center gap-2">
+                                                        {job.title}
+                                                        {job.questionnaire && job.questionnaire.length > 0 && (
+                                                            <span className="flex items-center gap-1 px-1.5 py-0.5 bg-blue-50 text-[#0040A1] text-[9px] font-black rounded border border-blue-100 uppercase tracking-tight">
+                                                                <ListChecks size={10} /> Vetting
+                                                            </span>
+                                                        )}
+                                                    </p>
                                                     <p className="text-[12px] text-[#737785]">{job.industry}</p>
                                                 </Link>
                                             </td>

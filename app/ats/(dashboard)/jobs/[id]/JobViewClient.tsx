@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { capitalizeName } from '@/lib/utils';
 import { 
     ArrowLeft, 
     Share2, 
@@ -11,9 +12,25 @@ import {
     CornerUpRight,
     Bold, Italic, List, Link as LinkIcon, Heading1, Heading2,
     CheckCircle2, Globe, Plus, Clock, MessageSquare,
-    Link2, Eye, Save, Settings2, Sparkles, RefreshCcw
+    Link2, Eye, Save, Settings2, Sparkles, RefreshCcw, Trash2
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase-client';
+import { updateJobQuestionnaire, updateJobDescription } from '@/app/ats/actions';
+
+interface Question {
+    id: string;
+    label: string;
+    type: string;
+    subquestions?: string[];
+    helper?: string;
+    note?: string;
+}
+
+interface QuestionnaireSection {
+    id: string;
+    title: string;
+    questions: Question[];
+}
 
 interface JobData {
     id: string;
@@ -36,22 +53,149 @@ interface JobData {
     };
     recentActivity?: any[];
     team?: any[];
+    questionnaire?: any[];
 }
 
-export default function JobViewClient({ job }: { job: JobData | null }) {
+export default function JobViewClient({ job, userRole }: { job: JobData | null; userRole?: string }) {
     const [activeTab, setActiveTab] = useState('Candidates');
-    const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+    
+    // Parse role from prop safely
+    const roleStr = (userRole || '').toString().toLowerCase();
+    const [isSuperAdmin, setIsSuperAdmin] = useState(roleStr === 'superadmin' || roleStr === 'admin');
+    
+    const [copied, setCopied] = useState(false);
+    const [isEditing, setIsEditing] = useState(false); // questionnaire edit
+    const [isEditingDesc, setIsEditingDesc] = useState(false); // job description edit
+    const [isSaving, setIsSaving] = useState(false);
+    
+    const [descContent, setDescContent] = useState(job?.description || '');
+    const [reqContent, setReqContent] = useState(job?.requirements || '');
 
-    // Fetch user role
+    const DEFAULT_QUESTIONNAIRE: QuestionnaireSection[] = [
+        {
+            id: 'contact',
+            title: 'CONTACT INFORMATION',
+            questions: [
+                { id: 'q_name', label: 'Name', type: 'text' },
+                { id: 'q_email', label: 'Personal email', type: 'text' },
+                { id: 'q_phone', label: 'Phone', type: 'text' },
+                { id: 'q_linkedin', label: 'LinkedIn', type: 'text' },
+                { id: 'q_country', label: 'Country', type: 'text' }
+            ]
+        },
+        {
+            id: 'experience',
+            title: 'ABOUT YOUR EXPERIENCE',
+            questions: [
+                { id: 'q1', label: '1. How many years of experience do you have with .NET Development (C#, ASP.NET, .NET Core)?', type: 'text' },
+                { 
+                    id: 'q2', 
+                    label: '2. How many years of experience do you have with the following technologies?', 
+                    type: 'sublist',
+                    subquestions: [
+                        'SQL Server (Advanced queries, optimization)',
+                        'Microservices Architecture',
+                        'Frontend Frameworks (React, Angular or similar)',
+                        'Cloud Platforms (Azure/AWS)'
+                    ]
+                },
+                { id: 'q3', label: '3. Have you worked as a contractor remotely for international clients?', type: 'yesno' },
+                { id: 'q4', label: '4. Are you currently working? If yes, please describe your current role.', type: 'textarea' },
+                { id: 'q5', label: '5. Do you have experience designing or maintaining Microservices?', type: 'textarea', helper: 'Please elaborate on your role and the tools used (e.g., Docker, Kubernetes, Service Bus).' },
+                { id: 'q6', label: '6. Do you have an advanced level of spoken English (B2 or higher)?', type: 'yesno', note: 'NOTE: A TECHNICAL INTERVIEW IN ENGLISH WILL BE REQUIRED.' },
+                { id: 'q7', label: '7. The client requires a background check (Criminal Records Certificate) and a drug test. Are you willing to provide/undergo these?', type: 'yesno' },
+                { id: 'q8', label: '8. Do you have any planned vacations or time off in the next 6 months?', type: 'text' }
+            ]
+        }
+    ];
+
+    const [questionnaire, setQuestionnaire] = useState<QuestionnaireSection[]>((job as any)?.questionnaire || DEFAULT_QUESTIONNAIRE);
+
+    // Sync user role from prop if it changes
     React.useEffect(() => {
-        const fetchRole = async () => {
-            const supabaseAuth = await createClient();
-            const { data: { user } } = await supabaseAuth.auth.getUser();
-            const role = user?.user_metadata?.role || user?.role;
-            setIsSuperAdmin(role === 'SuperAdmin');
-        };
-        fetchRole();
-    }, []);
+        const str = (userRole || '').toString().toLowerCase();
+        setIsSuperAdmin(str === 'superadmin' || str === 'admin');
+    }, [userRole]);
+
+    const handleCopyQuestionnaire = () => {
+        const content = `JOB QUESTIONNAIRE: ${title}
+        
+${questionnaire.map(section => {
+    const sectionText = `${section.title}\n${section.questions.map(q => {
+        let qText = `- ${q.label}`;
+        if (q.subquestions) {
+            qText += `\n${q.subquestions.map(sq => `  • ${sq}`).join('\n')}`;
+        }
+        if (q.type === 'yesno') qText += ' (Yes/No)';
+        return qText;
+    }).join('\n')}`;
+    return sectionText;
+}).join('\n\n')}
+        `;
+        navigator.clipboard.writeText(content);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    const handleSaveQuestionnaire = async () => {
+        if (!job?.id) return;
+        setIsSaving(true);
+        try {
+            await updateJobQuestionnaire(job.id, questionnaire);
+            setIsEditing(false);
+        } catch (error: any) {
+            console.error('Failed to save questionnaire', error);
+            if (error.message?.includes('column "questionnaire" of relation "job_openings" does not exist')) {
+                alert('MIGRACIÓN REQUERIDA: Debes ejecutar el script SQL de la columna "questionnaire" en tu panel de Supabase.');
+            } else {
+                alert('No se pudo guardar: ' + error.message);
+            }
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleSaveDescription = async () => {
+        if (!job?.id) return;
+        setIsSaving(true);
+        try {
+            await updateJobDescription(job.id, descContent, reqContent);
+            setIsEditingDesc(false);
+        } catch (error: any) {
+            console.error('Failed to save description', error);
+            alert('No se pudo guardar: ' + error.message);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const updateQuestion = (sectionIdx: number, qIdx: number, value: string) => {
+        const newQuestionnaire = JSON.parse(JSON.stringify(questionnaire));
+        newQuestionnaire[sectionIdx].questions[qIdx].label = value;
+        setQuestionnaire(newQuestionnaire);
+    };
+
+    const updateSectionTitle = (sectionIdx: number, value: string) => {
+        const newQuestionnaire = JSON.parse(JSON.stringify(questionnaire));
+        newQuestionnaire[sectionIdx].title = value;
+        setQuestionnaire(newQuestionnaire);
+    };
+
+    const addQuestion = (sectionIdx: number) => {
+        const newQuestionnaire = JSON.parse(JSON.stringify(questionnaire));
+        newQuestionnaire[sectionIdx].questions.push({
+            id: `q_new_${Date.now()}`,
+            label: 'New Question',
+            type: 'text'
+        });
+        setQuestionnaire(newQuestionnaire);
+    };
+
+    const removeQuestion = (sectionIdx: number, qIdx: number) => {
+        const newQuestionnaire = JSON.parse(JSON.stringify(questionnaire));
+        newQuestionnaire[sectionIdx].questions.splice(qIdx, 1);
+        setQuestionnaire(newQuestionnaire);
+    };
     
     // Default mock info to match the design precisely
     const title = job?.title || 'Senior Product Designer';
@@ -95,16 +239,40 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                 <div className="flex items-center gap-3">
                     {activeTab === 'Job Description' ? (
                         <>
-                            <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all h-10 flex items-center">
-                                Preview Public Page
-                            </button>
-                            <button className="px-5 py-2.5 bg-[#0040A1] hover:bg-[#003380] text-white text-[13px] font-bold rounded-xl transition-all shadow-lg shadow-[#0040A1]/10 h-10 flex items-center">
-                                Save Changes
-                            </button>
+                            {isSuperAdmin && !isEditingDesc && (
+                                <button 
+                                    onClick={() => setIsEditingDesc(true)}
+                                    className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all flex items-center gap-2"
+                                >
+                                    <Edit2 size={16} /> Edit Job
+                                </button>
+                            )}
+                            {isEditingDesc && (
+                                <>
+                                    <button 
+                                        onClick={() => {
+                                            setIsEditingDesc(false);
+                                            setDescContent(job?.description || '');
+                                            setReqContent(job?.requirements || '');
+                                        }}
+                                        className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#191C1D] text-[13px] font-bold rounded-xl transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        onClick={handleSaveDescription}
+                                        disabled={isSaving}
+                                        className="px-5 py-2.5 bg-[#0040A1] hover:bg-[#003380] text-white text-[13px] font-bold rounded-xl transition-all flex items-center gap-2 shadow-lg disabled:opacity-50"
+                                    >
+                                        {isSaving ? <RefreshCcw size={16} className="animate-spin" /> : <Save size={16} />} 
+                                        {isSaving ? 'Saving...' : 'Save Changes'}
+                                    </button>
+                                </>
+                            )}
                         </>
                     ) : (
                         <>
-                            {isSuperAdmin && (
+                            {isSuperAdmin && activeTab !== 'Questionnaire' && activeTab !== 'Candidates' && (
                                 <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all flex items-center gap-2">
                                     <Edit2 size={16} /> Edit
                                 </button>
@@ -194,9 +362,12 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                              {job?.recentActivity && job.recentActivity.length > 0 ? (
                                 job.recentActivity.map((candidate: any, idx: number) => {
                                     const timeAgo = Math.floor((Date.now() - new Date(candidate.created_at).getTime()) / (1000 * 60 * 60)) + 'h ago';
-                                    const shortName = `${candidate.first_name} ${candidate.last_name?.charAt(0) || ''}.`;
+                                    const rawName = `${candidate.first_name} ${candidate.last_name}`;
+                                    const capitalizedFullName = capitalizeName(rawName);
+                                    const names = capitalizedFullName.split(' ');
+                                    const shortName = `${names[0]} ${names[1]?.charAt(0) || ''}.`;
                                     const recruiterData = Array.isArray(candidate.recruiter) ? candidate.recruiter[0] : candidate.recruiter;
-                                    const recruiterName = recruiterData?.full_name || 'Unassigned';
+                                    const recruiterName = recruiterData?.full_name ? capitalizeName(recruiterData.full_name) : 'Unassigned';
                                     return (
                                         <div key={candidate.id} className="group/card relative bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md hover:border-[#0040A1]/30 transition-all flex items-center justify-between mb-4">
                                             <Link href={`/ats/candidates/${candidate.id}`} className="absolute inset-0 z-10" />
@@ -251,7 +422,7 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                                                     </div>
                                                 )}
                                                 <div>
-                                                    <p className="text-[13px] font-bold text-[#191C1D]">{member.full_name || 'Unknown'}</p>
+                                                    <p className="text-[13px] font-bold text-[#191C1D]">{member.full_name ? capitalizeName(member.full_name) : 'Unknown'}</p>
                                                     <p className="text-[11px] text-[#737785]">{member.role || 'Recruiter'}</p>
                                                 </div>
                                             </div>
@@ -310,10 +481,10 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                 {/* JOB DESCRIPTION TAB */}
                 {activeTab === 'Job Description' && (
                     <>
-                        <div className="lg:col-span-8 bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+                        <div className="lg:col-span-8 bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden min-h-[600px]">
                             {/* Editor Toolbar */}
-                          {isSuperAdmin && (
-                            <div className="flex items-center gap-6 px-6 py-4 border-b border-[#E2E8F0] text-[#191C1D]">
+                          {isSuperAdmin && isEditingDesc && (
+                            <div className="flex items-center gap-6 px-6 py-4 bg-[#F8FAFC] border-b border-[#E2E8F0] text-[#191C1D]">
                                 <button className="hover:text-[#0040A1] transition-colors"><Bold size={16} /></button>
                                 <button className="hover:text-[#0040A1] transition-colors"><Italic size={16} /></button>
                                 <button className="hover:text-[#0040A1] transition-colors"><List size={16} /></button>
@@ -325,45 +496,70 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                           )}
                             
                             <div className="p-8">
-                                {job?.description ? (
+                                {isEditingDesc ? (
+                                    <div className="space-y-10">
+                                        <div>
+                                            <label className="text-[10px] font-black tracking-widest uppercase text-[#737785] block mb-4">About the Role</label>
+                                            <textarea 
+                                                value={descContent}
+                                                onChange={(e) => setDescContent(e.target.value)}
+                                                className="w-full min-h-[300px] text-[15px] p-6 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#0040A1] transition-colors font-serif leading-relaxed"
+                                                placeholder="Write your job description here (HTML supported)..."
+                                            />
+                                        </div>
+                                        <div className="pt-8 border-t border-[#E2E8F0]">
+                                            <label className="text-[10px] font-black tracking-widest uppercase text-[#737785] block mb-4">Requirements</label>
+                                            <textarea 
+                                                value={reqContent}
+                                                onChange={(e) => setReqContent(e.target.value)}
+                                                className="w-full min-h-[300px] text-[15px] p-6 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#0040A1] transition-colors font-serif leading-relaxed"
+                                                placeholder="List the job requirements here..."
+                                            />
+                                        </div>
+                                    </div>
+                                ) : (
                                     <>
-                                        <div 
-                                            className="job-content"
-                                            dangerouslySetInnerHTML={{ __html: job.description }}
-                                        />
-                                        {job.requirements && (
-                                            <div className="mt-8 pt-6 border-t border-[#E2E8F0]">
-                                                <h2 className="text-2xl font-bold text-[#191C1D] mb-4 font-heading uppercase tracking-tight">Requirements</h2>
+                                        {descContent ? (
+                                            <>
                                                 <div 
-                                                    className="job-content"
-                                                    dangerouslySetInnerHTML={{ __html: job.requirements }}
+                                                    className="job-content prose prose-zinc max-w-none text-[#191C1D] text-[15px] leading-relaxed font-serif"
+                                                    dangerouslySetInnerHTML={{ __html: descContent }}
                                                 />
+                                                {reqContent && (
+                                                    <div className="mt-8 pt-6 border-t border-[#E2E8F0]">
+                                                        <h2 className="text-[20px] font-bold text-[#191C1D] mb-4 uppercase tracking-tight font-sans">Requirements</h2>
+                                                        <div 
+                                                            className="job-content prose prose-zinc max-w-none text-[#191C1D] text-[15px] leading-relaxed font-serif"
+                                                            dangerouslySetInnerHTML={{ __html: reqContent }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className="prose prose-zinc max-w-none text-[#475569] text-[14px] leading-[1.8] font-medium">
+                                                <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">About the Role</h2>
+                                                <p className="mb-8">
+                                                    We are seeking a visionary Senior Product Designer to lead the evolution of our core talent ecosystem. In this role, you will be the bridge between complex data architectures and human-centric experiences. You'll work closely with product managers and engineers to craft a platform that feels intuitive, powerful, and exceptionally refined.
+                                                </p>
+    
+                                                <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">Responsibilities</h2>
+                                                <ul className="list-disc pl-5 mb-8 space-y-2">
+                                                    <li>Define the visual and interaction patterns for our next-generation applicant tracking system.</li>
+                                                    <li>Conduct deep user research with recruiters and hiring managers to identify friction points.</li>
+                                                    <li>Create high-fidelity prototypes that demonstrate complex logic and seamless transitions.</li>
+                                                    <li>Mentor junior designers and contribute to our growing design system library.</li>
+                                                </ul>
+    
+                                                <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">Requirements</h2>
+                                                <ul className="list-disc pl-5 mb-8 space-y-2">
+                                                    <li>5+ years of experience in product design, preferably in SaaS or enterprise tools.</li>
+                                                    <li>A portfolio demonstrating expertise in layout, typography, and systemic thinking.</li>
+                                                    <li>Proficiency in Figma and modern prototyping tools.</li>
+                                                    <li>Strong communication skills and the ability to articulate design decisions to stakeholders.</li>
+                                                </ul>
                                             </div>
                                         )}
                                     </>
-                                ) : (
-                                    <div className="prose prose-zinc max-w-none text-[#475569] text-[14px] leading-[1.8] font-medium">
-                                        <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">About the Role</h2>
-                                        <p className="mb-8">
-                                            We are seeking a visionary Senior Product Designer to lead the evolution of our core talent ecosystem. In this role, you will be the bridge between complex data architectures and human-centric experiences. You'll work closely with product managers and engineers to craft a platform that feels intuitive, powerful, and exceptionally refined.
-                                        </p>
-
-                                        <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">Responsibilities</h2>
-                                        <ul className="list-disc pl-5 mb-8 space-y-2">
-                                            <li>Define the visual and interaction patterns for our next-generation applicant tracking system.</li>
-                                            <li>Conduct deep user research with recruiters and hiring managers to identify friction points.</li>
-                                            <li>Create high-fidelity prototypes that demonstrate complex logic and seamless transitions.</li>
-                                            <li>Mentor junior designers and contribute to our growing design system library.</li>
-                                        </ul>
-
-                                        <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">Requirements</h2>
-                                        <ul className="list-disc pl-5 mb-8 space-y-2">
-                                            <li>5+ years of experience in product design, preferably in SaaS or enterprise tools.</li>
-                                            <li>A portfolio demonstrating expertise in layout, typography, and systemic thinking.</li>
-                                            <li>Proficiency in Figma and modern prototyping tools.</li>
-                                            <li>Strong communication skills and the ability to articulate design decisions to stakeholders.</li>
-                                        </ul>
-                                    </div>
                                 )}
                             </div>
                         </div>
@@ -476,20 +672,39 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                                 <p className="text-[14px] text-[#475569] font-medium">Standard vetting form for {title} applicants.</p>
                             </div>
                             <div className="flex items-center gap-4">
-                                <button className="flex items-center gap-2 text-[#0040A1] font-bold text-[13px] hover:bg-[#F8FAFC] px-4 py-2 rounded-lg transition-colors">
-                                    <Link2 size={16} /> Copy Link to Questionnaire
-                                </button>
-                                <button className="flex items-center gap-2 text-[#0040A1] font-bold text-[13px] hover:bg-[#F8FAFC] px-4 py-2 rounded-lg transition-colors">
-                                    <Eye size={16} /> Preview Form
-                                </button>
-                                {isSuperAdmin && (
-                                    <button className="flex items-center gap-2 bg-[#0040A1] hover:bg-[#003380] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-colors">
-                                        <Edit2 size={16} /> Edit Questionnaire
+                                <div className="relative">
+                                    <button 
+                                        onClick={handleCopyQuestionnaire}
+                                        className="flex items-center gap-2 text-[#0040A1] font-bold text-[13px] hover:bg-[#F8FAFC] px-4 py-2 rounded-lg transition-colors"
+                                    >
+                                        <Link2 size={16} /> Copy Questionnaire
                                     </button>
+                                    {copied && (
+                                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-4 py-2 bg-[#191C1D] text-white text-[12px] font-bold rounded-xl shadow-2xl animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300 z-[100] whitespace-nowrap">
+                                            ¡Contenido copiado al portapapeles!
+                                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#191C1D] rotate-45"></div>
+                                        </div>
+                                    )}
+                                </div>
+                                {isSuperAdmin && (
+                                    <>
+                                        <button 
+                                            onClick={() => setIsEditing(!isEditing)}
+                                            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-colors ${
+                                                isEditing ? 'bg-[#F1F5F9] text-[#191C1D] hover:bg-[#E2E8F0]' : 'bg-[#0040A1] hover:bg-[#003380] text-white'
+                                            }`}
+                                        >
+                                            <Edit2 size={16} /> {isEditing ? 'Cancel Edit' : 'Edit Questionnaire'}
+                                        </button>
+                                        <button 
+                                            onClick={handleSaveQuestionnaire}
+                                            disabled={isSaving}
+                                            className="flex items-center gap-2 bg-[#0040A1] hover:bg-[#003380] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-colors disabled:opacity-50"
+                                        >
+                                            <Save size={16} /> {isSaving ? 'Saving...' : 'Save Questionnaire'}
+                                        </button>
+                                    </>
                                 )}
-                                <button className="flex items-center gap-2 bg-[#0040A1] hover:bg-[#003380] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-colors">
-                                    <Save size={16} /> Save Questionnaire
-                                </button>
                             </div>
                         </div>
 
@@ -510,148 +725,86 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                                     
                                     {/* Editor Content Area */}
                                     <div className="p-10 font-serif text-[#191C1D]">
-                                        {/* Intro Section */}
-                                        <div className="mb-10">
-                                            <h3 className="text-[13px] font-black tracking-widest uppercase mb-6 font-sans border-b border-[#E2E8F0] pb-2 text-[#191C1D]">CONTACT INFORMATION</h3>
-                                            
-                                            <div className="space-y-6">
-                                                <div className="flex items-baseline gap-4">
-                                                    <span className="font-bold whitespace-nowrap text-[15px]">Name:</span>
-                                                    <div className="flex-1 border-b border-[#E2E8F0] h-5"></div>
+                                        {questionnaire.map((section, sIdx) => (
+                                            <div key={section.id} className="mb-10 last:mb-0">
+                                                <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-2 mb-6">
+                                                    {isEditing ? (
+                                                        <input 
+                                                            value={section.title}
+                                                            onChange={(e) => updateSectionTitle(sIdx, e.target.value)}
+                                                            className="text-[13px] font-black tracking-widest uppercase font-sans bg-transparent border-none focus:outline-none focus:ring-0 w-full text-[#0040A1]"
+                                                        />
+                                                    ) : (
+                                                        <h3 className="text-[13px] font-black tracking-widest uppercase font-sans text-[#191C1D]">{section.title}</h3>
+                                                    )}
+                                                    {isEditing && (
+                                                        <button 
+                                                            onClick={() => addQuestion(sIdx)}
+                                                            className="text-[10px] font-bold text-[#0040A1] hover:underline"
+                                                        >
+                                                            + ADD QUESTION
+                                                        </button>
+                                                    )}
                                                 </div>
-                                                <div className="flex items-baseline gap-4">
-                                                    <span className="font-bold whitespace-nowrap text-[15px]">Personal email:</span>
-                                                    <div className="flex-1 border-b border-[#E2E8F0] h-5"></div>
-                                                </div>
-                                                <div className="flex items-baseline gap-4">
-                                                    <span className="font-bold whitespace-nowrap text-[15px]">Phone:</span>
-                                                    <div className="flex-1 border-b border-[#E2E8F0] h-5"></div>
-                                                </div>
-                                                <div className="flex items-baseline gap-4">
-                                                    <span className="font-bold whitespace-nowrap text-[15px]">LinkedIn:</span>
-                                                    <div className="flex-1 border-b border-[#E2E8F0] h-5"></div>
-                                                </div>
-                                                <div className="flex items-baseline gap-4">
-                                                    <span className="font-bold whitespace-nowrap text-[15px]">Country:</span>
-                                                    <div className="flex-1 border-b border-[#E2E8F0] h-5"></div>
+                                                
+                                                <div className="space-y-6">
+                                                    {section.questions.map((q, qIdx) => (
+                                                        <div key={q.id} className="group relative">
+                                                            <div className="flex items-start gap-4">
+                                                                <div className="flex-1">
+                                                                    {isEditing ? (
+                                                                        <textarea 
+                                                                            value={q.label}
+                                                                            onChange={(e) => updateQuestion(sIdx, qIdx, e.target.value)}
+                                                                            className="w-full font-bold text-[15px] p-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#0040A1] transition-colors resize-none"
+                                                                            rows={q.label.length > 80 ? 3 : 1}
+                                                                        />
+                                                                    ) : (
+                                                                        <p className="font-bold text-[15px] leading-relaxed tracking-tight">{q.label}</p>
+                                                                    )}
+                                                                    
+                                                                    {!isEditing && (
+                                                                        <>
+                                                                            {q.helper && (
+                                                                                <p className="text-[13px] text-[#64748B] italic mt-1">{q.helper}</p>
+                                                                            )}
+                                                                            {q.note && (
+                                                                                <p className="text-[9px] font-sans font-black tracking-widest text-[#737785] uppercase mt-2">{q.note}</p>
+                                                                            )}
+                                                                            {q.subquestions && (
+                                                                                <div className="space-y-4 pl-4 text-[15px] mt-4">
+                                                                                    {q.subquestions.map((sq, si) => (
+                                                                                        <div key={si} className="flex items-baseline gap-3">
+                                                                                            <span className="text-[#64748B]">•</span>
+                                                                                            <span className="whitespace-nowrap">{sq}</span>
+                                                                                            <div className="flex-1 border-b border-[#E2E8F0]"></div>
+                                                                                        </div>
+                                                                                    ))}
+                                                                                </div>
+                                                                            )}
+                                                                            {!q.subquestions && (
+                                                                                <div className="flex items-baseline gap-4 mt-2">
+                                                                                    <span className="text-[15px] opacity-60">Answer{q.type === 'yesno' ? ' (Yes/No)' : ''}:</span>
+                                                                                    <div className={`flex-1 ${q.type === 'textarea' ? 'border-b border-dashed border-[#E2E8F0] mt-8 block w-full h-8' : 'border-b border-[#E2E8F0] h-5'}`}></div>
+                                                                                </div>
+                                                                            )}
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                                {isEditing && (
+                                                                    <button 
+                                                                        onClick={() => removeQuestion(sIdx, qIdx)}
+                                                                        className="text-[#EF4444] opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-[#FEE2E2] rounded-lg"
+                                                                    >
+                                                                        <Trash2 size={16} />
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        {/* Questions Section */}
-                                        <div>
-                                            <h3 className="text-[13px] font-black tracking-widest uppercase mb-6 font-sans border-b border-[#E2E8F0] pb-2 text-[#191C1D]">ABOUT YOUR EXPERIENCE</h3>
-                                            
-                                            <div className="space-y-10">
-                                                {/* Q1 */}
-                                                <div>
-                                                    <p className="font-bold text-[15px] mb-4 leading-relaxed tracking-tight">
-                                                        1. How many years of experience do you have with .NET Development (C#, ASP.NET, .NET Core)? *
-                                                    </p>
-                                                    <div className="flex items-baseline gap-4">
-                                                        <span className="text-[15px]">Answer:</span>
-                                                        <div className="flex-1 border-b border-[#E2E8F0]"></div>
-                                                    </div>
-                                                </div>
-
-                                                {/* Q2 */}
-                                                <div className="pt-2">
-                                                    <p className="font-bold text-[15px] mb-4 leading-relaxed tracking-tight">
-                                                        2. How many years of experience do you have with the following technologies?
-                                                    </p>
-                                                    <div className="space-y-4 pl-4 text-[15px]">
-                                                        <div className="flex items-baseline gap-3">
-                                                            <span className="text-[#64748B]">•</span>
-                                                            <span className="whitespace-nowrap">SQL Server (Advanced queries, optimization):</span>
-                                                            <div className="flex-1 border-b border-[#E2E8F0]"></div>
-                                                        </div>
-                                                        <div className="flex items-baseline gap-3">
-                                                            <span className="text-[#64748B]">•</span>
-                                                            <span className="whitespace-nowrap">Microservices Architecture:</span>
-                                                            <div className="flex-1 border-b border-[#E2E8F0]"></div>
-                                                        </div>
-                                                        <div className="flex items-baseline gap-3">
-                                                            <span className="text-[#64748B]">•</span>
-                                                            <span className="whitespace-nowrap">Frontend Frameworks (React, Angular or similar):</span>
-                                                            <div className="flex-1 border-b border-[#E2E8F0]"></div>
-                                                        </div>
-                                                        <div className="flex items-baseline gap-3">
-                                                            <span className="text-[#64748B]">•</span>
-                                                            <span className="whitespace-nowrap">Cloud Platforms (Azure/AWS):</span>
-                                                            <div className="flex-1 border-b border-[#E2E8F0]"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {/* Q3 */}
-                                                <div className="pt-2">
-                                                    <p className="font-bold text-[15px] mb-3 leading-relaxed tracking-tight">
-                                                        3. Have you worked as a contractor remotely for international clients? *
-                                                    </p>
-                                                    <div className="flex items-center gap-6 font-sans text-[14px]">
-                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> Yes</label>
-                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> No</label>
-                                                    </div>
-                                                </div>
-
-                                                {/* Q4 */}
-                                                <div className="pt-2">
-                                                    <p className="font-bold text-[15px] mb-4 leading-relaxed tracking-tight">
-                                                        4. Are you currently working? If yes, please describe your current role. *
-                                                    </p>
-                                                    <div className="w-full border-b border-dashed border-[#E2E8F0] mt-8"></div>
-                                                    <div className="w-full border-b border-dashed border-[#E2E8F0] mt-8"></div>
-                                                </div>
-
-                                                {/* Q5 */}
-                                                <div className="pt-2">
-                                                    <p className="font-bold text-[15px] mb-2 leading-relaxed tracking-tight">
-                                                        5. Do you have experience designing or maintaining Microservices?
-                                                    </p>
-                                                    <p className="text-[13px] text-[#64748B] italic mb-4">
-                                                        Please elaborate on your role and the tools used (e.g., Docker, Kubernetes, Service Bus).
-                                                    </p>
-                                                    <div className="w-full border-b border-dashed border-[#E2E8F0] mt-8"></div>
-                                                    <div className="w-full border-b border-dashed border-[#E2E8F0] mt-8"></div>
-                                                </div>
-
-                                                {/* Q6 */}
-                                                <div className="pt-2">
-                                                    <p className="font-bold text-[15px] mb-1 leading-relaxed tracking-tight">
-                                                        6. Do you have an advanced level of spoken English (B2 or higher)? *
-                                                    </p>
-                                                    <p className="text-[9px] font-sans font-black tracking-widest text-[#737785] uppercase mb-4">
-                                                        NOTE: A TECHNICAL INTERVIEW IN ENGLISH WILL BE REQUIRED.
-                                                    </p>
-                                                    <div className="flex items-center gap-6 font-sans text-[14px]">
-                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> Yes</label>
-                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> No</label>
-                                                    </div>
-                                                </div>
-
-                                                {/* Q7 - Box */}
-                                                <div className="border border-[#CBD5E1] rounded-lg p-6 my-6 bg-white shadow-sm">
-                                                    <p className="font-bold text-[15px] mb-4 leading-relaxed tracking-tight">
-                                                        7. The client requires a background check (Criminal Records Certificate) and a drug test. Are you willing to provide/undergo these? *
-                                                    </p>
-                                                    <div className="flex items-center gap-6 font-sans text-[14px]">
-                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> Yes</label>
-                                                        <label className="flex items-center gap-2 cursor-pointer"><div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]"></div> No</label>
-                                                    </div>
-                                                </div>
-
-                                                {/* Q8 */}
-                                                <div className="pt-2">
-                                                    <p className="font-bold text-[15px] mb-4 leading-relaxed tracking-tight">
-                                                        8. Do you have any planned vacations or time off in the next 6 months? *
-                                                    </p>
-                                                    <div className="flex items-baseline gap-4">
-                                                        <span className="text-[15px]">Answer:</span>
-                                                        <div className="flex-1 border-b border-[#E2E8F0]"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -670,7 +823,7 @@ export default function JobViewClient({ job }: { job: JobData | null }) {
                                         </div>
                                         <div className="flex justify-between items-center text-[13px] border-b border-[#F1F5F9] pb-4">
                                             <span className="text-[#737785]">Required Questions</span>
-                                            <span className="font-bold text-[#191C1D]">8 of 14</span>
+                                            <span className="font-bold text-[#191C1D]">8 Questions</span>
                                         </div>
                                         <div className="flex justify-between items-center text-[13px] pt-1">
                                             <span className="text-[#737785]">Language</span>

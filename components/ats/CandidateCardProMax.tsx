@@ -3,6 +3,7 @@ import React from 'react';
 import { Linkedin, FileText, Phone, Mail, MapPin, User, ChevronRight } from 'lucide-react';
 import { Candidate } from '@/app/ats/types';
 import Link from 'next/link';
+import { capitalizeName } from '@/lib/utils';
 
 interface Props {
   candidate: Candidate;
@@ -49,13 +50,13 @@ const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
       <div className="mb-6">
         <Link href={`/ats/candidates/${candidate.id}`}>
           <h3 className="text-[18px] font-bold text-[#010101] mb-1 leading-tight group-hover:text-[#0040A1] transition-colors cursor-pointer">
-            {candidate.full_name}
+            {capitalizeName(candidate.full_name)}
           </h3>
         </Link>
         <p className="text-[13px] text-[#6B7485] font-medium leading-none mb-2">{candidate.position}</p>
         <div className="flex items-center gap-1.5 text-[11px] text-[#6B7485] font-bold uppercase tracking-widest">
             <MapPin size={12} className="shrink-0" />
-            {candidate.country?.toUpperCase() || 'N/A'}
+            {candidate.country ? capitalizeName(candidate.country) : 'N/A'}
         </div>
       </div>
 

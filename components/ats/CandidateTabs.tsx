@@ -6,6 +6,8 @@ import CoverLetterCard from './CoverLetterCard';
 import ResumeViewer from './ResumeViewer';
 import RecruiterNotesWidget from './RecruiterNotesWidget';
 import ApplicationHistoryWidget from './ApplicationHistoryWidget';
+import QuestionnaireAnswersCard from './QuestionnaireAnswersCard';
+import { ListChecks } from 'lucide-react';
 
 interface CandidateTabsProps {
     candidate: any;
@@ -13,10 +15,11 @@ interface CandidateTabsProps {
 }
 
 export default function CandidateTabs({ candidate, logs }: CandidateTabsProps) {
-    const [activeTab, setActiveTab] = useState<'Overview' | 'Resume' | 'Notes' | 'History'>('Overview');
+    const [activeTab, setActiveTab] = useState<'Overview' | 'Vetting' | 'Resume' | 'Notes' | 'History'>('Overview');
 
     const tabs = [
         { id: 'Overview', label: 'Overview', icon: User },
+        { id: 'Vetting', label: 'Vetting', icon: ListChecks },
         { id: 'Resume', label: 'Resume', icon: FileText },
         { id: 'Notes', label: 'Notes', icon: StickyNote },
         { id: 'History', label: 'History', icon: Clock },
@@ -30,6 +33,15 @@ export default function CandidateTabs({ candidate, logs }: CandidateTabsProps) {
                         <CoverLetterCard 
                             candidateId={candidate.id} 
                             initialContent={candidate.cover_letter} 
+                        />
+                    </div>
+                );
+            case 'Vetting':
+                return (
+                    <div className="animate-in fade-in slide-in-from-left-4 duration-500">
+                        <QuestionnaireAnswersCard 
+                            answers={candidate.questionnaire_answers || []} 
+                            questionnaire={candidate.job?.questionnaire || []} 
                         />
                     </div>
                 );

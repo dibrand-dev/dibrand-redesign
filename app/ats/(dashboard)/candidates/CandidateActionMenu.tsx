@@ -13,6 +13,7 @@ import {
     FileText
 } from 'lucide-react';
 import { updateCandidateStatus, assignRecruiter, deleteCandidate } from '../../actions';
+import { capitalizeName } from '@/lib/utils';
 
 interface Recruiter {
     id: string;
@@ -178,7 +179,7 @@ export default function CandidateActionMenu({
                                                     onClick={() => handleAssignRecruiter(r.id)}
                                                     className="w-full text-left px-3 py-1.5 text-[10px] font-bold text-slate-500 hover:bg-slate-50 rounded-lg transition-all truncate"
                                                 >
-                                                    {r.full_name}
+                                                    {capitalizeName(r.full_name)}
                                                 </button>
                                             ))}
                                         </div>

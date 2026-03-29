@@ -51,6 +51,7 @@ export async function createJob(formData: any) {
             modality: formData.modality,
             salary_range: formData.salary_range,
             is_active: formData.is_active,
+            questionnaire: formData.questionnaire
         }]);
 
     if (error) throw error;
@@ -86,6 +87,7 @@ export async function updateJob(id: string, formData: any) {
             modality: formData.modality,
             salary_range: formData.salary_range,
             is_active: formData.is_active,
+            questionnaire: formData.questionnaire
         })
         .eq('id', id);
 

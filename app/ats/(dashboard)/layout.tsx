@@ -5,6 +5,7 @@ import { Bell, Search, HelpCircle } from 'lucide-react';
 import LogoutButton from '@/app/admin/(dashboard)/LogoutButton';
 import { syncRecruiterProfile } from '../actions';
 import ProfileMenu from '@/components/ats/ProfileMenu';
+import { capitalizeName } from '@/lib/utils';
 
 export default async function AtsDashboardLayout({
     children,
@@ -31,7 +32,8 @@ export default async function AtsDashboardLayout({
         redirect('/ats/login');
     }
 
-    const name = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Recruiter';
+    const rawName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Recruiter';
+    const name = capitalizeName(rawName);
     const initials = name[0].toUpperCase();
     const avatarUrl = user?.user_metadata?.avatar_url;
 

@@ -4,7 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase-server-client';
 import Link from 'next/link';
 import SearchTalentPredictive from '@/components/ats/SearchTalentPredictive';
-import { getCandidateNames, getJobs, getCountries } from '@/app/ats/actions';
+import { getCandidateNames, getJobs, getCountries, getRecruiters } from '@/app/ats/actions';
 import CandidatesView from '@/components/ats/CandidatesView';
 import CandidateFilters from '@/components/ats/CandidateFilters';
 import { ATS_STAGES } from '@/lib/ats-constants';
@@ -15,6 +15,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const search = resolvedParams.search as string || undefined;
     const jobId = resolvedParams.jobId as string || undefined;
     const country = resolvedParams.country as string || undefined;
+    const recruiterId = resolvedParams.recruiterId as string || undefined;
     const page = parseInt(resolvedParams.page as string || '1');
     const limit = 9;
     const offset = (page - 1) * limit;
@@ -24,16 +25,21 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
         search, 
         jobId, 
         country,
+        recruiterId,
         limit, 
         offset 
     });
     
     // Fetch filter data
-    const [candidateNames, jobs, countries] = await Promise.all([
+    const [candidateNames, jobs, countries, recruiters] = await Promise.all([
         getCandidateNames(),
         getJobs(),
-        getCountries()
+        getCountries(),
+        getRecruiters()
     ]);
+
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
     const filterJobs = jobs.map(j => ({ id: j.id, label: j.title }));
     const filterStatuses = ATS_STAGES.map(s => s.value);
@@ -61,6 +67,8 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
                 jobs={filterJobs}
                 countries={countries}
                 statuses={filterStatuses}
+                recruiters={recruiters}
+                currentUser={user}
             />
 
             <CandidatesView 
@@ -68,7 +76,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
                 totalCount={totalCount}
                 page={page}
                 totalPages={totalPages}
-                filters={{ status, search, jobId }}
+                filters={{ status, search, jobId, country, recruiterId }}
             />
         </div>
     );

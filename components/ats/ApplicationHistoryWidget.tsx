@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Briefcase, User, Info, FileText, CheckCircle2 } from 'lucide-react';
+import { Clock, CheckCircle2, UserPlus, FileText, Mail, Trash2, Calendar, AlertCircle, Briefcase, Info } from 'lucide-react';
+import { capitalizeName } from '@/lib/utils';
 
 interface Log {
     id: string;
@@ -27,7 +28,7 @@ export default function ApplicationHistoryWidget({ candidate, logs }: Props) {
             type: 'rejection',
             title: 'Candidato Rechazado',
             description: log.note_text.replace('RECHAZADO: ', ''),
-            author: log.author_name,
+            author: log.author_name ? capitalizeName(log.author_name) : 'System',
             author_avatar: log.author_avatar_url,
             date: log.created_at
         })),
@@ -35,8 +36,8 @@ export default function ApplicationHistoryWidget({ candidate, logs }: Props) {
             id: 'creation',
             type: 'creation',
             title: 'Candidato Creado',
-            description: `Registrado en el sistema asignado a ${candidate.recruiter?.full_name || 'Recruiter'}`,
-            author: candidate.recruiter?.full_name || 'System',
+            description: `Registrado en el sistema asignado a ${candidate.recruiter?.full_name ? capitalizeName(candidate.recruiter.full_name) : 'Recruiter'}`,
+            author: candidate.recruiter?.full_name ? capitalizeName(candidate.recruiter.full_name) : 'System',
             author_avatar: null,
             date: candidate.created_at
         }

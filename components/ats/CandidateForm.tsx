@@ -3,12 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { 
     X, User, Mail, Phone, MapPin, Linkedin, Briefcase, 
-    Save, Loader2, Upload, FileText, Bold, Italic, Underline, List, Link as LinkIcon, ChevronDown
+    Save, Loader2, Upload, FileText, Bold, Italic, Underline, List, Link as LinkIcon, ChevronDown, ListChecks, CheckCircle2, ChevronRight
 } from 'lucide-react';
 import { createCandidate, updateCandidate, getRecruiterJobs, getAllTechStacks } from '@/app/ats/actions';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import { toast } from 'react-hot-toast';
+import { capitalizeName } from '@/lib/utils';
+import { Country, State } from 'country-state-city';
 
 interface Props {
     candidate?: any;
@@ -23,17 +25,43 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
     const [isUploading, setIsUploading] = useState(false);
     
     const [formData, setFormData] = useState({
-        first_name: candidate?.first_name || '',
-        last_name: candidate?.last_name || '',
+        first_name: candidate?.first_name ? capitalizeName(candidate.first_name) : '',
+        last_name: candidate?.last_name ? capitalizeName(candidate.last_name) : '',
         email: candidate?.email || '',
         phone: candidate?.phone || '',
-        country: candidate?.country || '',
+        country: candidate?.country || (isEdit ? '' : 'Argentina'),
+        state_province: candidate?.state_province || '',
         linkedin_url: candidate?.linkedin_url || '',
         job_id: candidate?.job_id || '',
         cover_letter: candidate?.cover_letter || '',
         resume_url: candidate?.resume_url || '',
-        cv_filename: candidate?.cv_filename || ''
+        cv_filename: candidate?.cv_filename || '',
+        questionnaire_answers: candidate?.questionnaire_answers || []
     });
+
+    // Location States
+    const [countriesList] = useState(() => {
+        const latamIsos = ['AR', 'BO', 'BR', 'CL', 'CO', 'CR', 'CU', 'EC', 'SV', 'GT', 'HN', 'MX', 'NI', 'PA', 'PY', 'PE', 'PR', 'DO', 'UY', 'VE'];
+        const allCountries = Country.getAllCountries();
+        
+        const latam = allCountries
+            .filter(c => latamIsos.includes(c.isoCode))
+            .sort((a, b) => latamIsos.indexOf(a.isoCode) - latamIsos.indexOf(b.isoCode)); // Keep priority or alpha
+            
+        const others = allCountries
+            .filter(c => !latamIsos.includes(c.isoCode))
+            .sort((a, b) => a.name.localeCompare(b.name));
+            
+        return { latam, others };
+    });
+
+    const [statesList, setStatesList] = useState<any[]>([]);
+    const [selectedCountryCode, setSelectedCountryCode] = useState(() => {
+        const initialCountry = candidate?.country || (isEdit ? '' : 'Argentina');
+        return Country.getAllCountries().find(c => c.name === initialCountry)?.isoCode || '';
+    });
+
+    const [questionnaire, setQuestionnaire] = useState<any[]>(candidate?.job?.questionnaire || []);
 
     const [skills, setSkills] = useState<string[]>(candidate?.skills || []);
 
@@ -53,6 +81,37 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
         };
         loadData();
     }, []);
+
+    // Load states when country changes
+    useEffect(() => {
+        if (selectedCountryCode) {
+            const states = State.getStatesOfCountry(selectedCountryCode);
+            setStatesList(states);
+        } else {
+            setStatesList([]);
+        }
+    }, [selectedCountryCode]);
+
+    // Helper to handle blur normalization
+    const handleNameBlur = (field: 'first_name' | 'last_name', value: string) => {
+        setFormData(prev => ({ ...prev, [field]: capitalizeName(value) }));
+    };
+
+    // Effect to fetch questionnaire when job_id changes
+    useEffect(() => {
+        if (!formData.job_id) {
+            setQuestionnaire([]);
+            return;
+        }
+
+        const selectedJob = jobs.find(j => j.id === formData.job_id);
+        if (selectedJob) {
+            setQuestionnaire(selectedJob.questionnaire || []);
+            
+            // If it's a new job and not the initial edit load, we might want to reset answers
+            // But usually, it's better to keep existing answers if IDs match
+        }
+    }, [formData.job_id, jobs]);
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -115,12 +174,14 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                 email: formData.email,
                 phone: formData.phone,
                 country: formData.country,
+                state_province: formData.state_province,
                 linkedin_url: formData.linkedin_url,
                 job_id: formData.job_id,
                 cover_letter: formData.cover_letter,
                 resume_url: formData.resume_url,
                 cv_filename: formData.cv_filename,
-                skills
+                skills,
+                questionnaire_answers: formData.questionnaire_answers
             };
 
             if (isEdit) {
@@ -179,7 +240,8 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                     placeholder="e.g. Julian"
                                     value={formData.first_name}
                                     onChange={(e) => setFormData({...formData, first_name: e.target.value})}
-                                    className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
+                                    onBlur={(e) => handleNameBlur('first_name', e.target.value)}
+                                    className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all font-inter"
                                     required
                                 />
                             </div>
@@ -190,6 +252,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                     placeholder="e.g. Vance"
                                     value={formData.last_name}
                                     onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+                                    onBlur={(e) => handleNameBlur('last_name', e.target.value)}
                                     className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
                                     required
                                 />
@@ -225,21 +288,50 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                     className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
                                 />
                             </div>
-                            <div className="md:col-span-2 space-y-3">
+                            <div className="space-y-3">
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Country</label>
                                 <div className="relative">
                                     <select 
                                         value={formData.country}
-                                        onChange={(e) => setFormData({...formData, country: e.target.value})}
-                                        className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer"
+                                        onChange={(e) => {
+                                            const countryName = e.target.value;
+                                            const iso = Country.getAllCountries().find(c => c.name === countryName)?.isoCode || '';
+                                            setSelectedCountryCode(iso);
+                                            setFormData({...formData, country: countryName, state_province: ''});
+                                        }}
+                                        className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer"
                                     >
-                                        <option value="">United States</option>
-                                        <option value="Argentina">Argentina</option>
-                                        <option value="Spain">Spain</option>
-                                        <option value="Mexico">Mexico</option>
-                                        <option value="Colombia">Colombia</option>
+                                        <option value="">Select country</option>
+                                        <optgroup label="Latin America">
+                                            {countriesList.latam.map(c => (
+                                                <option key={c.isoCode} value={c.name}>{c.name}</option>
+                                            ))}
+                                        </optgroup>
+                                        <optgroup label="Other Countries">
+                                            {countriesList.others.map(c => (
+                                                <option key={c.isoCode} value={c.name}>{c.name}</option>
+                                            ))}
+                                        </optgroup>
                                     </select>
-                                    <ChevronDown size={18} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                                    <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
+
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">State / Province</label>
+                                <div className="relative">
+                                    <select 
+                                        value={formData.state_province}
+                                        onChange={(e) => setFormData({...formData, state_province: e.target.value})}
+                                        disabled={!selectedCountryCode}
+                                        className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer disabled:opacity-50"
+                                    >
+                                        <option value="">Select state</option>
+                                        {statesList.map(s => (
+                                            <option key={s.isoCode || s.name} value={s.name}>{s.name}</option>
+                                        ))}
+                                    </select>
+                                    <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                                 </div>
                             </div>
                         </div>
@@ -276,6 +368,108 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                             ></textarea>
                         </div>
                     </div>
+
+                    {/* Vetting Questionnaire (Dynamic) */}
+                    {questionnaire && questionnaire.length > 0 && (
+                        <div className="bg-white rounded-2xl p-10 animate-in fade-in slide-in-from-top-4 duration-500">
+                            <div className="flex items-center gap-3 mb-10">
+                                <ListChecks size={20} className="text-[#0040A1]" />
+                                <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Vetting Questionnaire</h2>
+                            </div>
+
+                            <div className="space-y-10">
+                                {questionnaire.map((section: any) => (
+                                    <div key={section.id} className="space-y-6">
+                                        <h3 className="text-[11px] font-black tracking-[0.1em] text-slate-400 uppercase border-b border-slate-100 pb-3">
+                                            {section.title}
+                                        </h3>
+                                        
+                                        <div className="space-y-8">
+                                            {section.questions.map((q: any) => {
+                                                const currentAnswer = (formData.questionnaire_answers || []).find((a: any) => a.question_id === q.id)?.answer;
+                                                
+                                                const setAnswer = (val: any) => {
+                                                    const newAnswers = [...(formData.questionnaire_answers || [])];
+                                                    const idx = newAnswers.findIndex((a: any) => a.question_id === q.id);
+                                                    if (idx >= 0) {
+                                                        newAnswers[idx] = { ...newAnswers[idx], answer: val };
+                                                    } else {
+                                                        newAnswers.push({ question_id: q.id, answer: val });
+                                                    }
+                                                    setFormData({ ...formData, questionnaire_answers: newAnswers });
+                                                };
+
+                                                return (
+                                                    <div key={q.id} className="space-y-3">
+                                                        <label className="text-[12px] font-black text-slate-900 leading-tight block">
+                                                            {q.label}
+                                                            {q.helper && <span className="block text-[11px] text-slate-400 font-medium italic mt-1">{q.helper}</span>}
+                                                        </label>
+                                                        
+                                                        {q.type === 'yesno' ? (
+                                                            <div className="flex gap-3">
+                                                                {['Yes', 'No'].map((opt) => (
+                                                                    <button
+                                                                        key={opt}
+                                                                        type="button"
+                                                                        onClick={() => setAnswer(opt)}
+                                                                        className={`px-6 py-2.5 rounded-xl text-[13px] font-bold transition-all border ${
+                                                                            currentAnswer === opt 
+                                                                                ? 'bg-[#0040A1] text-white border-[#0040A1] shadow-lg shadow-blue-900/10' 
+                                                                                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                                                                        }`}
+                                                                    >
+                                                                        {opt}
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        ) : q.type === 'textarea' ? (
+                                                            <textarea 
+                                                                rows={3}
+                                                                value={currentAnswer || ''}
+                                                                onChange={(e) => setAnswer(e.target.value)}
+                                                                className="w-full bg-[#F8FAFC] rounded-xl px-5 py-4 text-[14px] font-semibold text-slate-900 border border-slate-100 focus:ring-2 focus:ring-blue-100 transition-all outline-none"
+                                                                placeholder="Type response..."
+                                                            />
+                                                        ) : q.type === 'sublist' && q.subquestions ? (
+                                                            <div className="space-y-3">
+                                                                {q.subquestions.map((sub: string, subIdx: number) => {
+                                                                    const subAnswers = Array.isArray(currentAnswer) ? [...currentAnswer] : [];
+                                                                    return (
+                                                                        <div key={subIdx} className="flex items-center gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-slate-100">
+                                                                            <span className="text-[11px] font-bold text-slate-400 w-1/3 truncate">{sub}</span>
+                                                                            <input 
+                                                                                type="text"
+                                                                                value={subAnswers[subIdx] || ''}
+                                                                                onChange={(e) => {
+                                                                                    subAnswers[subIdx] = e.target.value;
+                                                                                    setAnswer(subAnswers);
+                                                                                }}
+                                                                                className="flex-1 bg-transparent border-none text-[13px] font-bold text-[#0040A1] outline-none"
+                                                                                placeholder="Years / Info..."
+                                                                            />
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        ) : (
+                                                            <input 
+                                                                type="text"
+                                                                value={currentAnswer || ''}
+                                                                onChange={(e) => setAnswer(e.target.value)}
+                                                                className="w-full bg-[#F8FAFC] rounded-xl px-5 py-4 text-[14px] font-semibold text-slate-900 border border-slate-100 focus:ring-2 focus:ring-blue-100 transition-all outline-none"
+                                                                placeholder="Type response..."
+                                                            />
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* RIGHT COLUMN */}

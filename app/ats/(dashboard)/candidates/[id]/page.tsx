@@ -15,6 +15,7 @@ import RecruiterNotesWidget from '@/components/ats/RecruiterNotesWidget';
 import ApplicationHistoryWidget from '@/components/ats/ApplicationHistoryWidget';
 import ResumeViewer from '@/components/ats/ResumeViewer';
 import CandidateTabs from '@/components/ats/CandidateTabs';
+import { capitalizeName } from '@/lib/utils';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -58,17 +59,20 @@ export default async function CandidateDetailPage({
                             <div className="w-[110px] h-[110px] rounded-[24px] bg-slate-200 overflow-hidden shadow-sm shrink-0 border border-slate-200/60 ring-4 ring-white relative group">
                                 <img 
                                     src={candidate.avatar_url || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'} 
-                                    alt="Avatar" 
+                                    alt={candidate.full_name ? capitalizeName(candidate.full_name) : 'Avatar'} 
                                     className="w-full h-full object-cover" 
                                 />
                             </div>
                             <div className="min-w-0 flex-1 pt-1">
                                 {candidate.status === 'Rejected' && <DisqualifiedTag reason={rejectionReason} />}
-                                <h1 className="text-[22px] font-black text-slate-900 leading-none mb-3 tracking-tight truncate" title={candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}>
-                                    {candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}
+                                <h1 
+                                    className="text-[22px] font-black text-slate-900 leading-none mb-3 tracking-tight truncate" 
+                                    title={candidate.full_name ? capitalizeName(candidate.full_name) : `${capitalizeName(candidate.first_name)} ${capitalizeName(candidate.last_name)}`}
+                                >
+                                    {capitalizeName(candidate.full_name || `${candidate.first_name} ${candidate.last_name}`)}
                                 </h1>
                                 <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-[13px] text-slate-500 font-semibold mb-3">
-                                    <div className="flex items-center gap-1.5 whitespace-nowrap"><MapPin size={16} className="text-slate-400" /> {candidate.country || 'Sin especificar'}</div>
+                                    <div className="flex items-center gap-1.5 whitespace-nowrap"><MapPin size={16} className="text-slate-400" /> {candidate.country ? capitalizeName(candidate.country) : 'Sin especificar'}</div>
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><Mail size={16} className="text-slate-400" /> {candidate.email}</div>
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><Phone size={16} className="text-slate-400" /> {candidate.phone || 'Sin número'}</div>
                                 </div>
@@ -93,7 +97,10 @@ export default async function CandidateDetailPage({
 
                     {/* Progress Tracker Widget */}
                     <div className="mb-10">
-                        <CandidatePipelineTracker currentStatus={candidate.status || 'Applied'} />
+                        <CandidatePipelineTracker 
+                            currentStatus={candidate.status || 'Applied'} 
+                            hasVetting={Array.isArray(candidate.questionnaire_answers) && candidate.questionnaire_answers.length > 0} 
+                        />
                     </div>
 
                     {/* Content Section with Tabs */}
@@ -114,7 +121,7 @@ export default async function CandidateDetailPage({
                                     </div>
                                     <div className="min-w-0">
                                         <p className="text-[14px] font-black text-slate-900 leading-tight truncate px-1">
-                                            {candidate.recruiter?.full_name || 'Sin asignar'}
+                                            {candidate.recruiter?.full_name ? capitalizeName(candidate.recruiter.full_name) : 'Sin asignar'}
                                         </p>
                                         <p className="text-[11px] font-semibold text-slate-500 mt-0.5 px-1 truncate capitalize">
                                             Managing Recruiter

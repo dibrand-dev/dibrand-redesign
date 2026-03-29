@@ -11,6 +11,8 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
         redirect('/admin/login');
     }
 
+    const userRole = user?.user_metadata?.role || user?.role;
+
     let jobData: any = null;
 
     try {
@@ -26,6 +28,7 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
                 employment_type,
                 seniority,
                 salary_range,
+                questionnaire,
                 created_at,
                 candidates:job_applications(
                     id, first_name, last_name, email, status, created_at, is_deleted, avatar_url, recruiter_id
@@ -94,6 +97,6 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
     }
 
     return (
-        <JobViewClient job={jobData} />
+        <JobViewClient job={jobData} userRole={userRole} />
     );
 }

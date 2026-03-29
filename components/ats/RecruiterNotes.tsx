@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, AtSign, Paperclip, MoreHorizontal, MessageSquare, Loader2, User } from 'lucide-react';
 import { addApplicationLog, getRecruiters } from '@/app/ats/actions';
+import { capitalizeName } from '@/lib/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Recruiter {
@@ -143,9 +144,12 @@ export default function RecruiterNotes({
                                      className="w-full px-4 py-2.5 flex items-center gap-3 text-left hover:bg-[#F1F5F9] transition-colors group"
                                  >
                                      <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-[#0040A1]">
-                                         {r.full_name.charAt(0)}
+                                         {capitalizeName(r.full_name)[0]}
                                      </div>
-                                     <span className="text-[12px] font-semibold text-[#191C1D]">{r.full_name}</span>
+                                     <div className="flex flex-col">
+                                         <span className="text-[12px] font-semibold text-[#191C1D]">{capitalizeName(r.full_name)}</span>
+                                         <span className="text-[10px] text-slate-400">@{r.full_name.split(' ')[0].toLowerCase()}</span>
+                                     </div>
                                  </button>
                              ))}
                         </div>

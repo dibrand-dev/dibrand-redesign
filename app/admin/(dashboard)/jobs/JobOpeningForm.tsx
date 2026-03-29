@@ -2,10 +2,13 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Save, Sparkles, Loader2, Trash2, Globe } from 'lucide-react';
+import { ArrowLeft, Save, Sparkles, Loader2, Trash2, Globe, ListChecks } from 'lucide-react';
 import Link from 'next/link';
 import { createJob, updateJob, deleteJob } from '@/app/actions/jobs';
 import TiptapEditor from '@/components/admin/TiptapEditor';
+import { DEFAULT_QUESTIONNAIRE } from '@/lib/ats-constants';
+
+
 
 interface JobOpeningFormProps {
     initialData?: any;
@@ -33,6 +36,7 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
         modality: initialData?.modality || 'Remoto',
         salary_range: initialData?.salary_range || '',
         is_active: initialData?.is_active ?? true,
+        questionnaire: initialData?.questionnaire || DEFAULT_QUESTIONNAIRE,
     });
 
     const modalities = ['Remoto', 'Híbrido', 'Presencial'];
@@ -337,6 +341,24 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                         onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))}
                         className="w-6 h-6 text-admin-accent border-admin-border rounded-lg focus:ring-admin-accent transition-all cursor-pointer accent-admin-accent"
                     />
+                </div>
+
+                {/* Section: Recruitment Questionnaire Indicator */}
+                <div className="flex items-center justify-between p-6 bg-blue-50/30 rounded-2xl border border-blue-100 mt-6 transition-colors hover:border-admin-accent/30 group">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-[#0040A1]/10 text-[#0040A1] flex items-center justify-center">
+                            <ListChecks size={24} />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-sm font-black text-admin-text-primary uppercase tracking-tight">Cuestionario de Vetting</span>
+                            <span className="text-[10px] text-admin-text-secondary font-medium uppercase tracking-widest">
+                                {initialData ? 'Cuestionario personalizado activo' : 'Se adjuntará la plantilla estándar automáticamente'}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="text-[10px] font-black text-[#0040A1] bg-white px-3 py-1.5 rounded-lg border border-blue-100 shadow-sm uppercase tracking-widest">
+                        Gestionar en ATS
+                    </div>
                 </div>
             </div>
 

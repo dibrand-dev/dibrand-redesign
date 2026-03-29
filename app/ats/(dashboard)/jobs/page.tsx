@@ -10,7 +10,8 @@ import {
     ChevronDown, 
     TrendingUp, 
     Play,
-    Plus
+    Plus,
+    ListChecks
 } from 'lucide-react';
 import Link from 'next/link';
 import { getRecruiterJobs } from '../../actions';
@@ -36,6 +37,7 @@ interface Job {
     days_open?: number;
     totalCandidatesCount: number; // total candidates assigned to this job
     avatars: { url?: string, initials: string }[];
+    questionnaire?: any[];
 }
 
 export default function AtsJobsPage() {
@@ -165,11 +167,17 @@ function JobCard({ job }: { job: Job }) {
             ? 'bg-[#F8FAFC] border-2 border-dashed border-[#E2E8F0] opacity-80' 
             : 'bg-white border border-[#E2E8F0] hover:shadow-2xl hover:shadow-[#0040A1]/5 hover:translate-y-[-4px]'
         }`}>
-            {/* Header Content */}
             <div className="flex justify-between items-start mb-4">
-                <span className="px-3 py-1 bg-[#E8F0FF] text-[#0040A1] text-[10px] font-black tracking-widest rounded-lg uppercase">
-                    {job.department || 'ENGINEERING'}
-                </span>
+                <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 bg-[#E8F0FF] text-[#0040A1] text-[10px] font-black tracking-widest rounded-lg uppercase">
+                        {job.department || 'ENGINEERING'}
+                    </span>
+                    {job.questionnaire && job.questionnaire.length > 0 && (
+                        <span className="flex items-center gap-1 px-2 py-1 bg-green-50 text-[#1A3A00] text-[9px] font-black rounded-lg border border-green-100 uppercase tracking-tight">
+                            <ListChecks size={12} /> Vetting Active
+                        </span>
+                    )}
+                </div>
                 <button className="p-1.5 text-[#737785] hover:bg-slate-50 hover:text-[#191C1D] rounded-full transition-all">
                     <MoreVertical size={20} />
                 </button>

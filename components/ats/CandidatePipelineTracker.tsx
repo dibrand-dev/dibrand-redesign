@@ -6,9 +6,10 @@ import { ATS_STAGES } from '@/lib/ats-constants';
 
 interface Props {
     currentStatus: string;
+    hasVetting?: boolean;
 }
 
-export default function CandidatePipelineTracker({ currentStatus }: Props) {
+export default function CandidatePipelineTracker({ currentStatus, hasVetting }: Props) {
     const currentIndex = ATS_STAGES.findIndex(
         s => s.value.toLowerCase() === currentStatus?.toLowerCase()
     );
@@ -62,6 +63,12 @@ export default function CandidatePipelineTracker({ currentStatus }: Props) {
                             >
                                 {stage.label}
                             </span>
+                            {idx === 1 && (
+                                <div className={`flex items-center gap-1 mt-1 transition-all duration-500 ${hasVetting ? 'opacity-100' : 'opacity-0 h-0 pointer-events-none'}`}>
+                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                    <span className="text-[7px] font-black text-green-600 uppercase tracking-tighter">Vetting Comp.</span>
+                                </div>
+                            )}
                         </div>
                     );
                 })}
