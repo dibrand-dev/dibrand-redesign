@@ -630,6 +630,7 @@ export async function createCandidate(formData: {
     job_id: string;
     linkedin_url?: string;
     skills?: string[];
+    status?: string;
     questionnaire_answers?: any[];
 }) {
     // 1. Check for duplicate email (case-insensitive)
@@ -674,7 +675,7 @@ export async function createCandidate(formData: {
             linkedin_url: formData.linkedin_url,
             skills: formData.skills || [],
             questionnaire_answers: formData.questionnaire_answers || [],
-            status: 'Applied', // Default Stage
+            status: formData.status || 'Applied', // Use provided status or default
             is_deleted: false,
             created_at: new Date().toISOString()
         }])

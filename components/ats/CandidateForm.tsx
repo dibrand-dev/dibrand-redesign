@@ -11,6 +11,7 @@ import { createBrowserClient } from '@supabase/ssr';
 import { toast } from 'react-hot-toast';
 import { capitalizeName } from '@/lib/utils';
 import { Country, State } from 'country-state-city';
+import { ATS_STAGES } from '@/lib/ats-constants';
 
 interface Props {
     candidate?: any;
@@ -31,6 +32,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
         phone: candidate?.phone || '',
         country: candidate?.country || (isEdit ? '' : 'Argentina'),
         state_province: candidate?.state_province || '',
+        status: candidate?.status || (isEdit ? '' : 'Applied'),
         linkedin_url: candidate?.linkedin_url || '',
         job_id: candidate?.job_id || '',
         cover_letter: candidate?.cover_letter || '',
@@ -181,6 +183,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                 resume_url: formData.resume_url,
                 cv_filename: formData.cv_filename,
                 skills,
+                status: formData.status,
                 questionnaire_answers: formData.questionnaire_answers
             };
 
@@ -483,7 +486,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
 
                         <div className="space-y-8">
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Target Role</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Desired Position</label>
                                 <div className="relative">
                                     <select 
                                         value={formData.job_id}
@@ -496,48 +499,63 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                     </select>
                                     <ChevronDown size={18} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                                 </div>
+                                <p className="text-[11px] text-slate-400 font-medium pl-1 italic">Role the talent is currently aspiring to</p>
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Position</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Hiring Stage</label>
                                 <div className="relative">
-                                    <select className="w-full bg-white border border-slate-100 rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none focus:ring-4 focus:ring-blue-50 transition-all appearance-none cursor-pointer">
-                                        <option value="">Creative & Design</option>
-                                        <option value="">Engineering</option>
-                                        <option value="">Product Management</option>
+                                    <select 
+                                        value={formData.status}
+                                        onChange={(e) => setFormData({...formData, status: e.target.value})}
+                                        className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer"
+                                    >
+                                        <option value="">Seleccionar etapa actual...</option>
+                                        {ATS_STAGES.map(stage => (
+                                            <option key={stage.value} value={stage.value}>{stage.label}</option>
+                                        ))}
+                                        <option value="Rejected">Rejected</option>
                                     </select>
-                                    <ChevronDown size={18} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                                    <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                                 </div>
                             </div>
 
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Skills (Tech Stacks)</label>
-                                <div className="flex flex-wrap gap-2 mb-2">
-                                    {skills.map(skill => (
-                                        <span key={skill} className="px-3 py-1.5 bg-blue-50 text-blue-600 text-[11px] font-bold rounded-lg flex items-center gap-2">
-                                            {skill}
-                                            <button type="button" onClick={() => setSkills(skills.filter(s => s !== skill))} className="hover:text-blue-900"><X size={12} /></button>
-                                        </span>
-                                    ))}
-                                </div>
-                                <input 
-                                    list="tech-stacks"
-                                    placeholder="Add a skill..."
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            e.preventDefault();
-                                            const val = e.currentTarget.value.trim();
-                                            if (val && !skills.includes(val)) {
-                                                setSkills([...skills, val]);
-                                                e.currentTarget.value = '';
+                                <div className="bg-[#F8FAFC] border border-slate-100 rounded-xl p-4 min-h-[120px] focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {skills.map(skill => (
+                                            <span key={skill} className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-[11px] font-bold rounded-lg flex items-center gap-3 shadow-sm group">
+                                                {skill}
+                                                <button 
+                                                    type="button" 
+                                                    onClick={() => setSkills(skills.filter(s => s !== skill))} 
+                                                    className="text-slate-300 hover:text-red-500 transition-colors"
+                                                >
+                                                    <X size={12} strokeWidth={3} />
+                                                </button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <input 
+                                        list="tech-stacks"
+                                        placeholder="Escribe una tecnología y presiona Enter..."
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                const val = e.currentTarget.value.trim();
+                                                if (val && !skills.includes(val)) {
+                                                    setSkills([...skills, val]);
+                                                    e.currentTarget.value = '';
+                                                }
                                             }
-                                        }
-                                    }}
-                                    className="w-full bg-transparent border-b border-slate-100 py-2 text-[14px] font-medium placeholder:text-slate-300 outline-none focus:border-[#0040A1] transition-all"
-                                />
-                                <datalist id="tech-stacks">
-                                    {techStacks.map(stack => <option key={stack.id} value={stack.name} />)}
-                                </datalist>
+                                        }}
+                                        className="w-full bg-transparent py-2 text-[14px] font-bold text-[#0040A1] placeholder:text-slate-300 placeholder:font-normal outline-none"
+                                    />
+                                    <datalist id="tech-stacks">
+                                        {techStacks.map(stack => <option key={stack.id} value={stack.name} />)}
+                                    </datalist>
+                                </div>
                             </div>
                         </div>
                     </div>
