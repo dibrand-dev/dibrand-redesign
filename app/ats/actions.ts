@@ -268,6 +268,31 @@ export async function getCandidateById(id: string) {
     }
 }
 
+export async function getApplicationsByEmail(email: string) {
+    if (!email) return [];
+    
+    // UUID regex check (not needed since email is dynamic, but we can check if it's a valid email)
+    
+    const { data, error } = await supabase
+        .from('job_applications')
+        .select(`
+            id,
+            status,
+            created_at,
+            job:job_openings(title)
+        `)
+        .eq('email', email)
+        .eq('is_deleted', false)
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching applications by email:', error);
+        return [];
+    }
+
+    return data;
+}
+
 export async function updateCandidate(id: string, updates: any) {
     console.log('UPDATING CANDIDATE:', id, updates);
     const { error } = await supabase
@@ -581,10 +606,12 @@ export async function createCandidate(formData: {
     full_name: string;
     email: string;
     phone: string;
-    candidate_summary: string;
+    candidate_summary?: string;
+    cover_letter?: string;
     resume_url: string;
+    cv_filename?: string;
     country: string;
-    state_province: string;
+    state_province?: string;
     job_id: string;
     linkedin_url?: string;
     skills?: string[];
@@ -618,10 +645,12 @@ export async function createCandidate(formData: {
             last_name,
             email: formData.email,
             phone: formData.phone,
-            candidate_summary: formData.candidate_summary,
+            candidate_summary: formData.candidate_summary || formData.cover_letter || '',
+            cover_letter: formData.cover_letter || formData.candidate_summary || '',
             resume_url: formData.resume_url,
+            cv_filename: formData.cv_filename || '',
             country: formData.country,
-            state_province: formData.state_province,
+            state_province: formData.state_province || '',
             job_id: formData.job_id,
             recruiter_id: user.id, // associate to creator
             linkedin_url: formData.linkedin_url,

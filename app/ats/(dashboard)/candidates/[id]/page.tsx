@@ -1,5 +1,4 @@
-import { Suspense } from 'react';
-import { getCandidateById, getApplicationLogs, getStackNames, syncRecruiterProfile } from '@/app/ats/actions';
+import { getCandidateById, getApplicationLogs, getStackNames, syncRecruiterProfile, getApplicationsByEmail } from '@/app/ats/actions';
 import { 
     MapPin, Mail, Phone, Calendar, FileText, StickyNote, Clock,
     Check, Bold, Italic, Underline, List, ListOrdered, Link as LinkIcon, Download, Maximize2, User, Pencil, Users, Briefcase
@@ -14,6 +13,8 @@ import CoverLetterCard from '@/components/ats/CoverLetterCard';
 import DisqualifiedTag from '@/components/ats/DisqualifiedTag';
 import RecruiterNotesWidget from '@/components/ats/RecruiterNotesWidget';
 import ApplicationHistoryWidget from '@/components/ats/ApplicationHistoryWidget';
+import ResumeViewer from '@/components/ats/ResumeViewer';
+import CandidateTabs from '@/components/ats/CandidateTabs';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -31,60 +32,26 @@ export default async function CandidateDetailPage({
     const logs = await getApplicationLogs(id);
     const recruiterId = await syncRecruiterProfile();
 
+    if (!candidate) notFound();
+
+    // Fetch all applications for this candidate to show which positions they applied for
+    const allApplications = await getApplicationsByEmail(candidate.email);
+    const uniqueJobTitles = Array.from(new Set(allApplications.map((app: any) => {
+        const jobData = app.job;
+        return Array.isArray(jobData) ? jobData[0]?.title : jobData?.title;
+    }).filter(Boolean))) as string[];
+
     const rejectionLog = (logs || []).find(log => log.note_text?.startsWith('RECHAZADO: '));
     const rejectionReason = rejectionLog ? rejectionLog.note_text.split(' (Por ')[0].replace('RECHAZADO: ', '') : null;
-
-    if (!candidate) notFound();
 
     const resolvedStackNames = await getStackNames(candidate.stack_ids || []);
     const allSkills = Array.from(new Set([...resolvedStackNames, ...(candidate.skills || [])])).sort();
 
     return (
-        <div className="-m-10 min-h-[calc(100vh-80px)] flex bg-[#FAFAFA] font-inter">
-            {/* Secondary Sidebar */}
-            <div className="w-56 bg-white border-r border-[#E2E8F0] shrink-0 flex flex-col justify-between hidden lg:flex">
-                <div>
-                   <div className="p-6">
-                       <div className="flex items-center gap-3 text-[10px] font-black text-slate-500 tracking-widest uppercase mb-6 mt-2">
-                           <div className="w-4 h-4 bg-slate-900 rounded-sm"></div>
-                           Recruitment Hub
-                       </div>
-                       
-                       <nav className="space-y-1 relative mt-4">
-                           {/* Active marker right edge */}
-                           <div className="absolute right-[-24px] top-0 bottom-0 w-[4px] bg-transparent">
-                               <div className="absolute top-0 right-0 h-[44px] w-[4px] bg-[#0B4FEA] rounded-l-full"></div>
-                           </div>
-
-                           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-[#0B4FEA] bg-[#EEF2FF] rounded-xl text-[13px] font-bold">
-                               <User size={16} /> Overview
-                           </Link>
-                           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 text-[13px] font-semibold transition-colors">
-                               <Calendar size={16} /> Timeline
-                           </Link>
-                           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 text-[13px] font-semibold transition-colors">
-                               <FileText size={16} /> Resume
-                           </Link>
-                           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 text-[13px] font-semibold transition-colors">
-                               <StickyNote size={16} /> Notes
-                           </Link>
-                           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 text-[13px] font-semibold transition-colors">
-                               <Clock size={16} /> History
-                           </Link>
-                       </nav>
-                   </div>
-                </div>
-                
-                <div className="p-6 border-t border-slate-100">
-                    <button className="w-full py-3 bg-[#0B4FEA] text-white rounded-xl text-[13px] font-bold shadow-md shadow-blue-600/20 hover:bg-blue-800 transition-colors">
-                        Hire Candidate
-                    </button>
-                </div>
-            </div>
-
+        <div className="min-h-[calc(100vh-80px)] bg-[#FAFAFA] font-inter">
             {/* Main Content */}
-            <div className="flex-1 overflow-y-auto p-12 custom-scrollbar">
-                <div className="max-w-6xl mx-auto">
+            <div className="overflow-y-auto px-12 py-10 custom-scrollbar">
+                <div className="max-w-7xl mx-auto">
                     {/* Header */}
                     <div className="flex justify-between items-start mb-10 gap-8">
                         <div className="flex items-start gap-6 min-w-0 flex-1">
@@ -94,24 +61,29 @@ export default async function CandidateDetailPage({
                                     alt="Avatar" 
                                     className="w-full h-full object-cover" 
                                 />
-                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-600 outline outline-4 outline-white rounded-full flex items-center justify-center text-white text-[10px] shadow-sm">
-                                    <Briefcase size={12} fill="currentColor" className="text-white" />
-                                </div>
                             </div>
                             <div className="min-w-0 flex-1 pt-1">
                                 {candidate.status === 'Rejected' && <DisqualifiedTag reason={rejectionReason} />}
                                 <h1 className="text-[22px] font-black text-slate-900 leading-none mb-3 tracking-tight truncate" title={candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}>
                                     {candidate.full_name || `${candidate.first_name} ${candidate.last_name}`}
                                 </h1>
-                                <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-[13px] text-slate-500 font-semibold">
+                                <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-[13px] text-slate-500 font-semibold mb-3">
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><MapPin size={16} className="text-slate-400" /> {candidate.country || 'Sin especificar'}</div>
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><Mail size={16} className="text-slate-400" /> {candidate.email}</div>
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><Phone size={16} className="text-slate-400" /> {candidate.phone || 'Sin número'}</div>
                                 </div>
+                                <div className="flex flex-wrap items-center gap-2 mt-2">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-1">Postulaciones:</span>
+                                    {uniqueJobTitles.map((title, i) => (
+                                        <span key={i} className="px-2.5 py-1 bg-slate-100 text-slate-600 text-[11px] font-bold rounded-lg border border-slate-200 flex items-center gap-1.5">
+                                            <Briefcase size={12} className="text-slate-400" /> {title}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
-                            <Link href={`/ats/candidates/${id}?edit=true`} className="h-[42px] px-6 border border-slate-200 bg-white rounded-xl text-[13px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
+                            <Link href={`/ats/candidates/${id}/edit`} className="h-[42px] px-6 border border-slate-200 bg-white rounded-xl text-[13px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
                                 <Pencil size={14} /> Editar
                             </Link>
                             <button className="h-[42px] px-6 border border-slate-200 bg-white rounded-xl text-[13px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Message</button>
@@ -120,56 +92,21 @@ export default async function CandidateDetailPage({
                     </div>
 
                     {/* Progress Tracker Widget */}
-                    <CandidatePipelineTracker currentStatus={candidate.status || 'Applied'} />
+                    <div className="mb-10">
+                        <CandidatePipelineTracker currentStatus={candidate.status || 'Applied'} />
+                    </div>
 
-                    {/* Subgrid layout */}
-                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                        <div className="xl:col-span-2 space-y-8">
-                            {/* Cover Letter */}
-                            <CoverLetterCard 
-                                candidateId={id} 
-                                initialContent={candidate.cover_letter} 
-                            />
-
-                            {/* Application History */}
-                            <ApplicationHistoryWidget 
-                                candidate={candidate} 
-                                logs={logs || []} 
-                            />
-
-                            {/* Resume / CV */}
-                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-8">
-                                <div className="flex justify-between items-center mb-6">
-                                    <h3 className="text-[18px] font-extrabold text-slate-900">Resume / CV</h3>
-                                    <div className="flex gap-4 text-slate-400">
-                                        <button className="hover:text-slate-700 transition-colors"><Download size={18} /></button>
-                                        <button className="hover:text-slate-700 transition-colors"><Maximize2 size={18} /></button>
-                                    </div>
-                                </div>
-                                <div className="border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 flex flex-col items-center justify-center py-20 mb-6 h-[400px] relative overflow-hidden group">
-                                    <div className="w-72 bg-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] rounded-sm p-8 absolute transform transition-transform duration-500 group-hover:-translate-y-2">
-                                        <div className="h-5 bg-slate-200 w-1/3 mb-6 rounded-sm"></div>
-                                        <div className="h-2.5 bg-slate-100 w-full mb-3 rounded-full"></div>
-                                        <div className="h-2.5 bg-slate-100 w-full mb-3 rounded-full"></div>
-                                        <div className="h-2.5 bg-slate-100 w-4/5 mb-6 rounded-full"></div>
-                                        <div className="h-2.5 bg-slate-200 w-1/4 mb-3 rounded-full"></div>
-                                        <div className="h-2.5 bg-slate-100 w-full mb-3 rounded-full"></div>
-                                        <div className="h-2.5 bg-slate-100 w-2/3 mb-3 rounded-full"></div>
-                                    </div>
-                                    <div className="absolute inset-0 bg-slate-900/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                                        <button className="px-6 py-3 bg-white text-slate-900 font-extrabold text-[13px] rounded-xl shadow-xl flex items-center gap-2 hover:scale-105 transition-transform">
-                                            <Maximize2 size={16}/> View Full Document
-                                        </button>
-                                    </div>
-                                </div>
-                                <p className="text-center text-[12px] font-bold text-slate-500">Eleanor_Vance_Resume_2024.pdf (2.4 MB)</p>
-                            </div>
+                    {/* Content Section with Tabs */}
+                    <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
+                        {/* LEFT/MAIN COLUMN (Tabs) */}
+                        <div className="xl:col-span-8">
+                            <CandidateTabs candidate={candidate} logs={logs || []} />
                         </div>
 
-                        {/* Right Column */}
-                        <div className="space-y-8">
-                            {/* Assigned Recruiter Card */}
-                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6 animate-in slide-in-from-right-4 duration-500">
+                        {/* RIGHT SIDEBAR (Quick Actions/Meta) */}
+                        <div className="xl:col-span-4 space-y-8">
+                             {/* Assigned Recruiter Card */}
+                             <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
                                 <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Reclutador Asignado</h3>
                                 <div className="flex items-center gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-slate-100">
                                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0B4FEA] to-blue-700 text-white flex items-center justify-center font-black text-sm shadow-md">
@@ -186,33 +123,22 @@ export default async function CandidateDetailPage({
                                 </div>
                             </div>
 
-                            {/* Process Actions */}
+                            {/* Process Actions Widget */}
                             <ProcessActionsWidget 
                                 candidateId={id} 
                                 currentStatus={candidate.status || 'Applied'} 
                             />
 
-                            <RecruiterNotesWidget 
-                                candidateId={id} 
-                                initialLogs={logs || []} 
-                            />
-
-                            {/* Core Competencies */}
+                            {/* Core Competencies (Skills) */}
                             <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
                                 <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Core Competencies</h3>
                                 <div className="flex flex-wrap gap-2">
-                                    {allSkills.length > 0 ? allSkills.slice(0, 5).map(skill => (
+                                    {allSkills.length > 0 ? allSkills.slice(0, 10).map(skill => (
                                          <span key={skill} className="px-3 py-1.5 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">
                                             {skill}
                                          </span>
                                     )) : (
-                                        <>
-                                            <span className="px-3.5 py-2 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">PRODUCT STRATEGY</span>
-                                            <span className="px-3.5 py-2 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">DESIGN SYSTEMS</span>
-                                            <span className="px-3.5 py-2 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">FIGMA</span>
-                                            <span className="px-3.5 py-2 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">USER RESEARCH</span>
-                                            <span className="px-3.5 py-2 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">REACT/TS</span>
-                                        </>
+                                        <p className="text-[12px] text-slate-400 italic">No skills listed</p>
                                     )}
                                 </div>
                             </div>
