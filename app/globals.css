@@ -113,6 +113,8 @@
 
   --color-brand: var(--brand-primary);
   --color-primary: var(--brand-primary);
+  
+  --font-heading: var(--font-outfit);
 }
 
 @layer base {
