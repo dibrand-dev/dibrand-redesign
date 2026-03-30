@@ -83,11 +83,7 @@ export async function submitToZoho(formData: FormData) {
         console.error('[ContactForm] Zoho Sync Network Error:', syncError);
     }
 
-    // ALWAYS RETURN SUCCESS if we saved it in Supabase, 
-    // to avoid scaring the user with errors while we debug Zoho.
-    if (supabaseSaved) {
-        return { success: true };
-    }
-
-    return { success: false, error: 'Database capture failed' };
+    // ALWAYS RETURN SUCCESS to the client to keep the conversion funnel open.
+    // We will monitor failures through server logs [ContactForm].
+    return { success: true };
 }
