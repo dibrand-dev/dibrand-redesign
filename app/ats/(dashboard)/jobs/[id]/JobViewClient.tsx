@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase-client';
 import { updateJobQuestionnaire, updateJobDescription } from '@/app/ats/actions';
+import StageBadge from '@/components/ats/StageBadge';
+import { getStageConfig } from '@/lib/ats-constants';
 
 interface Question {
     id: string;
@@ -54,10 +56,12 @@ interface JobData {
     recentActivity?: any[];
     team?: any[];
     questionnaire?: any[];
+    allCandidates?: any[];
 }
 
 export default function JobViewClient({ job, userRole }: { job: JobData | null; userRole?: string }) {
     const [activeTab, setActiveTab] = useState('Candidates');
+    const [showAllCandidates, setShowAllCandidates] = useState(false);
     
     // Parse role from prop safely
     const roleStr = (userRole || '').toString().toLowerCase();
@@ -303,25 +307,25 @@ ${questionnaire.map(section => {
                     <div className="mb-10">
                         <h3 className="text-[16px] font-bold text-[#191C1D] mb-4">Recruitment Pipeline</h3>
                         <div className="grid grid-cols-4 w-full rounded-2xl overflow-hidden h-24 shadow-sm border border-[#E2E8F0]">
-                            <div className="bg-[#0040A1] p-4 flex flex-col justify-between relative">
-                                <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">NEW</span>
-                                <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.newCount || 0}</span>
+                            <div className={`${getStageConfig('Applied').twBg} p-4 flex flex-col justify-between relative`}>
+                                <span className={`text-[10px] font-bold ${getStageConfig('Applied').twText} opacity-80 tracking-widest uppercase`}>NUEVO</span>
+                                <span className={`text-[28px] font-bold ${getStageConfig('Applied').twText} leading-none`}>{job?.stats?.newCount || 0}</span>
                             </div>
-                            <div className="bg-[#0060F0] p-4 flex flex-col justify-between -ml-2 skew-x-[-10deg] border-l border-[#0040A1]/20 z-10">
+                            <div className={`${getStageConfig('Screening').twBg} p-4 flex flex-col justify-between -ml-2 skew-x-[-10deg] border-l border-white/20 z-10`}>
                                 <div className="skew-x-[10deg] flex flex-col h-full justify-between">
-                                    <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">SCREENED</span>
-                                    <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.screenedCount || 0}</span>
+                                    <span className={`text-[10px] font-bold ${getStageConfig('Screening').twText} opacity-80 tracking-widest uppercase`}>SCREENED</span>
+                                    <span className={`text-[28px] font-bold ${getStageConfig('Screening').twText} leading-none`}>{job?.stats?.screenedCount || 0}</span>
                                 </div>
                             </div>
-                            <div className="bg-[#5A6376] p-4 flex flex-col justify-between -ml-4 skew-x-[-10deg] border-l border-[#0040A1]/20 z-20">
+                            <div className={`${getStageConfig('Interview').twBg} p-4 flex flex-col justify-between -ml-4 skew-x-[-10deg] border-l border-white/20 z-20`}>
                                 <div className="skew-x-[10deg] flex flex-col h-full justify-between pl-2">
-                                    <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">INTERVIEWING</span>
-                                    <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.interviewingCount || 0}</span>
+                                    <span className={`text-[10px] font-bold ${getStageConfig('Interview').twText} opacity-80 tracking-widest uppercase`}>INTERVIEWING</span>
+                                    <span className={`text-[28px] font-bold ${getStageConfig('Interview').twText} leading-none`}>{job?.stats?.interviewingCount || 0}</span>
                                 </div>
                             </div>
-                            <div className="bg-[#191C1D] p-4 flex flex-col justify-between -ml-4 z-30">
-                                <span className="text-[10px] font-bold text-white/80 tracking-widest uppercase">OFFER</span>
-                                <span className="text-[28px] font-bold text-white leading-none">{job?.stats?.offerCount || 0}</span>
+                            <div className={`${getStageConfig('Offer').twBg} p-4 flex flex-col justify-between -ml-4 z-30`}>
+                                <span className={`text-[10px] font-bold ${getStageConfig('Offer').twText} opacity-80 tracking-widest uppercase`}>OFFER</span>
+                                <span className={`text-[28px] font-bold ${getStageConfig('Offer').twText} leading-none`}>{job?.stats?.offerCount || 0}</span>
                             </div>
                         </div>
                     </div>
@@ -353,57 +357,76 @@ ${questionnaire.map(section => {
                     <>
                         <div className="lg:col-span-8 space-y-4">
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">RECENT ACTIVITY</h3>
-                                <button className="text-[12px] font-bold text-[#0040A1] flex items-center gap-1">
-                                    View All Candidates <ArrowLeft size={12} className="rotate-180" />
-                                </button>
+                                <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">
+                                    {showAllCandidates ? 'ALL CANDIDATES' : 'RECENT ACTIVITY'}
+                                </h3>
+                                {!showAllCandidates ? (
+                                    <button 
+                                        onClick={() => setShowAllCandidates(true)}
+                                        className="text-[12px] font-bold text-[#0040A1] flex items-center gap-1 hover:underline"
+                                    >
+                                        View All Candidates <ArrowLeft size={12} className="rotate-180" />
+                                    </button>
+                                ) : (
+                                    <button 
+                                        onClick={() => setShowAllCandidates(false)}
+                                        className="text-[12px] font-bold text-[#0040A1] flex items-center gap-1 hover:underline"
+                                    >
+                                        <ArrowLeft size={12} /> Back to Summary
+                                    </button>
+                                )}
                             </div>
                             
-                             {job?.recentActivity && job.recentActivity.length > 0 ? (
-                                job.recentActivity.map((candidate: any, idx: number) => {
-                                    const timeAgo = Math.floor((Date.now() - new Date(candidate.created_at).getTime()) / (1000 * 60 * 60)) + 'h ago';
-                                    const rawName = `${candidate.first_name} ${candidate.last_name}`;
-                                    const capitalizedFullName = capitalizeName(rawName);
-                                    const names = capitalizedFullName.split(' ');
-                                    const shortName = `${names[0]} ${names[1]?.charAt(0) || ''}.`;
-                                    const recruiterData = Array.isArray(candidate.recruiter) ? candidate.recruiter[0] : candidate.recruiter;
-                                    const recruiterName = recruiterData?.full_name ? capitalizeName(recruiterData.full_name) : 'Unassigned';
-                                    return (
-                                        <div key={candidate.id} className="group/card relative bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md hover:border-[#0040A1]/30 transition-all flex items-center justify-between mb-4">
-                                            <Link href={`/ats/candidates/${candidate.id}`} className="absolute inset-0 z-10" />
-                                            <div className="flex items-center gap-4 relative z-20 pointer-events-none">
-                                                {candidate.avatar_url ? (
-                                                    <img src={candidate.avatar_url} alt="Avatar" className="w-12 h-12 rounded-xl object-cover" />
-                                                ) : (
-                                                    <div className="w-12 h-12 rounded-xl bg-[#0040A1] flex items-center justify-center text-white font-bold text-[18px]">
-                                                        {candidate.first_name.charAt(0)}{candidate.last_name?.charAt(0)}
+                             {(() => {
+                                const listToShow = showAllCandidates ? (job?.allCandidates || []) : (job?.recentActivity || []);
+                                if (listToShow.length > 0) {
+                                    return listToShow.map((candidate: any, idx: number) => {
+                                        const timeAgo = Math.floor((Date.now() - new Date(candidate.created_at).getTime()) / (1000 * 60 * 60)) + 'h ago';
+                                        const rawName = `${candidate.first_name} ${candidate.last_name}`;
+                                        const capitalizedFullName = capitalizeName(rawName);
+                                        const names = capitalizedFullName.split(' ');
+                                        const shortName = names.length >= 2 ? `${names[0]} ${names[1].charAt(0)}.` : capitalizedFullName;
+                                        const recruiterData = Array.isArray(candidate.recruiter) ? candidate.recruiter[0] : candidate.recruiter;
+                                        const recruiterName = recruiterData?.full_name ? capitalizeName(recruiterData.full_name) : 'Unassigned';
+                                        return (
+                                            <div key={candidate.id} className="group/card relative bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md hover:border-[#0040A1]/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                                                <Link href={`/ats/candidates/${candidate.id}`} className="absolute inset-0 z-10" />
+                                                <div className="flex items-center gap-4 relative z-20 pointer-events-none">
+                                                    {candidate.avatar_url ? (
+                                                        <img src={candidate.avatar_url} alt="Avatar" className="w-12 h-12 rounded-xl object-cover" />
+                                                    ) : (
+                                                        <div className="w-12 h-12 rounded-xl bg-[#0040A1] flex items-center justify-center text-white font-bold text-[18px]">
+                                                            {candidate.first_name.charAt(0)}{candidate.last_name?.charAt(0)}
+                                                        </div>
+                                                    )}
+                                                    <div className="min-w-0">
+                                                        <h4 className="text-[15px] font-bold text-[#191C1D] mb-1 truncate">{shortName}</h4>
+                                                        <p className="text-[13px] text-[#737785] truncate">Applied {timeAgo} • {recruiterName}</p>
                                                     </div>
-                                                )}
-                                                <div>
-                                                    <h4 className="text-[15px] font-bold text-[#191C1D] mb-1">{shortName}</h4>
-                                                    <p className="text-[13px] text-[#737785]">Applied {timeAgo} • {recruiterName}</p>
+                                                </div>
+                                                <div className="flex items-center gap-4 relative z-30">
+                                                    <StageBadge status={candidate.status || 'Applied'} />
+                                                    <div className="flex items-center gap-2">
+                                                        <button className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F8FAFC] text-[#0040A1] hover:bg-[#E2E8F0] transition-colors pointer-events-auto">
+                                                            <CalendarIcon size={16} />
+                                                        </button>
+                                                        <Link href={`/ats/candidates/${candidate.id}`} className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F8FAFC] text-[#0040A1] hover:bg-[#E2E8F0] transition-colors pointer-events-auto">
+                                                            <CornerUpRight size={16} />
+                                                        </Link>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-4 relative z-30">
-                                                <span className="px-3 py-1 bg-[#E2E8F0] text-[#0040A1] text-[9px] font-black tracking-widest rounded-full uppercase">
-                                                    {candidate.status || 'Applied'}
-                                                </span>
-                                                <button className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F8FAFC] text-[#0040A1] hover:bg-[#E2E8F0] transition-colors pointer-events-auto">
-                                                    <CalendarIcon size={16} />
-                                                </button>
-                                                <Link href={`/ats/candidates/${candidate.id}`} className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F8FAFC] text-[#0040A1] hover:bg-[#E2E8F0] transition-colors pointer-events-auto">
-                                                    <CornerUpRight size={16} />
-                                                </Link>
-                                            </div>
+                                        )
+                                    });
+                                } else {
+                                    return (
+                                        <div className="bg-[#F8FAFC] rounded-2xl p-12 text-center border-2 border-dashed border-[#E2E8F0]">
+                                            <p className="text-[14px] font-bold text-[#191C1D] mb-2">{showAllCandidates ? 'No common candidates found' : 'No active candidates'}</p>
+                                            <p className="text-[12px] text-[#737785]">When people start applying, they will arrive here.</p>
                                         </div>
-                                    )
-                                })
-                            ) : (
-                                <div className="bg-[#F8FAFC] rounded-2xl p-12 text-center border-2 border-dashed border-[#E2E8F0]">
-                                    <p className="text-[14px] font-bold text-[#191C1D] mb-2">No active candidates</p>
-                                    <p className="text-[12px] text-[#737785]">When people start applying, they will arrive here.</p>
-                                </div>
-                            )}
+                                    );
+                                }
+                             })()}
                         </div>
 
                         <div className="lg:col-span-4 space-y-6">

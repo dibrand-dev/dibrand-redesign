@@ -140,7 +140,7 @@ export default async function CandidateDetailPage({
                             <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
                                 <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Core Competencies</h3>
                                 <div className="flex flex-wrap gap-2">
-                                    {allSkills.length > 0 ? allSkills.slice(0, 10).map(skill => (
+                                    {allSkills.length > 0 ? allSkills.map(skill => (
                                          <span key={skill} className="px-3 py-1.5 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">
                                             {skill}
                                          </span>

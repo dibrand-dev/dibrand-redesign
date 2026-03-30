@@ -3,23 +3,40 @@
  * Used in candidate profile, filters, pipeline boards, and status badges.
  */
 export const ATS_STAGES = [
-    { value: 'Sourced',     label: 'Sourced',      color: '#6B7485', bg: '#F1F5F9' },
-    { value: 'Applied',     label: 'Applied',      color: '#191C1D', bg: '#E1E2E5' },
-    { value: 'Screen',      label: 'Screen',       color: '#0040A1', bg: '#DAE2FF' },
-    { value: 'Interview',   label: 'Interview',    color: '#21005D', bg: '#EADDFF' },
-    { value: 'Interview 2', label: 'Interview 2',  color: '#1A3A00', bg: '#C4EFAD' },
-    { value: 'Offer',       label: 'Offer',        color: '#7A2900', bg: '#FFE0CC' },
-    { value: 'Hired',       label: 'Hired',        color: '#003823', bg: '#B8F0D6' },
+    { value: 'Applied',     label: 'Nuevo',          twBg: 'bg-slate-100',   twText: 'text-slate-700' },
+    { value: 'Sourced',     label: 'Sourced',        twBg: 'bg-blue-100',    twText: 'text-blue-700' },
+    { value: 'Screening',   label: 'Screening',      twBg: 'bg-amber-100',   twText: 'text-amber-700' },
+    { value: 'Interview',   label: 'Entrevista',     twBg: 'bg-purple-100',  twText: 'text-purple-700' },
+    { value: 'Technical',   label: 'Prueba Técnica', twBg: 'bg-indigo-100',  twText: 'text-indigo-700' },
+    { value: 'Offer',       label: 'Oferta',         twBg: 'bg-pink-100',    twText: 'text-pink-700' },
+    { value: 'Hired',       label: 'Contratado',     twBg: 'bg-emerald-100', twText: 'text-emerald-700' },
+    { value: 'Rejected',    label: 'Rechazado',      twBg: 'bg-rose-100',    twText: 'text-rose-700' },
+    { value: 'Withdrawn',   label: 'Retirado',       twBg: 'bg-slate-100',   twText: 'text-slate-500' }
 ] as const;
 
 export type ATSStageValue = typeof ATS_STAGES[number]['value'];
 
-export function getStageStyle(status: string) {
-    if (status?.toLowerCase() === 'rejected') {
-        return { value: 'Rejected', label: 'Rejected', color: '#dc2626', bg: '#fef2f2' };
-    }
-    const stage = ATS_STAGES.find(s => s.value.toLowerCase() === status?.toLowerCase());
-    return stage || { color: '#191C1D', bg: '#E1E2E5', label: status };
+export function getStageConfig(status: string) {
+    const s = status?.toLowerCase() || '';
+    
+    // Normalize and match
+    if (s === 'applied' || s === 'nuevo') return ATS_STAGES[0];
+    if (s === 'sourced') return ATS_STAGES[1];
+    if (s === 'screening' || s === 'screen') return ATS_STAGES[2];
+    if (s === 'interview' || s === 'interviewing' || s === 'entrevista') return ATS_STAGES[3];
+    if (s.includes('technical') || s.includes('técnica') || s.includes('tecnica')) return ATS_STAGES[4];
+    if (s === 'offer' || s === 'offered' || s === 'oferta') return ATS_STAGES[5];
+    if (s === 'hired' || s === 'contratado') return ATS_STAGES[6];
+    if (s === 'rejected' || s === 'rechazado') return ATS_STAGES[7];
+    if (s === 'withdrawn' || s === 'retirado') return ATS_STAGES[8];
+    
+    // Default fallback
+    return { 
+        value: status, 
+        label: status, 
+        twBg: 'bg-slate-100',   
+        twText: 'text-slate-600' 
+    };
 }
 
 export const DEFAULT_QUESTIONNAIRE = [

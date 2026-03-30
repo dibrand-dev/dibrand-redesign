@@ -42,7 +42,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const { data: { user } } = await supabase.auth.getUser();
 
     const filterJobs = jobs.map(j => ({ id: j.id, label: j.title }));
-    const filterStatuses = ATS_STAGES.map(s => s.value);
+    const filterStatuses = ATS_STAGES.map(s => ({ id: s.value, label: s.label }));
     const totalPages = Math.ceil(totalCount / limit);
 
     return (

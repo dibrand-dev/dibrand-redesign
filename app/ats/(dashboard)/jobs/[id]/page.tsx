@@ -89,7 +89,8 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
                 ...job,
                 team,
                 stats: { totalApplicants, newCount, screenedCount, interviewingCount, offerCount, hiredCount, daysOpen },
-                recentActivity
+                recentActivity,
+                allCandidates: candidatesWithRecruiters
             };
         }
     } catch (e) {

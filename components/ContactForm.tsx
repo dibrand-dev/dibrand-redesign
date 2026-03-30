@@ -59,9 +59,6 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
   }, [subject, setValue]);
 
   const onSubmit = async (data: FormData) => {
-    // DIAGNÓSTICO: Esto aparecerá apenas hagas clic si la validación es correcta.
-    console.log('[ContactForm] DEBUG: onSubmit triggered!', data);
-    
     setSubmitStatus('idle');
 
     // MODO ULTRA-DEFENSIVO: Si falta la llave, no intentamos NADA con reCAPTCHA.
@@ -213,10 +210,11 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
           <div className="col-span-1 md:col-span-2 flex justify-end mt-4">
             <button
               type="submit"
+              disabled={isSubmitting}
               className={clsx(
                 "inline-flex items-center justify-center gap-3 w-full md:w-auto px-10 py-5 rounded-full text-base font-bold text-white transition-all hover:scale-[1.02] group",
                 isSubmitting
-                  ? "bg-brand/50 cursor-wait"
+                  ? "bg-brand/50 cursor-not-allowed"
                   : "bg-brand shadow-lg shadow-brand/20 hover:bg-brand/90"
               )}
             >

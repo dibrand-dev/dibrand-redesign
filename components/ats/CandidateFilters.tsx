@@ -12,7 +12,7 @@ interface FilterOption {
 interface CandidateFiltersProps {
     jobs: FilterOption[];
     countries: string[];
-    statuses: string[];
+    statuses: { id: string, label: string }[];
     recruiters: any[];
     currentUser?: any;
 }
@@ -67,8 +67,8 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
         // Complex label logic for Recruiter Initialization
         let displayLabel = 'All';
         if (current) {
-            if (type === 'jobs') {
-                displayLabel = options.find((o: any) => o.id === current)?.label || 'All';
+            if (type === 'jobs' || type === 'status') {
+                displayLabel = options.find((o: any) => o.id === current)?.label || current || 'All';
             } else if (type === 'recruiters') {
                 displayLabel = options.find((o: any) => o.id === current)?.full_name || 'All';
             } else {
@@ -148,6 +148,7 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
                     current={currentStatus} 
                     options={statuses} 
                     filterKey="status" 
+                    type="status"
                 />
 
                 <Dropdown 

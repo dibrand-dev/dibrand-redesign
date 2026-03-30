@@ -17,7 +17,7 @@ export default function DisqualifiedTag({ reason }: Props) {
             <div 
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
-                className="flex items-center gap-1.5 px-3 py-1 bg-red-50 text-red-600 rounded-full border border-red-100 shadow-sm cursor-help transition-all hover:bg-red-100/50"
+                className="flex items-center gap-1.5 px-3 py-1 bg-rose-50 text-rose-700 rounded-full border border-rose-100 shadow-sm cursor-help transition-all hover:bg-rose-100/50"
             >
                 <AlertCircle size={14} className="shrink-0" />
                 <span className="text-[10px] font-black tracking-widest uppercase">DISQUALIFIED</span>
