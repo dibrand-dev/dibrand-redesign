@@ -17,54 +17,62 @@ export default async function EcommerceLanding() {
   const dict = await getDictionary(lang);
 
   return (
-    <div className="flex flex-col min-h-screen font-lato">
-      {/* 1. HERO SECTION - OFFICIAL BRANDING */}
-      <section className="relative bg-[#F5F5F5] overflow-hidden lg:min-h-[85vh] flex items-center">
-        <div className="container mx-auto px-6 py-12 lg:py-0">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+    <div className="flex flex-col min-h-screen font-lato bg-[#F5F5F5]">
+      {/* 1. HERO SECTION - PREMIUM RECONSTRUCTION */}
+      <section className="relative overflow-hidden pt-32 pb-24 lg:pt-40 lg:pb-32 flex items-center">
+        <div className="container mx-auto px-8 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             
-            {/* LADO IZQUIERDO: CONTENIDO */}
-            <div className="lg:col-span-6 z-10 order-2 lg:order-1">
-              <div className="inline-block px-4 py-1.5 bg-gradient-to-r from-[#D83484] to-[#A3369D] text-white text-[10px] font-bold uppercase tracking-[0.3em] mb-8 rounded-full shadow-lg shadow-magenta-500/20">
-                Impulsando la Transformación Digital
+            {/* COLUMNA IZQUIERDA: CONTENIDO Y JERARQUÍA */}
+            <div className="flex flex-col space-y-10 z-10">
+              <div className="inline-flex items-center gap-2 px-4 py-1 bg-white/80 border border-[#D83484]/20 rounded-full w-fit shadow-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D83484] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D83484]"></span>
+                </span>
+                <span className="text-[10px] font-montserrat font-bold text-[#A3369D] uppercase tracking-widest">Digital Hub Escobar</span>
               </div>
-              <h1 className="text-5xl lg:text-7xl font-montserrat font-black leading-[1] tracking-tight mb-8">
-                Potenciamos el <br /> 
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#D83484] to-[#A3369D]">
-                  comercio de Escobar.
-                </span> 
-              </h1>
-              <h2 className="text-2xl lg:text-3xl font-montserrat font-semibold text-slate-800 mb-8 leading-tight">
-                Tiendas online que definen el futuro de tu negocio.
-              </h2>
-              <p className="text-lg lg:text-xl text-slate-600 mb-12 max-w-xl leading-relaxed">
-                Expertos en <span className="font-bold text-[#A3369D]">Tienda Nube, WooCommerce y Shopify.</span> Integramos soluciones innovadoras para escalar tu comercio local a nivel nacional.
-              </p>
+
+              <div className="space-y-6">
+                <h1 className="text-4xl lg:text-7xl font-montserrat font-bold text-slate-900 leading-[1.1] tracking-tight">
+                  Llevamos tu comercio de <br />
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#D83484] to-[#A3369D]">
+                    Escobar a todo el país.
+                  </span>
+                </h1>
+                <p className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-lg">
+                  Creamos tiendas online de alta performance optimizadas para convertir visitas en ventas recurrentes. Tecnología de punta con soporte humano local.
+                </p>
+              </div>
               
-              <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="pt-4">
                 <a 
                   href="https://wa.me/5491165939115?text=Hola%20Dibrand!%20Vengo%20del%20diario%20y%20quiero%20consultar%20por%20mi%20tienda%20online."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto px-12 py-5 bg-gradient-to-r from-[#D83484] to-[#A3369D] hover:scale-[1.02] text-white text-sm font-bold rounded-full transition-all shadow-xl shadow-[#D83484]/30 flex items-center justify-center gap-4 uppercase tracking-widest"
+                  className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-gradient-to-r from-[#D83484] to-[#A3369D] text-white text-base font-bold rounded-lg shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-300 group"
                 >
                   Consultar por WhatsApp
-                  <ArrowRight size={18} />
+                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </a>
               </div>
             </div>
 
-            {/* LADO DERECHO: IMAGEN 16:9 */}
-            <div className="lg:col-span-6 order-1 lg:order-2">
-              <div className="relative aspect-video lg:aspect-[4/5] xl:aspect-video overflow-hidden rounded-3xl shadow-2xl group border-4 border-white">
+            {/* COLUMNA DERECHA: IMAGEN 16:9 REFINADA */}
+            <div className="relative">
+              <div className="relative aspect-video overflow-hidden rounded-2xl shadow-2xl border-4 border-white ring-1 ring-[#A3369D]/10">
                 <NextImage 
                   src="/ecommerce-hero.png"
                   alt="Dibrand Ecommerce Escobar"
                   fill
                   priority
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#A3369D]/30 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#A3369D]/10 to-transparent pointer-events-none" />
+              </div>
+              {/* Elemento Decorativo Tech */}
+              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-white rounded-2xl shadow-xl flex items-center justify-center hidden lg:flex">
+                <ShoppingBag size={48} className="text-[#D83484]" />
               </div>
             </div>
 
@@ -72,86 +80,56 @@ export default async function EcommerceLanding() {
         </div>
       </section>
 
-      {/* 2. PLATFORMS SECTION - OFFICIAL BRANDING */}
-      <section className="py-24 bg-white relative">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-24">
-            <h2 className="text-4xl lg:text-5xl font-montserrat font-black text-slate-900 mb-6 tracking-tight">Ecosistema Tecnológico.</h2>
-            <div className="h-1.5 w-24 bg-gradient-to-r from-[#D83484] to-[#A3369D] mx-auto rounded-full" />
+      {/* 2. PLATFORMS SECTION - REDESIÑADA CON MÁS AIRE */}
+      <section className="py-32 bg-white relative">
+        <div className="container mx-auto px-8 lg:px-12">
+          <div className="max-w-3xl mb-24">
+            <h2 className="text-3xl lg:text-5xl font-montserrat font-bold text-slate-900 mb-6">Expertos en las plataformas líderes del mercado.</h2>
+            <div className="h-1 w-20 bg-gradient-to-r from-[#D83484] to-[#A3369D] rounded-full" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {/* Tienda Nube */}
-            <div className="p-10 rounded-3xl bg-[#F5F5F5] border border-slate-100 hover:shadow-2xl transition-all group flex flex-col h-full border-t-4 border-t-[#D83484]">
-              <div className="w-14 h-14 bg-gradient-to-br from-[#D83484] to-[#A3369D] flex items-center justify-center mb-8 text-white rounded-2xl shadow-lg">
+            <div className="p-12 rounded-3xl bg-[#F5F5F5] border border-slate-100 hover:shadow-xl transition-all group border-t-4 border-t-[#D83484]">
+              <div className="w-14 h-14 bg-gradient-to-br from-[#D83484] to-[#A3369D] flex items-center justify-center mb-8 text-white rounded-xl shadow-md">
                 <ShoppingBag size={28} />
               </div>
               <h3 className="text-2xl font-montserrat font-bold text-slate-900 mb-4 tracking-tight">Tienda Nube</h3>
-              <p className="text-slate-600 mb-8 leading-relaxed">
-                La solución ágil para PyMEs con visión. Puesta en marcha profesional y soporte local especializado.
+              <p className="text-gray-600 mb-10 leading-relaxed">
+                Puesta en marcha profesional y soporte local especializado para escalar rápido.
               </p>
-              <div className="mt-auto">
-                <ul className="space-y-4 mb-10">
-                  {['Panel Administrativo', 'Integración Mercado Pago', 'Soporte Escobar'].map(item => (
-                    <li key={item} className="flex items-center gap-3 text-sm font-semibold text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-[#D83484] rounded-full" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <a href="#contact" className="text-[#D83484] font-bold flex items-center gap-2 hover:gap-4 transition-all">
-                  Comenzar <ArrowRight size={16} />
-                </a>
-              </div>
+              <a href="#contact" className="text-[#D83484] font-bold flex items-center gap-2 hover:gap-4 transition-all">
+                Comenzar <ArrowRight size={16} />
+              </a>
             </div>
 
             {/* WooCommerce */}
-            <div className="p-10 rounded-3xl bg-white shadow-2xl relative flex flex-col h-full border-b-4 border-b-[#A3369D] scale-105 z-10 transition-transform hover:scale-[1.08]">
-              <div className="absolute top-0 right-0 bg-gradient-to-r from-[#D83484] to-[#A3369D] text-white text-[10px] font-black px-6 py-2 rounded-bl-3xl uppercase tracking-widest">A Medida</div>
-              <div className="w-14 h-14 bg-gradient-to-br from-[#A3369D] to-[#D83484] flex items-center justify-center mb-8 text-white rounded-2xl shadow-lg">
+            <div className="p-12 rounded-3xl bg-white shadow-2xl relative flex flex-col h-full border-b-4 border-b-[#A3369D] transition-transform hover:-translate-y-2">
+              <div className="absolute top-4 right-6 bg-[#A3369D]/10 text-[#A3369D] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Personalizado</div>
+              <div className="w-14 h-14 bg-gradient-to-br from-[#A3369D] to-[#D83484] flex items-center justify-center mb-8 text-white rounded-xl shadow-md">
                 <Settings size={28} />
               </div>
               <h3 className="text-2xl font-montserrat font-bold text-slate-900 mb-4 tracking-tight">WooCommerce</h3>
-              <p className="text-slate-600 mb-8 leading-relaxed">
-                Ingeniería robusta y personalización extrema. Sin comisiones y con control absoluto del código.
+              <p className="text-gray-600 mb-10 leading-relaxed">
+                Control total del código y cero comisiones para marcas con requerimientos específicos.
               </p>
-              <div className="mt-auto">
-                <ul className="space-y-4 mb-10">
-                  {['Cero Comisiones', 'Estructura SEO Avanzada', 'Personalización Total'].map(item => (
-                    <li key={item} className="flex items-center gap-3 text-sm font-semibold text-slate-700">
-                      <div className="w-1.5 h-1.5 bg-[#A3369D] rounded-full" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <a href="#contact" className="text-[#A3369D] font-bold flex items-center gap-2 hover:gap-4 transition-all">
-                  Consultar Proyecto <ArrowRight size={16} />
-                </a>
-              </div>
+              <a href="#contact" className="text-[#A3369D] font-bold flex items-center gap-2 hover:gap-4 transition-all">
+                Consultar <ArrowRight size={16} />
+              </a>
             </div>
 
             {/* Shopify */}
-            <div className="p-10 rounded-3xl bg-[#F5F5F5] border border-slate-100 hover:shadow-2xl transition-all group flex flex-col h-full border-t-4 border-t-[#A3369D]">
-              <div className="w-14 h-14 bg-gradient-to-br from-[#D83484] to-[#A3369D] flex items-center justify-center mb-8 text-white rounded-2xl shadow-lg">
+            <div className="p-12 rounded-3xl bg-[#F5F5F5] border border-slate-100 hover:shadow-xl transition-all group border-t-4 border-t-[#A3369D]">
+              <div className="w-14 h-14 bg-gradient-to-br from-[#D83484] to-[#A3369D] flex items-center justify-center mb-8 text-white rounded-xl shadow-md">
                 <Globe size={28} />
               </div>
-              <h3 className="text-2xl font-montserrat font-bold text-slate-900 mb-4 tracking-tight">Shopify Enterprise</h3>
-              <p className="text-slate-600 mb-8 leading-relaxed">
-                Infraestructura global para marcas de gran volumen. Escalabilidad masiva para lanzamientos mundiales.
+              <h3 className="text-2xl font-montserrat font-bold text-slate-900 mb-4 tracking-tight">Shopify</h3>
+              <p className="text-gray-600 mb-10 leading-relaxed">
+                Infraestructura global para marcas internacionales con gran volumen de ventas.
               </p>
-              <div className="mt-auto">
-                <ul className="space-y-4 mb-10">
-                  {['Seguridad Superior', 'Soporte 24/7 Global', 'Marketplace Robusto'].map(item => (
-                    <li key={item} className="flex items-center gap-3 text-sm font-semibold text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-[#A3369D] rounded-full" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <a href="#contact" className="text-[#D83484] font-bold flex items-center gap-2 hover:gap-4 transition-all">
-                  Solicitar Plus <ArrowRight size={16} />
-                </a>
-              </div>
+              <a href="#contact" className="text-[#D83484] font-bold flex items-center gap-2 hover:gap-4 transition-all">
+                Solicitar Plus <ArrowRight size={16} />
+              </a>
             </div>
           </div>
         </div>
