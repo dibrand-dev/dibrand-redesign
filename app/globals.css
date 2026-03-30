@@ -114,9 +114,8 @@
   --color-brand: var(--brand-primary);
   --color-primary: var(--brand-primary);
   
-  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter);
-  --font-heading: var(--font-inter);
+  --font-sans: var(--font-outfit);
+  --font-heading: var(--font-outfit);
 }
 
 @layer base {
