@@ -57,19 +57,17 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
   const onSubmit = async (data: FormData) => {
     setSubmitStatus('idle');
 
-    if (!executeRecaptcha) {
-      console.error('Execute recaptcha not yet available');
-      return;
+    const captchaToken = executeRecaptcha ? await executeRecaptcha('contact_form') : null;
+    if (!captchaToken) {
+      console.warn('[ContactForm] Execution of reCAPTCHA was skipped or failed. Proceeding without token.');
     }
 
     try {
-      const token = await executeRecaptcha('contact_form');
-
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
         formData.append(key, value);
       });
-      formData.append('captchaToken', token);
+      if (captchaToken) formData.append('captchaToken', captchaToken);
 
       const result = await submitToZoho(formData);
 

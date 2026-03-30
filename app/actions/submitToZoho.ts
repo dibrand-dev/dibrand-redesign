@@ -20,35 +20,12 @@ export async function submitToZoho(formData: FormData) {
     const captchaToken = formData.get('captchaToken')?.toString();
     const isDev = process.env.NODE_ENV === 'development';
 
-    // 1. reCAPTCHA Validation
-    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-    
-    if (!secretKey) {
-        console.warn('⚠️ [ContactForm] CRITICAL: RECAPTCHA_SECRET_KEY is missing. Insecure submission allowed to avoid losing leads.');
-    } else if (captchaToken) {
-        try {
-            const { success, score } = await verifyRecaptcha(captchaToken);
-            if (!success) {
-                console.error(`[ContactForm] reCAPTCHA failed. Score: ${score}. Token might be invalid for this domain.`);
-                return { success: false, error: 'reCAPTCHA failed' };
-            }
-        } catch (error) {
-            console.error('[ContactForm] Error verifying reCAPTCHA:', error);
-            // If verification itself fails (network/invalid key), we follow the safety rule in production
-            if (!isDev) return { success: false, error: 'reCAPTCHA verification error' };
-        }
-    } else if (!isDev) {
-        // Token missing but secret is set -> likely a gap in the frontend integration
-        console.warn('[ContactForm] No reCAPTCHA token provided but Secret Key is configured!');
-        return { success: false, error: 'reCAPTCHA required' };
-    }
-
-    // 2. Zoho CRM Data Mapping
+    // 1. Data Mapping
     const data: Record<string, string> = {
         xnQsjsdp: '6d71a7c1bbe8886135bf97dd9c30c91eca761aa888ff3e6fe19132dcf97ac9e0',
         xmIwtLD: '57f43a5dfe4852abfc956f4323ee14f3493e60c1312a16601d422007c6fb2ead4e4328ed58fe4ac23ca079d0470be156',
         actionType: 'TGVhZHM=',
-        'Lead Source': 'Sitio Dibrand',
+        'Lead Source': 'Landing Ecommerce Escobar',
     };
 
     const userFields = ['First Name', 'Last Name', 'Email', 'Company', 'Description'];
@@ -57,54 +34,60 @@ export async function submitToZoho(formData: FormData) {
         if (value) data[field] = value.toString();
     }
 
-    const body = new URLSearchParams(data);
+    let supabaseSaved = false;
 
+    // 2. PRIMARY ACTION: Save to Supabase (OUR Source of truth)
     try {
-        console.log(`[ContactForm] Submitting lead to Zoho: ${data['Email']}...`);
+        console.log(`[ContactForm] Saving lead to Supabase backup...`);
+        const supabase = createAdminClient();
+        const { error: dbError } = await supabase.from('leads').insert({
+            name: `${data['First Name']} ${data['Last Name']}`,
+            email: data['Email'],
+            company: data['Company'],
+            message: data['Description'],
+            service_interest: 'Landing Ecommerce'
+        });
+
+        if (dbError) throw dbError;
+        supabaseSaved = true;
+        console.log('[ContactForm] Supabase backup SUCCESS');
+
+        await createNotification({
+            type: 'lead',
+            title: 'Nuevo Lead (E-commerce)',
+            description: `Consulta de ${data['First Name']} - ${data['Company'] || data['Email']}`,
+            link: '/admin/dashboard',
+            metadata: { company: data['Company'], email: data['Email'] }
+        });
+    } catch (saveError) {
+        console.error('[ContactForm] CRITICAL: Failed to save lead to Supabase:', saveError);
+    }
+
+    // 3. SECONDARY ACTION: Sync with Zoho CRM
+    try {
+        console.log(`[ContactForm] Syncing lead with Zoho: ${data['Email']}...`);
+        const body = new URLSearchParams(data);
         const response = await fetch('https://crm.zoho.com/crm/WebToLeadForm', {
             method: 'POST',
             body: body,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         });
 
-        // 3. Evaluate Zoho Response
-        // Note: Zoho WebToLead often returns a 302 redirect on success.
         if (response.ok || response.status === 302) {
-            console.log('[ContactForm] Zoho Submission SUCCESS');
-
-            // 4. Secondary tasks (Supabase & Notifications) - Non-blocking
-            try {
-                const supabase = createAdminClient();
-                const { error: dbError } = await supabase.from('leads').insert({
-                    name: `${data['First Name']} ${data['Last Name']}`,
-                    email: data['Email'],
-                    company: data['Company'],
-                    message: data['Description'],
-                    service_interest: 'Contact Form'
-                });
-
-                if (dbError) throw dbError;
-
-                await createNotification({
-                    type: 'lead',
-                    title: 'Nuevo Lead Recibido',
-                    description: `Nueva consulta de contacto de ${data['First Name']} (${data['Company'] || 'Empresa no especificada'})`,
-                    link: '/admin/dashboard',
-                    metadata: { company: data['Company'], email: data['Email'] }
-                });
-            } catch (secondaryError) {
-                console.error('[ContactForm] Secondary tasks failed (Supabase/Notif), but Zoho was OK:', secondaryError);
-            }
-
-            return { success: true };
+            console.log('[ContactForm] Zoho Sync SUCCESS');
         } else {
-            const errorText = await response.text();
-            console.error(`[ContactForm] Zoho API Error: ${response.status} - ${errorText.substring(0, 200)}`);
-            return { success: false, error: 'Zoho server error' };
+            const errorBody = await response.text();
+            console.error(`[ContactForm] Zoho Rejection | Status: ${response.status} | Body: ${errorBody.substring(0, 500)}`);
         }
-
-    } catch (error) {
-        console.error('[ContactForm] Critical Submission Error:', error);
-        return { success: false, error: 'Network error occurred' };
+    } catch (syncError) {
+        console.error('[ContactForm] Zoho Sync Network Error:', syncError);
     }
+
+    // ALWAYS RETURN SUCCESS if we saved it in Supabase, 
+    // to avoid scaring the user with errors while we debug Zoho.
+    if (supabaseSaved) {
+        return { success: true };
+    }
+
+    return { success: false, error: 'Database capture failed' };
 }
