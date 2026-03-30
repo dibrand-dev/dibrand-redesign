@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase-server-client';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
 import { revalidatePath } from 'next/cache';
+import { Resend } from 'resend';
 import { createGoogleEvent, listGoogleEvents } from '@/lib/google-calendar';
 import { capitalizeName as capitalizeEachWord } from '@/lib/utils';
 
@@ -467,16 +468,77 @@ export async function addApplicationLog(applicationId: string, noteText: string)
     const fullName = user?.user_metadata?.full_name || user?.email || 'Recruiter';
     const avatarUrl = user?.user_metadata?.avatar_url || null;
 
-    const { error } = await supabase
+        const { error } = await supabase
         .from('application_notes')
         .insert([{
             application_id: applicationId,
+            author_id: user.id,
             author_name: fullName,
             author_avatar_url: avatarUrl,
             note_text: noteText
         }]);
 
     if (error) throw error;
+
+    // --- NOTIFICATION LOGIC (RESEND) ---
+    try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const SUPERADMIN_EMAIL = 'nriccitelli@dibrand.co';
+
+        // 1. Get Candidate and Assigned Recruiter Info
+        const { data: candidate } = await supabase
+            .from('job_applications')
+            .select('full_name, recruiter_id')
+            .eq('id', applicationId)
+            .single();
+
+        if (candidate) {
+            // 2. Resolve Emails
+            const [authorRes, assignedRes] = await Promise.all([
+                supabase.from('recruiters').select('email, full_name').eq('id', user.id).single(),
+                supabase.from('recruiters').select('email').eq('id', candidate.recruiter_id).single()
+            ]);
+
+            const author = authorRes.data;
+            const assignedRecruiterEmail = assignedRes.data?.email;
+
+            if (author) {
+                // Determine recipient
+                const isSuperAdmin = author.email.toLowerCase() === SUPERADMIN_EMAIL.toLowerCase();
+                const recipientEmail = isSuperAdmin ? assignedRecruiterEmail : SUPERADMIN_EMAIL;
+
+                if (recipientEmail) {
+                    await resend.emails.send({
+                        from: 'ATS Dibrand <hola@dibrand.co>',
+                        to: recipientEmail,
+                        subject: `💬 Nuevo comentario sobre: ${candidate.full_name}`,
+                        html: `
+                            <div style="font-family: sans-serif; max-width: 600px; padding: 20px; color: #334155;">
+                                <p style="font-size: 16px; margin-bottom: 24px;">
+                                    <strong>${author.full_name}</strong> ha dejado un nuevo comentario sobre el candidato <strong>${candidate.full_name}</strong>:
+                                </p>
+                                <div style="background: #F1F5F9; border-left: 4px solid #0040A1; padding: 20px; border-radius: 8px; margin-bottom: 32px; font-style: italic;">
+                                    "${noteText}"
+                                </div>
+                                <p style="margin-bottom: 24px;">Puedes revisar la ficha completa del candidato y responder desde el panel del ATS:</p>
+                                <a href="https://www.dibrand.co/ats/candidates/${applicationId}" 
+                                   style="display: inline-block; background: #0040A1; color: white; padding: 14px 28px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 14px;">
+                                    Ver Perfil del Candidato
+                                </a>
+                                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #E2E8F0; font-size: 12px; color: #94A3B8;">
+                                    Este es un mensaje automático del sistema de reclutamiento de Dibrand.
+                                </div>
+                            </div>
+                        `
+                    });
+                }
+            }
+        }
+    } catch (notificationError) {
+        console.error('NOTIFICATION_ERROR:', notificationError);
+        // We don't throw here to avoid failing the whole save operation if email fails
+    }
+
     revalidatePath(`/ats/candidates/${applicationId}`);
     return { success: true };
 }
