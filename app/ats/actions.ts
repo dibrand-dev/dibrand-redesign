@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache';
 import { Resend } from 'resend';
 import { createGoogleEvent, listGoogleEvents } from '@/lib/google-calendar';
 import { capitalizeName as capitalizeEachWord } from '@/lib/utils';
+import { getStageConfig } from '@/lib/ats-constants';
 
 export async function getRecentCandidates() {
     const { data } = await getAllCandidates({ limit: 5 } as any);
@@ -135,27 +136,21 @@ export async function getRecruiterJobs() {
         const activeCandidates = allCandidates.filter((c: any) => !c.is_deleted);
         const recruiterCandidates = activeCandidates.filter((c: any) => c.recruiter_id === user.id);
         
-        // Count statuses for pipeline visualization
-        const countsByStatus = (isAdmin ? activeCandidates : recruiterCandidates).reduce((acc: any, curr: any) => {
-            const status = curr.status || 'Applied';
-            acc[status] = (acc[status] || 0) + 1;
-            return acc;
-        }, {
-            'Applied': 0,
-            'Interview': 0,
-            'Offer': 0,
-            'Hired': 0,
-            'Rejected': 0,
-            'Withdrawn': 0
-        });
-
         // Map statuses to the UI buckets in the design (NEW, INTERVIEWING, OFFER)
         const uiCounts = {
-            new: (countsByStatus['Applied'] || 0) + (countsByStatus['Screening'] || 0),
-            interviewing: (countsByStatus['Interview'] || 0) + (countsByStatus['Technical'] || 0) + (countsByStatus['Culture'] || 0),
-            offer: (countsByStatus['Offer'] || 0) + (countsByStatus['Contract'] || 0),
+            new: 0,
+            interviewing: 0,
+            offer: 0,
             total: isAdmin ? activeCandidates.length : recruiterCandidates.length
         };
+
+        (isAdmin ? activeCandidates : recruiterCandidates).forEach((c: any) => {
+            const config = getStageConfig(c.status);
+            const val = config.value;
+            if (val === 'Applied' || val === 'Sourced' || val === 'Screening') uiCounts.new++;
+            else if (val === 'Interview' || val === 'Technical') uiCounts.interviewing++;
+            else if (val === 'Offer') uiCounts.offer++;
+        });
 
         return {
             ...job,
@@ -345,9 +340,16 @@ export async function updateCandidateStatus(id: string, status: string) {
     // Log the status change
     await addApplicationLog(id, `Status changed to ${status} by ${fullName}`);
 
+    // Fetch job_id for revalidation before update
+    const { data: cand } = await supabase.from('job_applications').select('job_id').eq('id', id).single();
+
     revalidatePath(`/ats/candidates/${id}`);
     revalidatePath('/ats/candidates');
     revalidatePath('/ats');
+    if (cand?.job_id) {
+        revalidatePath(`/ats/jobs/${cand.job_id}`);
+        revalidatePath('/ats/jobs');
+    }
     return { success: true };
 }
 
@@ -415,8 +417,15 @@ export async function assignRecruiter(candidateId: string, recruiterId: string) 
     const recruiterName = recruiter?.full_name || 'a new recruiter';
     await addApplicationLog(candidateId, `Candidate assigned to ${recruiterName} by ${currentAdmin}`);
 
+    // Fetch job_id for revalidation
+    const { data: cand } = await supabase.from('job_applications').select('job_id').eq('id', candidateId).single();
+
     revalidatePath(`/ats/candidates/${candidateId}`);
     revalidatePath('/ats/candidates');
+    if (cand?.job_id) {
+        revalidatePath(`/ats/jobs/${cand.job_id}`);
+        revalidatePath('/ats/jobs');
+    }
     revalidatePath('/ats');
     return { success: true };
 }
@@ -425,16 +434,21 @@ export async function deleteCandidate(id: string) {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
 
-    if (user?.user_metadata?.role !== 'admin') {
-        throw new Error('Solo los administradores pueden eliminar candidatos.');
-    }
-
+    const { data: cand } = await supabase.from('job_applications').select('job_id').eq('id', id).single();
+    
+    // Soft delete
     const { error } = await supabase
         .from('job_applications')
         .update({ is_deleted: true, updated_at: new Date().toISOString() })
         .eq('id', id);
 
     if (error) throw error;
+
+    if (cand?.job_id) {
+        revalidatePath(`/ats/jobs/${cand.job_id}`);
+        revalidatePath('/ats/jobs');
+    }
+
     revalidatePath('/ats/candidates');
     return { success: true };
 }

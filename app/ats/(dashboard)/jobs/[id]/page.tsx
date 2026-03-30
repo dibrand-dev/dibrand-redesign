@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase-server-client';
 import { redirect } from 'next/navigation';
 import JobViewClient from './JobViewClient';
+import { getStageConfig } from '@/lib/ats-constants';
 
 export default async function JobViewPage(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
@@ -59,12 +60,6 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
             }));
 
             const totalApplicants = candidatesWithRecruiters.length;
-            const countsByStatus = candidatesWithRecruiters.reduce((acc: any, curr: any) => {
-                const status = curr.status || 'Applied';
-                acc[status] = (acc[status] || 0) + 1;
-                return acc;
-            }, {});
-
             // Extract unique recruiters for hiring team
             const teamMap = new Map();
             candidatesWithRecruiters.forEach((c: any) => {
@@ -74,12 +69,28 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
             });
             const team = Array.from(teamMap.values());
 
-            const newCount = (countsByStatus['Applied'] || 0) + (countsByStatus['New'] || 0);
-            const screenedCount = countsByStatus['Screening'] || 0;
-            const interviewingCount = (countsByStatus['Interview'] || 0) + (countsByStatus['Technical'] || 0);
-            const offerCount = countsByStatus['Offered'] || 0;
-            const hiredCount = countsByStatus['Hired'] || 0;
-            const daysOpen = Math.floor((Date.now() - new Date(job.created_at).getTime()) / (1000 * 60 * 60 * 24)) || 0;
+            // Initialize stats
+            const stats = {
+                totalApplicants: candidatesWithRecruiters.length,
+                newCount: 0,
+                screenedCount: 0,
+                interviewingCount: 0,
+                offerCount: 0,
+                hiredCount: 0,
+                daysOpen: Math.floor((Date.now() - new Date(job.created_at).getTime()) / (1000 * 60 * 60 * 24)) || 0
+            };
+
+            // Count real data using standardized stages
+            candidatesWithRecruiters.forEach((c: any) => {
+                const config = getStageConfig(c.status);
+                const val = config.value;
+                
+                if (val === 'Applied' || val === 'Sourced') stats.newCount++;
+                else if (val === 'Screening') stats.screenedCount++;
+                else if (val === 'Interview' || val === 'Technical') stats.interviewingCount++;
+                else if (val === 'Offer') stats.offerCount++;
+                else if (val === 'Hired') stats.hiredCount++;
+            });
 
             const recentActivity = candidatesWithRecruiters
                 .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
@@ -88,7 +99,7 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
             jobData = {
                 ...job,
                 team,
-                stats: { totalApplicants, newCount, screenedCount, interviewingCount, offerCount, hiredCount, daysOpen },
+                stats,
                 recentActivity,
                 allCandidates: candidatesWithRecruiters
             };
