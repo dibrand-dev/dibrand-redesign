@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Check, Star } from 'lucide-react';
-import { ATS_STAGES } from '@/lib/ats-constants';
+import { ATS_STAGES, getStageConfig } from '@/lib/ats-constants';
 
 interface Props {
     currentStatus: string;
@@ -10,11 +10,11 @@ interface Props {
 }
 
 export default function CandidatePipelineTracker({ currentStatus, hasVetting }: Props) {
-    const currentIndex = ATS_STAGES.findIndex(
-        s => s.value.toLowerCase() === currentStatus?.toLowerCase()
-    );
-    // Default to "Applied" (index 1) if not found
-    const activeIndex = currentIndex >= 0 ? currentIndex : 1;
+    const config = getStageConfig(currentStatus);
+    const currentIndex = ATS_STAGES.findIndex(s => s.value === config.value);
+    
+    // Default to "Applied" (index 0) if not found
+    const activeIndex = currentIndex >= 0 ? currentIndex : 0;
 
     // Calculate progress line width %
     const progressPct = ATS_STAGES.length > 1
