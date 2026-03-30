@@ -15,6 +15,7 @@ import RecruiterNotesWidget from '@/components/ats/RecruiterNotesWidget';
 import ApplicationHistoryWidget from '@/components/ats/ApplicationHistoryWidget';
 import ResumeViewer from '@/components/ats/ResumeViewer';
 import CandidateTabs from '@/components/ats/CandidateTabs';
+import CandidateSkills from '@/components/ats/CandidateSkills';
 import { capitalizeName } from '@/lib/utils';
 
 export default async function CandidateDetailPage({ 
@@ -137,18 +138,10 @@ export default async function CandidateDetailPage({
                             />
 
                             {/* Core Competencies (Skills) */}
-                            <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
-                                <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Core Competencies</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {allSkills.length > 0 ? allSkills.map(skill => (
-                                         <span key={skill} className="px-3 py-1.5 bg-[#EEF2FF] text-blue-700 text-[10px] font-black rounded-lg uppercase tracking-widest border border-blue-100">
-                                            {skill}
-                                         </span>
-                                    )) : (
-                                        <p className="text-[12px] text-slate-400 italic">No skills listed</p>
-                                    )}
-                                </div>
-                            </div>
+                            <CandidateSkills 
+                                candidateId={id} 
+                                initialSkills={allSkills} 
+                            />
                         </div>
                     </div>
                 </div>

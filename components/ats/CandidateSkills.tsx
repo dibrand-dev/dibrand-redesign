@@ -2,25 +2,38 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { updateCandidateSkills, getGlobalSkills } from '@/app/ats/actions';
-import { X, Plus, Loader2 } from 'lucide-react';
+import { X, Plus, Search, Loader2 } from 'lucide-react';
 
 interface CandidateSkillsProps {
     candidateId: string;
     initialSkills: string[];
 }
 
+/**
+ * Intelligent Skills Component for ATS Candidate Profile.
+ * Features:
+ * - Smart Tag (Chip) system with Dibrand aesthetics.
+ * - Predictive Autocomplete (Combobox).
+ * - Immediate association (saves to DB on add/remove).
+ * - Duplicate prevention.
+ */
 export default function CandidateSkills({ candidateId, initialSkills }: CandidateSkillsProps) {
-    const [skills, setSkills] = useState(initialSkills || []);
+    const [skills, setSkills] = useState<string[]>(initialSkills || []);
     const [globalSkills, setGlobalSkills] = useState<string[]>([]);
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const suggestionsRef = useRef<HTMLDivElement>(null);
 
+    // Fetch master list of skills/tech stacks
     useEffect(() => {
         const fetchGlobal = async () => {
-            const result = await getGlobalSkills();
-            setGlobalSkills(result);
+            try {
+                const result = await getGlobalSkills();
+                setGlobalSkills(result || []);
+            } catch (err) {
+                console.error('Error fetching global skills:', err);
+            }
         };
         fetchGlobal();
     }, []);
@@ -37,21 +50,28 @@ export default function CandidateSkills({ candidateId, initialSkills }: Candidat
     }, []);
 
     const handleAddSkill = async (skill: string) => {
-        const trimmed = skill.trim().toUpperCase();
-        if (trimmed && !skills.includes(trimmed)) {
-            const nextSkills = [...skills, trimmed];
-            setIsSaving(true);
-            try {
-                await updateCandidateSkills(candidateId, nextSkills);
-                setSkills(nextSkills);
-                setInputValue('');
-                setShowSuggestions(false);
-            } catch (error: any) {
-                console.error('Error adding skill:', error);
-                alert(`Failed to update skills: ${error.message || 'Unknown error'}`);
-            } finally {
-                setIsSaving(false);
-            }
+        const normalizedSkill = skill.trim();
+        if (!normalizedSkill) return;
+        
+        // Prevent duplicates (case-insensitive)
+        if (skills.some(s => s.toLowerCase() === normalizedSkill.toLowerCase())) {
+            setInputValue('');
+            setShowSuggestions(false);
+            return;
+        }
+
+        const nextSkills = [...skills, normalizedSkill];
+        setIsSaving(true);
+        try {
+            await updateCandidateSkills(candidateId, nextSkills);
+            setSkills(nextSkills);
+            setInputValue('');
+            setShowSuggestions(false);
+        } catch (error: any) {
+            console.error('Error adding skill:', error);
+            // In a real app we might want a toast here
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -63,85 +83,107 @@ export default function CandidateSkills({ candidateId, initialSkills }: Candidat
             setSkills(nextSkills);
         } catch (error: any) {
             console.error('Error removing skill:', error);
-            alert(`Failed to update skills: ${error.message || 'Unknown error'}`);
         } finally {
             setIsSaving(false);
         }
     };
 
-    const suggestions = globalSkills
-        .filter(s => !skills.includes(s.toUpperCase()))
+    const filteredSuggestions = globalSkills
+        .filter(s => !skills.some(selfSkill => selfSkill.toLowerCase() === s.toLowerCase()))
         .filter(s => s.toLowerCase().includes(inputValue.toLowerCase()))
-        .slice(0, 5);
+        .slice(0, 8);
 
     return (
-        <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm relative">
-            <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em] mb-8">Core Competencies</h3>
-            
-            <div className="flex flex-wrap gap-2 mb-6">
-                {skills.map((skill) => (
-                    <span 
-                        key={skill} 
-                        className="px-4 py-2 bg-[#0040A1] text-white text-[10px] font-black rounded-lg uppercase tracking-widest shadow-sm flex items-center gap-2 group animate-in zoom-in-90 duration-200"
+        <section className="bg-white rounded-[20px] p-6 shadow-sm border border-slate-200/60 font-sans">
+            <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">
+                Core Competencies
+            </h3>
+
+            {/* Chips Container */}
+            <div className="flex flex-wrap gap-2 mb-6 min-h-[40px]">
+                {skills.length > 0 ? skills.map((skill) => (
+                    <div 
+                        key={skill}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 text-slate-700 text-[11px] font-bold rounded-lg border border-slate-200 uppercase tracking-widest transition-all duration-200 animate-in zoom-in-95 group"
                     >
-                        {skill}
+                        <span className="font-sans">{skill}</span>
                         <button 
                             onClick={() => handleRemoveSkill(skill)}
-                            className="text-[#A1C5FF] hover:text-white transition-colors"
+                            className="text-slate-400 hover:text-[#D83484] transition-colors"
+                            disabled={isSaving}
+                            aria-label={`Remove ${skill}`}
                         >
-                            <X size={12} />
+                            <X size={14} strokeWidth={3} />
                         </button>
-                    </span>
-                ))}
+                    </div>
+                )) : (
+                    <p className="text-[12px] text-slate-400 italic">No skills listed yet</p>
+                )}
             </div>
 
-            {/* Add New Skill Input */}
+            {/* Predictive Search / Autocomplete */}
             <div className="relative">
-                <div className="relative">
+                <div className="relative group">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#A3369D] transition-colors" size={16} strokeWidth={3} />
                     <input 
+                        type="text"
                         value={inputValue}
                         onChange={(e) => {
                             setInputValue(e.target.value);
                             setShowSuggestions(true);
                         }}
                         onFocus={() => setShowSuggestions(true)}
+                        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                handleAddSkill(inputValue);
+                                e.preventDefault();
+                                if (inputValue.trim()) handleAddSkill(inputValue);
                             }
                         }}
                         disabled={isSaving}
-                        className="w-full h-[56px] pl-12 pr-12 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl text-[14px] font-medium text-[#191C1D] focus:outline-none focus:border-[#0040A1] transition-all disabled:opacity-50"
-                        placeholder="Add Tech Stack (e.g. REACT)..."
+                        className="w-full h-[46px] pl-12 pr-12 bg-[#F8FAFC] border border-slate-200 rounded-xl text-[13px] font-bold text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-[#A3369D] focus:ring-4 focus:ring-[#A3369D]/5 transition-all font-sans"
+                        placeholder={isSaving ? "Updating..." : "Search or add skill..."}
                     />
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A1A5B7]">
-                        {isSaving ? <Loader2 size={18} className="animate-spin text-[#0040A1]" /> : <Plus size={20} />}
-                    </div>
+                    {isSaving && (
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                            <Loader2 size={16} className="animate-spin text-[#A3369D]" />
+                        </div>
+                    )}
                 </div>
 
-                {/* Suggestions List */}
-                {showSuggestions && (inputValue.length > 0 || suggestions.length > 0) && (
+                {/* Suggestions Dropdown */}
+                {showSuggestions && (inputValue.length > 0 || filteredSuggestions.length > 0) && (
                     <div 
                         ref={suggestionsRef}
-                        className="absolute left-0 right-0 top-full mt-2 bg-white border border-[#E1E2E5] rounded-xl shadow-xl z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+                        className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-xl shadow-xl z-[100] max-h-[300px] overflow-y-auto animate-in fade-in zoom-in-95 duration-100"
                     >
-                        {suggestions.map((s) => (
+                        {filteredSuggestions.map((s) => (
                             <button
                                 key={s}
-                                onClick={() => handleAddSkill(s)}
-                                className="w-full px-5 py-3 text-left text-[13px] font-bold text-[#191C1D] hover:bg-[#F1F5F9] transition-colors flex items-center justify-between group"
+                                type="button"
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    handleAddSkill(s);
+                                }}
+                                className="w-full px-5 py-3 text-left text-[13px] font-bold text-slate-700 hover:bg-[#F1F5F9] hover:text-[#0040A1] transition-all flex items-center justify-between border-b border-slate-50 last:border-0"
                             >
-                                {s.toUpperCase()}
-                                <Plus size={14} className="text-[#A1A5B7] group-hover:text-[#0040A1]" />
+                                <span className="font-sans">{s}</span>
+                                <Plus size={14} strokeWidth={3} />
                             </button>
                         ))}
-                        {inputValue && !suggestions.some(s => s.toUpperCase() === inputValue.toUpperCase()) && (
+                        
+                        {/* Option to create new */}
+                        {inputValue && !filteredSuggestions.some(s => s.toLowerCase() === inputValue.toLowerCase()) && (
                             <button
-                                onClick={() => handleAddSkill(inputValue)}
-                                className="w-full px-5 py-3 text-left text-[13px] font-bold text-[#0040A1] bg-[#DAE2FF]/20 hover:bg-[#DAE2FF]/40 border-t border-[#F1F5F9] transition-colors flex items-center justify-between"
+                                type="button"
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    handleAddSkill(inputValue);
+                                }}
+                                className="w-full px-5 py-3 text-left text-[13px] font-bold text-[#A3369D] bg-purple-50 hover:bg-purple-100 transition-all flex items-center justify-between border-t border-purple-100"
                             >
-                                CREATE "{inputValue.toUpperCase()}"
-                                <Plus size={14} />
+                                <span className="font-sans">Add <span className="font-black">"{inputValue}"</span></span>
+                                <Plus size={14} strokeWidth={3} />
                             </button>
                         )}
                     </div>
