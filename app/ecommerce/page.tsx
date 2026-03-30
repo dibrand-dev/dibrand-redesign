@@ -18,13 +18,13 @@ export default async function EcommerceLanding() {
 
   return (
     <div className="flex flex-col min-h-screen font-lato bg-[#F5F5F5]">
-      {/* 1. HERO SECTION - PREMIUM RECONSTRUCTION */}
-      <section className="relative overflow-hidden pt-32 pb-24 lg:pt-40 lg:pb-32 flex items-center">
+      {/* 1. HERO SECTION - BALANCED VERTICALITY */}
+      <section className="relative overflow-hidden pt-8 pb-24 lg:pt-16 lg:pb-24 flex items-start">
         <div className="container mx-auto px-8 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
             
-            {/* COLUMNA IZQUIERDA: CONTENIDO Y JERARQUÍA */}
-            <div className="flex flex-col space-y-10 z-10">
+            {/* COLUMNA IZQUIERDA: JERARQUÍA ASCENDENTE */}
+            <div className="flex flex-col space-y-8 z-10">
               <div className="inline-flex items-center gap-2 px-4 py-1 bg-white/80 border border-[#D83484]/20 rounded-full w-fit shadow-sm">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D83484] opacity-75"></span>
