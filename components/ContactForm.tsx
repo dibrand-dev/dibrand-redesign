@@ -55,11 +55,24 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
   }, [subject, setValue]);
 
   const onSubmit = async (data: FormData) => {
+    // DIAGNÓSTICO: Esto aparecerá apenas hagas clic si la validación es correcta.
+    console.log('[ContactForm] DEBUG: onSubmit triggered!', data);
+    
     setSubmitStatus('idle');
 
-    const captchaToken = executeRecaptcha ? await executeRecaptcha('contact_form') : null;
-    if (!captchaToken) {
-      console.warn('[ContactForm] Execution of reCAPTCHA was skipped or failed. Proceeding without token.');
+    // MODO ULTRA-DEFENSIVO: Si falta la llave, no intentamos NADA con reCAPTCHA.
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+    let captchaToken = null;
+    
+    if (siteKey && siteKey.length > 5 && executeRecaptcha) {
+      try {
+        console.log('[ContactForm] ReCAPTCHA attempt...');
+        const tokenPromise = executeRecaptcha('contact_form');
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 1500));
+        captchaToken = await (Promise.race([tokenPromise, timeoutPromise]) as Promise<string>);
+      } catch (e) {
+        console.warn('[ContactForm] ReCAPTCHA bypass.');
+      }
     }
 
     try {
@@ -93,12 +106,12 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
       {submitStatus === 'success' ? (
         <div className="text-center py-12">
           <h3 className={clsx("text-2xl font-bold mb-2", isDark ? "text-white" : "text-zinc-900")}>{dict.contact.form.success}</h3>
-          <button
-            onClick={() => setSubmitStatus('idle')}
-            className="mt-4 text-emerald-400 hover:text-emerald-300 underline"
-          >
-            Send another message
-          </button>
+            <button
+              onClick={() => setSubmitStatus('idle')}
+              className="mt-4 text-[#D83484] hover:text-[#A3369D] font-bold text-sm underline underline-offset-4 transition-colors"
+            >
+              Enviar otro mensaje
+            </button>
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -196,11 +209,10 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
           <div className="col-span-1 md:col-span-2 flex justify-end mt-4">
             <button
               type="submit"
-              disabled={isSubmitting}
               className={clsx(
                 "inline-flex items-center justify-center gap-3 w-full md:w-auto px-10 py-5 rounded-full text-base font-bold text-white transition-all hover:scale-[1.02] group",
                 isSubmitting
-                  ? "bg-gray-400 cursor-not-allowed"
+                  ? "bg-brand/50 cursor-wait"
                   : "bg-brand shadow-lg shadow-brand/20 hover:bg-brand/90"
               )}
             >
