@@ -21,7 +21,11 @@ export async function submitToZoho(formData: FormData) {
     const isDev = process.env.NODE_ENV === 'development';
 
     // 1. reCAPTCHA Validation
-    if (captchaToken) {
+    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    
+    if (!secretKey) {
+        console.warn('⚠️ [ContactForm] CRITICAL: RECAPTCHA_SECRET_KEY is missing. Insecure submission allowed to avoid losing leads.');
+    } else if (captchaToken) {
         try {
             const { success, score } = await verifyRecaptcha(captchaToken);
             if (!success) {
@@ -30,11 +34,12 @@ export async function submitToZoho(formData: FormData) {
             }
         } catch (error) {
             console.error('[ContactForm] Error verifying reCAPTCHA:', error);
-            // In dev, we might want to continue, but for now we follow the security rule
+            // If verification itself fails (network/invalid key), we follow the safety rule in production
             if (!isDev) return { success: false, error: 'reCAPTCHA verification error' };
         }
     } else if (!isDev) {
-        console.warn('[ContactForm] No reCAPTCHA token provided in production!');
+        // Token missing but secret is set -> likely a gap in the frontend integration
+        console.warn('[ContactForm] No reCAPTCHA token provided but Secret Key is configured!');
         return { success: false, error: 'reCAPTCHA required' };
     }
 
