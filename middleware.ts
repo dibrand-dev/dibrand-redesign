@@ -34,13 +34,14 @@ function getLocale(request: NextRequest): string {
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
     const isApiRoute = pathname.startsWith('/api')
+    const isEcommerce = pathname.startsWith('/ecommerce')
     const isStaticAsset = pathname.match(/\.(svg|png|jpg|jpeg|gif|webp|ico|pdf|txt|xml|json)$/) || 
                          pathname.startsWith('/_next') || 
                          pathname === '/favicon.ico' || 
                          pathname === '/logo.png'
 
-    // 0. IMMEDIATE EXCLUSION FOR API AND STATIC ASSETS
-    if (isApiRoute || isStaticAsset) {
+    // 0. IMMEDIATE EXCLUSION FOR API, ECOMMERCE AND STATIC ASSETS
+    if (isApiRoute || isStaticAsset || isEcommerce) {
         return NextResponse.next()
     }
 

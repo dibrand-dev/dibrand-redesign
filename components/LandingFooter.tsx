@@ -7,8 +7,8 @@ export default function LandingFooter() {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-10">
           {/* Logo Minimal */}
-          <div className="text-2xl font-black tracking-tighter text-black flex items-center gap-1">
-            Dibrand<span className="w-1.5 h-1.5 bg-black rounded-full mt-1.5" />
+          <div className="text-2xl font-montserrat font-black tracking-tighter text-black flex items-center gap-1">
+            Dibrand<span className="w-1.5 h-1.5 bg-gradient-to-r from-[#D83484] to-[#A3369D] rounded-full mt-1.5" />
           </div>
 
           {/* Copyright Técnico */}
