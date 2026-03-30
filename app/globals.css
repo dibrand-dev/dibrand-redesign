@@ -115,6 +115,7 @@
   --color-primary: var(--brand-primary);
   
   --font-heading: var(--font-outfit);
+  --font-sans: var(--font-outfit);
 }
 
 @layer base {
