@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { ChevronDown, Check, Loader2, X, AlertCircle } from 'lucide-react';
-import { ATS_STAGES } from '@/lib/ats-constants';
+import { ATS_STAGES, getStageConfig } from '@/lib/ats-constants';
 import { updateCandidateStatus, rejectCandidate } from '@/app/ats/actions';
 import { useRouter } from 'next/navigation';
 
@@ -19,8 +19,7 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
 
-    const currentStage = ATS_STAGES.find(s => s.value.toLowerCase() === selected?.toLowerCase()) || 
-                       (selected === 'Rejected' ? { value: 'Rejected', label: 'Rejected', color: '#dc2626', bg: '#fef2f2' } : ATS_STAGES[1]);
+    const currentStage = getStageConfig(selected);
 
     function handleSelect(stageValue: string) {
         if (stageValue === selected) {
@@ -56,10 +55,9 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
             <div className="mb-3">
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Current Stage</p>
                 <div
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg w-fit"
-                    style={{ backgroundColor: currentStage.bg, color: currentStage.color }}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg w-fit ${currentStage.twBg} ${currentStage.twText}`}
                 >
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: currentStage.color }} />
+                    <div className={`w-2 h-2 rounded-full ${currentStage.twText.replace('text-', 'bg-')}`} />
                     <span className="text-[12px] font-black uppercase tracking-widest">{currentStage.label}</span>
                 </div>
             </div>
@@ -93,18 +91,16 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
                                     >
                                         <div className="flex items-center gap-3">
                                             <div
-                                                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                                                style={{ backgroundColor: stage.color }}
+                                                className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${stage.twText.replace('text-', 'bg-')}`}
                                             />
                                             <span
-                                                className="text-[13px] font-bold"
-                                                style={{ color: isActive ? stage.color : '#191C1D' }}
+                                                className={`text-[13px] font-bold ${isActive ? stage.twText : 'text-[#191C1D]'}`}
                                             >
                                                 {stage.label}
                                             </span>
                                         </div>
                                         {isActive && (
-                                            <Check size={14} style={{ color: stage.color }} />
+                                            <Check size={14} className={stage.twText} />
                                         )}
                                     </button>
                                 );
