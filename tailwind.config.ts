@@ -58,10 +58,9 @@ const config: Config = {
             },
             fontFamily: {
                 sans: ['var(--font-outfit)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                inter: ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                headline: ['Manrope', 'sans-serif'],
-                body: ['Inter', 'sans-serif'],
-                label: ['Inter', 'sans-serif'],
+                headline: ['var(--font-outfit)', 'sans-serif'],
+                body: ['var(--font-outfit)', 'sans-serif'],
+                label: ['var(--font-outfit)', 'sans-serif'],
             },
         },
     },

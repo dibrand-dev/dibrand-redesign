@@ -17,7 +17,7 @@ export default async function EcommerceLanding() {
   const dict = await getDictionary(lang);
 
   return (
-    <div className="flex flex-col min-h-screen font-lato bg-[#F5F5F5]">
+    <div className="flex flex-col min-h-screen bg-[#F5F5F5]">
       {/* 1. HERO SECTION - BALANCED VERTICALITY */}
       <section className="relative overflow-hidden pt-8 pb-24 lg:pt-16 lg:pb-24 flex items-start">
         <div className="container mx-auto px-8 lg:px-12">
@@ -30,11 +30,11 @@ export default async function EcommerceLanding() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D83484] opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D83484]"></span>
                 </span>
-                <span className="text-[10px] font-montserrat font-bold text-[#A3369D] uppercase tracking-widest">Digital Hub Escobar</span>
+                <span className="text-[10px] font-bold text-[#A3369D] uppercase tracking-widest">Digital Hub Escobar</span>
               </div>
 
               <div className="space-y-6">
-                <h1 className="text-4xl lg:text-7xl font-montserrat font-bold text-slate-900 leading-[1.1] tracking-tight">
+                <h1 className="text-4xl lg:text-7xl font-bold text-slate-900 leading-[1.1] tracking-tight">
                   Llevamos tu comercio de <br />
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#D83484] to-[#A3369D]">
                     Escobar a todo el país.
@@ -84,7 +84,7 @@ export default async function EcommerceLanding() {
       <section className="py-32 bg-white relative">
         <div className="container mx-auto px-8 lg:px-12">
           <div className="max-w-3xl mb-24">
-            <h2 className="text-3xl lg:text-5xl font-montserrat font-bold text-slate-900 mb-6">Expertos en las plataformas líderes del mercado.</h2>
+            <h2 className="text-3xl lg:text-5xl font-bold text-slate-900 mb-6">Expertos en las plataformas líderes del mercado.</h2>
             <div className="h-1 w-20 bg-gradient-to-r from-[#D83484] to-[#A3369D] rounded-full" />
           </div>
 
@@ -94,7 +94,7 @@ export default async function EcommerceLanding() {
               <div className="w-14 h-14 bg-gradient-to-br from-[#D83484] to-[#A3369D] flex items-center justify-center mb-8 text-white rounded-xl shadow-md">
                 <ShoppingBag size={28} />
               </div>
-              <h3 className="text-2xl font-montserrat font-bold text-slate-900 mb-4 tracking-tight">Tienda Nube</h3>
+              <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">Tienda Nube</h3>
               <p className="text-gray-600 mb-10 leading-relaxed">
                 Puesta en marcha profesional y soporte local especializado para escalar rápido.
               </p>
@@ -109,7 +109,7 @@ export default async function EcommerceLanding() {
               <div className="w-14 h-14 bg-gradient-to-br from-[#A3369D] to-[#D83484] flex items-center justify-center mb-8 text-white rounded-xl shadow-md">
                 <Settings size={28} />
               </div>
-              <h3 className="text-2xl font-montserrat font-bold text-slate-900 mb-4 tracking-tight">WooCommerce</h3>
+              <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">WooCommerce</h3>
               <p className="text-gray-600 mb-10 leading-relaxed">
                 Control total del código y cero comisiones para marcas con requerimientos específicos.
               </p>
@@ -123,7 +123,7 @@ export default async function EcommerceLanding() {
               <div className="w-14 h-14 bg-gradient-to-br from-[#D83484] to-[#A3369D] flex items-center justify-center mb-8 text-white rounded-xl shadow-md">
                 <Globe size={28} />
               </div>
-              <h3 className="text-2xl font-montserrat font-bold text-slate-900 mb-4 tracking-tight">Shopify</h3>
+              <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">Shopify</h3>
               <p className="text-gray-600 mb-10 leading-relaxed">
                 Infraestructura global para marcas internacionales con gran volumen de ventas.
               </p>
@@ -144,7 +144,7 @@ export default async function EcommerceLanding() {
                 <CreditCard size={28} />
               </div>
               <div>
-                <h4 className="text-sm font-montserrat font-bold text-slate-900 uppercase tracking-widest mb-1">Pagos Digitales</h4>
+                <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-1">Pagos Digitales</h4>
                 <p className="text-sm text-slate-500 leading-relaxed italic">Mercado Pago y Pasarelas Internacionales Integradas.</p>
               </div>
             </div>
@@ -153,7 +153,7 @@ export default async function EcommerceLanding() {
                 <Truck size={28} />
               </div>
               <div>
-                <h4 className="text-sm font-montserrat font-bold text-slate-900 uppercase tracking-widest mb-1">Logística</h4>
+                <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-1">Logística</h4>
                 <p className="text-sm text-slate-500 leading-relaxed italic">Despachos Inteligentes para Alcance Nacional.</p>
               </div>
             </div>
@@ -162,7 +162,7 @@ export default async function EcommerceLanding() {
                 <MessageSquare size={28} />
               </div>
               <div>
-                <h4 className="text-sm font-montserrat font-bold text-slate-900 uppercase tracking-widest mb-1">Experiencia Local</h4>
+                <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-1">Experiencia Local</h4>
                 <p className="text-sm text-slate-500 leading-relaxed italic">Soporte Técnico Humano desde Escobar.</p>
               </div>
             </div>
@@ -175,7 +175,7 @@ export default async function EcommerceLanding() {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl font-montserrat font-black mb-4 tracking-tight">Tu transformación comienza aquí.</h2>
+              <h2 className="text-4xl lg:text-5xl font-bold mb-4 tracking-tight">Tu transformación comienza aquí.</h2>
               <p className="text-[#A3369D] text-lg font-bold">Agenda una consultoría técnica gratuita.</p>
             </div>
             

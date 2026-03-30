@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat, Lato } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "../globals.css";
 import { GTMScript, GTMNoScript } from "@/components/analytics/GTM";
 import Navbar from "@/components/layout/Navbar";
@@ -7,18 +7,11 @@ import LandingFooter from "@/components/LandingFooter";
 import { getDictionary } from "@/lib/dictionaries";
 import { RecaptchaProvider } from "@/components/providers/RecaptchaProvider";
 
-const montserrat = Montserrat({
+const outfit = Outfit({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-montserrat',
-  weight: ['400', '600', '700', '800', '900']
-});
-
-const lato = Lato({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-lato',
-  weight: ['400', '700']
+  variable: '--font-outfit',
+  weight: ['300', '400', '500', '600', '700', '800', '900']
 });
 
 export const metadata: Metadata = {
@@ -36,11 +29,11 @@ export default async function EcommerceLayout({
   const dict = await getDictionary(lang);
 
   return (
-    <html lang={lang} className={`${montserrat.variable} ${lato.variable} scroll-smooth`} suppressHydrationWarning>
+    <html lang={lang} className={`${outfit.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <GTMScript />
       </head>
-      <body className="font-lato antialiased pt-16 bg-[#F5F5F5]" suppressHydrationWarning>
+      <body className="font-sans antialiased pt-16 bg-[#F5F5F5]" suppressHydrationWarning>
         <GTMNoScript />
         <Navbar dict={dict} lang={lang} />
         <div className="flex min-h-screen flex-col">
