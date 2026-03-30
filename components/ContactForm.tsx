@@ -45,7 +45,11 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
   const subject = searchParams.get('subject');
 
   const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormData>();
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  
+  // Obtenemos el contexto de forma segura. Si no existe la llave,
+  // RecaptchaProvider debe proveer un contexto aunque sea vacío para evitar el crash.
+  const recaptchaContext = useGoogleReCaptcha();
+  const executeRecaptcha = recaptchaContext?.executeRecaptcha;
 
   useEffect(() => {
     setMounted(true);
