@@ -468,7 +468,11 @@ export async function addApplicationLog(applicationId: string, noteText: string)
     const fullName = user?.user_metadata?.full_name || user?.email || 'Recruiter';
     const avatarUrl = user?.user_metadata?.avatar_url || null;
 
-        const { error } = await supabase
+    if (!user) {
+        throw new Error("No authenticated user found for application log.");
+    }
+
+    const { error } = await supabase
         .from('application_notes')
         .insert([{
             application_id: applicationId,
