@@ -566,7 +566,7 @@ export async function addApplicationLog(applicationId: string, noteText: string)
 export async function updateApplicationLog(id: string, applicationId: string, noteText: string) {
     const { error } = await supabase
         .from('application_notes')
-        .update({ note_text: noteText, updated_at: new Date().toISOString() })
+        .update({ note_text: noteText })
         .eq('id', id);
 
     if (error) throw error;

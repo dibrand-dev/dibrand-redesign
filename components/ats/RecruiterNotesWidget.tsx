@@ -54,9 +54,9 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
                 await updateApplicationLog(editingId, candidateId, editValue);
                 setEditingId(null);
                 setEditValue('');
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error saving updated note:', error);
-                alert('Hubo un error al guardar los cambios.');
+                alert(`Hubo un error al guardar los cambios: ${error.message || 'Error desconocido'}`);
             }
         });
     };
