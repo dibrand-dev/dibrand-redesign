@@ -5,13 +5,13 @@ import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 export function RecaptchaProvider({ children }: { children: React.ReactNode }) {
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+  const isValid = siteKey && siteKey.length > 5 && siteKey !== 'DUMMY_KEY_FOR_CONTEXT_ONLY';
 
-  // IMPORTANTE: Siempre debemos retornar el Provider para que useGoogleReCaptcha no rompa React en producción.
-  // Si falta la llave, GoogleReCaptchaProvider internamente manejará el error de llave inválida,
-  // pero mantendrá vivo el contexto de React para que el formulario pueda seguir operando.
+  // Siempre debemos retornar el Provider para que useGoogleReCaptcha no rompa React en sus hijos.
+  // Si falta la llave, pasamos una vacía para que no se vea el placeholder gritando en la consola.
   return (
     <GoogleReCaptchaProvider
-      reCaptchaKey={siteKey || 'DUMMY_KEY_FOR_CONTEXT_ONLY'}
+      reCaptchaKey={isValid ? siteKey : ''}
       scriptProps={{
         async: true,
         defer: true,

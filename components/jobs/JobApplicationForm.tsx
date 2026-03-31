@@ -52,11 +52,6 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
         e.preventDefault();
         const form = e.currentTarget;
 
-        if (!executeRecaptcha) {
-            console.error('Execute recaptcha not yet available');
-            return;
-        }
-
         if (!resumeFile) {
             alert(dict.attachResume || 'Please upload your resume');
             return;
@@ -68,8 +63,25 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
         }
 
         setLoading(true);
+        
+        // MODO ULTRA-DEFENSIVO: Si falta la llave o falla reCAPTCHA, seguimos adelante.
+        const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+        let captchaToken: string | null = null;
+        
+        if (siteKey && siteKey.length > 5 && siteKey !== 'DUMMY_KEY_FOR_CONTEXT_ONLY' && executeRecaptcha) {
+            try {
+                console.log('[JobForm] ReCAPTCHA attempt...');
+                const tokenPromise = executeRecaptcha('candidate_apply');
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000));
+                captchaToken = await (Promise.race([tokenPromise, timeoutPromise]) as Promise<string>);
+            } catch (e) {
+                console.warn('[JobForm] ReCAPTCHA bypass due to timeout or error.', e);
+            }
+        } else {
+            console.warn('[JobForm] ReCAPTCHA skipped: No valid site key or provider not ready.');
+        }
+
         try {
-            const token = await executeRecaptcha('candidate_apply');
             const resumeUrl = await uploadResume(resumeFile);
 
             const formData = new FormData(form);
@@ -83,7 +95,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
                 linkedin_url: formData.get('linkedin_url'),
                 resume_url: resumeUrl,
                 stack_ids: selectedStacks.map((s: any) => s.value),
-                captchaToken: token
+                captchaToken: captchaToken
             };
 
             await submitApplication(data);
