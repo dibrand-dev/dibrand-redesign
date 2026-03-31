@@ -6,8 +6,10 @@ import { verifyRecaptcha } from '@/lib/recaptcha';
 
 export async function submitApplication(formData: any) {
     // 1. Verify reCAPTCHA
-    if (formData.captchaToken) {
-        const { success, score } = await verifyRecaptcha(formData.captchaToken);
+    const { captchaToken, ...applicationData } = formData;
+    
+    if (captchaToken) {
+        const { success, score } = await verifyRecaptcha(captchaToken);
         if (!success) {
             console.error('reCAPTCHA failed for application:', score);
             throw new Error('reCAPTCHA verification failed. Please try again.');
@@ -17,12 +19,12 @@ export async function submitApplication(formData: any) {
     }
 
     // Split full_name into first_name and last_name for DB compliance
-    const nameParts = (formData.full_name || '').trim().split(/\s+/);
+    const nameParts = (applicationData.full_name || '').trim().split(/\s+/);
     const firstName = nameParts[0] || 'Unknown';
     const lastName = nameParts.slice(1).join(' ') || '';
 
     const dataToInsert = {
-        ...formData,
+        ...applicationData,
         first_name: firstName,
         last_name: lastName,
         status: 'New',
