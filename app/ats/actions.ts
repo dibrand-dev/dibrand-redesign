@@ -558,6 +558,30 @@ export async function addApplicationLog(applicationId: string, noteText: string)
     }
 
     revalidatePath(`/ats/candidates/${applicationId}`);
+    revalidatePath('/ats/candidates');
+    revalidatePath('/ats');
+    return { success: true };
+}
+
+export async function updateApplicationLog(id: string, applicationId: string, noteText: string) {
+    const { error } = await supabase
+        .from('application_notes')
+        .update({ note_text: noteText, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) throw error;
+    revalidatePath(`/ats/candidates/${applicationId}`);
+    return { success: true };
+}
+
+export async function deleteApplicationLog(id: string, applicationId: string) {
+    const { error } = await supabase
+        .from('application_notes')
+        .delete()
+        .eq('id', id);
+
+    if (error) throw error;
+    revalidatePath(`/ats/candidates/${applicationId}`);
     return { success: true };
 }
 
