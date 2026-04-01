@@ -5,7 +5,7 @@ import { Candidate } from '@/app/ats/types';
 import Link from 'next/link';
 import { capitalizeName } from '@/lib/utils';
 
-import StageBadge from './StageBadge';
+import StagePill from './StagePill';
 
 interface Props {
   candidate: Candidate;
@@ -16,7 +16,7 @@ const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
     <div className="bg-white border border-[#E1E2E5] rounded-[12px] p-6 hover:shadow-lg transition-all flex flex-col h-full font-inter relative group">
       {/* Status Badge - Top Right */}
       <div className="absolute top-6 right-6">
-        <StageBadge status={candidate.status} />
+        <StagePill status={candidate.status} />
       </div>
 
       {/* Header: Avatar + Info */}
@@ -51,7 +51,7 @@ const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
         </div>
         <div className="flex justify-between items-baseline">
             <p className="text-[12px] font-bold text-[#010101] truncate pr-2">{candidate.position}</p>
-            <StageBadge status={candidate.status} className="!text-[8px] !px-2 !py-0" />
+            <StagePill status={candidate.status} className="!text-[8px] !px-2 !py-0" />
         </div>
       </div>
 

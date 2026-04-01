@@ -2,33 +2,83 @@
  * ATS candidate pipeline stages — single source of truth for the entire ATS.
  * Used in candidate profile, filters, pipeline boards, and status badges.
  */
-export const ATS_STAGES = [
-    { value: 'Applied',     label: 'Nuevo',          twBg: 'bg-slate-100',   twText: 'text-slate-700' },
-    { value: 'Sourced',     label: 'Sourced',        twBg: 'bg-blue-100',    twText: 'text-blue-700' },
-    { value: 'Screening',   label: 'Screening',      twBg: 'bg-amber-100',   twText: 'text-amber-700' },
-    { value: 'Interview',   label: 'Entrevista',     twBg: 'bg-purple-100',  twText: 'text-purple-700' },
-    { value: 'Technical',   label: 'Prueba Técnica', twBg: 'bg-indigo-100',  twText: 'text-indigo-700' },
-    { value: 'Offer',       label: 'Oferta',         twBg: 'bg-pink-100',    twText: 'text-pink-700' },
-    { value: 'Hired',       label: 'Contratado',     twBg: 'bg-emerald-100', twText: 'text-emerald-700' },
-    { value: 'Rejected',    label: 'Rechazado',      twBg: 'bg-rose-100',    twText: 'text-rose-700' },
-    { value: 'Withdrawn',   label: 'Retirado',       twBg: 'bg-slate-100',   twText: 'text-slate-500' }
+export const STAGE_CONFIG = {
+    'Nuevo': { label: 'Nuevo', twBg: 'bg-slate-100', twText: 'text-slate-700' },
+    'Screening': { label: 'Screening', twBg: 'bg-amber-100', twText: 'text-amber-700' },
+    'Phone Screen': { label: 'Phone Screen', twBg: 'bg-amber-100', twText: 'text-amber-700' },
+    'Entrevista RRHH': { label: 'Entrevista RRHH', twBg: 'bg-purple-50', twText: 'text-[#A3369D]' },
+    'Entrevista Técnica': { label: 'Entrevista Técnica', twBg: 'bg-indigo-100', twText: 'text-indigo-700' },
+    'Prueba Técnica': { label: 'Prueba Técnica', twBg: 'bg-indigo-100', twText: 'text-indigo-700' },
+    'Entrevista Cliente': { label: 'Entrevista Cliente', twBg: 'bg-blue-100', twText: 'text-blue-700' },
+    'Oferta': { label: 'Oferta', twBg: 'bg-pink-50', twText: 'text-[#D83484]' },
+    'Contratado': { label: 'Contratado', twBg: 'bg-emerald-100', twText: 'text-emerald-700' },
+    'Desestimado': { label: 'Desestimado', twBg: 'bg-rose-50', twText: 'text-rose-700' },
+    'No cumple perfil': { label: 'No cumple perfil', twBg: 'bg-rose-50', twText: 'text-rose-700' },
+    'Pretensión alta': { label: 'Pretensión alta', twBg: 'bg-rose-50', twText: 'text-rose-700' },
+    'Poca exp': { label: 'Poca exp', twBg: 'bg-rose-50', twText: 'text-rose-700' },
+    'Otro': { label: 'Otro', twBg: 'bg-rose-50', twText: 'text-rose-700' },
+    'Talent Pool': { label: 'Talent Pool', twBg: 'bg-stone-100', twText: 'text-stone-700' },
+} as const;
+
+export const MACRO_STAGES = [
+    {
+        id: 'sourcing',
+        label: 'Sourcing',
+        color: '#64748B', // Slate 500
+        stages: ['Nuevo', 'Screening', 'Phone Screen']
+    },
+    {
+        id: 'evaluacion',
+        label: 'Evaluación',
+        color: '#A3369D', // Dibrand Purple
+        stages: ['Entrevista RRHH', 'Entrevista Técnica', 'Prueba Técnica', 'Entrevista Cliente']
+    },
+    {
+        id: 'cierre',
+        label: 'Cierre',
+        color: '#D83484', // Dibrand Magenta
+        stages: ['Oferta', 'Contratado']
+    },
+    {
+        id: 'fuera',
+        label: 'Talent Pool',
+        color: '#64748B', // Slate 500
+        stages: ['Talent Pool']
+    },
+    {
+        id: 'rechazados',
+        label: 'Rechazados',
+        color: '#BE123C', // Rose 700
+        stages: ['Desestimado', 'No cumple perfil', 'Pretensión alta', 'Poca exp', 'Otro']
+    }
 ] as const;
 
-export type ATSStageValue = typeof ATS_STAGES[number]['value'];
+export const ATS_STAGES = Object.keys(STAGE_CONFIG).map(key => ({
+    value: key,
+    label: (STAGE_CONFIG as any)[key].label,
+    twBg: (STAGE_CONFIG as any)[key].twBg,
+    twText: (STAGE_CONFIG as any)[key].twText,
+}));
+
+export type ATSStageValue = keyof typeof STAGE_CONFIG;
 
 export function getStageConfig(status: string) {
-    const s = status?.toLowerCase() || '';
+    const s = status || '';
     
-    // Normalize and match
-    if (s === 'applied' || s === 'nuevo') return ATS_STAGES[0];
-    if (s === 'sourced') return ATS_STAGES[1];
-    if (s === 'screening' || s === 'screen') return ATS_STAGES[2];
-    if (s === 'interview' || s === 'interviewing' || s === 'entrevista') return ATS_STAGES[3];
-    if (s.includes('technical') || s.includes('técnica') || s.includes('tecnica')) return ATS_STAGES[4];
-    if (s === 'offer' || s === 'offered' || s === 'oferta') return ATS_STAGES[5];
-    if (s === 'hired' || s === 'contratado') return ATS_STAGES[6];
-    if (s === 'rejected' || s === 'rechazado') return ATS_STAGES[7];
-    if (s === 'withdrawn' || s === 'retirado') return ATS_STAGES[8];
+    // Exact match from the new config
+    if (STAGE_CONFIG[s as keyof typeof STAGE_CONFIG]) {
+        return { value: s, ...(STAGE_CONFIG as any)[s] };
+    }
+
+    // Normalizations for legacy data
+    const lower = s.toLowerCase();
+    if (lower === 'applied' || lower === 'nuevo' || lower === 'sourced') return { value: 'Nuevo', ...STAGE_CONFIG['Nuevo'] };
+    if (lower === 'screening' || lower === 'phone screening' || lower === 'phone screen') return { value: 'Screening', ...STAGE_CONFIG['Screening'] };
+    if (lower === 'interview' || lower === 'entrevista rrhh' || lower === 'entrevista') return { value: 'Entrevista RRHH', ...STAGE_CONFIG['Entrevista RRHH'] };
+    if (lower === 'technical' || lower === 'prueba técnica' || lower === 'entrevista técnica') return { value: 'Entrevista Técnica', ...STAGE_CONFIG['Entrevista Técnica'] };
+    if (lower === 'offer' || lower === 'oferta') return { value: 'Oferta', ...STAGE_CONFIG['Oferta'] };
+    if (lower === 'hired' || lower === 'contratado') return { value: 'Contratado', ...STAGE_CONFIG['Contratado'] };
+    if (lower === 'rejected' || lower === 'desestimado' || lower === 'rechazado' || lower === 'withdrawn') return { value: 'Desestimado', ...STAGE_CONFIG['Desestimado'] };
     
     // Default fallback
     return { 

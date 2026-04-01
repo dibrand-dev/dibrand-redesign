@@ -2,7 +2,8 @@
 
 import React, { useState, useTransition } from 'react';
 import { ChevronDown, Check, Loader2, X, AlertCircle } from 'lucide-react';
-import { ATS_STAGES, getStageConfig } from '@/lib/ats-constants';
+import { ATS_STAGES, getStageConfig, STAGE_CONFIG } from '@/lib/ats-constants';
+import StagePill from './StagePill';
 import { updateCandidateStatus, rejectCandidate } from '@/app/ats/actions';
 import { useRouter } from 'next/navigation';
 
@@ -54,12 +55,7 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
             {/* Current Stage Display */}
             <div className="mb-3">
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Current Stage</p>
-                <div
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg w-fit ${currentStage.twBg} ${currentStage.twText}`}
-                >
-                    <div className={`w-2 h-2 rounded-full ${currentStage.twText.replace('text-', 'bg-')}`} />
-                    <span className="text-[12px] font-black uppercase tracking-widest">{currentStage.label}</span>
-                </div>
+                <StagePill status={selected} />
             </div>
 
             <div className="space-y-3">

@@ -1,7 +1,10 @@
-/**
- * Capitalizes every word in a string (e.g., "diego salvatore" -> "Diego Salvatore")
- * and handles multi-word names correctly.
- */
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}
+
 export function capitalizeName(str: string): string {
     if (!str) return '';
     return str
@@ -12,9 +15,6 @@ export function capitalizeName(str: string): string {
         .join(' ');
 }
 
-/**
- * Common formatting for currency/salary ranges
- */
 export function formatSalary(value: string | number): string {
     if (typeof value === 'number') return `$${value.toLocaleString()}`;
     return value.toString();

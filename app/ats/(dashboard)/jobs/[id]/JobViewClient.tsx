@@ -16,8 +16,9 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase-client';
 import { updateJobQuestionnaire, updateJobDescription } from '@/app/ats/actions';
-import StageBadge from '@/components/ats/StageBadge';
-import { getStageConfig } from '@/lib/ats-constants';
+import StagePill from '@/components/ats/StagePill';
+import PipelineStepper from '@/components/ats/PipelineStepper';
+import { getStageConfig, STAGE_CONFIG, MACRO_STAGES } from '@/lib/ats-constants';
 
 interface Question {
     id: string;
@@ -46,12 +47,8 @@ interface JobData {
     seniority?: string;
     stats?: {
         totalApplicants: number;
-        newCount: number;
-        screenedCount: number;
-        interviewingCount: number;
-        offerCount: number;
-        hiredCount: number;
         daysOpen: number;
+        [key: string]: number; // Allow dynamic stage keys
     };
     recentActivity?: any[];
     team?: any[];
@@ -60,8 +57,9 @@ interface JobData {
 }
 
 export default function JobViewClient({ job, userRole }: { job: JobData | null; userRole?: string }) {
-    const [activeTab, setActiveTab] = useState('Candidates');
+    const [activeTab, setActiveTab] = useState<string>('Candidatos');
     const [showAllCandidates, setShowAllCandidates] = useState(false);
+    const [activeStageFilter, setActiveStageFilter] = useState<string | null>(null);
     
     // Parse role from prop safely
     const roleStr = (userRole || '').toString().toLowerCase();
@@ -286,63 +284,20 @@ ${questionnaire.map(section => {
                 </div>
             </div>
 
-            {/* Key Stats Cards - Present on Candidates tab */}
-            {activeTab === 'Candidates' && (
-                <>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                        <div className="bg-[#F8FAFC] rounded-2xl p-8 flex flex-col items-center justify-center text-center">
-                            <span className="text-[42px] font-black text-[#0040A1] leading-none mb-3">{job?.stats?.daysOpen || 15}</span>
-                            <span className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">DAYS OPEN</span>
-                        </div>
-                        <div className="bg-[#F8FAFC] rounded-2xl p-8 flex flex-col items-center justify-center text-center border-x border-[#F1F5F9] md:border-x-0">
-                            <span className="text-[42px] font-black text-[#0040A1] leading-none mb-3">{job?.stats?.totalApplicants || 0}</span>
-                            <span className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">TOTAL APPLICANTS</span>
-                        </div>
-                        <div className="bg-[#F8FAFC] rounded-2xl p-8 flex flex-col items-center justify-center text-center">
-                            <span className="text-[42px] font-black text-[#0040A1] leading-none mb-3">{job?.stats?.hiredCount || 0}</span>
-                            <span className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">HIRED</span>
-                        </div>
-                    </div>
-
-                    <div className="mb-10">
-                        <h3 className="text-[16px] font-bold text-[#191C1D] mb-4">Recruitment Pipeline</h3>
-                        <div className="grid grid-cols-4 w-full rounded-2xl overflow-hidden h-24 shadow-sm border border-[#E2E8F0]">
-                            <div className={`${getStageConfig('Applied').twBg} p-4 flex flex-col justify-between relative`}>
-                                <span className={`text-[10px] font-bold ${getStageConfig('Applied').twText} opacity-80 tracking-widest uppercase`}>NUEVO</span>
-                                <span className={`text-[28px] font-bold ${getStageConfig('Applied').twText} leading-none`}>{job?.stats?.newCount || 0}</span>
-                            </div>
-                            <div className={`${getStageConfig('Screening').twBg} p-4 flex flex-col justify-between -ml-2 skew-x-[-10deg] border-l border-white/20 z-10`}>
-                                <div className="skew-x-[10deg] flex flex-col h-full justify-between">
-                                    <span className={`text-[10px] font-bold ${getStageConfig('Screening').twText} opacity-80 tracking-widest uppercase`}>SCREENED</span>
-                                    <span className={`text-[28px] font-bold ${getStageConfig('Screening').twText} leading-none`}>{job?.stats?.screenedCount || 0}</span>
-                                </div>
-                            </div>
-                            <div className={`${getStageConfig('Interview').twBg} p-4 flex flex-col justify-between -ml-4 skew-x-[-10deg] border-l border-white/20 z-20`}>
-                                <div className="skew-x-[10deg] flex flex-col h-full justify-between pl-2">
-                                    <span className={`text-[10px] font-bold ${getStageConfig('Interview').twText} opacity-80 tracking-widest uppercase`}>INTERVIEWING</span>
-                                    <span className={`text-[28px] font-bold ${getStageConfig('Interview').twText} leading-none`}>{job?.stats?.interviewingCount || 0}</span>
-                                </div>
-                            </div>
-                            <div className={`${getStageConfig('Offer').twBg} p-4 flex flex-col justify-between -ml-4 z-30`}>
-                                <span className={`text-[10px] font-bold ${getStageConfig('Offer').twText} opacity-80 tracking-widest uppercase`}>OFFER</span>
-                                <span className={`text-[28px] font-bold ${getStageConfig('Offer').twText} leading-none`}>{job?.stats?.offerCount || 0}</span>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
-
-            {/* Tabs Row */}
+            {/* Tabs Row - Now centered below title */}
             <div className="flex items-center gap-8 border-b border-[#E2E8F0] mb-8">
-                {['Candidates', 'Job Description', 'Team', 'Questionnaire'].map(tab => (
+                {['Candidatos', 'Descripción', 'Equipo', 'Cuestionario'].map(tab => (
                     <button
                         key={tab}
-                        onClick={() => setActiveTab(tab)}
+                        onClick={() => {
+                            setActiveTab(tab);
+                            if (tab !== 'Candidatos') setActiveStageFilter(null);
+                        }}
                         className={`text-[14px] font-bold pb-4 transition-all relative ${
                             activeTab === tab ? 'text-[#0040A1]' : 'text-[#737785] hover:text-[#191C1D]'
                         }`}
                     >
-                        {tab === 'Team' ? 'Hiring Team' : tab}
+                        {tab === 'Equipo' ? 'Hiring Team' : tab}
                         {activeTab === tab && (
                             <div className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-[#0040A1] rounded-full z-10"></div>
                         )}
@@ -352,10 +307,17 @@ ${questionnaire.map(section => {
 
             {/* Content Switcher */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* CANDIDATES TAB (Mock Layout) */}
-                {activeTab === 'Candidates' && (
-                    <>
-                        <div className="lg:col-span-8 space-y-4">
+                {/* CANDIDATES TAB */}
+                {activeTab === 'Candidatos' && (
+                    <div className="col-span-full">
+                        <PipelineStepper 
+                            counts={job?.stats || {}} 
+                            activeFilter={activeStageFilter}
+                            onFilterChange={setActiveStageFilter}
+                        />
+                        
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-10">
+                            <div className="lg:col-span-8 space-y-4">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">
                                     {showAllCandidates ? 'ALL CANDIDATES' : 'RECENT ACTIVITY'}
@@ -378,7 +340,22 @@ ${questionnaire.map(section => {
                             </div>
                             
                              {(() => {
-                                const listToShow = showAllCandidates ? (job?.allCandidates || []) : (job?.recentActivity || []);
+                                let listToShow = showAllCandidates ? (job?.allCandidates || []) : (job?.recentActivity || []);
+                                
+                                // Apply Stage Filter if active
+                                if (activeStageFilter) {
+                                    listToShow = (job?.allCandidates || []).filter((c: any) => {
+                                        // If filtering by a macro stage, check if candidate's status belongs to it
+                                        const macro = MACRO_STAGES.find(m => m.id === activeStageFilter);
+                                        if (macro) {
+                                            return (macro.stages as readonly string[]).includes(c.status);
+                                        }
+
+                                        const config = getStageConfig(c.status);
+                                        return config.value === activeStageFilter;
+                                    });
+                                }
+
                                 if (listToShow.length > 0) {
                                     return listToShow.map((candidate: any, idx: number) => {
                                         const timeAgo = Math.floor((Date.now() - new Date(candidate.created_at).getTime()) / (1000 * 60 * 60)) + 'h ago';
@@ -405,7 +382,7 @@ ${questionnaire.map(section => {
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-4 relative z-30">
-                                                    <StageBadge status={candidate.status || 'Applied'} />
+                                                    <StagePill status={candidate.status || 'Applied'} />
                                                     <div className="flex items-center gap-2">
                                                         <button className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F8FAFC] text-[#0040A1] hover:bg-[#E2E8F0] transition-colors pointer-events-auto">
                                                             <CalendarIcon size={16} />
@@ -497,12 +474,13 @@ ${questionnaire.map(section => {
                                 </p>
                             </div>
                         </div>
-                    </>
-                )}
+                    </div>
+                </div>
+            )}
 
 
                 {/* JOB DESCRIPTION TAB */}
-                {activeTab === 'Job Description' && (
+                {activeTab === 'Descripción' && (
                     <>
                         <div className="lg:col-span-8 bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden min-h-[600px]">
                             {/* Editor Toolbar */}
@@ -637,7 +615,7 @@ ${questionnaire.map(section => {
 
 
                 {/* TEAM TAB */}
-                {activeTab === 'Team' && (
+                {activeTab === 'Equipo' && (
                     <>
                         <div className="col-span-full space-y-10">
                             <div>
@@ -686,7 +664,7 @@ ${questionnaire.map(section => {
                 )}
 
                 {/* QUESTIONNAIRE TAB */}
-                {activeTab === 'Questionnaire' && (
+                {activeTab === 'Cuestionario' && (
                     <div className="col-span-full">
                         {/* Tab Header specific to Questionnaire */}
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8 pt-2">

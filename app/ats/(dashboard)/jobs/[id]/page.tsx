@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase-server-client';
 import { redirect } from 'next/navigation';
 import JobViewClient from './JobViewClient';
-import { getStageConfig } from '@/lib/ats-constants';
+import { getStageConfig, STAGE_CONFIG } from '@/lib/ats-constants';
 
 export default async function JobViewPage(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
@@ -69,27 +69,27 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
             });
             const team = Array.from(teamMap.values());
 
-            // Initialize stats
-            const stats = {
+            const stats: any = {
                 totalApplicants: candidatesWithRecruiters.length,
-                newCount: 0,
-                screenedCount: 0,
-                interviewingCount: 0,
-                offerCount: 0,
-                hiredCount: 0,
                 daysOpen: Math.floor((Date.now() - new Date(job.created_at).getTime()) / (1000 * 60 * 60 * 24)) || 0
             };
+
+            // Initialize all professional stages to 0
+            Object.keys(STAGE_CONFIG).forEach(key => {
+                stats[key] = 0;
+            });
 
             // Count real data using standardized stages
             candidatesWithRecruiters.forEach((c: any) => {
                 const config = getStageConfig(c.status);
                 const val = config.value;
-                
-                if (val === 'Applied' || val === 'Sourced') stats.newCount++;
-                else if (val === 'Screening') stats.screenedCount++;
-                else if (val === 'Interview' || val === 'Technical') stats.interviewingCount++;
-                else if (val === 'Offer') stats.offerCount++;
-                else if (val === 'Hired') stats.hiredCount++;
+                if (stats[val] !== undefined) {
+                    stats[val]++;
+                } else if (val === 'Applied' || val === 'Sourced') {
+                    stats['Nuevo']++;
+                } else if (val === 'Rejected' || val === 'Withdrawn') {
+                    stats['Desestimado']++;
+                }
             });
 
             const recentActivity = candidatesWithRecruiters

@@ -50,7 +50,7 @@ export default async function CandidateDetailPage({
     const allSkills = Array.from(new Set([...resolvedStackNames, ...(candidate.skills || [])])).sort();
 
     return (
-        <div className="min-h-[calc(100vh-80px)] bg-[#FAFAFA] font-inter">
+        <div className="min-h-[calc(100vh-80px)] bg-[#FAFAFA] font-outfit">
             {/* Main Content */}
             <div className="overflow-y-auto px-12 py-10 custom-scrollbar">
                 <div className="max-w-7xl mx-auto">
@@ -77,6 +77,23 @@ export default async function CandidateDetailPage({
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><Mail size={16} className="text-slate-400" /> {candidate.email}</div>
                                     <div className="flex items-center gap-1.5 whitespace-nowrap"><Phone size={16} className="text-slate-400" /> {candidate.phone || 'Sin número'}</div>
                                 </div>
+                                
+                                {candidate.linkedin_url && (
+                                    <div className="flex items-center gap-1.5 mb-3">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#0077b5" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                        </svg>
+                                        <a 
+                                            href={candidate.linkedin_url.startsWith('http') ? candidate.linkedin_url : `https://${candidate.linkedin_url}`} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="text-[13px] font-bold text-[#0077b5] hover:underline flex items-center gap-1"
+                                        >
+                                            LinkedIn Profile
+                                        </a>
+                                    </div>
+                                )}
+
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
                                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-1">Postulaciones:</span>
                                     {uniqueJobTitles.map((title, i) => (
@@ -99,8 +116,8 @@ export default async function CandidateDetailPage({
                     {/* Progress Tracker Widget */}
                     <div className="mb-10">
                         <CandidatePipelineTracker 
+                            candidateId={id}
                             currentStatus={candidate.status || 'Applied'} 
-                            hasVetting={Array.isArray(candidate.questionnaire_answers) && candidate.questionnaire_answers.length > 0} 
                         />
                     </div>
 
