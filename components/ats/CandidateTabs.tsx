@@ -40,6 +40,7 @@ export default function CandidateTabs({ candidate, logs }: CandidateTabsProps) {
                 return (
                     <div className="animate-in fade-in slide-in-from-left-4 duration-500">
                         <QuestionnaireAnswersCard 
+                            candidateId={candidate.id}
                             answers={candidate.questionnaire_answers || []} 
                             questionnaire={candidate.job?.questionnaire || []} 
                         />
