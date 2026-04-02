@@ -89,6 +89,24 @@ export function getStageConfig(status: string) {
     };
 }
 
+// Macro Stage Finder helper
+export function getMacroConfig(status: string) {
+    const config = getStageConfig(status);
+    const s = config.value;
+    
+    const macro = MACRO_STAGES.find(m => (m.stages as readonly string[]).includes(s));
+    
+    if (macro) return macro;
+
+    // Default fallback
+    return {
+        id: 'other',
+        label: 'Otros',
+        color: '#64748B',
+        stages: []
+    };
+}
+
 export const DEFAULT_QUESTIONNAIRE = [
     {
         id: 'contact',

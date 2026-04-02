@@ -5,6 +5,7 @@ import { getStageConfig } from '@/lib/ats-constants';
 
 interface StagePillProps {
     status: string;
+    label?: string;
     className?: string;
 }
 
@@ -13,7 +14,7 @@ interface StagePillProps {
  * Specialized pill for professional candidate flow.
  * Uses Outfit font and semantic coloring defined in STAGE_CONFIG.
  */
-export default function StagePill({ status, className = "" }: StagePillProps) {
+export default function StagePill({ status, label, className = "" }: StagePillProps) {
     const config = getStageConfig(status);
     
     return (
@@ -31,7 +32,7 @@ export default function StagePill({ status, className = "" }: StagePillProps) {
             transition-all duration-200
             shadow-sm
         `}>
-            {config.label}
+            {label || config.label}
         </span>
     );
 }

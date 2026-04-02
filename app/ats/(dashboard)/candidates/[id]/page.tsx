@@ -38,10 +38,15 @@ export default async function CandidateDetailPage({
 
     // Fetch all applications for this candidate to show which positions they applied for
     const allApplications = await getApplicationsByEmail(candidate.email);
-    const uniqueJobTitles = Array.from(new Set(allApplications.map((app: any) => {
-        const jobData = app.job;
-        return Array.isArray(jobData) ? jobData[0]?.title : jobData?.title;
-    }).filter(Boolean))) as string[];
+    
+    // Create a unique set of jobs (id + title)
+    const uniqueJobs = Array.from(new Map(
+        allApplications.map((app: any) => {
+            const jobData = app.job;
+            const singleJob = Array.isArray(jobData) ? jobData[0] : jobData;
+            return singleJob ? [singleJob.id, singleJob] : null;
+        }).filter(Boolean) as [string, { id: string, title: string }][]
+    ).values());
 
     const rejectionLog = (logs || []).find(log => log.note_text?.startsWith('RECHAZADO: '));
     const rejectionReason = rejectionLog ? rejectionLog.note_text.split(' (Por ')[0].replace('RECHAZADO: ', '') : null;
@@ -96,10 +101,14 @@ export default async function CandidateDetailPage({
 
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
                                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-1">Postulaciones:</span>
-                                    {uniqueJobTitles.map((title, i) => (
-                                        <span key={i} className="px-2.5 py-1 bg-slate-100 text-slate-600 text-[11px] font-bold rounded-lg border border-slate-200 flex items-center gap-1.5">
-                                            <Briefcase size={12} className="text-slate-400" /> {title}
-                                        </span>
+                                    {uniqueJobs.map((job: any) => (
+                                        <Link 
+                                            key={job.id} 
+                                            href={`/ats/jobs/${job.id}`}
+                                            className="px-2.5 py-1 bg-slate-100 text-slate-600 text-[11px] font-bold rounded-lg border border-slate-200 flex items-center gap-1.5 hover:bg-slate-200 hover:text-slate-900 transition-colors"
+                                        >
+                                            <Briefcase size={12} className="text-slate-400" /> {job.title}
+                                        </Link>
                                     ))}
                                 </div>
                             </div>

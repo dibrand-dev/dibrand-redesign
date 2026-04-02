@@ -278,7 +278,7 @@ export async function getApplicationsByEmail(email: string) {
             id,
             status,
             created_at,
-            job:job_openings(title)
+            job:job_openings(id, title)
         `)
         .eq('email', email)
         .eq('is_deleted', false)
