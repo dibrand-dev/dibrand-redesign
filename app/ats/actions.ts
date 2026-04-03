@@ -105,8 +105,8 @@ export async function getRecruiterStats() {
     return {
         counts,
         staleCount: staleCount || 0,
-        activeJobsCount: activeJobsCount || 0,
-        hiredCount: counts['Hired'] || 0
+        activeJobsCount: (statusCounts || []).filter((s: any) => s.is_active === true || s.status === 'Active' || s.status === 'Open').length,
+        hiredCount: counts['Hired'] || counts['Contratado'] || 0
     };
 }
 
@@ -119,7 +119,7 @@ export async function getRecruiterJobs() {
     const isAdmin = user.user_metadata?.role === 'admin' || user.user_metadata?.role === 'SuperAdmin';
 
     // Fetch jobs and include candidate counts with statuses, excluding deleted ones
-    const { data: jobs, error: jobsError } = await supabase
+    let { data: jobs, error: jobsError } = await supabase
         .from('job_openings')
         .select(`
             *,
@@ -127,9 +127,21 @@ export async function getRecruiterJobs() {
         `)
         .is('deleted_at', null);
 
+    // If query failed (possibly because of missing deleted_at col), try WITHOUT it
     if (jobsError) {
-        console.error('Error fetching jobs:', jobsError);
-        return [];
+        console.warn('RETRYING getRecruiterJobs without deleted_at check...');
+        const { data: retryData, error: retryError } = await supabase
+            .from('job_openings')
+            .select(`
+                *,
+                candidates:job_applications(id, recruiter_id, status, is_deleted, avatar_url)
+            `);
+        
+        if (retryError) {
+            console.error('CRITICAL ERROR FETCHING RECRUITER JOBS (RETRY):', retryError);
+            return [];
+        }
+        jobs = retryData;
     }
 
     return jobs?.map(job => {
@@ -137,20 +149,27 @@ export async function getRecruiterJobs() {
         const activeCandidates = allCandidates.filter((c: any) => !c.is_deleted);
         const recruiterCandidates = activeCandidates.filter((c: any) => c.recruiter_id === user.id);
         
+        // Determine if they should see all candidates (Admin/SuperAdmin) or just their own
+        const isSuperAdmin = 
+            user.user_metadata?.role === 'admin' || 
+            user.user_metadata?.role === 'SuperAdmin' ||
+            user.role === 'admin' ||
+            user.role === 'SuperAdmin';
+
         // Map statuses to the UI buckets in the design (NEW, INTERVIEWING, OFFER)
         const uiCounts = {
             new: 0,
             interviewing: 0,
             offer: 0,
-            total: isAdmin ? activeCandidates.length : recruiterCandidates.length
+            total: isSuperAdmin ? activeCandidates.length : recruiterCandidates.length
         };
 
         (isAdmin ? activeCandidates : recruiterCandidates).forEach((c: any) => {
             const config = getStageConfig(c.status);
             const val = config.value;
-            if (val === 'Applied' || val === 'Sourced' || val === 'Screening') uiCounts.new++;
-            else if (val === 'Interview' || val === 'Technical') uiCounts.interviewing++;
-            else if (val === 'Offer') uiCounts.offer++;
+            if (val === 'Nuevo' || val === 'Screening' || val === 'Phone Screen') uiCounts.new++;
+            else if (val === 'Entrevista RRHH' || val === 'Entrevista Técnica' || val === 'Prueba Técnica' || val === 'Entrevista Cliente') uiCounts.interviewing++;
+            else if (val === 'Oferta') uiCounts.offer++;
         });
 
         return {
@@ -160,7 +179,7 @@ export async function getRecruiterJobs() {
             targetHires: job.target_hires || 1,
             countsByStatus: uiCounts,
             // Real avatars/initials from candidates (limit to 3 for UI)
-            avatars: (isAdmin ? activeCandidates : recruiterCandidates)
+            avatars: (isSuperAdmin ? activeCandidates : recruiterCandidates)
                 .slice(0, 3)
                 .map((c: any) => ({
                     url: c.avatar_url,
@@ -1094,8 +1113,10 @@ export async function toggleJobStatus(jobId: string, currentStatus: string) {
     const isSuperAdmin = user?.user_metadata?.role === 'SuperAdmin' || user?.role === 'SuperAdmin' || user?.email?.toLowerCase() === 'nriccitelli@dibrand.co';
     if (!isSuperAdmin) throw new Error('Unauthorized');
 
-    const newStatus = currentStatus === 'Open' ? 'Paused' : 'Open';
-    const isActive = newStatus === 'Open';
+    const newStatus = currentStatus === 'Paused' ? 'Active' : 'Paused';
+    const isActive = newStatus === 'Active';
+
+    console.log(`Toggling job ${jobId} status from ${currentStatus} to ${newStatus}`);
 
     const { error } = await supabase
         .from('job_openings')
@@ -1106,7 +1127,10 @@ export async function toggleJobStatus(jobId: string, currentStatus: string) {
         })
         .eq('id', jobId);
 
-    if (error) throw error;
+    if (error) {
+        console.error('ERROR TOGGLING JOB STATUS:', error);
+        throw error;
+    }
     revalidatePath('/ats/jobs');
     revalidatePath('/[lang]/join-us', 'page');
     return { success: true, newStatus };

@@ -56,14 +56,23 @@ export default function AtsJobsPage() {
     const fetchJobs = async () => {
         const data = await getRecruiterJobs();
         // Transform data as needed to match the UI expectations
-        const transformed : Job[] = data.map((j: any) => ({
-            ...j,
-            status: j.status || (j.is_active ? 'Open' : 'Paused'),
-            department: j.industry || 'ENGINEERING', // Map from DB
-            type: j.employment_type?.replace('_', ' ') || 'Full-time',
-            posted_at: j.created_at,
-            days_open: Math.floor((Date.now() - new Date(j.created_at).getTime()) / (1000 * 60 * 60 * 24)) || 0,
-        }));
+        const transformed : Job[] = data.map((j: any) => {
+            let normalizedStatus = j.status;
+            if (j.status === 'Active' || j.status === 'Open' || (j.is_active && !j.status)) {
+                normalizedStatus = 'Active';
+            } else if (j.status === 'Paused' || (!j.is_active && !j.status)) {
+                normalizedStatus = 'Paused';
+            }
+
+            return {
+                ...j,
+                status: normalizedStatus || 'Paused',
+                department: j.industry || 'ENGINEERING', // Map from DB
+                type: j.employment_type?.replace('_', ' ') || 'Full-time',
+                posted_at: j.created_at,
+                days_open: Math.floor((Date.now() - new Date(j.created_at).getTime()) / (1000 * 60 * 60 * 24)) || 0,
+            };
+        });
         const sorted = transformed.sort((a, b) => new Date(b.posted_at!).getTime() - new Date(a.posted_at!).getTime());
         setJobs(sorted);
         setLoading(false);
@@ -83,7 +92,7 @@ export default function AtsJobsPage() {
     const tabs = ['Todas', 'Borradores', 'Archivadas'];
     
     // Derived stats
-    const activeSearchesCount = jobs.filter(j => j.status === 'Open').length;
+    const activeSearchesCount = jobs.filter(j => j.status === 'Active').length;
 
     const filteredJobs = jobs.filter(job => {
         if (activeTab === 'Todas') return true;
@@ -198,7 +207,7 @@ function JobCard({ job, userRole, onUpdate }: { job: Job, userRole: string, onUp
         setIsPausando(true);
         try {
             await toggleJobStatus(job.id, job.status);
-            toast.success(job.status === 'Open' ? 'Vacante pausada exitosamente' : 'Vacante activada exitosamente');
+            toast.success(job.status === 'Active' ? 'Vacante pausada exitosamente' : 'Vacante activada exitosamente');
             onUpdate();
         } catch (error) {
             toast.error('Error al cambiar el estado de la vacante');
