@@ -50,8 +50,8 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-12">
                 <div>
-                    <h1 className="text-[34px] font-bold text-[#010101] leading-tight mb-2 tracking-tight">Talent Pool</h1>
-                    <p className="text-[13px] text-[#6B7485] font-medium">Curating the next generation of industry leaders.</p>
+                    <h1 className="text-[34px] font-bold text-[#010101] leading-tight mb-2 tracking-tight">Pool de Talento</h1>
+                    <p className="text-[13px] text-[#6B7485] font-medium">Gestionando la próxima generación de líderes de la industria.</p>
                 </div>
 
                 <div className="flex items-center gap-3">

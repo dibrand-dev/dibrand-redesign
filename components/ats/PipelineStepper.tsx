@@ -49,14 +49,14 @@ const PipelineStepper: React.FC<PipelineStepperProps> = ({ counts, activeFilter,
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-[14px] font-black text-[#191C1D] uppercase tracking-widest flex items-center gap-2">
                     <Sparkles size={18} className="text-[#0040A1]" />
-                    Recruitment Pipeline Dashboard
+                    Dashboard de Pipeline de Selección
                 </h3>
                 {activeFilter && (
                     <button 
                         onClick={() => onFilterChange(null)}
                         className="text-[11px] font-bold text-[#0040A1] hover:underline uppercase tracking-widest"
                     >
-                        Clear Filter
+                        Limpiar Filtro
                     </button>
                 )}
             </div>
@@ -112,7 +112,7 @@ const PipelineStepper: React.FC<PipelineStepperProps> = ({ counts, activeFilter,
                                 {/* Active Macro Indicator Label */}
                                 {isActiveMacro && (
                                     <span className="absolute top-2.5 bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded text-[7px] font-black uppercase tracking-tighter shadow-sm animate-in fade-in zoom-in duration-300">
-                                        {activeFilter === macro.id ? 'FULL CATEGORY' : 'STAGE ACTIVE'}
+                                        {activeFilter === macro.id ? 'CATEGORÍA COMPLETA' : 'ETAPA ACTIVA'}
                                     </span>
                                 )}
 

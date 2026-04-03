@@ -76,37 +76,37 @@ export default function JobViewClient({ job, userRole }: { job: JobData | null; 
     const DEFAULT_QUESTIONNAIRE: QuestionnaireSection[] = [
         {
             id: 'contact',
-            title: 'CONTACT INFORMATION',
+            title: 'INFORMACIÓN DE CONTACTO',
             questions: [
-                { id: 'q_name', label: 'Name', type: 'text' },
-                { id: 'q_email', label: 'Personal email', type: 'text' },
-                { id: 'q_phone', label: 'Phone', type: 'text' },
-                { id: 'q_linkedin', label: 'LinkedIn', type: 'text' },
-                { id: 'q_country', label: 'Country', type: 'text' }
+                { id: 'q_name', label: 'Nombre Completo', type: 'text' },
+                { id: 'q_email', label: 'Correo electrónico personal', type: 'text' },
+                { id: 'q_phone', label: 'Teléfono', type: 'text' },
+                { id: 'q_linkedin', label: 'Link a perfil de LinkedIn', type: 'text' },
+                { id: 'q_country', label: 'País de residencia', type: 'text' }
             ]
         },
         {
             id: 'experience',
-            title: 'ABOUT YOUR EXPERIENCE',
+            title: 'SOBRE TU EXPERIENCIA',
             questions: [
-                { id: 'q1', label: '1. How many years of experience do you have with .NET Development (C#, ASP.NET, .NET Core)?', type: 'text' },
+                { id: 'q1', label: '1. ¿Cuántos años de experiencia tienes con Desarrollo .NET (C#, ASP.NET, .NET Core)?', type: 'text' },
                 { 
                     id: 'q2', 
-                    label: '2. How many years of experience do you have with the following technologies?', 
+                    label: '2. ¿Cuántos años de experiencia tienes con las siguientes tecnologías?', 
                     type: 'sublist',
                     subquestions: [
-                        'SQL Server (Advanced queries, optimization)',
-                        'Microservices Architecture',
-                        'Frontend Frameworks (React, Angular or similar)',
-                        'Cloud Platforms (Azure/AWS)'
+                        'SQL Server (Consultas avanzadas, optimización)',
+                        'Arquitectura de Microservicios',
+                        'Frameworks de Frontend (React, Angular o similar)',
+                        'Plataformas Cloud (Azure/AWS)'
                     ]
                 },
-                { id: 'q3', label: '3. Have you worked as a contractor remotely for international clients?', type: 'yesno' },
-                { id: 'q4', label: '4. Are you currently working? If yes, please describe your current role.', type: 'textarea' },
-                { id: 'q5', label: '5. Do you have experience designing or maintaining Microservices?', type: 'textarea', helper: 'Please elaborate on your role and the tools used (e.g., Docker, Kubernetes, Service Bus).' },
-                { id: 'q6', label: '6. Do you have an advanced level of spoken English (B2 or higher)?', type: 'yesno', note: 'NOTE: A TECHNICAL INTERVIEW IN ENGLISH WILL BE REQUIRED.' },
-                { id: 'q7', label: '7. The client requires a background check (Criminal Records Certificate) and a drug test. Are you willing to provide/undergo these?', type: 'yesno' },
-                { id: 'q8', label: '8. Do you have any planned vacations or time off in the next 6 months?', type: 'text' }
+                { id: 'q3', label: '3. ¿Has trabajado como contractor de forma remota para clientes internacionales?', type: 'yesno' },
+                { id: 'q4', label: '4. ¿Te encuentras trabajando actualmente? Si es así, por favor describe tu rol actual.', type: 'textarea' },
+                { id: 'q5', label: '5. ¿Tienes experiencia diseñando o manteniendo Microservicios?', type: 'textarea', helper: 'Por favor, detalla tu rol y las herramientas utilizadas (ej. Docker, Kubernetes, Service Bus).' },
+                { id: 'q6', label: '6. ¿Tienes un nivel avanzado de inglés hablado (B2 o superior)?', type: 'yesno', note: 'NOTA: SE REQUERIRÁ UNA ENTREVISTA TÉCNICA EN INGLÉS.' },
+                { id: 'q7', label: '7. El cliente requiere una verificación de antecedentes y un test de drogas. ¿Estás dispuesto a realizarlos?', type: 'yesno' },
+                { id: 'q8', label: '8. ¿Tienes vacaciones planeadas en los próximos 6 meses?', type: 'text' }
             ]
         }
     ];
@@ -120,7 +120,7 @@ export default function JobViewClient({ job, userRole }: { job: JobData | null; 
     }, [userRole]);
 
     const handleCopyQuestionnaire = () => {
-        const content = `JOB QUESTIONNAIRE: ${title}
+        const content = `CUESTIONARIO DE LA VACANTE: ${title}
         
 ${questionnaire.map(section => {
     const sectionText = `${section.title}\n${section.questions.map(q => {
@@ -128,7 +128,7 @@ ${questionnaire.map(section => {
         if (q.subquestions) {
             qText += `\n${q.subquestions.map(sq => `  • ${sq}`).join('\n')}`;
         }
-        if (q.type === 'yesno') qText += ' (Yes/No)';
+        if (q.type === 'yesno') qText += ' (Sí/No)';
         return qText;
     }).join('\n')}`;
     return sectionText;
@@ -212,7 +212,7 @@ ${questionnaire.map(section => {
             <div className="flex items-center justify-between mb-8">
                 <Link href="/ats/jobs" className="flex items-center gap-2 text-[13px] font-semibold text-[#737785] hover:text-[#191C1D] transition-colors">
                     <ArrowLeft size={16} />
-                    Back to Jobs
+                    Volver a Vacantes
                 </Link>
             </div>
 
@@ -223,7 +223,7 @@ ${questionnaire.map(section => {
                         <span className={`px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase ${
                             isActive ? 'bg-[#D6E3FB] text-[#0040A1]' : 'bg-[#E2E8F0] text-[#737785]'
                         }`}>
-                            {isActive ? 'ACTIVE' : 'PAUSED'}
+                            {isActive ? 'ACTIVA' : 'PAUSADA'}
                         </span>
                         <div className="flex items-center gap-1.5 text-[#737785] text-[13px] font-semibold">
                             <MapPin size={14} />
@@ -246,7 +246,7 @@ ${questionnaire.map(section => {
                                     onClick={() => setIsEditingDesc(true)}
                                     className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all flex items-center gap-2"
                                 >
-                                    <Edit2 size={16} /> Edit Job
+                                    <Edit2 size={16} /> Editar Vacante
                                 </button>
                             )}
                             {isEditingDesc && (
@@ -259,7 +259,7 @@ ${questionnaire.map(section => {
                                         }}
                                         className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#191C1D] text-[13px] font-bold rounded-xl transition-all"
                                     >
-                                        Cancel
+                                        Cancelar
                                     </button>
                                     <button 
                                         onClick={handleSaveDescription}
@@ -267,7 +267,7 @@ ${questionnaire.map(section => {
                                         className="px-5 py-2.5 bg-[#0040A1] hover:bg-[#003380] text-white text-[13px] font-bold rounded-xl transition-all flex items-center gap-2 shadow-lg disabled:opacity-50"
                                     >
                                         {isSaving ? <RefreshCcw size={16} className="animate-spin" /> : <Save size={16} />} 
-                                        {isSaving ? 'Saving...' : 'Save Changes'}
+                                        {isSaving ? 'Guardando...' : 'Guardar Cambios'}
                                     </button>
                                 </>
                             )}
@@ -276,7 +276,7 @@ ${questionnaire.map(section => {
                         <>
                             {isSuperAdmin && activeTab !== 'Questionnaire' && activeTab !== 'Candidates' && (
                                 <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all flex items-center gap-2">
-                                    <Edit2 size={16} /> Edit
+                                    <Edit2 size={16} /> Editar
                                 </button>
                             )}
                         </>
@@ -297,7 +297,7 @@ ${questionnaire.map(section => {
                             activeTab === tab ? 'text-[#0040A1]' : 'text-[#737785] hover:text-[#191C1D]'
                         }`}
                     >
-                        {tab === 'Equipo' ? 'Hiring Team' : tab}
+                        {tab}
                         {activeTab === tab && (
                             <div className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-[#0040A1] rounded-full z-10"></div>
                         )}
@@ -320,21 +320,21 @@ ${questionnaire.map(section => {
                             <div className="lg:col-span-8 space-y-4">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">
-                                    {showAllCandidates ? 'ALL CANDIDATES' : 'RECENT ACTIVITY'}
+                                    {showAllCandidates ? 'TODOS LOS CANDIDATOS' : 'ACTIVIDAD RECIENTE'}
                                 </h3>
                                 {!showAllCandidates ? (
                                     <button 
                                         onClick={() => setShowAllCandidates(true)}
                                         className="text-[12px] font-bold text-[#0040A1] flex items-center gap-1 hover:underline"
                                     >
-                                        View All Candidates <ArrowLeft size={12} className="rotate-180" />
+                                        Ver Todos <ArrowLeft size={12} className="rotate-180" />
                                     </button>
                                 ) : (
                                     <button 
                                         onClick={() => setShowAllCandidates(false)}
                                         className="text-[12px] font-bold text-[#0040A1] flex items-center gap-1 hover:underline"
                                     >
-                                        <ArrowLeft size={12} /> Back to Summary
+                                        <ArrowLeft size={12} /> Volver al Resumen
                                     </button>
                                 )}
                             </div>
@@ -364,7 +364,7 @@ ${questionnaire.map(section => {
                                         const names = capitalizedFullName.split(' ');
                                         const shortName = names.length >= 2 ? `${names[0]} ${names[1].charAt(0)}.` : capitalizedFullName;
                                         const recruiterData = Array.isArray(candidate.recruiter) ? candidate.recruiter[0] : candidate.recruiter;
-                                        const recruiterName = recruiterData?.full_name ? capitalizeName(recruiterData.full_name) : 'Unassigned';
+                                        const recruiterName = recruiterData?.full_name ? capitalizeName(recruiterData.full_name) : 'Sin asignar';
                                         return (
                                             <div key={candidate.id} className="group/card relative bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md hover:border-[#0040A1]/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                                                 <Link href={`/ats/candidates/${candidate.id}`} className="absolute inset-0 z-10" />
@@ -378,7 +378,7 @@ ${questionnaire.map(section => {
                                                     )}
                                                     <div className="min-w-0">
                                                         <h4 className="text-[15px] font-bold text-[#191C1D] mb-1 truncate">{shortName}</h4>
-                                                        <p className="text-[13px] text-[#737785] truncate">Applied {timeAgo} • {recruiterName}</p>
+                                                        <p className="text-[13px] text-[#737785] truncate">Postulado hace {timeAgo} • {recruiterName}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-4 relative z-30">
@@ -398,8 +398,8 @@ ${questionnaire.map(section => {
                                 } else {
                                     return (
                                         <div className="bg-[#F8FAFC] rounded-2xl p-12 text-center border-2 border-dashed border-[#E2E8F0]">
-                                            <p className="text-[14px] font-bold text-[#191C1D] mb-2">{showAllCandidates ? 'No common candidates found' : 'No active candidates'}</p>
-                                            <p className="text-[12px] text-[#737785]">When people start applying, they will arrive here.</p>
+                                            <p className="text-[14px] font-bold text-[#191C1D] mb-2">{showAllCandidates ? 'No se encontraron candidatos comunes' : 'Sin candidatos activos'}</p>
+                                            <p className="text-[12px] text-[#737785]">Cuando la gente comience a postularse, aparecerán aquí.</p>
                                         </div>
                                     );
                                 }
@@ -409,7 +409,7 @@ ${questionnaire.map(section => {
                         <div className="lg:col-span-4 space-y-6">
                             {/* Hiring Team summary snippet */}
                             <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm">
-                                <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase mb-4">HIRING TEAM</h3>
+                                <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase mb-4">EQUIPO DE SELECCIÓN</h3>
                                 <div className="space-y-4">
                                     {job?.team && job.team.length > 0 ? (
                                         job.team.slice(0, 3).map((member: any) => (
@@ -423,19 +423,19 @@ ${questionnaire.map(section => {
                                                 )}
                                                 <div>
                                                     <p className="text-[13px] font-bold text-[#191C1D]">{member.full_name ? capitalizeName(member.full_name) : 'Unknown'}</p>
-                                                    <p className="text-[11px] text-[#737785]">{member.role || 'Recruiter'}</p>
+                                                    <p className="text-[11px] text-[#737785]">{member.role || 'Reclutador'}</p>
                                                 </div>
                                             </div>
                                         ))
                                     ) : (
-                                        <p className="text-[12px] text-[#737785] italic">No active recruiters</p>
+                                        <p className="text-[12px] text-[#737785] italic">Sin reclutadores activos</p>
                                     )}
                                 </div>
                             </div>
 
                             {/* Top Sources */}
                             <div className="bg-[#F8FAFC] rounded-2xl p-6 border border-[#E2E8F0]">
-                                <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase mb-4">TOP SOURCES</h3>
+                                <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase mb-4">PRINCIPALES FUENTES</h3>
                                 <div className="space-y-4">
                                     <div>
                                         <div className="flex justify-between text-[11px] font-bold mb-1">
@@ -448,7 +448,7 @@ ${questionnaire.map(section => {
                                     </div>
                                     <div>
                                         <div className="flex justify-between text-[11px] font-bold mb-1">
-                                            <span className="text-[#191C1D]">Referrals</span>
+                                            <span className="text-[#191C1D]">Referidos</span>
                                             <span className="text-[#191C1D]">24%</span>
                                         </div>
                                         <div className="h-2 w-full bg-[#E2E8F0] rounded-full overflow-hidden">
@@ -468,7 +468,7 @@ ${questionnaire.map(section => {
                             </div>
 
                             <div className="bg-[#F1F5F9] rounded-2xl p-6 border border-[#E2E8F0]">
-                                <h3 className="text-[11px] font-bold text-[#0040A1] tracking-widest uppercase mb-2">QUICK NOTE</h3>
+                                <h3 className="text-[11px] font-bold text-[#0040A1] tracking-widest uppercase mb-2">NOTA RÁPIDA</h3>
                                 <p className="text-[13px] text-[#737785] italic font-semibold leading-relaxed">
                                     "The candidate pool is exceptionally strong this week. Focus on portfolios with complex design system work."
                                 </p>
@@ -500,21 +500,21 @@ ${questionnaire.map(section => {
                                 {isEditingDesc ? (
                                     <div className="space-y-10">
                                         <div>
-                                            <label className="text-[10px] font-black tracking-widest uppercase text-[#737785] block mb-4">About the Role</label>
+                                            <label className="text-[10px] font-black tracking-widest uppercase text-[#737785] block mb-4">Sobre el Rol</label>
                                             <textarea 
                                                 value={descContent}
                                                 onChange={(e) => setDescContent(e.target.value)}
                                                 className="w-full min-h-[300px] text-[15px] p-6 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#0040A1] transition-colors font-serif leading-relaxed"
-                                                placeholder="Write your job description here (HTML supported)..."
+                                                placeholder="Escribe la descripción del puesto aquí (soporta HTML)..."
                                             />
                                         </div>
                                         <div className="pt-8 border-t border-[#E2E8F0]">
-                                            <label className="text-[10px] font-black tracking-widest uppercase text-[#737785] block mb-4">Requirements</label>
+                                            <label className="text-[10px] font-black tracking-widest uppercase text-[#737785] block mb-4">Requisitos</label>
                                             <textarea 
                                                 value={reqContent}
                                                 onChange={(e) => setReqContent(e.target.value)}
                                                 className="w-full min-h-[300px] text-[15px] p-6 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#0040A1] transition-colors font-serif leading-relaxed"
-                                                placeholder="List the job requirements here..."
+                                                placeholder="Lista aquí los requisitos del puesto..."
                                             />
                                         </div>
                                     </div>
@@ -528,7 +528,7 @@ ${questionnaire.map(section => {
                                                 />
                                                 {reqContent && (
                                                     <div className="mt-8 pt-6 border-t border-[#E2E8F0]">
-                                                        <h2 className="text-[20px] font-bold text-[#191C1D] mb-4 uppercase tracking-tight font-sans">Requirements</h2>
+                                                        <h2 className="text-[20px] font-bold text-[#191C1D] mb-4 uppercase tracking-tight font-sans">Requisitos</h2>
                                                         <div 
                                                             className="job-content prose prose-zinc max-w-none text-[#191C1D] text-[15px] leading-relaxed font-serif"
                                                             dangerouslySetInnerHTML={{ __html: reqContent }}
@@ -538,12 +538,12 @@ ${questionnaire.map(section => {
                                             </>
                                         ) : (
                                             <div className="prose prose-zinc max-w-none text-[#475569] text-[14px] leading-[1.8] font-medium">
-                                                <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">About the Role</h2>
+                                                <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">Sobre el Rol</h2>
                                                 <p className="mb-8">
                                                     We are seeking a visionary Senior Product Designer to lead the evolution of our core talent ecosystem. In this role, you will be the bridge between complex data architectures and human-centric experiences. You'll work closely with product managers and engineers to craft a platform that feels intuitive, powerful, and exceptionally refined.
                                                 </p>
     
-                                                <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">Responsibilities</h2>
+                                                <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">Responsabilidades</h2>
                                                 <ul className="list-disc pl-5 mb-8 space-y-2">
                                                     <li>Define the visual and interaction patterns for our next-generation applicant tracking system.</li>
                                                     <li>Conduct deep user research with recruiters and hiring managers to identify friction points.</li>
@@ -551,7 +551,7 @@ ${questionnaire.map(section => {
                                                     <li>Mentor junior designers and contribute to our growing design system library.</li>
                                                 </ul>
     
-                                                <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">Requirements</h2>
+                                                <h2 className="text-[20px] font-bold text-[#191C1D] mb-4">Requisitos</h2>
                                                 <ul className="list-disc pl-5 mb-8 space-y-2">
                                                     <li>5+ years of experience in product design, preferably in SaaS or enterprise tools.</li>
                                                     <li>A portfolio demonstrating expertise in layout, typography, and systemic thinking.</li>
@@ -568,23 +568,23 @@ ${questionnaire.map(section => {
                         <div className="lg:col-span-4 space-y-6">
                             {/* Job Details Card */}
                             <div className="bg-[#F8FAFC] rounded-2xl p-8 border border-[#E2E8F0]">
-                                <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase mb-6">JOB DETAILS</h3>
+                                <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase mb-6">DETALLES DEL PUESTO</h3>
                                 
                                 <div className="space-y-6">
                                     <div>
-                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">SALARY RANGE</p>
+                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">RANGO SALARIAL</p>
                                         <p className="text-[15px] font-bold text-[#191C1D]">{job?.salary_range || '$120k - $160k'}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">EMPLOYMENT TYPE</p>
+                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">TIPO DE CONTRATO</p>
                                         <p className="text-[15px] font-bold text-[#191C1D]">{employmentType}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">LOCATION</p>
+                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">UBICACIÓN</p>
                                         <p className="text-[15px] font-bold text-[#191C1D] flex items-center gap-1.5"><Globe size={14} className="text-[#0040A1]" /> {location}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">EXPERIENCE LEVEL</p>
+                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">NIVEL DE EXPERIENCIA</p>
                                         <p className="text-[15px] font-bold text-[#191C1D]">{seniority}</p>
                                     </div>
                                 </div>
@@ -593,20 +593,20 @@ ${questionnaire.map(section => {
                              {/* Visibility Card */}
                              <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm">
                                  <div className="flex items-center justify-between mb-2">
-                                     <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">VISIBILITY</h3>
+                                     <h3 className="text-[11px] font-bold text-[#737785] tracking-widest uppercase">VISIBILIDAD</h3>
                                      <span className="px-2 py-0.5 bg-[#F1F5F9] text-[#737785] text-[10px] font-bold rounded uppercase">OFFLINE</span>
                                  </div>
-                                 <p className="text-[12px] text-[#737785] italic">This job listing is currently hidden from external boards.</p>
+                                 <p className="text-[12px] text-[#737785] italic">Esta oferta está actualmente oculta de los tableros externos.</p>
                              </div>
 
                             {/* AI Tip Block */}
                             <div className="bg-[#0040A1] rounded-2xl p-6 text-white relative overflow-hidden">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-[40px] -mr-16 -mt-16 pointer-events-none"></div>
                                 <div className="flex items-center gap-2 mb-3">
-                                    <Globe size={16} /> <span className="text-[15px] font-bold tracking-tight">Nexus AI Tip</span>
+                                    <Globe size={16} /> <span className="text-[15px] font-bold tracking-tight">Consejo de Nexus AI</span>
                                 </div>
                                 <p className="text-[12px] text-white/80 leading-relaxed font-medium">
-                                    Highlighting specific software like 'Figma' and 'React' in your requirements increases matching scores by 24%.
+                                    Resaltar software específico como 'Figma' y 'React' en tus requisitos aumenta las tasas de coincidencia en un 24%.
                                 </p>
                             </div>
                         </div>
@@ -620,7 +620,7 @@ ${questionnaire.map(section => {
                         <div className="col-span-full space-y-10">
                             <div>
                                 <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-[20px] font-bold text-[#191C1D]">Hiring Team Members</h3>
+                                    <h3 className="text-[20px] font-bold text-[#191C1D]">Miembros del Equipo de Selección</h3>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -638,23 +638,23 @@ ${questionnaire.map(section => {
                                                         )}
                                                         <div>
                                                             <h4 className="text-[16px] font-bold text-[#191C1D]">{member.full_name || 'Unknown'}</h4>
-                                                            <p className="text-[12px] text-[#737785]">{member.role || 'Recruiter'}</p>
+                                                            <p className="text-[12px] text-[#737785]">{member.role || 'Reclutador'}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div className="mt-4">
-                                                    <span className="text-[9px] font-black tracking-widest text-[#737785] uppercase block mb-2">ACTIVE STATUS</span>
+                                                    <span className="text-[9px] font-black tracking-widest text-[#737785] uppercase block mb-2">ESTADO ACTIVO</span>
                                                     <div className="flex flex-wrap gap-2">
-                                                        <span className="px-2 py-1 bg-[#F1F5F9] text-[#475569] text-[10px] font-bold rounded">Evaluating Candidates</span>
-                                                        <span className="px-2 py-1 bg-[#F1F5F9] text-[#475569] text-[10px] font-bold rounded">Reviewing</span>
+                                                        <span className="px-2 py-1 bg-[#F1F5F9] text-[#475569] text-[10px] font-bold rounded">Evaluando Candidatos</span>
+                                                        <span className="px-2 py-1 bg-[#F1F5F9] text-[#475569] text-[10px] font-bold rounded">Revisando</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         ))
                                     ) : (
                                         <div className="col-span-full rounded-2xl p-12 text-center border-2 border-dashed border-[#E2E8F0] bg-[#F8FAFC]">
-                                            <p className="text-[14px] font-bold text-[#191C1D] mb-2">No team members assigned</p>
-                                            <p className="text-[12px] text-[#737785]">As candidates are evaluated, their assigned recruiters will appear here.</p>
+                                            <p className="text-[14px] font-bold text-[#191C1D] mb-2">Sin miembros asignados</p>
+                                            <p className="text-[12px] text-[#737785]">A medida que se evalúen los candidatos, sus reclutadores asignados aparecerán aquí.</p>
                                         </div>
                                     )}
                                 </div>
@@ -669,8 +669,8 @@ ${questionnaire.map(section => {
                         {/* Tab Header specific to Questionnaire */}
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8 pt-2">
                             <div>
-                                <h2 className="text-[28px] font-bold text-[#191C1D] mb-1 tracking-tight">Job Questionnaire</h2>
-                                <p className="text-[14px] text-[#475569] font-medium">Standard vetting form for {title} applicants.</p>
+                                <h2 className="text-[28px] font-bold text-[#191C1D] mb-1 tracking-tight">Cuestionario de la Vacante</h2>
+                                <p className="text-[14px] text-[#475569] font-medium">Formulario de evaluación estándar para candidatos de {title}.</p>
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="relative">
@@ -678,7 +678,7 @@ ${questionnaire.map(section => {
                                         onClick={handleCopyQuestionnaire}
                                         className="flex items-center gap-2 text-[#0040A1] font-bold text-[13px] hover:bg-[#F8FAFC] px-4 py-2 rounded-lg transition-colors"
                                     >
-                                        <Link2 size={16} /> Copy Questionnaire
+                                        <Link2 size={16} /> Copiar Cuestionario
                                     </button>
                                     {copied && (
                                         <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-4 py-2 bg-[#191C1D] text-white text-[12px] font-bold rounded-xl shadow-2xl animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300 z-[100] whitespace-nowrap">
@@ -695,14 +695,14 @@ ${questionnaire.map(section => {
                                                 isEditing ? 'bg-[#F1F5F9] text-[#191C1D] hover:bg-[#E2E8F0]' : 'bg-[#0040A1] hover:bg-[#003380] text-white'
                                             }`}
                                         >
-                                            <Edit2 size={16} /> {isEditing ? 'Cancel Edit' : 'Edit Questionnaire'}
+                                            <Edit2 size={16} /> {isEditing ? 'Cancelar Edición' : 'Editar Cuestionario'}
                                         </button>
                                         <button 
                                             onClick={handleSaveQuestionnaire}
                                             disabled={isSaving}
                                             className="flex items-center gap-2 bg-[#0040A1] hover:bg-[#003380] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-colors disabled:opacity-50"
                                         >
-                                            <Save size={16} /> {isSaving ? 'Saving...' : 'Save Questionnaire'}
+                                            <Save size={16} /> {isSaving ? 'Guardando...' : 'Guardar Cuestionario'}
                                         </button>
                                     </>
                                 )}
@@ -721,7 +721,7 @@ ${questionnaire.map(section => {
                                             <button className="hover:text-[#0040A1] transition-colors"><List size={16} /></button>
                                             <button className="hover:text-[#0040A1] transition-colors"><LinkIcon size={16} /></button>
                                         </div>
-                                        <span className="text-[10px] font-black text-[#737785] tracking-widest uppercase">EDITING MODE</span>
+                                        <span className="text-[10px] font-black text-[#737785] tracking-widest uppercase">MODO EDICIÓN</span>
                                     </div>
                                     
                                     {/* Editor Content Area */}
@@ -743,7 +743,7 @@ ${questionnaire.map(section => {
                                                             onClick={() => addQuestion(sIdx)}
                                                             className="text-[10px] font-bold text-[#0040A1] hover:underline"
                                                         >
-                                                            + ADD QUESTION
+                                                            + AGREGAR PREGUNTA
                                                         </button>
                                                     )}
                                                 </div>
@@ -759,6 +759,7 @@ ${questionnaire.map(section => {
                                                                             onChange={(e) => updateQuestion(sIdx, qIdx, e.target.value)}
                                                                             className="w-full font-bold text-[15px] p-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#0040A1] transition-colors resize-none"
                                                                             rows={q.label.length > 80 ? 3 : 1}
+                                                                            placeholder="Nueva pregunta..."
                                                                         />
                                                                     ) : (
                                                                         <p className="font-bold text-[15px] leading-relaxed tracking-tight">{q.label}</p>
@@ -785,7 +786,7 @@ ${questionnaire.map(section => {
                                                                             )}
                                                                             {!q.subquestions && (
                                                                                 <div className="flex items-baseline gap-4 mt-2">
-                                                                                    <span className="text-[15px] opacity-60">Answer{q.type === 'yesno' ? ' (Yes/No)' : ''}:</span>
+                                                                                    <span className="text-[15px] opacity-60">Respuesta{q.type === 'yesno' ? ' (Sí/No)' : ''}:</span>
                                                                                     <div className={`flex-1 ${q.type === 'textarea' ? 'border-b border-dashed border-[#E2E8F0] mt-8 block w-full h-8' : 'border-b border-[#E2E8F0] h-5'}`}></div>
                                                                                 </div>
                                                                             )}

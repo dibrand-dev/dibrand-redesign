@@ -43,7 +43,7 @@ interface Job {
 export default function AtsJobsPage() {
     const [jobs, setJobs] = React.useState<Job[]>([]);
     const [loading, setLoading] = React.useState(true);
-    const [activeTab, setActiveTab] = React.useState('All Jobs');
+    const [activeTab, setActiveTab] = React.useState('Todas');
 
     React.useEffect(() => {
         const fetchJobs = async () => {
@@ -64,15 +64,15 @@ export default function AtsJobsPage() {
         fetchJobs();
     }, []);
 
-    const tabs = ['All Jobs', 'Drafts', 'Archived'];
+    const tabs = ['Todas', 'Borradores', 'Archivadas'];
     
     // Derived stats
     const activeSearchesCount = jobs.filter(j => j.status === 'Open').length;
 
     const filteredJobs = jobs.filter(job => {
-        if (activeTab === 'All Jobs') return true;
-        if (activeTab === 'Drafts') return job.status === 'Paused';
-        if (activeTab === 'Archived') return job.status === 'Closed' || job.status === 'Archived'; 
+        if (activeTab === 'Todas') return true;
+        if (activeTab === 'Borradores') return job.status === 'Paused';
+        if (activeTab === 'Archivadas') return job.status === 'Closed' || job.status === 'Archived'; 
         return true;
     });
 
@@ -82,7 +82,7 @@ export default function AtsJobsPage() {
             <div className="flex flex-col gap-6 mb-8">
                 <div className="flex items-end justify-between border-b border-[#E2E8F0]">
                     <div className="flex items-center gap-12">
-                        <h1 className="text-[28px] font-bold text-[#191C1D] tracking-tight pb-4">Job Openings</h1>
+                        <h1 className="text-[28px] font-bold text-[#191C1D] tracking-tight pb-4">Vacantes Abiertas</h1>
                         <div className="flex items-center gap-8 h-full">
                             {tabs.map(tab => (
                                 <button
@@ -105,9 +105,9 @@ export default function AtsJobsPage() {
                 {/* Filters Row */}
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
-                        <FilterButton label="DEPARTMENT" value="All Departments" />
-                        <FilterButton label="LOCATION" value="Remote & Office" />
-                        <FilterButton label="STATUS" value="Active" />
+                        <FilterButton label="DEPARTAMENTO" value="Todos los Departamentos" />
+                        <FilterButton label="UBICACIÓN" value="Remoto y Oficina" />
+                        <FilterButton label="ESTADO" value="Activas" />
                     </div>
 
                     {/* Summary Box */}
@@ -116,8 +116,8 @@ export default function AtsJobsPage() {
                             <TrendingUp size={16} className="text-white" />
                         </div>
                         <div className="flex items-center gap-2">
-                             <span className="text-[13px] font-semibold text-[#737785]">Showing</span>
-                             <span className="text-[14px] font-bold text-[#191C1D]">{activeSearchesCount} Active Searches</span>
+                             <span className="text-[13px] font-semibold text-[#737785]">Mostrando</span>
+                             <span className="text-[14px] font-bold text-[#191C1D]">{activeSearchesCount} Búsquedas Activas</span>
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,7 @@ export default function AtsJobsPage() {
                         {filteredJobs.length === 0 && (
                              <div className="col-span-full py-32 flex flex-col items-center justify-center bg-white rounded-3xl border-2 border-dashed border-[#E2E8F0] text-[#737785]">
                                  <Briefcase size={48} className="mb-4 opacity-20" />
-                                 <p className="font-semibold">No jobs found matches your criteria</p>
+                                 <p className="font-semibold">No se encontraron vacantes coincidentes</p>
                              </div>
                         )}
                     </>
@@ -170,11 +170,11 @@ function JobCard({ job }: { job: Job }) {
             <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-2">
                     <span className="px-3 py-1 bg-[#E8F0FF] text-[#0040A1] text-[10px] font-black tracking-widest rounded-lg uppercase">
-                        {job.department || 'ENGINEERING'}
+                        {job.department || 'OPERACIONES'}
                     </span>
                     {job.questionnaire && job.questionnaire.length > 0 && (
                         <span className="flex items-center gap-1 px-2 py-1 bg-green-50 text-[#1A3A00] text-[9px] font-black rounded-lg border border-green-100 uppercase tracking-tight">
-                            <ListChecks size={12} /> Vetting Active
+                            <ListChecks size={12} /> Evaluación Activa
                         </span>
                     )}
                 </div>
@@ -196,11 +196,11 @@ function JobCard({ job }: { job: Job }) {
             <div className="flex items-center gap-4 mb-8">
                 <div className="flex items-center gap-1.5 text-[#737785]">
                     <MapPin size={16} />
-                    <span className="text-[13px] font-semibold">{job.location_es || job.location || 'Remote'}</span>
+                    <span className="text-[13px] font-semibold">{job.location_es || job.location || 'Remoto'}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-[#737785]">
                     <Clock size={16} />
-                    <span className="text-[13px] font-semibold">{job.type || 'Full-time'}</span>
+                    <span className="text-[13px] font-semibold">{job.type || 'Tiempo completo'}</span>
                 </div>
             </div>
 
@@ -232,13 +232,13 @@ function JobCard({ job }: { job: Job }) {
                             )}
                         </div>
                     ) : null}
-                    <span className="text-[9px] font-black tracking-widest text-[#737785] uppercase">Candidate Pipeline</span>
+                    <span className="text-[9px] font-black tracking-widest text-[#737785] uppercase">Pipeline de Candidatos</span>
                  </div>
 
                  <div className="grid grid-cols-3 gap-4 border-t border-[#E2E8F0] pt-6">
-                    <PipelineStat label="NEW" count={job.countsByStatus.new} />
-                    <PipelineStat label="INTERVIEWING" count={job.countsByStatus.interviewing} />
-                    <PipelineStat label="OFFER" count={job.countsByStatus.offer} />
+                    <PipelineStat label="NUEVOS" count={job.countsByStatus.new} />
+                    <PipelineStat label="ENTREVISTAS" count={job.countsByStatus.interviewing} />
+                    <PipelineStat label="OFERTA" count={job.countsByStatus.offer} />
                  </div>
             </div>
 
@@ -246,16 +246,16 @@ function JobCard({ job }: { job: Job }) {
             {!isPaused ? (
                  <div className="mt-8 pt-8 flex items-center justify-between border-t border-[#F1F5F9]">
                         <span className="text-[12px] font-medium text-[#737785] flex items-center gap-1.5">
-                            <span>Posted {job.days_open || 0} days ago</span>
+                            <span>Publicada hace {job.days_open || 0} días</span>
                             <span className="w-1 h-1 bg-[#E2E8F0] rounded-full" />
-                            <span>Days Open: {Math.max(0, 30 - (job.days_open || 0))}</span>
+                            <span>Días Abierta: {Math.max(0, 30 - (job.days_open || 0))}</span>
                         </span>
                     <div className="flex items-center gap-3">
                         <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all">
-                            Edit
+                            Editar
                         </button>
                         <Link href={`/ats/jobs/${job.id}`} className="px-5 py-2.5 bg-[#0040A1] hover:bg-[#003380] text-white text-[13px] font-bold rounded-xl transition-all shadow-lg shadow-[#0040A1]/10">
-                            View Candidates
+                            Ver Candidatos
                         </Link>
                     </div>
                  </div>
@@ -265,12 +265,12 @@ function JobCard({ job }: { job: Job }) {
                          <div className="w-8 h-8 rounded-full bg-[#E2E8F0] flex items-center justify-center">
                             <Play size={14} fill="currentColor" />
                          </div>
-                         <span className="text-[14px] font-bold">Status: Paused</span>
+                         <span className="text-[14px] font-bold">Estado: Pausada</span>
                     </div>
                     <div className="flex items-center justify-between">
-                         <span className="text-[12px] font-medium text-[#737785]">Paused 1 day ago • Days Open: 45</span>
+                         <span className="text-[12px] font-medium text-[#737785]">Pausada hace {job.days_open || 0} días • Días Abierta: 45</span>
                          <button className="px-6 py-2.5 bg-[#E1E7EF] hover:bg-[#D1D5DB] text-[#475569] text-[13px] font-bold rounded-xl transition-all">
-                            Resume Search
+                            Reanudar Búsqueda
                         </button>
                     </div>
                 </div>

@@ -5,7 +5,7 @@
 export const STAGE_CONFIG = {
     'Nuevo': { label: 'Nuevo', twBg: 'bg-slate-100', twText: 'text-slate-700' },
     'Screening': { label: 'Screening', twBg: 'bg-amber-100', twText: 'text-amber-700' },
-    'Phone Screen': { label: 'Phone Screen', twBg: 'bg-amber-100', twText: 'text-amber-700' },
+    'Phone Screen': { label: 'Entrevista Telefónica', twBg: 'bg-amber-100', twText: 'text-amber-700' },
     'Entrevista RRHH': { label: 'Entrevista RRHH', twBg: 'bg-purple-50', twText: 'text-[#A3369D]' },
     'Entrevista Técnica': { label: 'Entrevista Técnica', twBg: 'bg-indigo-100', twText: 'text-indigo-700' },
     'Prueba Técnica': { label: 'Prueba Técnica', twBg: 'bg-indigo-100', twText: 'text-indigo-700' },
@@ -15,7 +15,7 @@ export const STAGE_CONFIG = {
     'Desestimado': { label: 'Desestimado', twBg: 'bg-rose-50', twText: 'text-rose-700' },
     'No cumple perfil': { label: 'No cumple perfil', twBg: 'bg-rose-50', twText: 'text-rose-700' },
     'Pretensión alta': { label: 'Pretensión alta', twBg: 'bg-rose-50', twText: 'text-rose-700' },
-    'Poca exp': { label: 'Poca exp', twBg: 'bg-rose-50', twText: 'text-rose-700' },
+    'Poca exp': { label: 'Poca experiencia', twBg: 'bg-rose-50', twText: 'text-rose-700' },
     'Otro': { label: 'Otro', twBg: 'bg-rose-50', twText: 'text-rose-700' },
     'Talent Pool': { label: 'Talent Pool', twBg: 'bg-stone-100', twText: 'text-stone-700' },
 } as const;
@@ -41,7 +41,7 @@ export const MACRO_STAGES = [
     },
     {
         id: 'fuera',
-        label: 'Talent Pool',
+        label: 'Pool de Talento',
         color: '#64748B', // Slate 500
         stages: ['Talent Pool']
     },
@@ -78,7 +78,7 @@ export function getStageConfig(status: string) {
     if (lower === 'technical' || lower === 'prueba técnica' || lower === 'entrevista técnica') return { value: 'Entrevista Técnica', ...STAGE_CONFIG['Entrevista Técnica'] };
     if (lower === 'offer' || lower === 'oferta') return { value: 'Oferta', ...STAGE_CONFIG['Oferta'] };
     if (lower === 'hired' || lower === 'contratado') return { value: 'Contratado', ...STAGE_CONFIG['Contratado'] };
-    if (lower === 'rejected' || lower === 'desestimado' || lower === 'rechazado' || lower === 'withdrawn') return { value: 'Desestimado', ...STAGE_CONFIG['Desestimado'] };
+    if (lower === 'rejected' || lower === 'desestimado' || lower === 'rechazado' || lower === 'withdrawn' || lower === 'desestimado') return { value: 'Desestimado', ...STAGE_CONFIG['Desestimado'] };
     
     // Default fallback
     return { 
@@ -110,37 +110,37 @@ export function getMacroConfig(status: string) {
 export const DEFAULT_QUESTIONNAIRE = [
     {
         id: 'contact',
-        title: 'CONTACT INFORMATION',
+        title: 'INFORMACIÓN DE CONTACTO',
         questions: [
-            { id: 'q_name', label: 'Name', type: 'text' },
-            { id: 'q_email', label: 'Personal email', type: 'text' },
-            { id: 'q_phone', label: 'Phone', type: 'text' },
-            { id: 'q_linkedin', label: 'LinkedIn', type: 'text' },
-            { id: 'q_country', label: 'Country', type: 'text' }
+            { id: 'q_name', label: 'Nombre Completo', type: 'text' },
+            { id: 'q_email', label: 'Correo Personal', type: 'text' },
+            { id: 'q_phone', label: 'Teléfono / WhatsApp', type: 'text' },
+            { id: 'q_linkedin', label: 'Perfil de LinkedIn', type: 'text' },
+            { id: 'q_country', label: 'País de Residencia', type: 'text' }
         ]
     },
     {
         id: 'experience',
-        title: 'ABOUT YOUR EXPERIENCE',
+        title: 'SOBRE TU EXPERIENCIA',
         questions: [
-            { id: 'q1', label: '1. How many years of experience do you have with .NET Development (C#, ASP.NET, .NET Core)?', type: 'text' },
+            { id: 'q1', label: '1. ¿Cuántos años de experiencia tienes en Desarrollo .NET (C#, ASP.NET, .NET Core)?', type: 'text' },
             { 
                 id: 'q2', 
-                label: '2. How many years of experience do you have with the following technologies?', 
+                label: '2. ¿Cuántos años de experiencia tienes con las siguientes tecnologías?', 
                 type: 'sublist',
                 subquestions: [
-                    'SQL Server (Advanced queries, optimization)',
-                    'Microservices Architecture',
-                    'Frontend Frameworks (React, Angular or similar)',
-                    'Cloud Platforms (Azure/Azure)'
+                    'SQL Server (Queries Avanzados, optimización)',
+                    'Arquitectura de Microservicios',
+                    'Frameworks Frontend (React, Angular o similar)',
+                    'Plataformas Cloud (Azure/AWS)'
                 ]
             },
-            { id: 'q3', label: '3. Have you worked as a contractor remotely for international clients?', type: 'yesno' },
-            { id: 'q4', label: '4. Are you currently working? If yes, please describe your current role.', type: 'textarea' },
-            { id: 'q5', label: '5. Do you have experience designing or maintaining Microservices?', type: 'textarea', helper: 'Please elaborate on your role and the tools used (e.g., Docker, Kubernetes, Service Bus).' },
-            { id: 'q6', label: '6. Do you have an advanced level of spoken English (B2 or higher)?', type: 'yesno', note: 'NOTE: A TECHNICAL INTERVIEW IN ENGLISH WILL BE REQUIRED.' },
-            { id: 'q7', label: '7. The client requires a background check (Criminal Records Certificate) and a drug test. Are you willing to provide/undergo these?', type: 'yesno' },
-            { id: 'q8', label: '8. Do you have any planned vacations or time off in the next 6 months?', type: 'text' }
+            { id: 'q3', label: '3. ¿Has trabajado como contractor de forma remota para clientes internacionales?', type: 'yesno' },
+            { id: 'q4', label: '4. ¿Estás trabajando actualmente? Si es así, por favor describe tu rol actual.', type: 'textarea' },
+            { id: 'q5', label: '5. ¿Tienes experiencia diseñando o manteniendo Microservicios?', type: 'textarea', helper: 'Explica tu rol y herramientas usadas (ej: Docker, Kubernetes, Service Bus).' },
+            { id: 'q6', label: '6. ¿Cuentas con un nivel avanzado de inglés hablado (B2 o superior)?', type: 'yesno', note: 'NOTA: SE REQUERIRÁ UNA ENTREVISTA TÉCNICA EN INGLÉS.' },
+            { id: 'q7', label: '7. El cliente requiere un background check (Certificado de Antecedentes) y un test de drogas. ¿Estás dispuesto a realizarlos?', type: 'yesno' },
+            { id: 'q8', label: '8. ¿Tienes planes de vacaciones o tiempo fuera en los próximos 6 meses?', type: 'text' }
         ]
     }
 ];

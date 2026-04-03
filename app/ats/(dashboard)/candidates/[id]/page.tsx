@@ -94,7 +94,7 @@ export default async function CandidateDetailPage({
                                             rel="noopener noreferrer"
                                             className="text-[13px] font-bold text-[#0077b5] hover:underline flex items-center gap-1"
                                         >
-                                            LinkedIn Profile
+                                            Perfil de LinkedIn
                                         </a>
                                     </div>
                                 )}
@@ -151,7 +151,7 @@ export default async function CandidateDetailPage({
                                             {candidate.recruiter?.full_name ? capitalizeName(candidate.recruiter.full_name) : 'Sin asignar'}
                                         </p>
                                         <p className="text-[11px] font-semibold text-slate-500 mt-0.5 px-1 truncate capitalize">
-                                            Managing Recruiter
+                                            Reclutador Responsable
                                         </p>
                                     </div>
                                 </div>

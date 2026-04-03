@@ -76,7 +76,7 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
 
     return (
         <div className="bg-white rounded-[24px] shadow-sm border border-slate-200/60 p-8 font-outfit">
-            <h3 className="text-[11px] font-black tracking-widest text-slate-400 uppercase mb-6">Recruiter Insights & Notes</h3>
+            <h3 className="text-[11px] font-black tracking-widest text-slate-400 uppercase mb-6">Notas e Insights del Reclutador</h3>
             
             <div className={`bg-white border border-slate-200 rounded-2xl p-5 mb-8 focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-blue-500 transition-all shadow-sm ${isPending ? 'opacity-70 pointer-events-none' : ''}`}>
                 <textarea 
@@ -88,8 +88,8 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
                 ></textarea>
                 <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-100">
                     <div className="flex gap-5 text-slate-400">
-                        <button className="hover:text-blue-600 transition-colors" title="Attach Link"><LinkIcon size={18} /></button>
-                        <button className="hover:text-blue-600 transition-colors" title="Mention Recruiter"><span className="font-extrabold text-[18px]">@</span></button>
+                        <button className="hover:text-blue-600 transition-colors" title="Adjuntar Link"><LinkIcon size={18} /></button>
+                        <button className="hover:text-blue-600 transition-colors" title="Mencionar Reclutador"><span className="font-extrabold text-[18px]">@</span></button>
                     </div>
                     <button 
                         onClick={handlePost}
@@ -99,7 +99,7 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
                         {isPending && !editingId ? (
                             <>
                                 <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                MOVING...
+                                PUBLICANDO...
                             </>
                         ) : 'PUBLICAR NOTA'}
                     </button>

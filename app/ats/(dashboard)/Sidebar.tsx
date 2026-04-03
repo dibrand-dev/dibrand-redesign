@@ -15,7 +15,7 @@ import {
 const MENU_ITEMS = [
     { label: 'Dashboard', href: '/ats', icon: LayoutDashboard },
     { label: 'Candidatos', href: '/ats/candidates', icon: Users },
-    { label: 'Jobs', href: '/ats/jobs', icon: Briefcase },
+    { label: 'Vacantes', href: '/ats/jobs', icon: Briefcase },
     { label: 'Calendario', href: '/ats/interviews', icon: Calendar },
     { label: 'Configuración', href: '/ats/settings', icon: Settings },
 ];

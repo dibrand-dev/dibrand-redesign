@@ -65,12 +65,12 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
         const isOpen = openDropdown === filterKey;
         
         // Complex label logic for Recruiter Initialization
-        let displayLabel = 'All';
+        let displayLabel = 'Todos';
         if (current) {
             if (type === 'jobs' || type === 'status') {
-                displayLabel = options.find((o: any) => o.id === current)?.label || current || 'All';
+                displayLabel = options.find((o: any) => o.id === current)?.label || current || 'Todos';
             } else if (type === 'recruiters') {
-                displayLabel = options.find((o: any) => o.id === current)?.full_name || 'All';
+                displayLabel = options.find((o: any) => o.id === current)?.full_name || 'Todos';
             } else {
                 displayLabel = current;
             }
@@ -99,7 +99,7 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
                                 onClick={() => updateFilter(filterKey, '')}
                                 className="w-full flex items-center justify-between px-3 py-2 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 rounded-lg transition-colors group"
                             >
-                                All {filterKey === 'status' ? 'Stages' : ''}
+                                {filterKey === 'status' ? 'Todas las Etapas' : (filterKey === 'jobId' ? 'Todas las Vacantes' : (filterKey === 'recruiterId' ? 'Todos los Reclutadores' : 'Todos'))}
                                 {!current && <Check size={14} className="text-[#0040A1]" />}
                             </button>
                             {options.map((opt: any) => {
@@ -129,7 +129,7 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
         <div className="flex flex-wrap items-center justify-between gap-8 mb-12 py-6 border-y border-[#F1F5F9]" ref={dropdownRef}>
             <div className="flex flex-wrap items-center gap-10">
                 <Dropdown 
-                    label="Job Role" 
+                    label="Vacante" 
                     current={currentJob} 
                     options={jobs} 
                     filterKey="jobId" 
@@ -137,14 +137,14 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
                 />
                 
                 <Dropdown 
-                    label="Location" 
+                    label="Ubicación" 
                     current={currentCountry} 
                     options={countries} 
                     filterKey="country" 
                 />
                 
                 <Dropdown 
-                    label="Application Stage" 
+                    label="Etapa del Proceso" 
                     current={currentStatus} 
                     options={statuses} 
                     filterKey="status" 
@@ -152,7 +152,7 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
                 />
 
                 <Dropdown 
-                    label="Recruiter" 
+                    label="Reclutador" 
                     current={currentRecruiter} 
                     options={recruiters} 
                     filterKey="recruiterId"
@@ -165,7 +165,7 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
                     onClick={clearFilters}
                     className="flex items-center gap-1.5 text-[11px] font-black text-[#6B7485] hover:text-red-500 transition-colors uppercase tracking-widest py-2"
                 >
-                    <X size={14} strokeWidth={3} /> Clear filters
+                    <X size={14} strokeWidth={3} /> Limpiar Filtros
                 </button>
             )}
         </div>

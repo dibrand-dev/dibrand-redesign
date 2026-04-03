@@ -46,8 +46,8 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                     <div className="w-12 h-12 rounded-xl bg-white border border-[#E1E2E5] flex items-center justify-center text-[#6B7485] mb-4 group-hover:scale-110 transition-transform">
                         <Plus size={24} />
                     </div>
-                    <h4 className="text-[15px] font-bold text-[#010101] mb-2">New Potential</h4>
-                    <p className="text-[12px] text-[#6B7485] max-w-[180px]">Manually add a high-priority candidate to the pool.</p>
+                    <h4 className="text-[15px] font-bold text-[#010101] mb-2">Nuevo Talento</h4>
+                    <p className="text-[12px] text-[#6B7485] max-w-[180px]">Agrega manualmente un candidato de alta prioridad al pool.</p>
                 </Link>
 
                 {candidates.length > 0 ? (
@@ -57,10 +57,10 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                             candidate={{
                                 id: candidate.id,
                                 full_name: candidate.full_name || `${candidate.first_name} ${candidate.last_name}`,
-                                position: candidate.position || candidate.job?.title || 'General App',
+                                position: candidate.position || candidate.job?.title || 'Postulación General',
                                 status: candidate.status || 'Applied',
                                 email: candidate.email,
-                                phone: candidate.phone || 'No phone',
+                                phone: candidate.phone || 'Sin teléfono',
                                 linkedin_url: candidate.linkedin_url || '#',
                                 resume_url: candidate.resume_url || candidate.cv_filename || '#',
                                 recruiter_id: candidate.recruiter_id,
@@ -72,7 +72,7 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                 ) : (
                     <div className="col-span-full py-24 text-center border-2 border-dashed border-[#E1E2E5] rounded-[16px] flex flex-col items-center justify-center">
                         <Users className="w-12 h-12 text-[#6B7485]/20 mb-4" />
-                        <p className="text-[#6B7485] font-medium">No other candidates found matching your criteria.</p>
+                        <p className="text-[#6B7485] font-medium">No se encontraron otros candidatos que coincidan con tus criterios.</p>
                     </div>
                 )}
             </div>
@@ -83,7 +83,7 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                     href="/ats/candidates/new"
                     className="bg-[#0040A1] text-white px-6 py-3 rounded-lg text-[13px] font-bold hover:bg-[#003380] transition-all flex items-center gap-2 shadow-sm"
                 >
-                    <Plus size={18} /> Add Candidate
+                    <Plus size={18} /> Agregar Candidato
                 </Link>
 
                 <div className="flex items-center gap-6">
@@ -91,7 +91,7 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                         href={getPageUrl(Math.max(1, page - 1))}
                         className={`text-[12px] font-bold text-[#6B7485] hover:text-[#010101] ${page <= 1 ? 'pointer-events-none opacity-30' : ''}`}
                     >
-                        Previous
+                        Anterior
                     </Link>
                     
                     <div className="flex items-center gap-2">
@@ -119,13 +119,13 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                         href={getPageUrl(Math.min(totalPages, page + 1))}
                         className={`text-[12px] font-bold text-[#0040A1] hover:underline ${page >= totalPages ? 'pointer-events-none opacity-30' : ''}`}
                     >
-                        Next
+                        Siguiente
                     </Link>
                 </div>
             </div>
 
             <div className="mt-8 text-center text-[12px] text-[#6B7485]">
-                Showing <span className="font-bold text-[#010101] text-[13px]">{candidates.length}</span> of <span className="font-bold text-[#010101] text-[13px]">{totalCount}</span> specialized candidates
+                Mostrando <span className="font-bold text-[#010101] text-[13px]">{candidates.length}</span> de <span className="font-bold text-[#010101] text-[13px]">{totalCount}</span> candidatos especializados
             </div>
         </>
     );

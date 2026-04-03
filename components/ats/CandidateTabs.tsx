@@ -18,11 +18,11 @@ export default function CandidateTabs({ candidate, logs }: CandidateTabsProps) {
     const [activeTab, setActiveTab] = useState<'Overview' | 'Vetting' | 'Resume' | 'Notes' | 'History'>('Overview');
 
     const tabs = [
-        { id: 'Overview', label: 'Overview', icon: User },
-        { id: 'Vetting', label: 'Vetting', icon: ListChecks },
-        { id: 'Resume', label: 'Resume', icon: FileText },
-        { id: 'Notes', label: 'Notes', icon: StickyNote },
-        { id: 'History', label: 'History', icon: Clock },
+        { id: 'Overview', label: 'Resumen', icon: User },
+        { id: 'Vetting', label: 'Evaluación', icon: ListChecks },
+        { id: 'Resume', label: 'Currículum', icon: FileText },
+        { id: 'Notes', label: 'Notas', icon: StickyNote },
+        { id: 'History', label: 'Historial', icon: Clock },
     ] as const;
 
     const renderContent = () => {
@@ -82,7 +82,7 @@ export default function CandidateTabs({ candidate, logs }: CandidateTabsProps) {
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
+                        onClick={() => setActiveTab(tab.id as any)}
                         className={`flex items-center gap-2 px-6 py-4 text-[13px] font-bold transition-all border-b-2 -mb-[2px] ${
                             activeTab === tab.id
                                 ? 'border-[#0B4FEA] text-[#0B4FEA]'

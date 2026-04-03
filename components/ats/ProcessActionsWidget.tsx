@@ -49,12 +49,12 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
     return (
         <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
             <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">
-                Process Actions
+                Acciones del Proceso
             </h3>
 
             {/* Current Stage Display */}
             <div className="mb-3">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Current Stage</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Etapa Actual</p>
                 <StagePill status={selected} />
             </div>
 
@@ -70,7 +70,7 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
                             {isPending && selected !== 'Rejected' ? (
                                 <Loader2 size={14} className="animate-spin" />
                             ) : null}
-                            Move to Stage
+                            Mover a Etapa
                         </span>
                         <ChevronDown size={16} className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
                     </button>
@@ -113,7 +113,7 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
                 >
                     <span className="flex items-center gap-2">
                         {isPending && selected === 'Rejected' && <Loader2 size={14} className="animate-spin" />}
-                        Reject Candidate
+                        Desestimar Candidato
                     </span>
                     <X size={16} />
                 </button>
@@ -133,7 +133,7 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
                                 <AlertCircle size={24} />
                             </div>
                             <div>
-                                <h4 className="text-[18px] font-black leading-none mb-1">Rechazar Candidato</h4>
+                                <h4 className="text-[18px] font-black leading-none mb-1">Desestimar Candidato</h4>
                                 <p className="text-[12px] font-bold text-red-400">Por favor, explica el motivo</p>
                             </div>
                         </div>
@@ -158,7 +158,7 @@ export default function ProcessActionsWidget({ candidateId, currentStatus }: Pro
                                 disabled={!rejectionReason.trim()}
                                 className="px-8 py-2.5 bg-red-600 text-white rounded-xl text-[14px] font-black shadow-lg shadow-red-600/20 hover:bg-red-700 transition-all disabled:opacity-50"
                             >
-                                Rechazar
+                                Confirmar Rechazo
                             </button>
                         </div>
                     </div>

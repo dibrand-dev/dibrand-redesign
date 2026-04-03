@@ -109,9 +109,6 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
         const selectedJob = jobs.find(j => j.id === formData.job_id);
         if (selectedJob) {
             setQuestionnaire(selectedJob.questionnaire || []);
-            
-            // If it's a new job and not the initial edit load, we might want to reset answers
-            // But usually, it's better to keep existing answers if IDs match
         }
     }, [formData.job_id, jobs]);
 
@@ -214,14 +211,14 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
             {/* Breadcrumbs & Header */}
             <div className="mb-10">
                 <nav className="flex items-center gap-3 text-[12px] font-bold text-slate-400 mb-6 uppercase tracking-widest">
-                    <button onClick={() => router.push('/ats/candidates')} className="hover:text-slate-900 transition-colors">Candidates</button>
+                    <button onClick={() => router.push('/ats/candidates')} className="hover:text-slate-900 transition-colors">Candidatos</button>
                     <span className="text-slate-300">/</span>
-                    <span className="text-slate-900 font-black">{isEdit ? 'Edit Profile' : 'Add New'}</span>
+                    <span className="text-slate-900 font-black">{isEdit ? 'Editar Perfil' : 'Agregar Nuevo'}</span>
                 </nav>
                 <h1 className="text-[36px] font-black text-slate-900 leading-none mb-3 tracking-tight">
-                    {isEdit ? 'Edit Candidate' : 'Add New Candidate'}
+                    {isEdit ? 'Editar Candidato' : 'Agregar Nuevo Candidato'}
                 </h1>
-                <p className="text-[15px] text-slate-500 font-medium tracking-tight">Curating the next generation of excellence for your team.</p>
+                <p className="text-[15px] text-slate-500 font-medium tracking-tight">Gestionando la próxima generación de talento para tu equipo.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
@@ -232,15 +229,15 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     <div className="bg-white rounded-2xl p-10">
                         <div className="flex items-center gap-3 mb-10">
                             <User size={20} className="text-[#0040A1]" />
-                            <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Personal Information</h2>
+                            <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Información Personal</h2>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">First Name</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Nombre</label>
                                 <input 
                                     type="text"
-                                    placeholder="e.g. Julian"
+                                    placeholder="ej. Julian"
                                     value={formData.first_name}
                                     onChange={(e) => setFormData({...formData, first_name: e.target.value})}
                                     onBlur={(e) => handleNameBlur('first_name', e.target.value)}
@@ -249,10 +246,10 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Last Name</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Apellido</label>
                                 <input 
                                     type="text"
-                                    placeholder="e.g. Vance"
+                                    placeholder="ej. Vance"
                                     value={formData.last_name}
                                     onChange={(e) => setFormData({...formData, last_name: e.target.value})}
                                     onBlur={(e) => handleNameBlur('last_name', e.target.value)}
@@ -261,10 +258,10 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Email Address</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Correo Electrónico</label>
                                 <input 
                                     type="email"
-                                    placeholder="julian.v@example.com"
+                                    placeholder="julian.v@ejemplo.com"
                                     value={formData.email}
                                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                                     className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
@@ -272,7 +269,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Phone Number</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Número de Teléfono</label>
                                 <input 
                                     type="text"
                                     placeholder="+1 (555) 000-0000"
@@ -282,17 +279,17 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 />
                             </div>
                             <div className="md:col-span-2 space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Linkedin Profile</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Perfil de LinkedIn</label>
                                 <input 
                                     type="text"
-                                    placeholder="linkedin.com/in/username"
+                                    placeholder="linkedin.com/in/usuario"
                                     value={formData.linkedin_url}
                                     onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
                                     className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Country</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">País</label>
                                 <div className="relative">
                                     <select 
                                         value={formData.country}
@@ -304,13 +301,13 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                         }}
                                         className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer"
                                     >
-                                        <option value="">Select country</option>
-                                        <optgroup label="Latin America">
+                                        <option value="">Seleccionar país</option>
+                                        <optgroup label="Latinoamérica">
                                             {countriesList.latam.map(c => (
                                                 <option key={c.isoCode} value={c.name}>{c.name}</option>
                                             ))}
                                         </optgroup>
-                                        <optgroup label="Other Countries">
+                                        <optgroup label="Otros Países">
                                             {countriesList.others.map(c => (
                                                 <option key={c.isoCode} value={c.name}>{c.name}</option>
                                             ))}
@@ -321,7 +318,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">State / Province</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Provincia / Estado</label>
                                 <div className="relative">
                                     <select 
                                         value={formData.state_province}
@@ -329,7 +326,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                         disabled={!selectedCountryCode}
                                         className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer disabled:opacity-50"
                                     >
-                                        <option value="">Select state</option>
+                                        <option value="">Seleccionar estado</option>
                                         {statesList.map(s => (
                                             <option key={s.isoCode || s.name} value={s.name}>{s.name}</option>
                                         ))}
@@ -344,7 +341,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     <div className="bg-white rounded-2xl p-10">
                         <div className="flex items-center gap-3 mb-10">
                             <FileText size={20} className="text-[#0040A1]" />
-                            <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Cover Letter</h2>
+                            <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Carta de Presentación</h2>
                         </div>
 
                         <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
@@ -364,7 +361,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                             </div>
                             <textarea 
                                 rows={10}
-                                placeholder="Type or paste the candidate's cover letter here..."
+                                placeholder="Escribe o pega aquí la carta de presentación del candidato..."
                                 value={formData.cover_letter}
                                 onChange={(e) => setFormData({...formData, cover_letter: e.target.value})}
                                 className="w-full px-8 py-8 text-[15px] font-medium text-slate-700 outline-none resize-none leading-relaxed bg-white"
@@ -377,7 +374,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                         <div className="bg-white rounded-2xl p-10 animate-in fade-in slide-in-from-top-4 duration-500">
                             <div className="flex items-center gap-3 mb-10">
                                 <ListChecks size={20} className="text-[#0040A1]" />
-                                <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Vetting Questionnaire</h2>
+                                <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Cuestionario de Evaluación</h2>
                             </div>
 
                             <div className="space-y-10">
@@ -411,13 +408,13 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                                         
                                                         {q.type === 'yesno' ? (
                                                             <div className="flex gap-3">
-                                                                {['Yes', 'No'].map((opt) => (
+                                                                {['Sí', 'No'].map((opt) => (
                                                                     <button
                                                                         key={opt}
                                                                         type="button"
-                                                                        onClick={() => setAnswer(opt)}
+                                                                        onClick={() => setAnswer(opt === 'Sí' ? 'Yes' : 'No')}
                                                                         className={`px-6 py-2.5 rounded-xl text-[13px] font-bold transition-all border ${
-                                                                            currentAnswer === opt 
+                                                                            (currentAnswer === 'Yes' && opt === 'Sí') || (currentAnswer === 'No' && opt === 'No')
                                                                                 ? 'bg-[#0040A1] text-white border-[#0040A1] shadow-lg shadow-blue-900/10' 
                                                                                 : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
                                                                         }`}
@@ -432,7 +429,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                                                 value={currentAnswer || ''}
                                                                 onChange={(e) => setAnswer(e.target.value)}
                                                                 className="w-full bg-[#F8FAFC] rounded-xl px-5 py-4 text-[14px] font-semibold text-slate-900 border border-slate-100 focus:ring-2 focus:ring-blue-100 transition-all outline-none"
-                                                                placeholder="Type response..."
+                                                                placeholder="Escribe la respuesta..."
                                                             />
                                                         ) : q.type === 'sublist' && q.subquestions ? (
                                                             <div className="space-y-3">
@@ -449,7 +446,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                                                                     setAnswer(subAnswers);
                                                                                 }}
                                                                                 className="flex-1 bg-transparent border-none text-[13px] font-bold text-[#0040A1] outline-none"
-                                                                                placeholder="Years / Info..."
+                                                                                placeholder="Años / Info..."
                                                                             />
                                                                         </div>
                                                                     );
@@ -461,7 +458,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                                                 value={currentAnswer || ''}
                                                                 onChange={(e) => setAnswer(e.target.value)}
                                                                 className="w-full bg-[#F8FAFC] rounded-xl px-5 py-4 text-[14px] font-semibold text-slate-900 border border-slate-100 focus:ring-2 focus:ring-blue-100 transition-all outline-none"
-                                                                placeholder="Type response..."
+                                                                placeholder="Escribe la respuesta..."
                                                             />
                                                         )}
                                                     </div>
@@ -481,12 +478,12 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     <div className="bg-white rounded-2xl p-10">
                         <div className="flex items-center gap-3 mb-10">
                             <Briefcase size={20} className="text-[#0040A1]" />
-                            <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Professional Details</h2>
+                            <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Detalles Profesionales</h2>
                         </div>
 
                         <div className="space-y-8">
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Desired Position</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Posición Deseada</label>
                                 <div className="relative">
                                     <select 
                                         value={formData.job_id}
@@ -494,16 +491,16 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                         className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer"
                                         required
                                     >
-                                        <option value="">Select a role</option>
+                                        <option value="">Selecciona un rol</option>
                                         {jobs.map(j => <option key={j.id} value={j.id}>{j.title}</option>)}
                                     </select>
                                     <ChevronDown size={18} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                                 </div>
-                                <p className="text-[11px] text-slate-400 font-medium pl-1 italic">Role the talent is currently aspiring to</p>
+                                <p className="text-[11px] text-slate-400 font-medium pl-1 italic">Puesto al que aspira el talento</p>
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Hiring Stage</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Etapa de Selección</label>
                                 <div className="relative">
                                     <select 
                                         value={formData.status}
@@ -514,14 +511,14 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                         {ATS_STAGES.map(stage => (
                                             <option key={stage.value} value={stage.value}>{stage.label}</option>
                                         ))}
-                                        <option value="Rejected">Rejected</option>
+                                        <option value="Rejected">Desestimado</option>
                                     </select>
                                     <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                                 </div>
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Skills (Tech Stacks)</label>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Skills (Tecnologías)</label>
                                 <div className="bg-[#F8FAFC] border border-slate-100 rounded-xl p-4 min-h-[120px] focus-within:ring-2 focus-within:ring-blue-100 transition-all">
                                     <div className="flex flex-wrap gap-2 mb-4">
                                         {skills.map(skill => (
@@ -564,7 +561,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     <div className="bg-white rounded-2xl p-10">
                         <div className="flex items-center gap-3 mb-10">
                             <Upload size={20} className="text-[#0040A1]" />
-                            <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Resume Upload</h2>
+                            <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Subir Currículum</h2>
                         </div>
 
                         <label className={`flex flex-col items-center justify-center py-10 px-6 border-2 border-dashed rounded-2xl bg-white transition-all cursor-pointer hover:bg-slate-50 border-slate-200 group ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
@@ -573,9 +570,9 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 {isUploading ? <Loader2 size={28} className="animate-spin" /> : <Upload size={28} className="opacity-40" />}
                             </div>
                             <div className="text-center">
-                                <p className="text-[15px] font-bold text-slate-900">{formData.cv_filename || 'Drag and drop file'}</p>
-                                <p className="text-[12px] font-medium text-slate-400 mt-1 uppercase tracking-tight">PDF, DOCX up to 10MB</p>
-                                <p className="text-[13px] font-bold text-[#0040A1] mt-6 hover:underline">Or browse files</p>
+                                <p className="text-[15px] font-bold text-slate-900">{formData.cv_filename || 'Arrastra y suelta el archivo'}</p>
+                                <p className="text-[12px] font-medium text-slate-400 mt-1 uppercase tracking-tight">PDF, DOCX hasta 10MB</p>
+                                <p className="text-[13px] font-bold text-[#0040A1] mt-6 hover:underline">O busca en tus archivos</p>
                             </div>
                         </label>
                     </div>
@@ -588,14 +585,14 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                             className="w-full py-5 bg-[#0040A1] text-white rounded-[16px] text-[15px] font-black shadow-2xl shadow-blue-900/20 hover:bg-blue-800 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                         >
                             {isSaving ? <Loader2 size={20} className="animate-spin" /> : null}
-                            {isEdit ? 'Save Changes' : 'Create Candidate'}
+                            {isEdit ? 'Guardar Cambios' : 'Crear Candidato'}
                         </button>
                         <button 
                             type="button"
                             onClick={() => router.back()}
                             className="w-full py-5 bg-[#E2E8F0]/30 text-slate-600 rounded-[16px] text-[15px] font-black hover:bg-slate-200 transition-all"
                         >
-                            Cancel
+                            Cancelar
                         </button>
                     </div>
                 </div>
