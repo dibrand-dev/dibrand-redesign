@@ -20,7 +20,7 @@ import {
 import Link from 'next/link';
 import { getRecruiterJobs, toggleJobStatus, deleteJob } from '../../actions';
 import toast from 'react-hot-toast';
-import { createClient } from '@/lib/supabase-browser-client';
+import { createClient } from '@/lib/supabase-client';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface Job {
