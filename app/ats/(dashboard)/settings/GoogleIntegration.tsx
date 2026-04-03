@@ -40,9 +40,9 @@ export default function GoogleIntegration({ isConnected }: GoogleIntegrationProp
             <div className="flex-1">
                 <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight">Google Calendar</h4>
                 {isConnected ? (
-                    <span className="text-[9px] font-black tracking-widest text-emerald-600 uppercase">CONNECTED</span>
+                    <span className="text-[9px] font-black tracking-widest text-emerald-600 uppercase">CONECTADO</span>
                 ) : (
-                    <span className="text-[9px] font-black tracking-widest text-slate-400 uppercase">NOT CONNECTED</span>
+                    <span className="text-[9px] font-black tracking-widest text-slate-400 uppercase">SIN CONECTAR</span>
                 )}
             </div>
             {isLoading ? (
@@ -52,14 +52,14 @@ export default function GoogleIntegration({ isConnected }: GoogleIntegrationProp
                     onClick={handleDisconnect}
                     className="text-[11px] font-bold text-slate-400 hover:text-slate-600 transition-colors"
                 >
-                    Disconnect
+                    Desconectar
                 </button>
             ) : (
                 <button 
                     onClick={handleConnect}
                     className="text-[12px] font-bold text-[#0B4FEA] hover:text-blue-800 transition-colors"
                 >
-                    Connect
+                    Conectar
                 </button>
             )}
         </div>
