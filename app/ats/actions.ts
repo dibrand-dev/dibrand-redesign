@@ -1022,3 +1022,35 @@ export async function updateJobDescription(jobId: string, description: string, r
     revalidatePath(`/ats/jobs/${jobId}`);
     return { success: true };
 }
+
+export async function getTodayEvents() {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+
+    if (!user) return [];
+
+    // Get today's range in ISO format
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    try {
+        const events = await listGoogleEvents(user.id, startOfDay.toISOString(), endOfDay.toISOString());
+        
+        // Return a simplified version for the UI
+        return (events || []).map((event: any) => ({
+            id: event.id,
+            summary: event.summary,
+            start: event.start.dateTime || event.start.date,
+            end: event.end.dateTime || event.end.date,
+            location: event.location,
+            link: event.htmlLink,
+            hangoutLink: event.hangoutLink
+        }));
+    } catch (error) {
+        console.error('Error fetching today events:', error);
+        return [];
+    }
+}

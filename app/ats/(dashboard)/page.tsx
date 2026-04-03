@@ -1,13 +1,20 @@
-import { getRecruiterStats, getRecentCandidates, getRecruiterJobs } from '../actions';
-import { Users, Calendar, TrendingUp, LayoutGrid, AlertTriangle, Clock, ArrowRight, Activity, Zap, Briefcase, CheckCircle2, MoreHorizontal, ListChecks } from 'lucide-react';
+import { getRecruiterStats, getRecentCandidates, getRecruiterJobs, getTodayEvents } from '../actions';
+import { 
+    Users, Calendar, TrendingUp, LayoutGrid, AlertTriangle, Clock, 
+    ArrowRight, Activity, Zap, Briefcase, CheckCircle2, MoreHorizontal, 
+    ListChecks, Video, ExternalLink 
+} from 'lucide-react';
 import Link from 'next/link';
 
 export default async function AtsDashboard() {
-    const statsData = await getRecruiterStats();
-    const recentCandidatesData = await getRecentCandidates();
+    const [statsData, recentCandidatesData, jobs, todayEvents] = await Promise.all([
+        getRecruiterStats(),
+        getRecentCandidates(),
+        getRecruiterJobs(),
+        getTodayEvents()
+    ]);
     
     const counts = statsData?.counts || { Total: 0 };
-    const staleCount = statsData?.staleCount || 0;
     const activeJobsCount = statsData?.activeJobsCount || 0;
     const hiredCount = statsData?.hiredCount || 0;
 
@@ -26,7 +33,6 @@ export default async function AtsDashboard() {
         { label: 'CONTRATADOS', count: hiredCount }
     ];
 
-    const jobs = await getRecruiterJobs();
     const recentJobs = jobs
         .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         .slice(0, 5);
@@ -146,11 +152,56 @@ export default async function AtsDashboard() {
                     <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-sm p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h4 className="text-[13px] font-bold text-[#191C1D] uppercase tracking-wider">Agenda de Hoy</h4>
+                            {todayEvents.length > 0 && <span className="px-2 py-0.5 bg-red-50 text-red-600 text-[10px] font-black rounded-full border border-red-100 uppercase tracking-tighter animate-pulse">{todayEvents.length} EVENTOS</span>}
                         </div>
                         
-                        <div className="py-20 text-center border-2 border-dashed border-[#F1F5F9] rounded-2xl">
-                             <Calendar size={32} className="mx-auto text-[#E2E8F0] mb-4" strokeWidth={1.5} />
-                             <p className="text-[13px] font-medium text-[#737785] px-8">No hay entrevistas programadas en el sistema para hoy.</p>
+                        <div className="space-y-4">
+                            {todayEvents.length > 0 ? (
+                                todayEvents.map((event: any) => {
+                                    const startTime = new Date(event.start).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
+                                    
+                                    return (
+                                        <div key={event.id} className="p-4 rounded-xl border border-slate-100 bg-[#FAFAFA] hover:border-blue-200 hover:bg-white transition-all group/event relative">
+                                            <div className="flex items-start gap-3">
+                                                <div className="flex flex-col items-center shrink-0">
+                                                    <span className="text-[13px] font-black text-[#0040A1]">{startTime}</span>
+                                                    <div className="w-[2px] h-4 bg-blue-100 rounded-full mt-1"></div>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <h5 className="text-[13px] font-bold text-slate-900 truncate group-hover/event:text-[#0040A1] transition-colors">
+                                                        {event.summary}
+                                                    </h5>
+                                                    <div className="flex items-center gap-4 mt-2">
+                                                        {event.hangoutLink && (
+                                                            <a 
+                                                                href={event.hangoutLink} 
+                                                                target="_blank" 
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-1.5 text-[10px] font-black text-teal-600 hover:text-teal-700 transition-colors uppercase tracking-widest"
+                                                            >
+                                                                <Video size={14} /> Unirse a Meet
+                                                            </a>
+                                                        )}
+                                                        <a 
+                                                            href={event.link} 
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer"
+                                                            className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest"
+                                                        >
+                                                            <ExternalLink size={12} /> Detalles
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="py-12 text-center border-2 border-dashed border-[#F1F5F9] rounded-2xl">
+                                    <Calendar size={32} className="mx-auto text-[#E2E8F0] mb-4" strokeWidth={1.5} />
+                                    <p className="text-[13px] font-medium text-[#737785] px-8">No hay entrevistas programadas en el sistema para hoy.</p>
+                                </div>
+                            )}
                         </div>
                         
                         <div className="mt-6 p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
