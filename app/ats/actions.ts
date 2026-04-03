@@ -1029,7 +1029,10 @@ export async function getTodayEvents() {
 
     if (!user) return [];
 
-    // Get today's range in ISO format
+    // 1. Fetch Candidate Names for Matching
+    const candidateList = await getCandidateNames();
+
+    // 2. Get today's range in ISO format
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
     
@@ -1039,18 +1042,45 @@ export async function getTodayEvents() {
     try {
         const events = await listGoogleEvents(user.id, startOfDay.toISOString(), endOfDay.toISOString());
         
-        // Return a simplified version for the UI
-        return (events || []).map((event: any) => ({
-            id: event.id,
-            summary: event.summary,
-            start: event.start.dateTime || event.start.date,
-            end: event.end.dateTime || event.end.date,
-            location: event.location,
-            link: event.htmlLink,
-            hangoutLink: event.hangoutLink
-        }));
+        // 3. Filter and Map Events
+        const filteredEvents = (events || [])
+            .filter((event: any) => {
+                // Filter 1: Must have a specific start time (not all-day)
+                if (!event.start?.dateTime) return false;
+                
+                // Filter 2: Exclude potential non-meeting noise
+                const summary = (event.summary || '').toLowerCase();
+                if (summary.includes('cumpleaños') || summary.includes('birthday')) return false;
+
+                return true;
+            })
+            .map((event: any) => {
+                const summary = event.summary || 'Sin título';
+                
+                // 4. Try to match candidate names for highlighting
+                let matchedCandidateId = null;
+                for (const candidate of candidateList) {
+                    if (summary.toLowerCase().includes(candidate.name.toLowerCase())) {
+                        matchedCandidateId = candidate.id;
+                        break;
+                    }
+                }
+
+                return {
+                    id: event.id,
+                    summary,
+                    start: event.start.dateTime, // Already checked for existence
+                    end: event.end.dateTime,
+                    location: event.location,
+                    link: event.htmlLink,
+                    hangoutLink: event.hangoutLink,
+                    candidateId: matchedCandidateId
+                };
+            });
+
+        return filteredEvents;
     } catch (error) {
-        console.error('Error fetching today events:', error);
+        console.error('Error fetching today events (Refined):', error);
         return [];
     }
 }

@@ -171,13 +171,21 @@ export default async function AtsDashboard() {
                                                     <h5 className="text-[13px] font-bold text-slate-900 truncate group-hover/event:text-[#0040A1] transition-colors">
                                                         {event.summary}
                                                     </h5>
-                                                    <div className="flex items-center gap-4 mt-2">
+                                                    <div className="flex flex-wrap items-center gap-3 mt-2">
+                                                        {event.candidateId && (
+                                                            <Link 
+                                                                href={`/ats/candidates/${event.candidateId}`}
+                                                                className="flex items-center gap-1 px-1.5 py-0.5 bg-[#F5E6F4] text-[#A3369D] text-[9px] font-black rounded border border-[#E9CBE7] hover:bg-[#E9CBE7] transition-colors uppercase tracking-tight"
+                                                            >
+                                                                <Users size={10} /> Ver Perfil
+                                                            </Link>
+                                                        )}
                                                         {event.hangoutLink && (
                                                             <a 
                                                                 href={event.hangoutLink} 
                                                                 target="_blank" 
                                                                 rel="noopener noreferrer"
-                                                                className="flex items-center gap-1.5 text-[10px] font-black text-teal-600 hover:text-teal-700 transition-colors uppercase tracking-widest"
+                                                                className="flex items-center gap-1.5 text-[10px] font-black text-[#A3369D] hover:text-[#8e2e89] transition-colors uppercase tracking-widest px-2 py-0.5 rounded-md hover:bg-purple-50 transition-all"
                                                             >
                                                                 <Video size={14} /> Unirse a Meet
                                                             </a>
