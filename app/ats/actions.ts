@@ -118,13 +118,14 @@ export async function getRecruiterJobs() {
 
     const isAdmin = user.user_metadata?.role === 'admin' || user.user_metadata?.role === 'SuperAdmin';
 
-    // Fetch jobs and include candidate counts with statuses
+    // Fetch jobs and include candidate counts with statuses, excluding deleted ones
     const { data: jobs, error: jobsError } = await supabase
         .from('job_openings')
         .select(`
             *,
             candidates:job_applications(id, recruiter_id, status, is_deleted, avatar_url)
-        `);
+        `)
+        .is('deleted_at', null);
 
     if (jobsError) {
         console.error('Error fetching jobs:', jobsError);
@@ -630,6 +631,7 @@ export async function getJobs() {
     const { data, error } = await supabase
         .from('job_openings')
         .select('id, title')
+        .is('deleted_at', null)
         .order('title');
 
     if (error) {
@@ -1083,4 +1085,51 @@ export async function getTodayEvents() {
         console.error('Error fetching today events (Refined):', error);
         return [];
     }
+}
+
+export async function toggleJobStatus(jobId: string, currentStatus: string) {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    
+    const isSuperAdmin = user?.user_metadata?.role === 'SuperAdmin' || user?.role === 'SuperAdmin' || user?.email?.toLowerCase() === 'nriccitelli@dibrand.co';
+    if (!isSuperAdmin) throw new Error('Unauthorized');
+
+    const newStatus = currentStatus === 'Open' ? 'Paused' : 'Open';
+    const isActive = newStatus === 'Open';
+
+    const { error } = await supabase
+        .from('job_openings')
+        .update({ 
+            status: newStatus,
+            is_active: isActive,
+            updated_at: new Date().toISOString()
+        })
+        .eq('id', jobId);
+
+    if (error) throw error;
+    revalidatePath('/ats/jobs');
+    revalidatePath('/[lang]/join-us', 'page');
+    return { success: true, newStatus };
+}
+
+export async function deleteJob(jobId: string) {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    
+    const isSuperAdmin = user?.user_metadata?.role === 'SuperAdmin' || user?.role === 'SuperAdmin' || user?.email?.toLowerCase() === 'nriccitelli@dibrand.co';
+    if (!isSuperAdmin) throw new Error('Unauthorized');
+
+    const { error } = await supabase
+        .from('job_openings')
+        .update({ 
+            deleted_at: new Date().toISOString(),
+            is_active: false,
+            status: 'Deleted'
+        })
+        .eq('id', jobId);
+
+    if (error) throw error;
+    revalidatePath('/ats/jobs');
+    revalidatePath('/[lang]/join-us', 'page');
+    return { success: true };
 }
