@@ -235,8 +235,8 @@ function JobCard({ job, userRole, userEmail, onUpdate }: { job: Job, userRole: s
     return (
         <div className={`rounded-3xl p-8 transition-all duration-300 relative group overflow-hidden h-fit font-outfit ${
             isSuspended 
-            ? 'bg-[#F8FAFC] border-2 border-dashed border-[#E2E8F0] opacity-60' 
-            : 'bg-white border border-[#E2E8F0] hover:shadow-2xl hover:shadow-[#0040A1]/5 hover:-translate-y-1'
+            ? 'bg-[#F8FAFC] border-2 border-dashed border-slate-200 opacity-60' 
+            : 'bg-white border-2 border-[#0040A1]/10 hover:border-[#0040A1]/30 hover:shadow-2xl hover:shadow-[#0040A1]/5 hover:-translate-y-1'
         }`}>
             <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center gap-2">
@@ -332,24 +332,30 @@ function JobCard({ job, userRole, userEmail, onUpdate }: { job: Job, userRole: s
                 </div>
 
                 {isSuperAdmin && (
-                    <div className="flex items-center gap-3">
-                        <span className={`text-[12px] font-bold transition-colors ${isSuspended ? 'text-[#A3369D]' : 'text-[#737785]'}`}>
-                            {isSuspended ? 'Activar Vacante' : 'Suspender Vacante'}
+                    <div className="flex items-center gap-3 relative group/tooltip">
+                        <span className={`text-[12px] font-bold transition-colors ${!isSuspended ? 'text-[#0040A1]' : 'text-slate-400'}`}>
+                            {!isSuspended ? 'Suspender Vacante' : 'Activar Vacante'}
                         </span>
                         <button 
                             onClick={handleToggleStatus}
                             disabled={isPausando}
-                            className={`w-12 h-6 rounded-full relative transition-all duration-300 flex items-center px-1 ${
-                                isSuspended ? 'bg-[#A3369D]' : 'bg-slate-200'
+                            className={`w-12 h-6 rounded-full relative transition-colors duration-300 ease-in-out flex items-center px-1 active:scale-95 ${
+                                !isSuspended ? 'bg-[#0040A1]' : 'bg-slate-300'
                             }`}
                         >
                             <motion.div 
                                 initial={false}
-                                animate={{ x: isSuspended ? 24 : 0 }}
+                                animate={{ x: !isSuspended ? 24 : 0 }}
                                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                className="w-4 h-4 bg-white rounded-full shadow-sm"
+                                className="w-4 h-4 bg-white rounded-full shadow-sm drop-shadow-sm"
                             />
                         </button>
+
+                        {/* Tooltip Informativo */}
+                        <div className="absolute right-0 bottom-full mb-2 w-48 p-2 bg-slate-800 text-white text-[10px] rounded-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-300 z-10 pointer-events-none text-center font-medium shadow-xl">
+                            Al suspender, la vacante se oculta de la web pública
+                            <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45"></div>
+                        </div>
                     </div>
                 )}
             </div>
