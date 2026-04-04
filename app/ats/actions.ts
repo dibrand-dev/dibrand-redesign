@@ -1030,14 +1030,19 @@ export async function updateJobQuestionnaire(jobId: string, questionnaireData: a
     return { success: true };
 }
 
-export async function updateJobDescription(jobId: string, description: string, requirements: string) {
+export async function updateJobDescription(jobId: string, description: string, requirements: string, industry?: string) {
+    const updatePayload: any = {
+        description: description,
+        requirements: requirements,
+        updated_at: new Date().toISOString()
+    };
+    if (industry) {
+        updatePayload.industry = industry;
+    }
+
     const { error } = await supabase
         .from('job_openings')
-        .update({ 
-            description: description,
-            requirements: requirements,
-            updated_at: new Date().toISOString()
-        })
+        .update(updatePayload)
         .eq('id', jobId);
 
     if (error) {

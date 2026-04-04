@@ -72,6 +72,8 @@ export default function JobViewClient({ job, userRole }: { job: JobData | null; 
     
     const [descContent, setDescContent] = useState(job?.description || '');
     const [reqContent, setReqContent] = useState(job?.requirements || '');
+    // Provide a default that matches DB convention if it was mapped via job.industry or just 'Engineering'
+    const [industryContent, setIndustryContent] = useState((job as any)?.industry || 'Engineering');
 
     const DEFAULT_QUESTIONNAIRE: QuestionnaireSection[] = [
         {
@@ -161,7 +163,7 @@ ${questionnaire.map(section => {
         if (!job?.id) return;
         setIsSaving(true);
         try {
-            await updateJobDescription(job.id, descContent, reqContent);
+            await updateJobDescription(job.id, descContent, reqContent, industryContent);
             setIsEditingDesc(false);
         } catch (error: any) {
             console.error('Failed to save description', error);
@@ -256,6 +258,7 @@ ${questionnaire.map(section => {
                                             setIsEditingDesc(false);
                                             setDescContent(job?.description || '');
                                             setReqContent(job?.requirements || '');
+                                            setIndustryContent((job as any)?.industry || 'Engineering');
                                         }}
                                         className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#191C1D] text-[13px] font-bold rounded-xl transition-all"
                                     >
@@ -499,6 +502,20 @@ ${questionnaire.map(section => {
                             <div className="p-8">
                                 {isEditingDesc ? (
                                     <div className="space-y-10">
+                                        <div>
+                                            <label className="text-[10px] font-black tracking-widest uppercase text-[#737785] block mb-4">Mapeo de Departamento</label>
+                                            <select 
+                                                value={industryContent}
+                                                onChange={(e) => setIndustryContent(e.target.value)}
+                                                className="w-full text-[15px] p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#0040A1] transition-colors font-sans mb-10 text-[#191C1D] appearance-none cursor-pointer"
+                                            >
+                                                <option value="Engineering">Engineering</option>
+                                                <option value="Product & Design">Product & Design</option>
+                                                <option value="Sales & Marketing">Sales & Marketing</option>
+                                                <option value="Administration">Administration</option>
+                                                <option value="People & Culture">People & Culture</option>
+                                            </select>
+                                        </div>
                                         <div>
                                             <label className="text-[10px] font-black tracking-widest uppercase text-[#737785] block mb-4">Sobre el Rol</label>
                                             <textarea 

@@ -197,7 +197,7 @@ function JobCard({ job, userRole, userEmail, onUpdate }: { job: Job, userRole: s
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
     const [isDeleting, setIsDeleting] = React.useState(false);
     const [isPausando, setIsPausando] = React.useState(false);
-    const isSuspended = job.status === 'Suspended';
+    const [localIsSuspended, setLocalIsSuspended] = React.useState(job.status === 'Suspended');
     
     // Comprehensive SuperAdmin check including email bypass for Norberto and Eugenia
     const isSuperAdmin = 
@@ -207,11 +207,18 @@ function JobCard({ job, userRole, userEmail, onUpdate }: { job: Job, userRole: s
 
     const handleToggleStatus = async () => {
         setIsPausando(true);
+        // Instant visual update (optimistic UI)
+        const currentActive = !localIsSuspended;
+        setLocalIsSuspended(!localIsSuspended);
+        const internalDbStatus = currentActive ? 'Active' : 'Suspended';
+        
         try {
-            await toggleJobStatus(job.id, job.status);
-            toast.success(job.status === 'Active' ? 'Vacante pausada exitosamente' : 'Vacante activada exitosamente');
-            onUpdate();
+            await toggleJobStatus(job.id, internalDbStatus);
+            toast.success('Estado de la vacante actualizado');
+            // We no longer call onUpdate() to avoid the jarring page reload
         } catch (error) {
+            // Revert state if failed
+            setLocalIsSuspended(currentActive ? false : true);
             toast.error('Error al cambiar el estado de la vacante');
         } finally {
             setIsPausando(false);
@@ -234,13 +241,13 @@ function JobCard({ job, userRole, userEmail, onUpdate }: { job: Job, userRole: s
     
     return (
         <div className={`rounded-3xl p-8 transition-all duration-300 relative group overflow-hidden h-fit font-outfit ${
-            isSuspended 
+            localIsSuspended 
             ? 'bg-[#F8FAFC] border-2 border-dashed border-slate-200 opacity-60' 
             : 'bg-white border-2 border-[#0040A1]/10 hover:border-[#0040A1]/30 hover:shadow-2xl hover:shadow-[#0040A1]/5 hover:-translate-y-1'
         }`}>
             <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center gap-2">
-                    {isSuspended ? (
+                    {localIsSuspended ? (
                         <span className="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-black tracking-widest rounded-lg uppercase border border-amber-200">
                             Suspendida
                         </span>
@@ -288,7 +295,7 @@ function JobCard({ job, userRole, userEmail, onUpdate }: { job: Job, userRole: s
             </div>
 
             {/* Pipeline Section - RESTORED */}
-            <div className={`rounded-2xl p-6 relative ${isSuspended ? 'bg-slate-100/50' : 'bg-[#F8FAFC]'}`}>
+            <div className={`rounded-2xl p-6 relative ${localIsSuspended ? 'bg-slate-100/50' : 'bg-[#F8FAFC]'}`}>
                  <div className="flex items-center justify-between mb-6">
                     {/* Avatars */}
                     {job.avatars && job.avatars.length > 0 ? (
@@ -333,19 +340,19 @@ function JobCard({ job, userRole, userEmail, onUpdate }: { job: Job, userRole: s
 
                 {isSuperAdmin && (
                     <div className="flex items-center gap-3 relative group/tooltip">
-                        <span className={`text-[12px] font-bold transition-colors ${!isSuspended ? 'text-[#0040A1]' : 'text-slate-400'}`}>
-                            {!isSuspended ? 'Suspender Vacante' : 'Activar Vacante'}
+                        <span className={`text-[12px] font-bold transition-colors ${!localIsSuspended ? 'text-[#0040A1]' : 'text-slate-400'}`}>
+                            {!localIsSuspended ? 'Suspender Vacante' : 'Activar Vacante'}
                         </span>
                         <button 
                             onClick={handleToggleStatus}
                             disabled={isPausando}
                             className={`w-12 h-6 rounded-full relative transition-colors duration-300 ease-in-out flex items-center px-1 active:scale-95 ${
-                                !isSuspended ? 'bg-[#0040A1]' : 'bg-slate-300'
+                                !localIsSuspended ? 'bg-[#0040A1]' : 'bg-slate-300'
                             }`}
                         >
                             <motion.div 
                                 initial={false}
-                                animate={{ x: !isSuspended ? 24 : 0 }}
+                                animate={{ x: !localIsSuspended ? 24 : 0 }}
                                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                 className="w-4 h-4 bg-white rounded-full shadow-sm drop-shadow-sm"
                             />
@@ -361,7 +368,7 @@ function JobCard({ job, userRole, userEmail, onUpdate }: { job: Job, userRole: s
             </div>
 
             {/* Background elements to match the "Suspended" feel */}
-            {isSuspended && (
+            {localIsSuspended && (
                 <div className="absolute inset-0 bg-white/10 pointer-events-none"></div>
             )}
 
