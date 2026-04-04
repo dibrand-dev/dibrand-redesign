@@ -9,6 +9,21 @@ import { createGoogleEvent, listGoogleEvents } from '@/lib/google-calendar';
 import { capitalizeName as capitalizeEachWord } from '@/lib/utils';
 import { getStageConfig } from '@/lib/ats-constants';
 
+export async function getAtsUserContext() {
+    try {
+        const supabaseAuth = await createClient();
+        const { data: { user } } = await supabaseAuth.auth.getUser();
+        if (!user) return { role: '', email: '' };
+        
+        return {
+            role: user.user_metadata?.role || user.role || '',
+            email: user.email?.toLowerCase() || ''
+        };
+    } catch (e) {
+        return { role: '', email: '' };
+    }
+}
+
 export async function getRecentCandidates() {
     const { data } = await getAllCandidates({ limit: 5 } as any);
     return data;
@@ -118,33 +133,23 @@ export async function getRecruiterJobs() {
 
     const isAdmin = user.user_metadata?.role === 'admin' || user.user_metadata?.role === 'SuperAdmin';
 
-    // Fetch jobs and include candidate counts with statuses, excluding deleted ones
+    // Fetch all jobs excluding only the ones fully deleted (we check by status or deleted_at in JS for safety)
     let { data: jobs, error: jobsError } = await supabase
         .from('job_openings')
         .select(`
             *,
             candidates:job_applications(id, recruiter_id, status, is_deleted, avatar_url)
-        `)
-        .is('deleted_at', null);
+        `);
 
-    // If query failed (possibly because of missing deleted_at col), try WITHOUT it
     if (jobsError) {
-        console.warn('RETRYING getRecruiterJobs without deleted_at check...');
-        const { data: retryData, error: retryError } = await supabase
-            .from('job_openings')
-            .select(`
-                *,
-                candidates:job_applications(id, recruiter_id, status, is_deleted, avatar_url)
-            `);
-        
-        if (retryError) {
-            console.error('CRITICAL ERROR FETCHING RECRUITER JOBS (RETRY):', retryError);
-            return [];
-        }
-        jobs = retryData;
+        console.error('CRITICAL ERROR FETCHING RECRUITER JOBS:', jobsError);
+        return [];
     }
 
-    return jobs?.map(job => {
+    // Filter out truly deleted jobs in memory to avoid issues with missing columns in DB
+    const validJobs = (jobs || []).filter(j => j.status !== 'Deleted' && !j.deleted_at);
+
+    return validJobs.map(job => {
         const allCandidates = job.candidates || [];
         const activeCandidates = allCandidates.filter((c: any) => !c.is_deleted);
         const recruiterCandidates = activeCandidates.filter((c: any) => c.recruiter_id === user.id);
@@ -1053,14 +1058,18 @@ export async function getTodayEvents() {
     // 1. Fetch Candidate Names for Matching
     const candidateList = await getCandidateNames();
 
-    // 2. Get today's range in ISO format
-    const startOfDay = new Date();
+    // 2. Get today's range in ISO format (from now until end of day)
+    const now = new Date();
+    
+    // We fetch from the start of the day just to be safe, but we'll filter below
+    const startOfDay = new Date(now);
     startOfDay.setHours(0, 0, 0, 0);
     
-    const endOfDay = new Date();
+    const endOfDay = new Date(now);
     endOfDay.setHours(23, 59, 59, 999);
 
     try {
+        // Fetch all events for today
         const events = await listGoogleEvents(user.id, startOfDay.toISOString(), endOfDay.toISOString());
         
         // 3. Filter and Map Events
@@ -1072,6 +1081,10 @@ export async function getTodayEvents() {
                 // Filter 2: Exclude potential non-meeting noise
                 const summary = (event.summary || '').toLowerCase();
                 if (summary.includes('cumpleaños') || summary.includes('birthday')) return false;
+
+                // Filter 3: Only show current or upcoming events (exclude those that already ended)
+                const endTime = new Date(event.end?.dateTime || event.start.dateTime);
+                if (endTime < now) return false;
 
                 return true;
             })
@@ -1090,8 +1103,8 @@ export async function getTodayEvents() {
                 return {
                     id: event.id,
                     summary,
-                    start: event.start.dateTime, // Already checked for existence
-                    end: event.end.dateTime,
+                    start: event.start.dateTime, 
+                    end: event.end?.dateTime || event.start.dateTime,
                     location: event.location,
                     link: event.htmlLink,
                     hangoutLink: event.hangoutLink,
@@ -1110,18 +1123,21 @@ export async function toggleJobStatus(jobId: string, currentStatus: string) {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
     
-    const isSuperAdmin = user?.user_metadata?.role === 'SuperAdmin' || user?.role === 'SuperAdmin' || user?.email?.toLowerCase() === 'nriccitelli@dibrand.co';
+    const isSuperAdmin = 
+        user?.user_metadata?.role?.toLowerCase() === 'superadmin' || 
+        user?.user_metadata?.role?.toLowerCase() === 'admin' || 
+        user?.role === 'SuperAdmin' || 
+        ['norberto@dibrand.co', 'eugenia@dibrand.co', 'nriccitelli@dibrand.co'].includes(user?.email?.toLowerCase() || '');
     if (!isSuperAdmin) throw new Error('Unauthorized');
 
-    const newStatus = currentStatus === 'Paused' ? 'Active' : 'Paused';
-    const isActive = newStatus === 'Active';
+    const isActive = currentStatus === 'Suspended' || currentStatus === 'Paused' ? true : false;
+    const newStatus = isActive ? 'Active' : 'Suspended';
 
-    console.log(`Toggling job ${jobId} status from ${currentStatus} to ${newStatus}`);
+    console.log(`Toggling job ${jobId} status conceptually from ${currentStatus} to ${newStatus}`);
 
     const { error } = await supabase
         .from('job_openings')
         .update({ 
-            status: newStatus,
             is_active: isActive,
             updated_at: new Date().toISOString()
         })
@@ -1140,16 +1156,16 @@ export async function deleteJob(jobId: string) {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
     
-    const isSuperAdmin = user?.user_metadata?.role === 'SuperAdmin' || user?.role === 'SuperAdmin' || user?.email?.toLowerCase() === 'nriccitelli@dibrand.co';
+    const isSuperAdmin = 
+        user?.user_metadata?.role?.toLowerCase() === 'superadmin' || 
+        user?.user_metadata?.role?.toLowerCase() === 'admin' || 
+        user?.role === 'SuperAdmin' || 
+        ['norberto@dibrand.co', 'eugenia@dibrand.co', 'nriccitelli@dibrand.co'].includes(user?.email?.toLowerCase() || '');
     if (!isSuperAdmin) throw new Error('Unauthorized');
 
     const { error } = await supabase
         .from('job_openings')
-        .update({ 
-            deleted_at: new Date().toISOString(),
-            is_active: false,
-            status: 'Deleted'
-        })
+        .delete()
         .eq('id', jobId);
 
     if (error) throw error;

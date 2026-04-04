@@ -35,8 +35,7 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
                 modality,
                 employment_type
             `)
-            .eq('status', 'Active')
-            .is('deleted_at', null)
+            .eq('is_active', true)
             .order('created_at', { ascending: false });
         
         if (error) throw error;

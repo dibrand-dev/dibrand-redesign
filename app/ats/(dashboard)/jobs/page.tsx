@@ -18,7 +18,7 @@ import {
     X
 } from 'lucide-react';
 import Link from 'next/link';
-import { getRecruiterJobs, toggleJobStatus, deleteJob } from '../../actions';
+import { getRecruiterJobs, toggleJobStatus, deleteJob, getAtsUserContext } from '../../actions';
 import toast from 'react-hot-toast';
 import { createClient } from '@/lib/supabase-client';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -52,41 +52,44 @@ export default function AtsJobsPage() {
     const [loading, setLoading] = React.useState(true);
     const [activeTab, setActiveTab] = React.useState('Todas');
     const [userRole, setUserRole] = React.useState<string>('');
-
-    const fetchJobs = async () => {
-        const data = await getRecruiterJobs();
-        // Transform data as needed to match the UI expectations
-        const transformed : Job[] = data.map((j: any) => {
-            let normalizedStatus = j.status;
-            if (j.status === 'Active' || j.status === 'Open' || (j.is_active && !j.status)) {
-                normalizedStatus = 'Active';
-            } else if (j.status === 'Paused' || (!j.is_active && !j.status)) {
-                normalizedStatus = 'Paused';
-            }
-
-            return {
-                ...j,
-                status: normalizedStatus || 'Paused',
-                department: j.industry || 'ENGINEERING', // Map from DB
-                type: j.employment_type?.replace('_', ' ') || 'Full-time',
-                posted_at: j.created_at,
-                days_open: Math.floor((Date.now() - new Date(j.created_at).getTime()) / (1000 * 60 * 60 * 24)) || 0,
-            };
-        });
-        const sorted = transformed.sort((a, b) => new Date(b.posted_at!).getTime() - new Date(a.posted_at!).getTime());
-        setJobs(sorted);
-        setLoading(false);
-    };
+    const [userEmail, setUserEmail] = React.useState<string>('');
 
     React.useEffect(() => {
-        const checkUser = async () => {
-            const supabase = createClient();
-            const { data: { user } } = await supabase.auth.getUser();
-            setUserRole(user?.user_metadata?.role || '');
+        const loadDashboardData = async () => {
+            // Securely load context via Server Action to bypass any client auth state issues
+            const userContext = await getAtsUserContext();
+            
+            setUserRole(userContext.role);
+            setUserEmail(userContext.email);
+
+            // Fetch jobs after we know who the user is to prevent visual flashing
+            const data = await getRecruiterJobs();
+            
+            const transformed : Job[] = data.map((j: any) => {
+                const rawStatus = (j.status || '').toLowerCase();
+                let normalizedStatus = 'Suspended'; // Fallback
+                
+                if (rawStatus === 'active' || rawStatus === 'open' || (j.is_active && j.status !== 'Suspended')) {
+                    normalizedStatus = 'Active';
+                } else if (rawStatus === 'suspended' || rawStatus === 'paused' || (!j.is_active && !j.status)) {
+                    normalizedStatus = 'Suspended';
+                }
+
+                return {
+                    ...j,
+                    status: normalizedStatus || 'Suspended',
+                    department: j.industry || 'ENGINEERING', // Map from DB
+                    type: j.employment_type?.replace('_', ' ') || 'Full-time',
+                    posted_at: j.created_at,
+                    days_open: Math.floor((Date.now() - new Date(j.created_at).getTime()) / (1000 * 60 * 60 * 24)) || 0,
+                };
+            });
+            const sorted = transformed.sort((a, b) => new Date(b.posted_at!).getTime() - new Date(a.posted_at!).getTime());
+            setJobs(sorted);
+            setLoading(false);
         };
         
-        checkUser();
-        fetchJobs();
+        loadDashboardData();
     }, []);
 
     const tabs = ['Todas', 'Borradores', 'Archivadas'];
@@ -96,7 +99,7 @@ export default function AtsJobsPage() {
 
     const filteredJobs = jobs.filter(job => {
         if (activeTab === 'Todas') return true;
-        if (activeTab === 'Borradores') return job.status === 'Paused';
+        if (activeTab === 'Borradores') return job.status === 'Suspended';
         if (activeTab === 'Archivadas') return job.status === 'Closed' || job.status === 'Archived'; 
         return true;
     });
@@ -155,7 +158,14 @@ export default function AtsJobsPage() {
                 ) : (
                     <>
                         {filteredJobs.map((job) => (
-                            <JobCard key={job.id} job={job} userRole={userRole} onUpdate={fetchJobs} />
+                            <JobCard 
+                                key={job.id} 
+                                job={job} 
+                                userRole={userRole} 
+                                userEmail={userEmail} 
+                                // We can safely call our effect logic again by just hard refreshing or passing a stripped down update trigger
+                                onUpdate={() => window.location.reload()} 
+                            />
                         ))}
                         {/* If no jobs, show placeholder or create new */}
                         {filteredJobs.length === 0 && (
@@ -183,25 +193,17 @@ function FilterButton({ label, value }: { label: string, value: string }) {
     );
 }
 
-function JobCard({ job, userRole, onUpdate }: { job: Job, userRole: string, onUpdate: () => void }) {
-    const [showMenu, setShowMenu] = React.useState(false);
+function JobCard({ job, userRole, userEmail, onUpdate }: { job: Job, userRole: string, userEmail: string, onUpdate: () => void }) {
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
     const [isDeleting, setIsDeleting] = React.useState(false);
     const [isPausando, setIsPausando] = React.useState(false);
-    const isPaused = job.status === 'Paused';
-    const isSuperAdmin = userRole === 'SuperAdmin' || userRole === 'admin';
-    const menuRef = React.useRef<HTMLDivElement>(null);
-
-    // Close menu when clicking outside
-    React.useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setShowMenu(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+    const isSuspended = job.status === 'Suspended';
+    
+    // Comprehensive SuperAdmin check including email bypass for Norberto and Eugenia
+    const isSuperAdmin = 
+        userRole.toLowerCase() === 'superadmin' || 
+        userRole.toLowerCase() === 'admin' ||
+        ['norberto@dibrand.co', 'eugenia@dibrand.co', 'nriccitelli@dibrand.co'].includes(userEmail.toLowerCase());
 
     const handleToggleStatus = async () => {
         setIsPausando(true);
@@ -213,7 +215,6 @@ function JobCard({ job, userRole, onUpdate }: { job: Job, userRole: string, onUp
             toast.error('Error al cambiar el estado de la vacante');
         } finally {
             setIsPausando(false);
-            setShowMenu(false);
         }
     };
 
@@ -232,18 +233,22 @@ function JobCard({ job, userRole, onUpdate }: { job: Job, userRole: string, onUp
     };
     
     return (
-        <div className={`rounded-3xl p-8 transition-all duration-300 relative group overflow-hidden h-fit ${
-            isPaused 
+        <div className={`rounded-3xl p-8 transition-all duration-300 relative group overflow-hidden h-fit font-outfit ${
+            isSuspended 
             ? 'bg-[#F8FAFC] border-2 border-dashed border-[#E2E8F0] opacity-60' 
-            : 'bg-white border border-[#E2E8F0] hover:shadow-2xl hover:shadow-[#0040A1]/5 hover:translate-y-[-4px]'
+            : 'bg-white border border-[#E2E8F0] hover:shadow-2xl hover:shadow-[#0040A1]/5 hover:-translate-y-1'
         }`}>
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center gap-2">
-                    <span className={`px-3 py-1 text-[10px] font-black tracking-widest rounded-lg uppercase ${
-                        isPaused ? 'bg-slate-200 text-slate-500' : 'bg-[#E8F0FF] text-[#0040A1]'
-                    }`}>
-                        {job.department || 'OPERACIONES'}
-                    </span>
+                    {isSuspended ? (
+                        <span className="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-black tracking-widest rounded-lg uppercase border border-amber-200">
+                            Suspendida
+                        </span>
+                    ) : (
+                        <span className="px-3 py-1 bg-[#E8F0FF] text-[#0040A1] text-[10px] font-black tracking-widest rounded-lg uppercase">
+                            {job.department || 'OPERACIONES'}
+                        </span>
+                    )}
                     {job.questionnaire && job.questionnaire.length > 0 && (
                         <span className="flex items-center gap-1 px-2 py-1 bg-green-50 text-[#1A3A00] text-[9px] font-black rounded-lg border border-green-100 uppercase tracking-tight">
                             <ListChecks size={12} /> Evaluación Activa
@@ -252,71 +257,38 @@ function JobCard({ job, userRole, onUpdate }: { job: Job, userRole: string, onUp
                 </div>
                 
                 {isSuperAdmin && (
-                    <div className="relative" ref={menuRef}>
-                        <button 
-                            onClick={() => setShowMenu(!showMenu)}
-                            className={`p-1.5 rounded-full transition-all ${
-                                showMenu ? 'bg-slate-100 text-[#191C1D]' : 'text-[#737785] hover:bg-slate-50 hover:text-[#191C1D]'
-                            }`}
-                        >
-                            <MoreVertical size={20} />
-                        </button>
-
-                        <AnimatePresence>
-                            {showMenu && (
-                                <motion.div 
-                                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                                    className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-30 font-outfit"
-                                >
-                                    <button 
-                                        onClick={handleToggleStatus}
-                                        disabled={isPausando}
-                                        className="w-full px-4 py-2.5 text-left text-[13px] font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors disabled:opacity-50"
-                                    >
-                                        {isPaused ? (
-                                            <><Play size={16} className="text-[#0040A1]" /> Activar</>
-                                        ) : (
-                                            <><Pause size={16} className="text-amber-500" /> Pausar</>
-                                        )}
-                                    </button>
-                                    <button 
-                                        onClick={() => setShowDeleteModal(true)}
-                                        className="w-full px-4 py-2.5 text-left text-[13px] font-bold text-red-600 hover:bg-red-50/50 flex items-center gap-2 transition-colors"
-                                    >
-                                        <Trash2 size={16} /> Eliminar
-                                    </button>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
+                    <button 
+                        onClick={() => setShowDeleteModal(true)}
+                        className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
+                    >
+                        <Trash2 size={18} />
+                    </button>
                 )}
             </div>
 
             <Link href={`/ats/jobs/${job.id}`}>
-                    <h3 className="text-[22px] font-bold text-[#191C1D] mb-4 group-hover:text-[#0040A1] transition-colors">
-                        {(() => {
-                            const fullTitle = job.title_es || job.title || '';
-                            const maxChars = 40;
-                            return fullTitle.length > maxChars ? `${fullTitle.slice(0, maxChars - 3)}...` : fullTitle;
-                        })()}
-                    </h3>
+                <h3 className="text-[22px] font-bold text-[#191C1D] mb-4 group-hover:text-[#0040A1] transition-colors leading-tight">
+                    {(() => {
+                        const fullTitle = job.title_es || job.title || '';
+                        const maxChars = 40;
+                        return fullTitle.length > maxChars ? `${fullTitle.slice(0, maxChars - 3)}...` : fullTitle;
+                    })()}
+                </h3>
             </Link>
 
             <div className="flex items-center gap-4 mb-8">
                 <div className="flex items-center gap-1.5 text-[#737785]">
                     <MapPin size={16} />
-                    <span className="text-[13px] font-semibold">{job.location_es || job.location || 'Remoto'}</span>
+                    <span className="text-[13px] font-medium">{job.location_es || job.location || 'Remoto'}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-[#737785]">
                     <Clock size={16} />
-                    <span className="text-[13px] font-semibold">{job.type || 'Tiempo completo'}</span>
+                    <span className="text-[13px] font-medium">{job.type || 'Tiempo completo'}</span>
                 </div>
             </div>
 
-            {/* Pipeline Section */}
-            <div className={`rounded-2xl p-6 relative ${isPaused ? 'bg-slate-100/50' : 'bg-[#F8FAFC]'}`}>
+            {/* Pipeline Section - RESTORED */}
+            <div className={`rounded-2xl p-6 relative ${isSuspended ? 'bg-slate-100/50' : 'bg-[#F8FAFC]'}`}>
                  <div className="flex items-center justify-between mb-6">
                     {/* Avatars */}
                     {job.avatars && job.avatars.length > 0 ? (
@@ -353,46 +325,37 @@ function JobCard({ job, userRole, onUpdate }: { job: Job, userRole: string, onUp
                  </div>
             </div>
 
-            {/* Footer Row */}
-            {!isPaused ? (
-                 <div className="mt-8 pt-8 flex items-center justify-between border-t border-[#F1F5F9]">
-                        <span className="text-[12px] font-medium text-[#737785] flex items-center gap-1.5">
-                            <span>Publicada hace {job.days_open || 0} días</span>
-                            <span className="w-1 h-1 bg-[#E2E8F0] rounded-full" />
-                            <span>Días Abierta: {Math.max(0, 30 - (job.days_open || 0))}</span>
-                        </span>
+            {/* Final Row with Toggle Switch (SuperAdmin Only) */}
+            <div className="mt-8 pt-6 border-t border-[#F1F5F9] flex items-center justify-between">
+                <div className="flex flex-col">
+                    <span className="text-[11px] font-medium text-[#737785]">Publicada hace {job.days_open || 0} días</span>
+                </div>
+
+                {isSuperAdmin && (
                     <div className="flex items-center gap-3">
-                        <button className="px-5 py-2.5 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0040A1] text-[13px] font-bold rounded-xl transition-all">
-                            Editar
-                        </button>
-                        <Link href={`/ats/jobs/${job.id}`} className="px-5 py-2.5 bg-[#0040A1] hover:bg-[#003380] text-white text-[13px] font-bold rounded-xl transition-all shadow-lg shadow-[#0040A1]/10">
-                            Ver Candidatos
-                        </Link>
-                    </div>
-                 </div>
-            ) : (
-                <div className="mt-6 border-t border-[#E2E8F0] pt-6">
-                    <div className="flex items-center gap-2 mb-4 text-[#737785]">
-                         <div className="w-8 h-8 rounded-full bg-[#E2E8F0] flex items-center justify-center">
-                            <Play size={14} fill="currentColor" />
-                         </div>
-                         <span className="text-[14px] font-bold">Estado: Pausada</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                         <span className="text-[12px] font-medium text-[#737785]">Pausada hace {job.days_open || 0} días • Días Abierta: 45</span>
-                         <button 
+                        <span className={`text-[12px] font-bold transition-colors ${isSuspended ? 'text-[#A3369D]' : 'text-[#737785]'}`}>
+                            {isSuspended ? 'Activar Vacante' : 'Suspender Vacante'}
+                        </span>
+                        <button 
                             onClick={handleToggleStatus}
                             disabled={isPausando}
-                            className="px-6 py-2.5 bg-[#E1E7EF] hover:bg-[#D1D5DB] text-[#475569] text-[13px] font-bold rounded-xl transition-all disabled:opacity-50"
-                         >
-                            Reanudar Búsqueda
+                            className={`w-12 h-6 rounded-full relative transition-all duration-300 flex items-center px-1 ${
+                                isSuspended ? 'bg-[#A3369D]' : 'bg-slate-200'
+                            }`}
+                        >
+                            <motion.div 
+                                initial={false}
+                                animate={{ x: isSuspended ? 24 : 0 }}
+                                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                className="w-4 h-4 bg-white rounded-full shadow-sm"
+                            />
                         </button>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
-            {/* Background elements to match the "Paused" feel */}
-            {isPaused && (
+            {/* Background elements to match the "Suspended" feel */}
+            {isSuspended && (
                 <div className="absolute inset-0 bg-white/10 pointer-events-none"></div>
             )}
 
