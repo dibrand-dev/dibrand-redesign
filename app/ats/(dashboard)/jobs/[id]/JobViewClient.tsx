@@ -589,6 +589,10 @@ ${questionnaire.map(section => {
                                 
                                 <div className="space-y-6">
                                     <div>
+                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">DEPARTAMENTO</p>
+                                        <p className="text-[15px] font-bold text-[#191C1D] uppercase">{industryContent}</p>
+                                    </div>
+                                    <div>
                                         <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">RANGO SALARIAL</p>
                                         <p className="text-[15px] font-bold text-[#191C1D]">{job?.salary_range || '$120k - $160k'}</p>
                                     </div>

@@ -23,6 +23,7 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
                 id,
                 title, 
                 location,
+                industry,
                 is_active,
                 description,
                 requirements,
