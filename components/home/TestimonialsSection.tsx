@@ -51,7 +51,7 @@ export default function TestimonialsSection({ testimonials, dict, lang }: Testim
                         {dict.testimonials.title}
                     </h2>
                     <div className="mt-6 h-1 w-24 bg-brand mb-6" />
-                    <p className="text-base md:text-lg text-zinc-200 font-outfit font-normal leading-relaxed max-w-2xl">
+                    <p className="text-base md:text-lg text-zinc-100 font-outfit font-medium leading-relaxed max-w-2xl">
                         {dict.testimonials.subtitle}
                     </p>
                 </div>
