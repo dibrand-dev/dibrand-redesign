@@ -24,7 +24,7 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
     const [formData, setFormData] = useState({
         title_es: initialData?.title_es || initialData?.title || '',
         title_en: initialData?.title_en || '',
-        industry: initialData?.industry || initialData?.department || 'SaaS',
+        industry: initialData?.industry || initialData?.department || 'Engineering',
         location_es: initialData?.location_es || initialData?.location || '',
         location_en: initialData?.location_en || '',
         employment_type: initialData?.employment_type || 'Full-time',
@@ -41,8 +41,11 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
 
     const modalities = ['Remoto', 'Híbrido', 'Presencial'];
     const industries = [
-        'Fintech', 'Pharma', 'eCommerce', 'Big Tech', 'Automotive',
-        'Energy', 'SaaS', 'Retail', 'Entertainment & Media', 'Tolling', 'Other'
+        'Engineering', 
+        'Product & Design', 
+        'Sales & Marketing', 
+        'Administration', 
+        'People & Culture'
     ];
     const seniorities = ['Trainee', 'Junior', 'Semi Senior', 'Senior'];
 
@@ -235,7 +238,7 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
 
                     <div className="grid md:grid-cols-3 gap-8 pt-4">
                         <div className="space-y-2">
-                            <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Industria</label>
+                            <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Departamento</label>
                             <select
                                 name="industry"
                                 value={formData.industry}
