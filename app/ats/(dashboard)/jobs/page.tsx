@@ -54,6 +54,10 @@ export default function AtsJobsPage() {
     const [userRole, setUserRole] = React.useState<string>('');
     const [userEmail, setUserEmail] = React.useState<string>('');
 
+    const [departmentFilter, setDepartmentFilter] = React.useState('all');
+    const [locationFilter, setLocationFilter] = React.useState('all');
+    const [statusFilter, setStatusFilter] = React.useState('Activas');
+
     React.useEffect(() => {
         const loadDashboardData = async () => {
             // Securely load context via Server Action to bypass any client auth state issues
@@ -98,9 +102,27 @@ export default function AtsJobsPage() {
     const activeSearchesCount = jobs.filter(j => j.status === 'Active').length;
 
     const filteredJobs = jobs.filter(job => {
-        if (activeTab === 'Todas') return true;
-        if (activeTab === 'Borradores') return job.status === 'Suspended';
-        if (activeTab === 'Archivadas') return job.status === 'Closed' || job.status === 'Archived'; 
+        // Tab Filtering
+        if (activeTab === 'Borradores' && job.status !== 'Suspended') return false;
+        if (activeTab === 'Archivadas' && job.status !== 'Closed' && job.status !== 'Archived') return false; 
+        
+        // Dropdown Filtering
+        if (departmentFilter !== 'all') {
+            if ((job.department || '').toLowerCase() !== departmentFilter.toLowerCase()) return false;
+        }
+
+        if (locationFilter !== 'all') {
+            const loc = (job.location_es || job.location || '').toLowerCase();
+            if (locationFilter === 'remoto' && !loc.includes('remoto')) return false;
+            if (locationFilter === 'oficina' && !loc.includes('oficina') && !loc.includes('presencial')) return false;
+            if (locationFilter === 'híbrido' && !loc.includes('híbrido') && !loc.includes('hybrid')) return false;
+        }
+
+        if (statusFilter !== 'all') {
+            if (statusFilter === 'Activas' && job.status !== 'Active') return false;
+            if (statusFilter === 'Suspendidas' && job.status !== 'Suspended') return false;
+        }
+
         return true;
     });
 
@@ -133,9 +155,54 @@ export default function AtsJobsPage() {
                 {/* Filters Row */}
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
-                        <FilterButton label="DEPARTAMENTO" value="Todos los Departamentos" />
-                        <FilterButton label="UBICACIÓN" value="Remoto y Oficina" />
-                        <FilterButton label="ESTADO" value="Activas" />
+                        {/* Departamento Filter */}
+                        <div className="flex flex-col gap-1.5 relative">
+                            <span className="text-[10px] font-bold text-[#737785] tracking-widest pl-1">DEPARTAMENTO</span>
+                            <select 
+                                value={departmentFilter}
+                                onChange={(e) => setDepartmentFilter(e.target.value)}
+                                className="appearance-none flex items-center gap-6 px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-xl text-[13px] font-semibold text-[#191C1D] hover:bg-[#F8FAFC] focus:outline-none focus:border-[#0040A1] transition-all min-w-[200px]"
+                            >
+                                <option value="all">Todos los Departamentos</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Product & Design">Product & Design</option>
+                                <option value="Sales & Marketing">Sales & Marketing</option>
+                                <option value="Administration">Administration</option>
+                                <option value="People & Culture">People & Culture</option>
+                            </select>
+                            <ChevronDown size={16} className="text-[#737785] absolute right-4 bottom-3 pointer-events-none" />
+                        </div>
+
+                        {/* Ubicación Filter */}
+                        <div className="flex flex-col gap-1.5 relative">
+                            <span className="text-[10px] font-bold text-[#737785] tracking-widest pl-1">UBICACIÓN</span>
+                            <select 
+                                value={locationFilter}
+                                onChange={(e) => setLocationFilter(e.target.value)}
+                                className="appearance-none flex items-center gap-6 px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-xl text-[13px] font-semibold text-[#191C1D] hover:bg-[#F8FAFC] focus:outline-none focus:border-[#0040A1] transition-all min-w-[200px]"
+                            >
+                                <option value="all">Cualquier Ubicación</option>
+                                <option value="remoto">Remoto</option>
+                                <option value="oficina">Oficina (Presencial)</option>
+                                <option value="híbrido">Híbrido</option>
+                            </select>
+                            <ChevronDown size={16} className="text-[#737785] absolute right-4 bottom-3 pointer-events-none" />
+                        </div>
+
+                        {/* Estado Filter */}
+                        <div className="flex flex-col gap-1.5 relative">
+                            <span className="text-[10px] font-bold text-[#737785] tracking-widest pl-1">ESTADO</span>
+                            <select 
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="appearance-none flex items-center gap-6 px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-xl text-[13px] font-semibold text-[#191C1D] hover:bg-[#F8FAFC] focus:outline-none focus:border-[#0040A1] transition-all min-w-[200px]"
+                            >
+                                <option value="all">Cualquier Estado</option>
+                                <option value="Activas">Activas</option>
+                                <option value="Suspendidas">Suspendidas</option>
+                            </select>
+                            <ChevronDown size={16} className="text-[#737785] absolute right-4 bottom-3 pointer-events-none" />
+                        </div>
                     </div>
 
                     {/* Summary Box */}
@@ -181,17 +248,7 @@ export default function AtsJobsPage() {
     );
 }
 
-function FilterButton({ label, value }: { label: string, value: string }) {
-    return (
-        <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-bold text-[#737785] tracking-widest pl-1">{label}</span>
-            <button className="flex items-center gap-6 px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-xl text-[13px] font-semibold text-[#191C1D] hover:bg-[#F8FAFC] transition-all min-w-[200px] justify-between group">
-                {value}
-                <ChevronDown size={16} className="text-[#737785] group-hover:text-[#0040A1] transition-transform group-hover:translate-y-0.5" />
-            </button>
-        </div>
-    );
-}
+
 
 function JobCard({ job, userRole, userEmail, onUpdate }: { job: Job, userRole: string, userEmail: string, onUpdate: () => void }) {
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
