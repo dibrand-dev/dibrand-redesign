@@ -11,20 +11,13 @@ interface FooterProps {
 
 export default function Footer({ dict, lang }: FooterProps) {
     return (
-        <section id="contact" className="bg-black py-20 lg:py-28 relative overflow-hidden border-t border-white/10 w-full">
-            {/* Abstract Background for Contact */}
-            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 transform opacity-20">
-                <div className="h-[40rem] w-[40rem] rounded-full bg-gradient-to-br from-brand to-brand blur-3xl" />
-            </div>
+        <section id="contact" className="bg-[#000000] py-20 lg:py-28 relative w-full">
 
             <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
                 {/* Columna Izquierda (Información de Contacto) */}
                 <div className="flex flex-col">
                     <h2 className="mb-2">
-                        <span
-                            className="block text-5xl lg:text-6xl font-black text-gray-900 tracking-wide mb-2 leading-none"
-                            style={{ textShadow: '-1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}
-                        >
+                        <span className="block text-5xl lg:text-6xl font-black text-white tracking-wide mb-2 leading-none">
                             {dict.footer.title1}
                         </span>
                         <span className="block text-4xl lg:text-5xl font-black text-white leading-tight mb-8">

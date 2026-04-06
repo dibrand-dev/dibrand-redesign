@@ -43,11 +43,7 @@ export default function TestimonialsSection({ testimonials, dict, lang }: Testim
     if (!mounted) return null;
 
     return (
-        <section className="bg-zinc-800 py-24 md:py-32 relative overflow-hidden" id="testimonials">
-            {/* Background elements refined for zinc-800 */}
-            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 transform opacity-10">
-                <div className="h-[40rem] w-[40rem] rounded-full bg-gradient-to-br from-brand to-brand blur-3xl" />
-            </div>
+        <section className="bg-[#000000] py-24 md:py-32 relative w-full" id="testimonials">
 
             <div className="container mx-auto px-6 max-w-7xl relative z-10">
                 <div className="mb-16 md:mb-20">
@@ -61,9 +57,6 @@ export default function TestimonialsSection({ testimonials, dict, lang }: Testim
                 </div>
 
                 <div className="relative">
-                    {/* Gradient Masks */}
-                    <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-zinc-800 to-transparent z-10 pointer-events-none hidden md:block" />
-                    <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-zinc-800 to-transparent z-10 pointer-events-none hidden md:block" />
 
                     <Swiper
                         modules={[Autoplay]}
@@ -85,7 +78,7 @@ export default function TestimonialsSection({ testimonials, dict, lang }: Testim
                                 >
                                     <Quote className="h-8 w-8 text-brand opacity-40 mb-6 group-hover:scale-110 transition-transform" />
 
-                                    <p className="text-white text-lg leading-relaxed mb-10 font-outfit italic">
+                                    <p className="text-white text-lg md:text-xl leading-relaxed mb-10 font-outfit font-semibold italic">
                                         "{lang === 'en' ? (t.content_en || t.content_es) : t.content_es}"
                                     </p>
 
