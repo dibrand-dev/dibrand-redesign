@@ -1,4 +1,4 @@
-import { getCandidateById, getApplicationLogs, getStackNames, syncRecruiterProfile, getApplicationsByEmail } from '@/app/ats/actions';
+import { getCandidateById, getApplicationLogs, getStackNames, syncRecruiterProfile, getApplicationsByEmail, getRecruiters, getAtsUserContext } from '@/app/ats/actions';
 import { 
     MapPin, Mail, Phone, Calendar, FileText, StickyNote, Clock,
     Check, Bold, Italic, Underline, List, ListOrdered, Link as LinkIcon, Download, Maximize2, User, Pencil, Users, Briefcase
@@ -17,6 +17,7 @@ import ResumeViewer from '@/components/ats/ResumeViewer';
 import CandidateTabs from '@/components/ats/CandidateTabs';
 import CandidateSkills from '@/components/ats/CandidateSkills';
 import { capitalizeName } from '@/lib/utils';
+import RecruiterAssignment from '@/components/ats/RecruiterAssignment';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -33,6 +34,9 @@ export default async function CandidateDetailPage({
     const candidate = await getCandidateById(id);
     const logs = await getApplicationLogs(id);
     const recruiterId = await syncRecruiterProfile();
+    const allRecruiters = await getRecruiters();
+    const userCtx = await getAtsUserContext();
+    const isAdmin = userCtx.role === 'admin' || userCtx.role === 'SuperAdmin';
 
     if (!candidate) notFound();
 
@@ -139,23 +143,15 @@ export default async function CandidateDetailPage({
 
                         {/* RIGHT SIDEBAR (Quick Actions/Meta) */}
                         <div className="xl:col-span-4 space-y-8">
-                             {/* Assigned Recruiter Card */}
-                             <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6">
-                                <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">Reclutador Asignado</h3>
-                                <div className="flex items-center gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-slate-100">
-                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0B4FEA] to-blue-700 text-white flex items-center justify-center font-black text-sm shadow-md">
-                                        {(candidate.recruiter?.full_name || 'SA')[0].toUpperCase()}
-                                    </div>
-                                    <div className="min-w-0">
-                                        <p className="text-[14px] font-black text-slate-900 leading-tight truncate px-1">
-                                            {candidate.recruiter?.full_name ? capitalizeName(candidate.recruiter.full_name) : 'Sin asignar'}
-                                        </p>
-                                        <p className="text-[11px] font-semibold text-slate-500 mt-0.5 px-1 truncate capitalize">
-                                            Reclutador Responsable
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                             {/* Assigned Recruiter Component */}
+                             <RecruiterAssignment 
+                                 candidateId={candidate.id}
+                                 currentRecruiterId={candidate.recruiter_id}
+                                 currentRecruiterName={candidate.recruiter?.full_name || null}
+                                 currentRecruiterAvatar={candidate.recruiter?.avatar_url || null}
+                                 allRecruiters={allRecruiters}
+                                 isAdmin={isAdmin}
+                             />
 
                             {/* Process Actions Widget */}
                             <ProcessActionsWidget 
