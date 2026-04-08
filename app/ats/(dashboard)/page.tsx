@@ -33,7 +33,12 @@ export default async function AtsDashboard() {
         { label: 'CONTRATADOS', count: hiredCount }
     ];
 
-    const recentJobs = jobs
+    const activeJobsOnly = jobs.filter((j: any) => {
+        const rawStatus = (j.status || '').toLowerCase();
+        return j.is_active === true || rawStatus === 'active' || rawStatus === 'open';
+    });
+
+    const recentJobs = activeJobsOnly
         .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         .slice(0, 5);
 
