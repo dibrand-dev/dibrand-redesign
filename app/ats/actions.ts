@@ -120,8 +120,8 @@ export async function getRecruiterStats() {
     return {
         counts,
         staleCount: staleCount || 0,
-        activeJobsCount: (statusCounts || []).filter((s: any) => s.is_active === true || s.status === 'Active' || s.status === 'Open').length,
-        hiredCount: counts['Hired'] || counts['Contratado'] || 0
+        activeJobsCount: activeJobsCount || 0,
+        hiredCount: counts['Contratado'] || counts['Hired'] || 0
     };
 }
 

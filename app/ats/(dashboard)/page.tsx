@@ -18,18 +18,20 @@ export default async function AtsDashboard() {
     const activeJobsCount = statsData?.activeJobsCount || 0;
     const hiredCount = statsData?.hiredCount || 0;
 
+    const getCount = (keys: string[]) => keys.reduce((sum, key) => sum + (counts[key] || 0), 0);
+
     const stats = [
         { label: 'Vacantes Activas', count: activeJobsCount, icon: Briefcase, color: 'text-[#0040A1]', bg: 'bg-[#DAE2FF]', trend: 'Activas' },
         { label: 'Candidatos Totales', count: counts.Total || 0, icon: Users, color: 'text-[#0040A1]', bg: 'bg-[#D6E3FB]', trend: 'Histórico' },
-        { label: 'Entrevistas', count: counts['Interview'] || 0, icon: Calendar, color: 'text-[#B3261E]', bg: 'bg-[#FFDAD6]', trend: 'En Curso' },
+        { label: 'Entrevistas', count: getCount(['Interview', 'Entrevista RRHH', 'Entrevista Técnica', 'Prueba Técnica', 'Entrevista Cliente', 'Technical']), icon: Calendar, color: 'text-[#B3261E]', bg: 'bg-[#FFDAD6]', trend: 'En Curso' },
         { label: 'Contratados', count: hiredCount, icon: CheckCircle2, color: 'text-[#0040A1]', bg: 'bg-[#DAE2FF]', trend: 'Total' }
     ];
 
     const funnelStages = [
-        { label: 'POSTULADOS', count: counts['Applied'] || 0 },
-        { label: 'SCREENING', count: counts['Screening'] || 0 },
-        { label: 'ENTREVISTA', count: counts['Interview'] || 0 },
-        { label: 'OFERTA', count: counts['Offered'] || 0 },
+        { label: 'POSTULADOS', count: getCount(['Applied', 'Nuevo']) },
+        { label: 'SCREENING', count: getCount(['Screening', 'Phone Screen', 'Phone Screening']) },
+        { label: 'ENTREVISTA', count: getCount(['Interview', 'Entrevista RRHH', 'Entrevista Técnica', 'Prueba Técnica', 'Entrevista Cliente', 'Technical']) },
+        { label: 'OFERTA', count: getCount(['Offered', 'Oferta']) },
         { label: 'CONTRATADOS', count: hiredCount }
     ];
 
