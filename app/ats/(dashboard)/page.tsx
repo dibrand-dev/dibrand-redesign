@@ -158,13 +158,13 @@ export default async function AtsDashboard() {
                 <div className="lg:col-span-4 space-y-6">
                     <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-sm p-6">
                         <div className="flex items-center justify-between mb-6">
-                            <h4 className="text-[13px] font-bold text-[#191C1D] uppercase tracking-wider">Agenda de Hoy</h4>
-                            {todayEvents.length > 0 && <span className="px-2 py-0.5 bg-red-50 text-red-600 text-[10px] font-black rounded-full border border-red-100 uppercase tracking-tighter animate-pulse">{todayEvents.length} {todayEvents.length === 1 ? 'EVENTO' : 'EVENTOS'}</span>}
+                            <h4 className="text-[13px] font-bold text-[#191C1D] uppercase tracking-wider">{todayEvents.title}</h4>
+                            {todayEvents.events.length > 0 && <span className="px-2 py-0.5 bg-red-50 text-red-600 text-[10px] font-black rounded-full border border-red-100 uppercase tracking-tighter animate-pulse">{todayEvents.events.length} {todayEvents.events.length === 1 ? 'EVENTO' : 'EVENTOS'}</span>}
                         </div>
                         
                         <div className="space-y-4">
-                            {todayEvents.length > 0 ? (
-                                todayEvents.map((event: any) => {
+                            {todayEvents.events.length > 0 ? (
+                                todayEvents.events.map((event: any) => {
                                     const startTime = new Date(event.start).toLocaleTimeString('es-AR', { 
                                         hour: '2-digit', 
                                         minute: '2-digit', 

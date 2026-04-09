@@ -1058,27 +1058,25 @@ export async function getTodayEvents() {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
 
-    if (!user) return [];
+    if (!user) return { title: 'Agenda de Hoy', events: [] };
 
-    // 1. Fetch Candidate Names for Matching
     const candidateList = await getCandidateNames();
-
-    // 2. Get today's range in ISO format (from now until end of day)
     const now = new Date();
-    
-    // We fetch from the start of the day just to be safe, but we'll filter below
-    const startOfDay = new Date(now);
-    startOfDay.setHours(0, 0, 0, 0);
-    
-    const endOfDay = new Date(now);
-    endOfDay.setHours(23, 59, 59, 999);
+    const timeZone = 'America/Argentina/Buenos_Aires';
 
-    try {
-        // Fetch all events for today
-        const events = await listGoogleEvents(user.id, startOfDay.toISOString(), endOfDay.toISOString());
-        
-        // 3. Filter and Map Events
-        const filteredEvents = (events || [])
+    const getDayInfo = (date: Date) => {
+        const formatter = new Intl.DateTimeFormat('en-US', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' });
+        const p = formatter.formatToParts(date);
+        const year = p.find(v => v.type === 'year')?.value;
+        const month = p.find(v => v.type === 'month')?.value;
+        const day = p.find(v => v.type === 'day')?.value;
+        return `${year}-${month}-${day}`;
+    };
+
+    const todayStr = getDayInfo(now);
+
+    const processEvents = (events: any[]) => {
+        return (events || [])
             .filter((event: any) => {
                 // Filter 1: Must have a specific start time (not all-day)
                 if (!event.start?.dateTime) return false;
@@ -1096,7 +1094,7 @@ export async function getTodayEvents() {
             .map((event: any) => {
                 const summary = event.summary || 'Sin título';
                 
-                // 4. Try to match candidate names for highlighting
+                // Try to match candidate names for highlighting
                 let matchedCandidateId = null;
                 for (const candidate of candidateList) {
                     if (summary.toLowerCase().includes(candidate.name.toLowerCase())) {
@@ -1116,11 +1114,37 @@ export async function getTodayEvents() {
                     candidateId: matchedCandidateId
                 };
             });
+    };
 
-        return filteredEvents;
+    try {
+        // 1. Try Today
+        const startOfToday = `${todayStr}T00:00:00-03:00`;
+        const endOfToday = `${todayStr}T23:59:59-03:00`;
+        const todayEventsRaw = await listGoogleEvents(user.id, startOfToday, endOfToday);
+        const todayEvents = processEvents(todayEventsRaw);
+
+        if (todayEvents.length > 0) {
+            return { title: 'Agenda de Hoy', events: todayEvents };
+        }
+
+        // 2. If no events today (or all finished), Try Tomorrow
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowStr = getDayInfo(tomorrow);
+        
+        const startOfTomorrow = `${tomorrowStr}T00:00:00-03:00`;
+        const endOfTomorrow = `${tomorrowStr}T23:59:59-03:00`;
+        const tomorrowEventsRaw = await listGoogleEvents(user.id, startOfTomorrow, endOfTomorrow);
+        const tomorrowEvents = processEvents(tomorrowEventsRaw);
+
+        if (tomorrowEvents.length > 0) {
+            return { title: 'Agenda de Mañana', events: tomorrowEvents };
+        }
+
+        return { title: 'Agenda de Hoy', events: [] };
     } catch (error) {
-        console.error('Error fetching today events (Refined):', error);
-        return [];
+        console.error('Error fetching agenda events:', error);
+        return { title: 'Agenda de Hoy', events: [] };
     }
 }
 
