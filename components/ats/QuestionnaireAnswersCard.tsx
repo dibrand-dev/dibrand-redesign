@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { ListChecks, CheckCircle2, XCircle, Info, Pencil, Save, X, Loader2 } from 'lucide-react';
+import { ListChecks, CheckCircle2, XCircle, Info, Pencil, Save, X, Loader2, Copy } from 'lucide-react';
 import { updateCandidate } from '@/app/ats/actions';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -78,6 +78,37 @@ export default function QuestionnaireAnswersCard({
     const handleCancel = () => {
         setEditedAnswers(initialAnswers || []);
         setIsEditing(false);
+    };
+
+    const [isCopied, setIsCopied] = useState(false);
+
+    const copyVettingToClipboard = () => {
+        let text = "";
+        questionnaire.forEach(section => {
+            text += `\n--- ${section.title.toUpperCase()} ---\n\n`;
+            section.questions.forEach((q, idx) => {
+                const answer = getAnswer(q.id);
+                let answerText = "No response";
+
+                if (answer !== null && answer !== undefined && answer !== "") {
+                    if (q.type === 'yesno') {
+                        const isYes = answer === true || answer === 'yes' || answer === 'Yes' || answer === 'si' || answer === 'Si';
+                        answerText = isYes ? 'SÍ' : 'NO';
+                    } else if (q.type === 'sublist' && q.subquestions) {
+                        answerText = q.subquestions.map((sub: string, i: number) => {
+                            return `${sub}: ${(answer as any)?.[i] || 'N/A'}`;
+                        }).join('\n');
+                    } else {
+                        answerText = String(answer);
+                    }
+                }
+                text += `${idx + 1}. ${q.label}\nR: ${answerText}\n\n`;
+            });
+        });
+
+        navigator.clipboard.writeText(text.trim());
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
     };
 
     const renderAnswer = (q: any) => {
@@ -199,14 +230,25 @@ export default function QuestionnaireAnswersCard({
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 font-outfit">
-            <div className="flex justify-end pr-2">
+            <div className="flex justify-end pr-2 gap-3">
                 {!isEditing ? (
-                    <button 
-                        onClick={() => setIsEditing(true)}
-                        className="flex items-center gap-2 bg-white border border-slate-200 px-5 py-2.5 rounded-xl text-[13px] font-black text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all shadow-sm"
-                    >
-                        <Pencil size={14} /> Editar Vetting
-                    </button>
+                    <>
+                        <button 
+                            onClick={copyVettingToClipboard}
+                            className={cn(
+                                "flex items-center gap-2 bg-white border border-slate-200 px-5 py-2.5 rounded-xl text-[13px] font-black transition-all shadow-sm",
+                                isCopied ? "text-green-600 border-green-200 bg-green-50" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                            )}
+                        >
+                            <Copy size={14} /> {isCopied ? '¡Copiado!' : 'Copiar Vetting'}
+                        </button>
+                        <button 
+                            onClick={() => setIsEditing(true)}
+                            className="flex items-center gap-2 bg-white border border-slate-200 px-5 py-2.5 rounded-xl text-[13px] font-black text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all shadow-sm"
+                        >
+                            <Pencil size={14} /> Editar Vetting
+                        </button>
+                    </>
                 ) : (
                     <div className="flex items-center gap-4">
                          <button 
