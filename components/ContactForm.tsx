@@ -67,13 +67,20 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
     
     if (siteKey && siteKey.length > 5 && executeRecaptcha) {
       try {
-        console.log('[ContactForm] ReCAPTCHA attempt...');
+        console.log('[ContactForm] Executing reCAPTCHA...');
         const tokenPromise = executeRecaptcha('contact_form');
-        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 1500));
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3500));
         captchaToken = await (Promise.race([tokenPromise, timeoutPromise]) as Promise<string>);
+        console.log('[ContactForm] reCAPTCHA token generated successfully.');
       } catch (e) {
-        console.warn('[ContactForm] ReCAPTCHA bypass.');
+        console.warn('[ContactForm] reCAPTCHA failed or timed out. Falling back to other security layers:', e);
       }
+    } else {
+      console.warn('[ContactForm] reCAPTCHA skipped: siteKey missing or executeRecaptcha not ready.', { 
+        hasSiteKey: !!siteKey, 
+        siteKeyLength: siteKey?.length,
+        hasExecute: !!executeRecaptcha 
+      });
     }
 
     try {

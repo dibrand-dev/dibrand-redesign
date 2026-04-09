@@ -58,17 +58,16 @@ export async function submitToZoho(formData: FormData) {
     }
 
     // C. reCAPTCHA Verification (Production only)
-    if (!isDev) {
-        if (!captchaToken) {
-            console.warn('[ContactForm] Spam suspected: Missing reCAPTCHA token.');
-            return { success: false, error: 'reCAPTCHA required' };
-        }
-        
+    if (!isDev && captchaToken) {
         const verification = await verifyRecaptcha(captchaToken);
         if (!verification.success) {
             console.warn(`[ContactForm] Spam detected: reCAPTCHA score too low (${verification.score})`);
             return { success: true }; // Silent rejection to bots
         }
+    } else if (!isDev && !captchaToken) {
+        // If token is missing, we don't block (to avoid issues with adblockers or misconfig)
+        // but we've already checked Honeypot and Gibberish.
+        console.warn('[ContactForm] Warning: Missing reCAPTCHA token. Proceeding with other security layers.');
     }
 
     // 1. Data Mapping
