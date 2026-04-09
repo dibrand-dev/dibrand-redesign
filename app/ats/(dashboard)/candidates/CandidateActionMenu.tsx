@@ -41,7 +41,7 @@ export default function CandidateActionMenu({
     const isAdmin = userRole === 'admin';
     const isRecruiterOrAdmin = userRole === 'recruiter' || isAdmin;
 
-    const statuses = ['New', 'Screening', 'Interview', 'Offered', 'Rejected'];
+    const statuses = ['Nuevo', 'Screening', 'Interview', 'Offered', 'Rejected'];
 
     const handleStatusUpdate = async (newStatus: string) => {
         setLoading(true);

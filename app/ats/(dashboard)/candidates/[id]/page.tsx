@@ -130,7 +130,7 @@ export default async function CandidateDetailPage({
                     <div className="mb-10">
                         <CandidatePipelineTracker 
                             candidateId={id}
-                            currentStatus={candidate.status || 'Applied'} 
+                            currentStatus={candidate.status || 'Nuevo'} 
                         />
                     </div>
 
@@ -156,7 +156,7 @@ export default async function CandidateDetailPage({
                             {/* Process Actions Widget */}
                             <ProcessActionsWidget 
                                 candidateId={id} 
-                                currentStatus={candidate.status || 'Applied'} 
+                                currentStatus={candidate.status || 'Nuevo'} 
                             />
 
                             {/* Core Competencies (Skills) */}

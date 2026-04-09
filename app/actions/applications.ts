@@ -27,8 +27,8 @@ export async function submitApplication(formData: any) {
         ...applicationData,
         first_name: firstName,
         last_name: lastName,
-        status: 'New',
-        source: 'Website'
+        status: 'Nuevo',
+        source: 'Web / Join-Us'
     };
 
     const { error } = await supabase
@@ -46,7 +46,7 @@ export async function submitApplication(formData: any) {
         type: 'candidate',
         title: 'Nuevo Candidato Recibido',
         description: `Nuevo CV recibido: ${formData.full_name || 'Desconocido'}`,
-        link: '/admin/candidates?status=New',
+        link: '/admin/candidates?status=Nuevo',
         metadata: { name: formData.full_name, email: formData.email }
     });
 

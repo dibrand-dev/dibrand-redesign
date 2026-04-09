@@ -72,7 +72,7 @@ export function getStageConfig(status: string) {
 
     // Normalizations for legacy data
     const lower = s.toLowerCase();
-    if (lower === 'applied' || lower === 'nuevo' || lower === 'sourced') return { value: 'Nuevo', ...STAGE_CONFIG['Nuevo'] };
+    if (lower === 'applied' || lower === 'nuevo' || lower === 'sourced' || lower === 'new') return { value: 'Nuevo', ...STAGE_CONFIG['Nuevo'] };
     if (lower === 'screening' || lower === 'phone screening' || lower === 'phone screen') return { value: 'Screening', ...STAGE_CONFIG['Screening'] };
     if (lower === 'interview' || lower === 'entrevista rrhh' || lower === 'entrevista') return { value: 'Entrevista RRHH', ...STAGE_CONFIG['Entrevista RRHH'] };
     if (lower === 'technical' || lower === 'prueba técnica' || lower === 'entrevista técnica') return { value: 'Entrevista Técnica', ...STAGE_CONFIG['Entrevista Técnica'] };

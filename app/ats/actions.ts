@@ -82,7 +82,7 @@ export async function getRecruiterStats() {
     if (statusError) console.error('Error fetching status counts:', statusError);
 
     const counts = (statusCounts || []).reduce((acc: any, curr: any) => {
-        const stage = curr.status || 'Applied';
+        const stage = curr.status || 'Nuevo';
         acc[stage] = (acc[stage] || 0) + 1;
         acc['Total'] = (acc['Total'] || 0) + 1;
         return acc;
@@ -805,7 +805,8 @@ export async function createCandidate(formData: {
             linkedin_url: formData.linkedin_url,
             skills: formData.skills || [],
             questionnaire_answers: formData.questionnaire_answers || [],
-            status: formData.status || 'Applied', // Use provided status or default
+            status: formData.status || 'Nuevo', // Use provided status or default
+            source: `Manual / ${user.user_metadata?.full_name || user.email?.split('@')[0] || 'Recruiter'}`,
             is_deleted: false,
             created_at: new Date().toISOString()
         }])

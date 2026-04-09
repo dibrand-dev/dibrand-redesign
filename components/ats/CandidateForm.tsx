@@ -32,7 +32,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
         phone: candidate?.phone || '',
         country: candidate?.country || (isEdit ? '' : 'Argentina'),
         state_province: candidate?.state_province || '',
-        status: candidate?.status || (isEdit ? '' : 'Applied'),
+        status: candidate?.status || (isEdit ? '' : 'Nuevo'),
         linkedin_url: candidate?.linkedin_url || '',
         job_id: candidate?.job_id || '',
         cover_letter: candidate?.cover_letter || '',

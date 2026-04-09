@@ -385,7 +385,7 @@ ${questionnaire.map(section => {
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-4 relative z-30">
-                                                    <StagePill status={candidate.status || 'Applied'} />
+                                                    <StagePill status={candidate.status || 'Nuevo'} />
                                                     <div className="flex items-center gap-2">
                                                         <button className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F8FAFC] text-[#0040A1] hover:bg-[#E2E8F0] transition-colors pointer-events-auto">
                                                             <CalendarIcon size={16} />
