@@ -14,7 +14,7 @@ interface ResumeViewerProps {
 }
 
 export default function ResumeViewer({ candidate }: ResumeViewerProps) {
-    const [showPreview, setShowPreview] = useState(false);
+    const [showPreview, setShowPreview] = useState(true);
     
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mdvyvqphumrciekgjlfb.supabase.co';
     
@@ -22,8 +22,17 @@ export default function ResumeViewer({ candidate }: ResumeViewerProps) {
     const getFileUrl = () => {
         if (!candidate.resume_url && !candidate.cv_filename) return null;
         
-        const path = candidate.resume_url || candidate.cv_filename || '';
+        let path = candidate.resume_url || candidate.cv_filename || '';
+        
+        // If it's already an absolute URL, return as is
         if (path.startsWith('http')) return path;
+
+        // If it starts with /storage, it might be a relative path from the domain
+        if (path.startsWith('/storage')) return `${supabaseUrl}${path}`;
+        
+        // Clean up the path from potentially being double-nested by the UI elsewhere
+        // (Sometimes paths include the bucket name prefix if saved incorrectly)
+        if (path.startsWith('resumes/')) path = path.replace('resumes/', '');
         
         return `${supabaseUrl}/storage/v1/object/public/resumes/${path}`;
     };
@@ -48,22 +57,27 @@ export default function ResumeViewer({ candidate }: ResumeViewerProps) {
     };
 
     return (
-        <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-8">
+        <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-8 h-full">
             <div className="flex justify-between items-center mb-6">
-                <h3 className="text-[18px] font-extrabold text-slate-900">Resume / CV</h3>
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#DAE2FF] flex items-center justify-center text-[#0040A1]">
+                        <FileText size={16} />
+                    </div>
+                    <h3 className="text-[18px] font-extrabold text-slate-900">Currículum Vitae</h3>
+                </div>
                 <div className="flex gap-4 text-slate-400">
                     <button 
                         onClick={handleDownload}
-                        className="hover:text-slate-700 transition-colors" 
-                        title="Download CV"
+                        className="p-2 hover:bg-slate-50 rounded-lg hover:text-[#0040A1] transition-all" 
+                        title="Descargar CV"
                         disabled={!fileUrl}
                     >
                         <Download size={18} />
                     </button>
                     <button 
                         onClick={handleOpenNewWindow}
-                        className="hover:text-slate-700 transition-colors" 
-                        title="Open in new window"
+                        className="p-2 hover:bg-slate-50 rounded-lg hover:text-[#0040A1] transition-all" 
+                        title="Abrir en Nueva Pestaña"
                         disabled={!fileUrl}
                     >
                         <Maximize2 size={18} />
@@ -71,46 +85,44 @@ export default function ResumeViewer({ candidate }: ResumeViewerProps) {
                 </div>
             </div>
 
-            <div className="border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 flex flex-col items-center justify-center mb-6 h-[500px] relative overflow-hidden group">
+            <div className="border border-slate-200 rounded-2xl bg-[#F8FAFC] flex flex-col items-center justify-center mb-6 h-[720px] relative overflow-hidden group">
                 {!fileUrl ? (
-                    <div className="text-center p-10">
-                        <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <FileText size={32} className="text-slate-300" />
+                    <div className="text-center p-10 animate-pulse">
+                        <div className="w-20 h-20 bg-white shadow-sm rounded-3xl flex items-center justify-center mx-auto mb-6">
+                            <FileText size={36} className="text-slate-200" />
                         </div>
-                        <p className="text-slate-400 font-bold text-sm">No resume uploaded yet</p>
+                        <p className="text-slate-400 font-bold text-[13px]">Sin archivo adjunto</p>
+                        <p className="text-slate-300 text-[11px] mt-1 uppercase tracking-widest">Sube un CV para visualizarlo aquí</p>
                     </div>
-                ) : showPreview ? (
-                    <iframe 
-                        src={`${fileUrl}#toolbar=0&navpanes=0`}
-                        className="w-full h-full border-none rounded-xl"
-                        title="Candidate Resume"
-                    />
                 ) : (
-                    <>
-                        <div className="w-72 bg-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] rounded-sm p-8 absolute transform transition-transform duration-500 group-hover:-translate-y-2">
-                            <div className="h-5 bg-slate-200 w-1/3 mb-6 rounded-sm"></div>
-                            <div className="h-2.5 bg-slate-100 w-full mb-3 rounded-full"></div>
-                            <div className="h-2.5 bg-slate-100 w-full mb-3 rounded-full"></div>
-                            <div className="h-2.5 bg-slate-100 w-4/5 mb-6 rounded-full"></div>
-                            <div className="h-2.5 bg-slate-200 w-1/4 mb-3 rounded-full"></div>
-                            <div className="h-2.5 bg-slate-100 w-full mb-3 rounded-full"></div>
-                            <div className="h-2.5 bg-slate-100 w-2/3 mb-3 rounded-full"></div>
-                        </div>
-                        <div className="absolute inset-0 bg-slate-900/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                    <div className="w-full h-full relative">
+                        <iframe 
+                            src={`${fileUrl}#toolbar=0&navpanes=0`}
+                            className="w-full h-full border-none rounded-xl"
+                            title="Candidate Resume"
+                        />
+                        <div className="absolute inset-x-0 bottom-4 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                             <button 
-                                onClick={() => setShowPreview(true)}
-                                className="px-6 py-3 bg-white text-slate-900 font-extrabold text-[13px] rounded-xl shadow-xl flex items-center gap-2 hover:scale-105 transition-transform"
+                                onClick={handleOpenNewWindow}
+                                className="px-6 py-3 bg-[#0040A1] text-white font-extrabold text-[12px] rounded-xl shadow-2xl shadow-blue-900/40 flex items-center gap-2 hover:scale-105 transition-all uppercase tracking-widest"
                             >
-                                <Maximize2 size={16}/> View Full Document
+                                <Maximize2 size={14}/> Pantalla Completa
                             </button>
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
             
-            <p className="text-center text-[12px] font-bold text-slate-500 truncate px-4" title={fileName}>
-                {fileName}
-            </p>
+            <div className="flex items-center justify-between px-2">
+                <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.15em] truncate max-w-[70%]" title={fileName}>
+                    {fileName}
+                </p>
+                {fileUrl && (
+                    <span className="text-[10px] font-black text-[#0040A1] bg-[#DAE2FF] px-2 py-0.5 rounded-md uppercase tracking-tighter">
+                        Verified PDF
+                    </span>
+                )}
+            </div>
         </div>
     );
 }
