@@ -151,9 +151,19 @@ export default function AtsLoginPage() {
                         </button>
                     </form>
 
-                    <p className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                        Dibrand Recruitment Network &copy; 2026
-                    </p>
+                    <div className="text-center space-y-4">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            Dibrand Recruitment Network &copy; 2026
+                        </p>
+                        <div className="flex justify-center gap-6">
+                            <a href="https://www.dibrand.co/es/terminos-del-servicio" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition-colors">
+                                Términos y Condiciones
+                            </a>
+                            <a href="https://www.dibrand.co/es/politica-de-privacidad" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition-colors">
+                                Política de Privacidad
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
