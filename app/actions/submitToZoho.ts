@@ -3,6 +3,24 @@ import { verifyRecaptcha } from '@/lib/recaptcha';
 import { createAdminClient } from '@/lib/supabase-server';
 import { createNotification } from '@/app/admin/(dashboard)/notifications-actions';
 
+function isGibberish(text: string): boolean {
+    if (!text) return false;
+    // Simple check: high consonant ratio (Spanish/English usually have > 30% vowels)
+    const vowels = text.match(/[aeiouáéíóú]/gi);
+    const vowelCount = vowels ? vowels.length : 0;
+    const alphaChars = text.match(/[a-z]/gi);
+    const alphaCount = alphaChars ? alphaChars.length : 0;
+    
+    // If it's mostly consonants, it's likely gibberish
+    if (alphaCount > 15 && (vowelCount / alphaCount) < 0.18) return true;
+    
+    // Check for weird long strings without spaces
+    const words = text.split(/\s+/);
+    if (words.some(word => word.length > 40)) return true;
+
+    return false;
+}
+
 interface ZohoFormData {
     xnQsjsdp: string;
     xmIwtLD: string;
@@ -19,6 +37,39 @@ interface ZohoFormData {
 export async function submitToZoho(formData: FormData) {
     const captchaToken = formData.get('captchaToken')?.toString();
     const isDev = process.env.NODE_ENV === 'development';
+
+    // 0. SECURITY LAYERS (Honeypot, reCAPTCHA, Gibberish)
+    
+    // A. Honeypot check
+    const honeypot = formData.get('Website Secondary')?.toString();
+    if (honeypot) {
+        console.warn('[ContactForm] Spam detected: Honeypot field filled.');
+        return { success: true }; // Silent rejection
+    }
+
+    // B. Gibberish check
+    const firstName = formData.get('First Name')?.toString() || '';
+    const lastName = formData.get('Last Name')?.toString() || '';
+    const message = formData.get('Description')?.toString() || '';
+    
+    if (isGibberish(firstName) || isGibberish(lastName) || isGibberish(message)) {
+        console.warn('[ContactForm] Spam detected: Gibberish content.');
+        return { success: true }; // Silent rejection
+    }
+
+    // C. reCAPTCHA Verification (Production only)
+    if (!isDev) {
+        if (!captchaToken) {
+            console.warn('[ContactForm] Spam suspected: Missing reCAPTCHA token.');
+            return { success: false, error: 'reCAPTCHA required' };
+        }
+        
+        const verification = await verifyRecaptcha(captchaToken);
+        if (!verification.success) {
+            console.warn(`[ContactForm] Spam detected: reCAPTCHA score too low (${verification.score})`);
+            return { success: true }; // Silent rejection to bots
+        }
+    }
 
     // 1. Data Mapping
     const data: Record<string, string> = {

@@ -207,6 +207,16 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
             />
           </div>
 
+          {/* Honeypot field - Hidden from users */}
+          <div className="hidden" aria-hidden="true">
+            <input
+              type="text"
+              {...register('Website Secondary' as any)}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
+
           <div className="col-span-1 md:col-span-2 flex justify-end mt-4">
             <button
               type="submit"
