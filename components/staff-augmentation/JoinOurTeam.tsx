@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { MapPin, Building2, Clock, Bookmark, Filter, ChevronDown, DollarSign } from 'lucide-react';
 import { motion } from 'framer-motion';
+import SpontaneousApplicationCard from '../jobs/SpontaneousApplicationCard';
 
 interface JobOpening {
     id: string;
@@ -162,10 +163,13 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                             </motion.div>
                         );
                     })}
+
+                    {/* Spontaneous Application Card at the end of the grid */}
+                    <SpontaneousApplicationCard lang={lang} dict={dict} />
                 </div>
 
                 {activeJobs.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-24 text-center">
+                    <div className="flex flex-col items-center justify-center py-12 text-center mt-12 border-t border-slate-100">
                         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-6">
                             <Clock size={32} className="text-gray-400" />
                         </div>

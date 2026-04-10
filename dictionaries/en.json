@@ -423,7 +423,14 @@
         "sendApplication": "Send Application",
         "sending": "Sending...",
         "success": "Application received! Thank you for wanting to join Dibrand. We already have your profile on our radar and, if there is a match, we will contact you shortly. Good luck!",
-        "fallbackLink": "Send us your CV!"
+        "fallbackLink": "Send us your CV!",
+        "spontaneousTitle": "Spontaneous Application",
+        "spontaneousSubtitle": "Don't see a role that fits? Join our Talent Pool and we'll contact you when a match opens up.",
+        "joinTalentPool": "Join Talent Pool",
+        "areaOfInterest": "Area of Interest",
+        "seniority": "Seniority",
+        "welcomeTeam": "Welcome to the Team!",
+        "talentPoolSuccess": "Your profile has been added to our Talent Pool. We will contact you soon for future opportunities."
     },
     "aiWorkflows": {
         "hero": {

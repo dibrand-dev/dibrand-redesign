@@ -5,8 +5,14 @@ import { createNotification } from '@/app/admin/(dashboard)/notifications-action
 import { verifyRecaptcha } from '@/lib/recaptcha';
 
 export async function submitApplication(formData: any) {
+    // 0. Honeypot Check
+    if (formData.website_secondary) {
+        console.warn('Spam detected via Honeypot: Spontaneous application');
+        return { success: true }; // Silent rejection
+    }
+
     // 1. Verify reCAPTCHA
-    const { captchaToken, ...applicationData } = formData;
+    const { captchaToken, website_secondary, ...applicationData } = formData;
     
     if (captchaToken) {
         const { success, score } = await verifyRecaptcha(captchaToken);
@@ -28,7 +34,7 @@ export async function submitApplication(formData: any) {
         first_name: firstName,
         last_name: lastName,
         status: 'Nuevo',
-        source: 'Web / Join-Us'
+        source: applicationData.source || 'Web / Join-Us'
     };
 
     const { error } = await supabase
@@ -87,4 +93,32 @@ export async function getTechStacks() {
 
     if (error) throw error;
     return data || [];
+}
+
+export async function getTalentPoolJobId() {
+    // Attempt to find the "General Talent Pool" job opening
+    const { data, error } = await supabase
+        .from('job_openings')
+        .select('id')
+        .ilike('title', '%General Talent Pool%')
+        .single();
+
+    if (error) {
+        console.warn('General Talent Pool job opening not found by title. Searching for any internal/placeholder job.');
+        // Fallback: search for any job that contains "Talent Pool"
+        const { data: fallback, error: fallbackError } = await supabase
+            .from('job_openings')
+            .select('id')
+            .ilike('title', '%Talent Pool%')
+            .limit(1)
+            .single();
+            
+        if (fallbackError) {
+            console.error('No Talent Pool job opening found in database.');
+            return null;
+        }
+        return fallback.id;
+    }
+
+    return data.id;
 }
