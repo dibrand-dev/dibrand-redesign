@@ -176,7 +176,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                         <h3 className="text-xl font-bold text-gray-900 mb-2">
                             {isEn ? 'No positions found' : 'No se encontraron posiciones'}
                         </h3>
-                        <p className="text-gray-500">
+                        <p className="text-slate-600">
                             {isEn ? 'Try adjusting your filters or check back later.' : 'Prueba ajustando los filtros o vuelve más tarde.'}
                         </p>
                     </div>

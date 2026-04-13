@@ -157,7 +157,7 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
                 <h3 className="text-2xl font-black text-slate-900 mb-4 font-inter uppercase tracking-tight italic">
                     {welcomeTitle}
                 </h3>
-                <p className="text-slate-500 font-inter text-sm leading-relaxed max-w-sm mx-auto text-center">
+                <p className="text-slate-600 font-inter text-sm leading-relaxed max-w-sm mx-auto text-center">
                     {successMsg}
                 </p>
             </div>
@@ -200,7 +200,7 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{dict?.fullName || (isEn ? 'Full Name' : 'Nombre Completo')} *</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{dict?.fullName || (isEn ? 'Full Name' : 'Nombre Completo')} *</label>
                     <input
                         name="full_name"
                         required
@@ -210,7 +210,7 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
                 </div>
 
                 <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{dict?.email || (isEn ? 'Email' : 'Email')} *</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{dict?.email || (isEn ? 'Email' : 'Email')} *</label>
                     <input
                         name="email"
                         type="email"
@@ -223,7 +223,7 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{areaLabel} *</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{areaLabel} *</label>
                     <Select
                         instanceId="area-select"
                         options={areas}
@@ -235,7 +235,7 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
                     />
                 </div>
                 <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{seniorityLabel} *</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{seniorityLabel} *</label>
                     <Select
                         instanceId="seniority-select"
                         options={seniorities}
@@ -250,7 +250,7 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{dict?.country || (isEn ? 'Country' : 'País')} *</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{dict?.country || (isEn ? 'Country' : 'País')} *</label>
                     <Select
                         instanceId="country-select"
                         options={countries}
@@ -261,7 +261,7 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
                     />
                 </div>
                 <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{dict?.stateProvince || (isEn ? 'State/Province' : 'Provincia/Estado')} *</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{dict?.stateProvince || (isEn ? 'State/Province' : 'Provincia/Estado')} *</label>
                     <Select
                         instanceId="state-select"
                         options={states}
@@ -275,7 +275,7 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
             </div>
 
             <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{dict?.linkedin || (isEn ? 'LinkedIn profile' : 'Perfil de LinkedIn')} *</label>
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{dict?.linkedin || (isEn ? 'LinkedIn profile' : 'Perfil de LinkedIn')} *</label>
                 <input
                     name="linkedin_url"
                     type="url"
@@ -286,7 +286,7 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
             </div>
 
             <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{isEn ? 'Main Technologies' : 'Tecnologías Principales'}</label>
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{isEn ? 'Main Technologies' : 'Tecnologías Principales'}</label>
                 <Select
                     instanceId="stacks-select"
                     isMulti
@@ -300,7 +300,7 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
             </div>
 
             <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{isEn ? 'Upload CV (PDF)' : 'Subir CV (PDF)'} *</label>
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{isEn ? 'Upload CV (PDF)' : 'Subir CV (PDF)'} *</label>
                 <div className="relative group">
                     <input
                         type="file"

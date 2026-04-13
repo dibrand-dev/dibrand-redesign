@@ -39,7 +39,7 @@ export default async function SpontaneousPage(props: { params: Promise<{ lang: "
                                     {title}
                                 </h1>
                             </div>
-                            <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-2xl">
+                            <p className="text-slate-600 text-lg font-medium leading-relaxed max-w-2xl">
                                 {subtitle}
                             </p>
                         </div>
