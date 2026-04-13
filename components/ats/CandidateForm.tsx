@@ -6,6 +6,7 @@ import {
     Save, Loader2, Upload, FileText, Bold, Italic, Underline, List, Link as LinkIcon, ChevronDown, ListChecks, CheckCircle2, ChevronRight
 } from 'lucide-react';
 import { createCandidate, updateCandidate, getRecruiterJobs, getAllTechStacks } from '@/app/ats/actions';
+import DeleteCandidateButton from '@/components/ats/DeleteCandidateButton';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import { toast } from 'react-hot-toast';
@@ -601,11 +602,27 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                         <button 
                             type="button"
                             onClick={() => router.back()}
-                            className="w-full py-5 bg-[#E2E8F0]/30 text-slate-600 rounded-[16px] text-[15px] font-black hover:bg-slate-200 transition-all"
+                            className="w-full py-5 bg-[#E2E8F0]/30 text-slate-600 rounded-[16px] text-[15px] font-black hover:bg-slate-200 transition-all font-inter"
                         >
                             Cancelar
                         </button>
                     </div>
+                    {/* DANGER ZONE */}
+                    {isEdit && (
+                        <div className="pt-10 mt-10 border-t border-red-100 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                            <div className="bg-red-50/50 rounded-2xl p-8 border border-red-100/50">
+                                <h3 className="text-[11px] font-black text-red-500 uppercase tracking-[0.2em] mb-4">Zona de Peligro</h3>
+                                <p className="text-[13px] text-red-400 font-medium mb-6 leading-relaxed">
+                                    Esta acción eliminará permanentemente al candidato y todo su historial de la base de datos. No se puede deshacer.
+                                </p>
+                                <DeleteCandidateButton 
+                                    candidateId={candidate.id} 
+                                    candidateName={`${candidate.first_name} ${candidate.last_name}`} 
+                                    variant="form" 
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </form>
         </div>

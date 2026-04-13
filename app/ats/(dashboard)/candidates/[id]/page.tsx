@@ -18,6 +18,7 @@ import CandidateTabs from '@/components/ats/CandidateTabs';
 import CandidateSkills from '@/components/ats/CandidateSkills';
 import { capitalizeName } from '@/lib/utils';
 import RecruiterAssignment from '@/components/ats/RecruiterAssignment';
+import DeleteCandidateButton from '@/components/ats/DeleteCandidateButton';
 
 export default async function CandidateDetailPage({ 
     params,
@@ -121,7 +122,7 @@ export default async function CandidateDetailPage({
                             <Link href={`/ats/candidates/${id}/edit`} className="h-[42px] px-6 border border-slate-200 bg-white rounded-xl text-[13px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
                                 <Pencil size={14} /> Editar
                             </Link>
-                            <button className="h-[42px] px-6 border border-slate-200 bg-white rounded-xl text-[13px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Message</button>
+                            <DeleteCandidateButton candidateId={id} candidateName={candidate.full_name || `${candidate.first_name} ${candidate.last_name}`} />
                             <Link href={`/ats/candidates/${id}?schedule=true`} className="h-[42px] px-6 bg-[#0B4FEA] text-white rounded-xl text-[13px] font-bold hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center">Interview</Link>
                         </div>
                     </div>

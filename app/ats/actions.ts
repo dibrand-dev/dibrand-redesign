@@ -146,8 +146,8 @@ export async function getRecruiterJobs() {
         return [];
     }
 
-    // Filter out truly deleted jobs in memory to avoid issues with missing columns in DB
-    const validJobs = (jobs || []).filter(j => j.status !== 'Deleted' && !j.deleted_at);
+    // Filter jobs by active status for the dashboard
+    const validJobs = (jobs || []).filter(j => j.is_active);
 
     return validJobs.map(job => {
         const allCandidates = job.candidates || [];
@@ -461,13 +461,16 @@ export async function deleteCandidate(id: string) {
 
     const { data: cand } = await supabase.from('job_applications').select('job_id').eq('id', id).single();
     
-    // Soft delete
+    // Permanent Hard Delete as requested by user
     const { error } = await supabase
         .from('job_applications')
-        .update({ is_deleted: true, updated_at: new Date().toISOString() })
+        .delete()
         .eq('id', id);
 
-    if (error) throw error;
+    if (error) {
+        console.error('Error in hard delete:', error);
+        throw error;
+    }
 
     if (cand?.job_id) {
         revalidatePath(`/ats/jobs/${cand.job_id}`);
@@ -655,7 +658,7 @@ export async function getJobs() {
     const { data, error } = await supabase
         .from('job_openings')
         .select('id, title')
-        .is('deleted_at', null)
+        .eq('is_active', true)
         .order('title');
 
     if (error) {
