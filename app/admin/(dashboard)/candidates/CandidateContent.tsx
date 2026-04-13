@@ -7,6 +7,7 @@ import { MapPin, Mail, Phone, ArrowLeft, User, Pencil, Trash2, MoreHorizontal, X
 import { FaLinkedin } from 'react-icons/fa6';
 import { BsFiletypePdf } from 'react-icons/bs';
 import CandidateSummary from './CandidateSummary';
+import DeleteCandidateButton from './DeleteCandidateButton';
 import { addApplicationNote, deleteNote, updateNote } from './actions';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -224,24 +225,30 @@ export default function CandidateContent({ candidate }: { candidate: Candidate }
                     <ArrowLeft size={16} /> Candidates List
                 </Link>
 
-                <div className="flex items-center gap-8">
-                    <div className="w-24 h-24 rounded-full bg-admin-bg border border-admin-border flex items-center justify-center text-gray-400">
-                        <User size={48} />
-                    </div>
-                    <div>
-                        <h1 className="text-5xl font-black text-admin-text-primary tracking-tight">
-                            {candidate.full_name}
-                        </h1>
-                        <div className="flex items-center gap-4 mt-2">
-                            <a href={`mailto:${candidate.email}`} className="text-admin-accent hover:underline text-sm font-bold italic flex items-center gap-1.5">
-                                <Mail size={14} /> {candidate.email}
-                            </a>
-                            {candidate.phone && (
-                                <span className="text-admin-text-secondary text-sm font-medium italic flex items-center gap-1.5">
-                                    <Phone size={14} /> {candidate.phone}
-                                </span>
-                            )}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="flex items-center gap-8">
+                        <div className="w-24 h-24 rounded-full bg-admin-bg border border-admin-border flex items-center justify-center text-gray-400">
+                            <User size={48} />
                         </div>
+                        <div>
+                            <h1 className="text-5xl font-black text-admin-text-primary tracking-tight">
+                                {candidate.full_name}
+                            </h1>
+                            <div className="flex items-center gap-4 mt-2">
+                                <a href={`mailto:${candidate.email}`} className="text-admin-accent hover:underline text-sm font-bold italic flex items-center gap-1.5">
+                                    <Mail size={14} /> {candidate.email}
+                                </a>
+                                {candidate.phone && (
+                                    <span className="text-admin-text-secondary text-sm font-medium italic flex items-center gap-1.5">
+                                        <Phone size={14} /> {candidate.phone}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-red-500/5 rounded-2xl border border-red-500/10 self-start md:self-center">
+                        <span className="text-[10px] font-black text-red-500/50 uppercase tracking-widest mr-2">Delete Profile</span>
+                        <DeleteCandidateButton candidateId={candidate.id} candidateName={candidate.full_name} />
                     </div>
                 </div>
             </div>
