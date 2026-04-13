@@ -70,17 +70,20 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
         setSelectedState(null);
     };
 
+    const [formError, setFormError] = useState<string | null>(null);
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setFormError(null);
         const form = e.currentTarget;
 
         if (!resumeFile) {
-            alert(isEn ? 'Please upload your CV' : 'Por favor sube tu currículum');
+            setFormError(isEn ? 'Please upload your CV' : 'Por favor sube tu currículum');
             return;
         }
 
         if (!selectedArea || !selectedSeniority) {
-            alert(isEn ? 'Please select your Area and Seniority' : 'Por favor selecciona tu Área y Seniority');
+            setFormError(isEn ? 'Please select your Area and Seniority' : 'Por favor selecciona tu Área y Seniority');
             return;
         }
 
@@ -92,21 +95,28 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
         if (siteKey && siteKey.length > 5 && siteKey !== 'DUMMY_KEY_FOR_CONTEXT_ONLY' && executeRecaptcha) {
             try {
                 const tokenPromise = executeRecaptcha('spontaneous_apply');
-                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2500));
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000));
                 captchaToken = await (Promise.race([tokenPromise, timeoutPromise]) as Promise<string>);
             } catch (e) {
-                console.warn('[SpontaneousForm] reCAPTCHA bypass.', e);
+                console.warn('[SpontaneousForm] reCAPTCHA bypass or failure.', e);
+                // We keep going as some environments might block it
             }
         }
 
         try {
-            // Find Talent Pool Job ID
+            // 1. Find or Ensure Talent Pool Job ID
             const jobId = await getTalentPoolJobId();
-            if (!jobId) throw new Error('Talent Pool Job not found');
+            if (!jobId) {
+                throw new Error(isEn 
+                    ? 'Internal configuration error: Talent Pool not available. Please try again later.' 
+                    : 'Error de configuración interna: El Talent Pool no está disponible. Por favor intenta más tarde.');
+            }
 
+            // 2. Upload Resume
             const resumeUrl = await uploadResume(resumeFile);
             const formData = new FormData(form);
 
+            // 3. Prepare Submission Data
             const data = {
                 job_id: jobId,
                 full_name: formData.get('full_name'),
@@ -120,20 +130,25 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
                 captchaToken: captchaToken,
                 website_secondary: formData.get('website_secondary'), // Honeypot
                 source: 'Web / Spontaneous',
-                // Additional internal metadata mapping
                 metadata: {
                     area_of_interest: selectedArea.value,
                     seniority_pref: selectedSeniority.value
                 }
             };
 
-            await submitApplication(data);
-            trackJoinUsFormSuccess();
-            setSuccess(true);
-            if (onSuccess) onSuccess();
+            // 4. Submit to Server Action
+            const result = await submitApplication(data);
+            
+            if (result.success) {
+                trackJoinUsFormSuccess();
+                setSuccess(true);
+                if (onSuccess) onSuccess();
+            } else {
+                setFormError(result.error || (isEn ? 'Submission failed. Please try again.' : 'La postulación falló. Intenta de nuevo.'));
+            }
         } catch (error: any) {
             console.error('SUBMISSION ERROR:', error);
-            alert('Error: ' + (error.message || 'Unknown error'));
+            setFormError(error.message || (isEn ? 'An unexpected error occurred.' : 'Ocurrió un error inesperado.'));
         } finally {
             setLoading(false);
         }
@@ -327,6 +342,13 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
                     </label>
                 </div>
             </div>
+
+            {formError && (
+                <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-sm font-bold flex items-center gap-3 animate-shake">
+                    <div className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+                    {formError}
+                </div>
+            )}
 
             <button
                 type="submit"
