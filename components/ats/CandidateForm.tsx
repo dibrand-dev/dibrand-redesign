@@ -80,9 +80,20 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
             ]);
             setJobs(jobsData || []);
             setTechStacks(techData || []);
+
+            // Auto-select Talent Pool if no job_id is provided and we are creating a new candidate
+            if (!isEdit && !formData.job_id && jobsData) {
+                const talentPool = jobsData.find((j: any) => 
+                    j.id === '00000000-0000-0000-0000-000000000001' || 
+                    j.title?.toLowerCase().includes('talent pool')
+                );
+                if (talentPool) {
+                    setFormData(prev => ({ ...prev, job_id: talentPool.id }));
+                }
+            }
         };
         loadData();
-    }, []);
+    }, [isEdit]);
 
     // Load states when country changes
     useEffect(() => {
