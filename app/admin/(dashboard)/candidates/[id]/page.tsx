@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { getCandidateById } from '../actions';
 import StatusSelector from '../StatusSelector';
 import CandidateContent from '../CandidateContent';
-import { ArrowLeft } from 'lucide-react';
+import DeleteCandidateButton from '../DeleteCandidateButton';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 
 export default async function CandidateDetailPage(props: { params: Promise<{ id: string }> }) {
     const { id } = await props.params;
@@ -71,6 +72,23 @@ export default async function CandidateDetailPage(props: { params: Promise<{ id:
                         <div className="flex items-center justify-between">
                             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">ID Reference</span>
                             <span className="text-[10px] text-admin-text-secondary/50 uppercase font-mono bg-admin-bg px-2 py-1 rounded border border-admin-border/50 font-bold">#{candidate.id.split('-')[0]}</span>
+                        </div>
+                    </div>
+
+                    {/* Danger Zone */}
+                    <div className="pt-8 space-y-6 border-t border-red-500/20">
+                        <div className="space-y-1">
+                            <span className="text-[10px] font-black text-red-500/60 uppercase tracking-widest flex items-center gap-2">
+                                <Trash2 size={10} />
+                                Danger Zone
+                            </span>
+                            <p className="text-[10px] text-admin-text-secondary/40 font-medium italic">
+                                Permanent candidate deletion
+                            </p>
+                        </div>
+                        <div className="flex items-center justify-between p-4 bg-red-500/5 rounded-xl border border-red-500/10 transition-all hover:bg-red-500/10">
+                            <span className="text-[11px] font-bold text-admin-text-primary uppercase tracking-tight">Delete Profile</span>
+                            <DeleteCandidateButton candidateId={candidate.id} candidateName={candidate.full_name} />
                         </div>
                     </div>
 

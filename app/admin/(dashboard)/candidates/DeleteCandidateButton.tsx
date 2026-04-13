@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Trash2, AlertTriangle, X, Loader2 } from 'lucide-react';
 import { deleteCandidate } from './actions';
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 interface DeleteCandidateButtonProps {
     candidateId: string;
@@ -11,6 +12,7 @@ interface DeleteCandidateButtonProps {
 }
 
 export default function DeleteCandidateButton({ candidateId, candidateName }: DeleteCandidateButtonProps) {
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -20,6 +22,8 @@ export default function DeleteCandidateButton({ candidateId, candidateName }: De
             await deleteCandidate(candidateId);
             toast.success('Candidato eliminado correctamente');
             setIsOpen(false);
+            router.push('/admin/candidates');
+            router.refresh();
         } catch (error) {
             console.error('Error deleting candidate:', error);
             toast.error('Error al eliminar el candidato');

@@ -289,15 +289,26 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
                 </div>
             </div>
 
-            <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{dict?.linkedin || (isEn ? 'LinkedIn profile' : 'Perfil de LinkedIn')} *</label>
-                <input
-                    name="linkedin_url"
-                    type="url"
-                    required
-                    placeholder="https://linkedin.com/in/..."
-                    className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-brand/5 focus:border-brand/30 outline-none transition-all font-inter font-bold text-slate-700 text-sm"
-                />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{dict?.phone || (isEn ? 'Phone' : 'Teléfono')} *</label>
+                    <input
+                        name="phone"
+                        required
+                        placeholder="+1..."
+                        className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-brand/5 focus:border-brand/30 outline-none transition-all font-inter font-bold text-slate-700 text-sm"
+                    />
+                </div>
+                <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{dict?.linkedin || (isEn ? 'LinkedIn profile' : 'Perfil de LinkedIn')} *</label>
+                    <input
+                        name="linkedin_url"
+                        type="url"
+                        required
+                        placeholder="https://linkedin.com/in/..."
+                        className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-brand/5 focus:border-brand/30 outline-none transition-all font-inter font-bold text-slate-700 text-sm"
+                    />
+                </div>
             </div>
 
             <div className="space-y-1.5">
