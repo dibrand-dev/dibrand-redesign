@@ -134,16 +134,16 @@ export default async function SuccessStoriesPage(props: { params: Promise<{ lang
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-[2s]"
                                 />
-                                {/* Brand Overlay - #a04c97 at 20% + Dark Base */}
-                                <div className="absolute inset-0 bg-zinc-950/40" />
-                                <div className="absolute inset-0 bg-[#a04c97]/15" />
+                                {/* Brand Overlay - #a04c97 at 30% + Dark Base */}
+                                <div className="absolute inset-0 bg-zinc-950/60" />
+                                <div className="absolute inset-0 bg-[#a04c97]/25" />
                             </div>
 
                             <div className="relative z-10 max-w-4xl space-y-8 text-center flex flex-col items-center">
-                                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black font-outfit tracking-tighter leading-tight text-white">
+                                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black font-outfit tracking-tighter leading-tight text-white drop-shadow-lg">
                                     {isEn ? 'Ready to build your own success story?' : '¿Listo para construir tu propia historia de éxito?'}
                                 </h2>
-                                <p className="text-zinc-200 text-lg md:text-xl font-outfit font-light leading-relaxed max-w-2xl mx-auto">
+                                <p className="text-white text-lg md:text-xl font-outfit font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-md">
                                     {isEn
                                         ? "Let's transform your technical challenges into a competitive advantage with our senior engineering team."
                                         : 'Transformemos tus desafíos técnicos en una ventaja competitiva con nuestro equipo de ingeniería senior.'}
