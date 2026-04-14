@@ -193,13 +193,7 @@ export default function PortfolioFilters({ initialCases, lang, dict }: Props) {
                                     </div>
                                 </div>
 
-                                {/* Persistent button indicator (Subtle) */}
-                                <div className="absolute bottom-6 right-8 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                                    <div className="flex items-center gap-2 px-5 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-full text-[10px] font-bold font-outfit uppercase tracking-widest">
-                                        <span className="opacity-80">{lang === 'en' ? 'Learn more' : 'Ver más'}</span>
-                                        <ArrowRight size={10} className="opacity-80" />
-                                    </div>
-                                </div>
+
                             </div>
                         </Link>
                     ))}
