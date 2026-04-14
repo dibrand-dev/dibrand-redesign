@@ -183,9 +183,9 @@ export default function PortfolioFilters({ initialCases, lang, dict }: Props) {
                                 {/* Overlay gradient */}
                                 <div className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors duration-500" />
 
-                                {/* Centered 'Learn more' button - Centered per reference instruction */}
-                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 scale-95 group-hover:scale-100">
-                                    <div className="flex items-center gap-3 px-8 py-3 bg-white/10 backdrop-blur-md border border-white/40 text-white rounded-full text-[12px] font-bold font-outfit uppercase tracking-widest shadow-2xl">
+                                {/* Centered 'Learn more' button - Hidden by default, flex on hover */}
+                                <div className="absolute inset-0 hidden group-hover:flex items-center justify-center pointer-events-none">
+                                    <div className="flex items-center gap-3 px-8 py-3 bg-white/10 backdrop-blur-md border border-white/40 text-white rounded-full text-[12px] font-bold font-outfit uppercase tracking-widest shadow-2xl transition-all duration-500 scale-95 group-hover:scale-100 pointer-events-auto">
                                         <span>{lang === 'en' ? 'Learn more' : 'Ver más'}</span>
                                         <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
                                             <ArrowRight size={12} className="text-white" />
