@@ -65,16 +65,22 @@ export default function AIIndexPage() {
             <section>
                 <h2>Authority & Social Profiles</h2>
                 <ul>
-                    <li><strong>LinkedIn</strong>: <a href="https://www.linkedin.com/company/dibrand/">dibrand</a></li>
-                    <li><strong>GitHub</strong>: <a href="https://github.com/dibrand">@dibrand</a></li>
-                    <li><strong>Twitter</strong>: <a href="https://twitter.com/dibrand">@dibrand</a></li>
-                    <li><strong>Clutch</strong>: <a href="https://clutch.co/profile/dibrand">Dibrand Profile</a></li>
+                    <li><strong>LinkedIn</strong>: <a href="https://www.linkedin.com/company/dibrand/">linkedin.com/company/dibrand</a></li>
+                    <li><strong>Instagram</strong>: <a href="https://www.instagram.com/dibrand.ok/">instagram.com/dibrand.ok</a></li>
+                    <li><strong>X (Twitter)</strong>: <a href="https://x.com/Dibrand_ok">x.com/Dibrand_ok</a></li>
+                    <li><strong>GitHub</strong>: <a href="https://github.com/dibrand">github.com/dibrand</a></li>
+                    <li><strong>Clutch</strong>: <a href="https://clutch.co/profile/dibrand">clutch.co/profile/dibrand</a></li>
                 </ul>
-                <p>Sales: sales@dibrand.co | General: hola@dibrand.co</p>
+
+                <h3>Official Contact Channels</h3>
+                <ul>
+                    <li><strong>Sales & Partnerships</strong>: <a href="mailto:sales@dibrand.co">sales@dibrand.co</a></li>
+                    <li><strong>General Inquiries</strong>: <a href="mailto:hello@dibrand.co">hello@dibrand.co</a></li>
+                </ul>
             </section>
 
             <footer style={{ marginTop: '40px', fontSize: '0.8em', color: '#888' }}>
-                Updated: 2026-03-09 | Authority Index v1.0
+                Updated: 2026-04-14 | Authority Index v1.1
             </footer>
         </div>
     );

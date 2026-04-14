@@ -277,6 +277,9 @@ export async function getCandidateById(id: string) {
             .single();
 
         if (error) {
+            // PGRST116 is "The result contains 0 rows", which is expected for deleted candidates
+            if (error.code === 'PGRST116') return null;
+            
             console.error('--- SUPABASE QUERY ERROR ---');
             console.error('Code:', error.code);
             console.error('Message:', error.message);

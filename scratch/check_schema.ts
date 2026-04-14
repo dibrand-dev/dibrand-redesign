@@ -13,11 +13,11 @@ if (!supabaseUrl || !supabaseServiceKey) {
 const supabase = createClient(supabaseUrl!, supabaseServiceKey!)
 
 async function checkColumns() {
-  const { data, error } = await supabase.rpc('get_table_columns', { table_name: 'job_applications' })
+  const { data, error } = await supabase.rpc('get_table_columns', { table_name: 'recruiters' })
   if (error) {
     // try direct query if rpc doesn't exist
     const { data: cols, error: err2 } = await supabase
-      .from('job_applications')
+      .from('recruiters')
       .select('*')
       .limit(1)
     
@@ -25,9 +25,9 @@ async function checkColumns() {
       console.error('Error fetching columns:', err2)
       return
     }
-    console.log('Columns in job_applications:', Object.keys(cols[0] || {}))
+    console.log('Columns in recruiters:', Object.keys(cols[0] || {}))
   } else {
-    console.log('Columns from RPC (job_applications):', data)
+    console.log('Columns from RPC (recruiters):', data)
   }
 }
 

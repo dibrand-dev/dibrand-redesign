@@ -1,5 +1,13 @@
+import { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "../globals.css";
+
+export const metadata: Metadata = {
+    metadataBase: new URL("https://www.dibrand.co"),
+    alternates: {
+        canonical: 'https://www.dibrand.co/',
+    },
+};
 import ToasterProvider from "@/components/admin/ToasterProvider";
 
 const outfit = Outfit({

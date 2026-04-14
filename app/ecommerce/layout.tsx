@@ -15,8 +15,12 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.dibrand.co"),
   title: "E-Commerce de Escobar al País | Dibrand",
   description: "Creamos tiendas online de alto rendimiento. Especialistas en Tienda Nube, WooCommerce y Shopify desde Escobar.",
+  alternates: {
+    canonical: 'https://www.dibrand.co/',
+  },
 };
 
 export default async function EcommerceLayout({

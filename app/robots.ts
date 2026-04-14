@@ -13,6 +13,6 @@ export default function robots(): MetadataRoute.Robots {
                 allow: ['/', '/success-stories/'],
             },
         ],
-        sitemap: 'https://dibrand.co/sitemap.xml',
+        sitemap: 'https://www.dibrand.co/sitemap.xml',
     };
 }

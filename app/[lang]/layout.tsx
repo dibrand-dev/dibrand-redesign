@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const isEs = lang === 'es';
 
   return {
+    metadataBase: new URL("https://www.dibrand.co"),
     title: isEs
       ? "Dibrand | Desarrollo de Software y Staff Augmentation"
       : "Dibrand | Software Development & Staff Augmentation",
@@ -25,10 +26,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       ? "Dibrand es una empresa de desarrollo de software y staff augmentation que ayuda a startups a construir productos digitales de alto impacto."
       : "Dibrand is a software development and staff augmentation company helping startups build digital products.",
     alternates: {
-      canonical: `https://dibrand.co/${lang}`,
+      canonical: 'https://www.dibrand.co/',
       languages: {
-        'en': 'https://dibrand.co/en',
-        'es': 'https://dibrand.co/es',
+        'en': 'https://www.dibrand.co/en',
+        'es': 'https://www.dibrand.co/es',
       },
     },
   };
