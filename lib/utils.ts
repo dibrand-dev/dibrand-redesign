@@ -19,3 +19,19 @@ export function formatSalary(value: string | number): string {
     if (typeof value === 'number') return `$${value.toLocaleString()}`;
     return value.toString();
 }
+export function getInitials(fullName?: string, firstName?: string, lastName?: string): string {
+    if (firstName && lastName) {
+        const f = firstName.trim().charAt(0).toUpperCase();
+        const l = lastName.trim().charAt(0).toUpperCase();
+        return `${f}${l}`;
+    }
+    
+    if (!fullName) return '';
+    
+    const parts = fullName.trim().split(/\s+/).filter(p => !['de', 'la', 'del', 'los', 'las'].includes(p.toLowerCase()));
+    
+    if (parts.length === 0) return '';
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    
+    return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+}

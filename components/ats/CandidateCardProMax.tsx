@@ -1,9 +1,10 @@
+'use client';
 
 import React from 'react';
 import { Linkedin, FileText, Phone, Mail, MapPin, User, ChevronRight } from 'lucide-react';
 import { Candidate } from '@/app/ats/types';
 import Link from 'next/link';
-import { capitalizeName } from '@/lib/utils';
+import { capitalizeName, getInitials } from '@/lib/utils';
 import { getMacroConfig } from '@/lib/ats-constants';
 
 import StagePill from './StagePill';
@@ -24,11 +25,11 @@ const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
 
       {/* Header: Avatar + Info */}
       <div className="flex items-start gap-4 mb-6">
-        <div className="w-14 h-14 rounded-xl bg-[#F8FAFC] border border-[#E1E2E5] flex items-center justify-center text-[#0040A1] font-bold text-xl shrink-0 overflow-hidden">
+        <div className="w-14 h-14 rounded-full bg-[#EBF1FF] border border-[#D0DFFF] flex items-center justify-center text-[#0040A1] font-bold text-xl shrink-0 overflow-hidden">
           {candidate.avatar_url ? (
             <img src={candidate.avatar_url} alt={candidate.full_name} className="w-full h-full object-cover" />
           ) : (
-            candidate.full_name?.split(' ').map(n => n[0]).join('')
+            getInitials(candidate.full_name, candidate.first_name, candidate.last_name)
           )}
         </div>
       </div>
@@ -75,4 +76,3 @@ const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
 };
 
 export default CandidateCardProMax;
-

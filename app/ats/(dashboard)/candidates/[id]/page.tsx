@@ -16,7 +16,7 @@ import ApplicationHistoryWidget from '@/components/ats/ApplicationHistoryWidget'
 import ResumeViewer from '@/components/ats/ResumeViewer';
 import CandidateTabs from '@/components/ats/CandidateTabs';
 import CandidateSkills from '@/components/ats/CandidateSkills';
-import { capitalizeName } from '@/lib/utils';
+import { capitalizeName, getInitials } from '@/lib/utils';
 import RecruiterAssignment from '@/components/ats/RecruiterAssignment';
 import DeleteCandidateButton from '@/components/ats/DeleteCandidateButton';
 
@@ -67,12 +67,16 @@ export default async function CandidateDetailPage({
                     {/* Header */}
                     <div className="flex justify-between items-start mb-10 gap-8">
                         <div className="flex items-start gap-6 min-w-0 flex-1">
-                            <div className="w-[110px] h-[110px] rounded-[24px] bg-slate-200 overflow-hidden shadow-sm shrink-0 border border-slate-200/60 ring-4 ring-white relative group">
-                                <img 
-                                    src={candidate.avatar_url || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'} 
-                                    alt={candidate.full_name ? capitalizeName(candidate.full_name) : 'Avatar'} 
-                                    className="w-full h-full object-cover" 
-                                />
+                            <div className="w-[110px] h-[110px] rounded-full bg-[#EBF1FF] border border-[#D0DFFF] flex items-center justify-center text-[#0040A1] font-bold text-4xl shrink-0 overflow-hidden shadow-sm ring-4 ring-white relative group">
+                                {candidate.avatar_url ? (
+                                    <img 
+                                        src={candidate.avatar_url} 
+                                        alt={candidate.full_name ? capitalizeName(candidate.full_name) : 'Avatar'} 
+                                        className="w-full h-full object-cover" 
+                                    />
+                                ) : (
+                                    getInitials(candidate.full_name, candidate.first_name, candidate.last_name)
+                                )}
                             </div>
                             <div className="min-w-0 flex-1 pt-1">
                                 {candidate.status === 'Rejected' && <DisqualifiedTag reason={rejectionReason} />}

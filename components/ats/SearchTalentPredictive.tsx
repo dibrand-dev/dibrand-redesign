@@ -86,7 +86,7 @@ export default function SearchTalentPredictive({ candidates, initialQuery = '' }
                                     className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-[#F8FAFC] transition-all group/item text-left border border-transparent hover:border-[#E2E8F0]"
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#0040A1] flex items-center justify-center border border-blue-100 group-hover/item:bg-[#0040A1] group-hover/item:text-white transition-colors">
+                                        <div className="w-8 h-8 rounded-full bg-blue-50 text-[#0040A1] flex items-center justify-center border border-blue-100 group-hover/item:bg-[#0040A1] group-hover/item:text-white transition-colors">
                                             <User size={14} />
                                         </div>
                                         <div className="flex flex-col">

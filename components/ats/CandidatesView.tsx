@@ -65,7 +65,9 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                                 resume_url: candidate.resume_url || candidate.cv_filename || '#',
                                 recruiter_id: candidate.recruiter_id,
                                 country: candidate.country || 'N/A',
-                                avatar_url: candidate.avatar_url
+                                avatar_url: candidate.avatar_url,
+                                first_name: candidate.first_name,
+                                last_name: candidate.last_name
                             } as Candidate} 
                         />
                     ))
