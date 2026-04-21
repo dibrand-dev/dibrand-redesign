@@ -31,6 +31,7 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
     const currentCountry = searchParams.get('country') || '';
     const currentStatus = searchParams.get('status') || '';
     const currentRecruiter = searchParams.get('recruiterId') || '';
+    const currentSkills = searchParams.get('skills')?.split(',').filter(Boolean) || [];
 
     const isAdmin = currentUser?.user_metadata?.role === 'admin' || currentUser?.user_metadata?.role === 'SuperAdmin';
 
