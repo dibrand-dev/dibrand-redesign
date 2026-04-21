@@ -116,7 +116,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                      <div className="flex-1 min-w-0">
                                          <div className="flex justify-between items-start mb-2">
                                              <Link href={`/${lang}/join-us/${job.id}`} className="min-w-0">
-                                                 <h3 className="text-lg font-bold text-[#101828] font-inter truncate pr-2 group-hover:text-brand transition-colors leading-snug uppercase">
+                                                 <h3 className="text-[18px] font-bold text-[#101828] font-inter truncate pr-2 group-hover:text-brand transition-colors leading-snug uppercase">
                                                      {jobTitle}
                                                  </h3>
                                              </Link>
