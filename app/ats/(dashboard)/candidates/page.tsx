@@ -61,7 +61,12 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-12">
                 <div>
-                    <h1 className="text-[34px] font-bold text-[#010101] leading-tight mb-2 tracking-tight">Pool de Talento</h1>
+                    <h1 className="text-[34px] font-bold text-[#010101] leading-tight mb-2 tracking-tight flex items-center gap-4">
+                        Pool de Talento
+                        <span className="bg-[#EBF1FF] text-[#0040A1] text-[14px] font-black px-4 py-1.5 rounded-full border border-[#D0DFFF] animate-in fade-in zoom-in duration-500">
+                            {totalCount} Candidatos
+                        </span>
+                    </h1>
                     <p className="text-[13px] text-[#6B7485] font-medium">Gestionando la próxima generación de líderes de la industria.</p>
                 </div>
 
