@@ -30,6 +30,7 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
         if (filters.jobId) params.set('jobId', filters.jobId);
         if (filters.country) params.set('country', filters.country);
         if (filters.recruiterId) params.set('recruiterId', filters.recruiterId);
+        if (filters.skills) params.set('skills', filters.skills);
         params.set('page', p.toString());
         return `/ats/candidates?${params.toString()}`;
     };

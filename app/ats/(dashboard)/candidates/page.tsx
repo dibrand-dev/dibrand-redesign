@@ -1,10 +1,16 @@
 import React from 'react';
-import { getAllCandidates } from '../../actions';
+import { 
+    getAllCandidates, 
+    getCandidateNames, 
+    getJobs, 
+    getCountries, 
+    getRecruiters, 
+    getGlobalSkills 
+} from '@/app/ats/actions';
 import { ChevronRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase-server-client';
 import Link from 'next/link';
 import SearchTalentPredictive from '@/components/ats/SearchTalentPredictive';
-import { getCandidateNames, getJobs, getCountries, getRecruiters } from '@/app/ats/actions';
 import CandidatesView from '@/components/ats/CandidatesView';
 import CandidateFilters from '@/components/ats/CandidateFilters';
 import { ATS_STAGES } from '@/lib/ats-constants';
@@ -16,6 +22,9 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const jobId = resolvedParams.jobId as string || undefined;
     const country = resolvedParams.country as string || undefined;
     const recruiterId = resolvedParams.recruiterId as string || undefined;
+    const skillsParam = resolvedParams.skills as string | undefined;
+    const skills = skillsParam ? skillsParam.split(',').filter(Boolean) : undefined;
+    
     const page = parseInt(resolvedParams.page as string || '1');
     const limit = 9;
     const offset = (page - 1) * limit;
@@ -26,16 +35,18 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
         jobId, 
         country,
         recruiterId,
+        skills,
         limit, 
         offset 
     });
     
     // Fetch filter data
-    const [candidateNames, jobs, countries, recruiters] = await Promise.all([
+    const [candidateNames, jobs, countries, recruiters, allSkills] = await Promise.all([
         getCandidateNames(),
         getJobs(),
         getCountries(),
-        getRecruiters()
+        getRecruiters(),
+        getGlobalSkills()
     ]);
 
     const supabase = await createClient();
@@ -68,6 +79,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
                 countries={countries}
                 statuses={filterStatuses}
                 recruiters={recruiters}
+                allSkills={allSkills}
                 currentUser={user}
             />
 
@@ -76,7 +88,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
                 totalCount={totalCount}
                 page={page}
                 totalPages={totalPages}
-                filters={{ status, search, jobId, country, recruiterId }}
+                filters={{ status, search, jobId, country, recruiterId, skills: skillsParam }}
             />
         </div>
     );

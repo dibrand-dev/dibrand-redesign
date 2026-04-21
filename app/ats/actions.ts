@@ -194,7 +194,7 @@ export async function getRecruiterJobs() {
     }) || [];
 }
 
-export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number, offset?: number, jobId?: string, country?: string, recruiterId?: string } = {}) {
+export async function getAllCandidates(filters: { status?: string, search?: string, limit?: number, offset?: number, jobId?: string, country?: string, recruiterId?: string, skills?: string[] } = {}) {
     const supabaseAuth = await createClient();
     const { data: { user } } = await supabaseAuth.auth.getUser();
 
@@ -211,10 +211,15 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
         .from('job_applications')
         .select(`
             *,
-            job:job_openings(id, title)
+            job:job_openings(id, title),
+            recruiter:recruiters(id, full_name, avatar_url)
         `, { count: 'exact' })
-        .eq('is_deleted', false)
-        .order('created_at', { ascending: false });
+        .eq('is_deleted', false);
+
+    // Initial sort if no skills ranking is used
+    if (!filters.skills || filters.skills.length === 0) {
+        query = query.order('created_at', { ascending: false });
+    }
 
     if (!isAdmin) {
         query = query.eq('recruiter_id', user.id);
@@ -238,20 +243,59 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
         query = query.or(`first_name.ilike.%${filters.search}%,last_name.ilike.%${filters.search}%,full_name.ilike.%${filters.search}%`);
     }
 
-    if (filters.limit) {
+    const hasSkills = filters.skills && filters.skills.length > 0;
+    
+    // Apply skills overlap filter if present
+    if (hasSkills) {
+        query = query.overlaps('skills', filters.skills!);
+    }
+
+    // Handle pagination vs ranking
+    if (hasSkills) {
+        // Fetch all matching candidates to rank them in JS
+        const { data, error, count } = await query;
+        
+        if (error) {
+            console.error('Error fetching candidates with skills:', error);
+            return { data: [], count: 0 };
+        }
+
+        // Rank by match count
+        const ranked = (data || []).map(cand => {
+            const candSkills = cand.skills || [];
+            // Match count is intersection of requested skills and candidate skills
+            const matchCount = filters.skills!.filter(s => candSkills.includes(s)).length;
+            return { ...cand, matchCount };
+        }).sort((a, b) => {
+            // Primarily by match count DESC
+            if (b.matchCount !== a.matchCount) return b.matchCount - a.matchCount;
+            // Secondarily by date DESC
+            return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+        });
+
+        // Paginate in memory
         const from = filters.offset || 0;
-        const to = from + filters.limit - 1;
-        query = query.range(from, to);
+        const total = ranked.length;
+        const slice = ranked.slice(from, from + (filters.limit || 9));
+
+        return { data: slice, count: total };
+    } else {
+        // Standard server-side pagination path
+        if (filters.limit) {
+            const from = filters.offset || 0;
+            const to = from + filters.limit - 1;
+            query = query.range(from, to);
+        }
+
+        const { data, error, count } = await query;
+
+        if (error) {
+            console.error('Error fetching candidates:', error);
+            return { data: [], count: 0 };
+        }
+
+        return { data: data || [], count: count || 0 };
     }
-
-    const { data, error, count } = await query;
-
-    if (error) {
-        console.error('Error fetching candidates:', error);
-        return { data: [], count: 0 };
-    }
-
-    return { data: data || [], count: count || 0 };
 }
 
 export async function getCandidateById(id: string) {
