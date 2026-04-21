@@ -52,7 +52,7 @@ export default function ProfileMenu({ name, role, initials, avatarUrl, isAdmin }
                     <p className="text-[11px] font-medium text-[#737785] leading-none capitalize">{role.toLowerCase().replace('_', ' ')}</p>
                 </div>
                 <div className="relative">
-                    <div className="w-10 h-10 rounded-xl bg-[#0040A1] text-white flex items-center justify-center font-bold text-sm shadow-sm overflow-hidden transition-transform group-hover:scale-105">
+                    <div className="w-10 h-10 rounded-full bg-[#0040A1] text-white flex items-center justify-center font-bold text-sm shadow-sm overflow-hidden transition-transform group-hover:scale-105">
                         {avatarUrl ? (
                             <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
                         ) : (
