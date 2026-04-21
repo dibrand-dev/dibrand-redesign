@@ -18,6 +18,7 @@ interface CandidatesViewProps {
         jobId?: string;
         country?: string;
         recruiterId?: string;
+        skills?: string;
     };
 }
 
