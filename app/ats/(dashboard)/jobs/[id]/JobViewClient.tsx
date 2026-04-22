@@ -38,6 +38,8 @@ interface QuestionnaireSection {
 interface JobData {
     id: string;
     title: string;
+    title_es?: string;
+    title_en?: string;
     location: string;
     is_active: boolean;
     description?: string;
