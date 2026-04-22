@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { MapPin, Building2, Clock, Bookmark, Filter, ChevronDown, DollarSign } from 'lucide-react';
+import { MapPin, Building2, Clock, Bookmark, Filter, ChevronDown, DollarSign, Search, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SpontaneousApplicationCard from '../jobs/SpontaneousApplicationCard';
 
@@ -40,6 +40,30 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
     const activeJobs = jobs || [];
     const isEn = lang === 'en';
     const [bookmarked, setBookmarked] = React.useState<Record<string, boolean>>({});
+    
+    // Filter states
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const [selectedLocation, setSelectedLocation] = React.useState('all');
+    const [selectedIndustry, setSelectedIndustry] = React.useState('all');
+    const [selectedType, setSelectedType] = React.useState('all');
+
+    // Get unique options for filters
+    const locations = Array.from(new Set(activeJobs.map(j => isEn ? (j.location_en || j.location) : (j.location_es || j.location)).filter(Boolean))).sort();
+    const industries = Array.from(new Set(activeJobs.map(j => j.industry).filter(Boolean))).sort();
+    const types = Array.from(new Set(activeJobs.map(j => j.employment_type).filter(Boolean))).sort();
+
+    // Filter logic
+    const filteredJobs = activeJobs.filter(job => {
+        const title = isEn ? (job.title_en || job.title) : (job.title_es || job.title);
+        const location = isEn ? (job.location_en || job.location) : (job.location_es || job.location);
+        
+        const matchesSearch = title.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesLocation = selectedLocation === 'all' || location === selectedLocation;
+        const matchesIndustry = selectedIndustry === 'all' || job.industry === selectedIndustry;
+        const matchesType = selectedType === 'all' || job.employment_type === selectedType;
+
+        return matchesSearch && matchesLocation && matchesIndustry && matchesType;
+    });
 
     // Helper to format relative time
     const getRelativeTime = (dateString?: string) => {
@@ -64,33 +88,76 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
         <section className="bg-[#F9FAFB] py-24 overflow-hidden min-h-screen font-inter">
             <div className="container mx-auto px-6 max-w-7xl">
                 
-                {/* Search / Filter Bar (UI Mockup Header) */}
-                <div className="flex flex-col md:flex-row items-center justify-between mb-10 gap-6">
-                    <div className="flex items-center gap-6">
-                        <button className="flex items-center gap-2.5 px-5 py-2.5 bg-white border border-[#EAECF0] rounded-xl text-sm font-semibold text-[#344054] shadow-sm hover:bg-gray-50 transition-all hover:border-[#D0D5DD]">
-                            <Filter size={18} className="text-[#344054]" />
-                            {isEn ? 'Filter' : 'Filtrar'}
-                        </button>
-                        <span className="text-sm font-medium text-[#667085]">
-                            <strong className="text-[#101828] font-bold">{activeJobs.length}</strong> {isEn ? 'jobs' : 'vacantes'}
-                        </span>
+                {/* Search / Filter Bar */}
+                <div className="flex flex-col gap-6 mb-12">
+                    {/* Search Row */}
+                    <div className="relative group">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-brand transition-colors" size={20} />
+                        <input 
+                            type="text" 
+                            placeholder={isEn ? "Search by job title..." : "Buscar por título de vacante..."}
+                            className="w-full bg-white border border-[#EAECF0] rounded-2xl py-4 pl-12 pr-4 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all shadow-sm"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        {searchQuery && (
+                            <button 
+                                onClick={() => setSearchQuery('')}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                            >
+                                <X size={18} />
+                            </button>
+                        )}
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 px-4 py-2.5 bg-white border border-[#EAECF0] rounded-xl text-sm font-medium text-[#344054] shadow-sm cursor-pointer hover:bg-gray-50 hover:border-[#D0D5DD] transition-all">
-                            {isEn ? 'Sort by (default)' : 'Ordenar por'}
-                            <ChevronDown size={14} className="text-[#667085]" />
+                    {/* Filter Row */}
+                    <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex flex-col gap-1.5 min-w-[200px] flex-1 md:flex-none">
+                            <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">{isEn ? 'Location' : 'Ubicación'}</label>
+                            <select 
+                                className="bg-white border border-[#EAECF0] rounded-xl px-4 py-2.5 text-sm font-medium text-[#344054] shadow-sm hover:border-[#D0D5DD] transition-all focus:outline-none focus:ring-2 focus:ring-brand/20"
+                                value={selectedLocation}
+                                onChange={(e) => setSelectedLocation(e.target.value)}
+                            >
+                                <option value="all">{isEn ? 'All Locations' : 'Todas las ubicaciones'}</option>
+                                {locations.map(loc => <option key={loc} value={loc}>{loc}</option>)}
+                            </select>
                         </div>
-                        <div className="flex items-center gap-2 px-4 py-2.5 bg-white border border-[#EAECF0] rounded-xl text-sm font-medium text-[#344054] shadow-sm cursor-pointer hover:bg-gray-50 hover:border-[#D0D5DD] transition-all">
-                            {isEn ? 'All' : 'Todo'}
-                            <ChevronDown size={14} className="text-[#667085]" />
+
+                        <div className="flex flex-col gap-1.5 min-w-[200px] flex-1 md:flex-none">
+                            <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">{isEn ? 'Department' : 'Departamento'}</label>
+                            <select 
+                                className="bg-white border border-[#EAECF0] rounded-xl px-4 py-2.5 text-sm font-medium text-[#344054] shadow-sm hover:border-[#D0D5DD] transition-all focus:outline-none focus:ring-2 focus:ring-brand/20"
+                                value={selectedIndustry}
+                                onChange={(e) => setSelectedIndustry(e.target.value)}
+                            >
+                                <option value="all">{isEn ? 'All Departments' : 'Todos los departamentos'}</option>
+                                {industries.map(ind => <option key={ind} value={ind}>{ind}</option>)}
+                            </select>
+                        </div>
+
+                        <div className="flex flex-col gap-1.5 min-w-[200px] flex-1 md:flex-none">
+                            <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">{isEn ? 'Contract Type' : 'Tipo de Contrato'}</label>
+                            <select 
+                                className="bg-white border border-[#EAECF0] rounded-xl px-4 py-2.5 text-sm font-medium text-[#344054] shadow-sm hover:border-[#D0D5DD] transition-all focus:outline-none focus:ring-2 focus:ring-brand/20"
+                                value={selectedType}
+                                onChange={(e) => setSelectedType(e.target.value)}
+                            >
+                                <option value="all">{isEn ? 'All Types' : 'Todos los tipos'}</option>
+                                {types.map(t => <option key={t} value={t}>{t.replace('_', ' ')}</option>)}
+                            </select>
+                        </div>
+
+                        <div className="md:ml-auto pt-5">
+                            <span className="text-sm font-medium text-[#667085]">
+                                <strong className="text-[#101828] font-bold">{filteredJobs.length}</strong> {isEn ? 'jobs found' : 'vacantes encontradas'}
+                            </span>
                         </div>
                     </div>
                 </div>
 
-                {/* Openings Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {activeJobs.map((job, index) => {
+                    {filteredJobs.map((job, index) => {
                         const jobTitle = isEn ? (job.title_en || job.title) : (job.title_es || job.title);
                         const jobLocation = isEn ? (job.location_en || job.location) : (job.location_es || job.location);
                         const isBookmarked = bookmarked[job.id];
@@ -169,17 +236,28 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                     <SpontaneousApplicationCard lang={lang} dict={dict} />
                 </div>
 
-                {activeJobs.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-12 text-center mt-12 border-t border-slate-100">
-                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-                            <Clock size={32} className="text-gray-400" />
+                {filteredJobs.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-20 text-center mt-12 bg-white rounded-3xl border border-dashed border-[#EAECF0]">
+                        <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-6">
+                            <Search size={32} className="text-zinc-300" />
                         </div>
                         <h3 className="text-xl font-bold text-gray-900 mb-2">
-                            {isEn ? 'No positions found' : 'No se encontraron posiciones'}
+                            {isEn ? 'No positions match your filters' : 'No se encontraron vacantes con estos filtros'}
                         </h3>
-                        <p className="text-slate-600">
-                            {isEn ? 'Try adjusting your filters or check back later.' : 'Prueba ajustando los filtros o vuelve más tarde.'}
+                        <p className="text-slate-500 max-w-sm mx-auto">
+                            {isEn ? 'Try adjusting your search query or filters to find what you are looking for.' : 'Prueba ajustando los términos de búsqueda o los filtros para encontrar lo que buscas.'}
                         </p>
+                        <button 
+                            onClick={() => {
+                                setSearchQuery('');
+                                setSelectedLocation('all');
+                                setSelectedIndustry('all');
+                                setSelectedType('all');
+                            }}
+                            className="mt-6 text-brand font-bold hover:underline"
+                        >
+                            {isEn ? 'Clear all filters' : 'Limpiar todos los filtros'}
+                        </button>
                     </div>
                 )}
             </div>
