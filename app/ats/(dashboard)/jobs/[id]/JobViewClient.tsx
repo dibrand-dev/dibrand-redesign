@@ -41,7 +41,11 @@ interface JobData {
     location: string;
     is_active: boolean;
     description?: string;
+    description_es?: string;
+    description_en?: string;
     requirements?: string;
+    requirements_es?: string;
+    requirements_en?: string;
     salary_range?: string;
     employment_type?: string;
     seniority?: string;
@@ -75,10 +79,10 @@ export default function JobViewClient({ job, userRole }: { job: JobData | null; 
     const [isEditingDesc, setIsEditingDesc] = useState(false); // job description edit
     const [isSaving, setIsSaving] = useState(false);
     
-    const [descContent, setDescContent] = useState(job?.description || '');
-    const [reqContent, setReqContent] = useState(job?.requirements || '');
+    const [descContent, setDescContent] = useState(job?.description_es || job?.description || '');
+    const [reqContent, setReqContent] = useState(job?.requirements_es || job?.requirements || '');
     // Provide a default that matches DB convention if it was mapped via job.industry or just 'Engineering'
-    const [industryContent, setIndustryContent] = useState((job as any)?.industry || 'Engineering');
+    const [industryContent, setIndustryContent] = useState(job?.industry || 'Engineering');
 
     const DEFAULT_QUESTIONNAIRE: QuestionnaireSection[] = [
         {
@@ -206,12 +210,12 @@ ${questionnaire.map(section => {
         setQuestionnaire(newQuestionnaire);
     };
     
-    // Default mock info to match the design precisely
-    const title = job?.title || 'Senior Product Designer';
-    const location = job?.location || 'London, UK / Remote';
+    // Use real data from database
+    const title = job?.title_es || job?.title || 'Sin Título';
+    const location = job?.location_es || job?.location || 'No especificado';
     const isActive = job?.is_active ?? true;
-    const employmentType = job?.employment_type || 'Full-time';
-    const seniority = job?.seniority || 'Senior';
+    const employmentType = job?.employment_type || 'No especificado';
+    const seniority = job?.seniority || 'No especificado';
 
     return (
         <div className="flex-1 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
@@ -601,14 +605,14 @@ ${questionnaire.map(section => {
                                         <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">UBICACIÓN</p>
                                         <p className="text-[15px] font-bold text-[#191C1D] flex items-center gap-2">
                                             <Globe size={16} className="text-[#0040A1]" /> 
-                                            {job?.location_es || job?.location || 'No especificado'}
+                                            {location}
                                         </p>
                                     </div>
                                     <div>
                                         <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">TIPO DE CONTRATACIÓN</p>
                                         <p className="text-[15px] font-bold text-[#191C1D] flex items-center gap-2">
                                             <Clock size={16} className="text-[#0040A1]" /> 
-                                            {job?.employment_type || 'No especificado'}
+                                            {employmentType}
                                         </p>
                                     </div>
                                     {job?.required_language && (
