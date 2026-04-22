@@ -1,5 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, MapPin, Briefcase } from 'lucide-react';
 import { FaLinkedinIn, FaWhatsapp } from 'react-icons/fa6';
@@ -12,45 +13,52 @@ import JobApplicationForm from '@/components/jobs/JobApplicationForm';
 import JobDetailHeader from '@/components/jobs/JobDetailHeader';
 
 interface Props {
-    params: Promise<{ lang: 'en' | 'es', id: string }>;
+    params: Promise<{ lang: 'en' | 'es', slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { id, lang } = await params;
+    const { slug, lang } = await params;
     
     try {
         const { data: job, error } = await supabase
             .from('job_openings')
-            .select('title, title_es, title_en')
-            .eq('id', id)
-            .single();
+            .select('id, slug, title, title_es, title_en')
+            .or(`slug.eq."${slug}",id.eq."${slug}"`)
+            .maybeSingle();
 
         if (error) throw error;
 
         const title = job ? (lang === 'en' ? (job.title_en || job.title) : (job.title_es || job.title)) : 'Job Detail';
+        
+        const finalSlug = job?.slug || job?.id || slug;
+        const canonical = `https://dibrand.co/${lang}/join-us/${finalSlug}`;
 
         return {
             title: `${title} | Dibrand Careers`,
+            alternates: {
+                canonical: canonical
+            }
         };
     } catch (e) {
         console.error('Metadata error:', e);
         return {
             title: `Job Opening | Dibrand Careers`,
         };
-    }
+}
 }
 
 export default async function JobDetailPage({ params }: Props) {
-    const { lang, id } = await params;
+    const { lang, slug } = await params;
     const dict = await getDictionary(lang);
     const isEn = lang === 'en';
 
     let job = null;
     try {
+        // Try to find by slug first, or by ID for backward compatibility
         const { data, error } = await supabase
             .from('job_openings')
             .select(`
-                id,
+                id, slug,
                 title, title_es, title_en,
                 location, location_es, location_en,
                 description, description_es, description_en,
@@ -58,11 +66,19 @@ export default async function JobDetailPage({ params }: Props) {
                 industry, seniority, modality, employment_type,
                 is_active, created_at
             `)
-            .eq('id', id)
-            .single();
+            .or(`slug.eq."${slug}",id.eq."${slug}"`)
+            .maybeSingle();
+
         if (error) throw error;
+        
+        // If we found the job by ID but it has a slug, redirect 301 to the slug URL
+        if (data && data.id === slug && data.slug && data.slug !== slug) {
+            redirect(`/${lang}/join-us/${data.slug}`);
+        }
+        
         job = data;
     } catch (e) {
+        if ((e as any)?.digest?.includes('NEXT_REDIRECT')) throw e;
         console.error('Job query error:', e);
     }
 
@@ -82,7 +98,7 @@ export default async function JobDetailPage({ params }: Props) {
     const jobRequirements = isEn ? (job.requirements_en || job.requirements) : (job.requirements_es || job.requirements);
     const jobLocation = isEn ? (job.location_en || job.location) : (job.location_es || job.location);
 
-    const shareUrl = `https://dibrand.co/${lang}/join-us/${id}`;
+    const shareUrl = `https://dibrand.co/${lang}/join-us/${job.slug || job.id}`;
     const shareText = isEn
         ? `Check out this opening at Dibrand: ${jobTitle}`
         : `Mira esta vacante en Dibrand: ${jobTitle}`;
@@ -161,7 +177,7 @@ export default async function JobDetailPage({ params }: Props) {
                         <div className="lg:col-span-4 lg:relative" id="application-form">
                             <div className="lg:sticky lg:top-32 bg-white border border-zinc-200 rounded-3xl p-8 transition-all">
                                 <JobApplicationForm
-                                    jobId={id}
+                                    jobId={job.id}
                                     lang={lang}
                                     dict={dict.joinOurTeam}
                                 />

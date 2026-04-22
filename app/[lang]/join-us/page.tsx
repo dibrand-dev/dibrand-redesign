@@ -27,7 +27,7 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
         const { data, error } = await supabase
             .from('job_openings')
             .select(`
-                id, 
+                id, slug,
                 title, title_es, title_en,
                 location, location_es, location_en,
                 industry, 

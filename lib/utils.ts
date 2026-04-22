@@ -35,3 +35,15 @@ export function getInitials(fullName?: string, firstName?: string, lastName?: st
     
     return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
 }
+
+export function generateSlug(text: string): string {
+    return text
+        .toLowerCase()
+        .normalize('NFD') // Normalize to decompose characters (e.g., á -> a + ´)
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+        .trim()
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-'); // Remove duplicate hyphens
+}
+

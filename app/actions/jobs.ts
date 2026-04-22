@@ -1,9 +1,7 @@
-
-'use server';
-
 import { createAdminClient } from '@/lib/supabase-server';
 import { revalidatePath } from 'next/cache';
 import { logAdminAction } from '@/lib/logging';
+import { generateSlug } from '@/lib/utils';
 
 export async function getJobs() {
     const supabase = createAdminClient();
@@ -28,14 +26,53 @@ export async function getJob(id: string) {
     return data;
 }
 
+async function ensureUniqueSlug(supabase: any, baseSlug: string, currentId?: string) {
+    let slug = baseSlug;
+    let isUnique = false;
+    let counter = 0;
+
+    while (!isUnique) {
+        let query = supabase
+            .from('job_openings')
+            .select('id')
+            .eq('slug', slug);
+        
+        if (currentId) {
+            query = query.neq('id', currentId);
+        }
+
+        const { data } = await query.maybeSingle();
+        
+        if (!data) {
+            isUnique = true;
+        } else {
+            counter++;
+            const randomSuffix = Math.random().toString(36).substring(2, 6);
+            slug = `${baseSlug}-${randomSuffix}`;
+            
+            if (counter > 5) {
+                slug = `${baseSlug}-${Date.now().toString().slice(-4)}`;
+                break;
+            }
+        }
+    }
+    return slug;
+}
+
 export async function createJob(formData: any) {
     const supabase = createAdminClient();
+    
+    // Generate base slug from title (Spanish preferred, fallback to title)
+    const baseSlug = generateSlug(formData.title_es || formData.title);
+    const uniqueSlug = await ensureUniqueSlug(supabase, baseSlug);
+
     const { error } = await supabase
         .from('job_openings')
         .insert([{
             title: formData.title,
             title_es: formData.title_es,
             title_en: formData.title_en,
+            slug: uniqueSlug,
             industry: formData.industry,
             location: formData.location,
             location_es: formData.location_es,
@@ -69,12 +106,26 @@ export async function createJob(formData: any) {
 
 export async function updateJob(id: string, formData: any) {
     const supabase = createAdminClient();
+    
+    // Check if we need to regenerate slug (if title changed or slug is missing)
+    const { data: currentJob } = await supabase.from('job_openings').select('title, title_es, slug').eq('id', id).maybeSingle();
+    
+    let updatedSlug = currentJob?.slug;
+    const newTitle = formData.title_es || formData.title;
+    const oldTitle = currentJob?.title_es || currentJob?.title;
+
+    if (!updatedSlug || newTitle !== oldTitle) {
+        const baseSlug = generateSlug(newTitle);
+        updatedSlug = await ensureUniqueSlug(supabase, baseSlug, id);
+    }
+
     const { error } = await supabase
         .from('job_openings')
         .update({
             title: formData.title,
             title_es: formData.title_es,
             title_en: formData.title_en,
+            slug: updatedSlug,
             industry: formData.industry,
             location: formData.location,
             location_es: formData.location_es,
@@ -102,8 +153,8 @@ export async function updateJob(id: string, formData: any) {
     await logAdminAction('actualizó búsqueda', 'job_opening', formData.title_es || formData.title);
 
     revalidatePath('/admin/jobs');
-    revalidatePath(`/en/join-us/${id}`);
-    revalidatePath(`/es/join-us/${id}`);
+    revalidatePath(`/en/join-us/${updatedSlug}`);
+    revalidatePath(`/es/join-us/${updatedSlug}`);
     revalidatePath('/en/join-us');
     revalidatePath('/es/join-us');
     return { success: true };
