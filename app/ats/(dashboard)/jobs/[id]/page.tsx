@@ -30,6 +30,11 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
                 employment_type,
                 seniority,
                 salary_range,
+                required_language,
+                years_of_experience,
+                positions_count,
+                location_es,
+                location_en,
                 questionnaire,
                 created_at,
                 candidates:job_applications(

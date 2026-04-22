@@ -12,7 +12,7 @@ import {
     CornerUpRight,
     Bold, Italic, List, Link as LinkIcon, Heading1, Heading2,
     CheckCircle2, Globe, Plus, Clock, MessageSquare,
-    Link2, Eye, Save, Settings2, Sparkles, RefreshCcw, Trash2
+    Link2, Eye, Save, Settings2, Sparkles, RefreshCcw, Trash2, Users, Award, Languages
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase-client';
 import { updateJobQuestionnaire, updateJobDescription } from '@/app/ats/actions';
@@ -54,6 +54,11 @@ interface JobData {
     team?: any[];
     questionnaire?: any[];
     allCandidates?: any[];
+    required_language?: string;
+    years_of_experience?: string;
+    positions_count?: number;
+    location_es?: string;
+    location_en?: string;
 }
 
 export default function JobViewClient({ job, userRole }: { job: JobData | null; userRole?: string }) {
@@ -593,16 +598,47 @@ ${questionnaire.map(section => {
                                         <p className="text-[15px] font-bold text-[#191C1D] uppercase">{industryContent}</p>
                                     </div>
                                     <div>
+                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">UBICACIÓN</p>
+                                        <p className="text-[15px] font-bold text-[#191C1D] flex items-center gap-2">
+                                            <Globe size={16} className="text-[#0040A1]" /> 
+                                            {job?.location_es || job?.location || 'No especificado'}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">TIPO DE CONTRATACIÓN</p>
+                                        <p className="text-[15px] font-bold text-[#191C1D] flex items-center gap-2">
+                                            <Clock size={16} className="text-[#0040A1]" /> 
+                                            {job?.employment_type || 'No especificado'}
+                                        </p>
+                                    </div>
+                                    {job?.required_language && (
+                                        <div>
+                                            <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">IDIOMA REQUERIDO</p>
+                                            <p className="text-[15px] font-bold text-[#191C1D] flex items-center gap-2">
+                                                <Languages size={16} className="text-[#0040A1]" /> 
+                                                {job.required_language}
+                                            </p>
+                                        </div>
+                                    )}
+                                    {job?.years_of_experience && (
+                                        <div>
+                                            <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">AÑOS DE EXPERIENCIA</p>
+                                            <p className="text-[15px] font-bold text-[#191C1D] flex items-center gap-2">
+                                                <Award size={16} className="text-[#0040A1]" /> 
+                                                {job.years_of_experience} años
+                                            </p>
+                                        </div>
+                                    )}
+                                    <div>
+                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">VACANTES DISPONIBLES</p>
+                                        <p className="text-[15px] font-bold text-[#191C1D] flex items-center gap-2">
+                                            <Users size={16} className="text-[#0040A1]" /> 
+                                            {job?.positions_count || 1}
+                                        </p>
+                                    </div>
+                                    <div>
                                         <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">RANGO SALARIAL</p>
                                         <p className="text-[15px] font-bold text-[#191C1D]">{job?.salary_range || '$120k - $160k'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">TIPO DE CONTRATO</p>
-                                        <p className="text-[15px] font-bold text-[#191C1D]">{employmentType}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">UBICACIÓN</p>
-                                        <p className="text-[15px] font-bold text-[#191C1D] flex items-center gap-1.5"><Globe size={14} className="text-[#0040A1]" /> {location}</p>
                                     </div>
                                     <div>
                                         <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">NIVEL DE EXPERIENCIA</p>
