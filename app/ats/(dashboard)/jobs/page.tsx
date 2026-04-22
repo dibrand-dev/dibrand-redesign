@@ -45,6 +45,9 @@ interface Job {
     totalCandidatesCount: number; // total candidates assigned to this job
     avatars: { url?: string, initials: string }[];
     questionnaire?: any[];
+    required_language?: string;
+    years_of_experience?: string;
+    positions_count?: number;
 }
 
 export default function AtsJobsPage() {

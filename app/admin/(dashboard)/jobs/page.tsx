@@ -16,6 +16,9 @@ interface JobOpening {
     modality: string;
     is_active: boolean;
     created_at: string;
+    required_language?: string;
+    years_of_experience?: string;
+    positions_count?: number;
 }
 
 export default function JobsPage() {

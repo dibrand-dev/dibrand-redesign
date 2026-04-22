@@ -25,9 +25,12 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
         title_es: initialData?.title_es || initialData?.title || '',
         title_en: initialData?.title_en || '',
         industry: initialData?.industry || initialData?.department || 'Engineering',
-        location_es: initialData?.location_es || initialData?.location || '',
-        location_en: initialData?.location_en || '',
-        employment_type: initialData?.employment_type || 'Full-time',
+        location_es: initialData?.location_es || initialData?.location || 'Argentina',
+        location_en: initialData?.location_en || 'Argentina',
+        employment_type: initialData?.employment_type || 'Long Term',
+        required_language: initialData?.required_language || 'Español',
+        years_of_experience: initialData?.years_of_experience || '+1',
+        positions_count: initialData?.positions_count || 1,
         description_es: initialData?.description_es || initialData?.description || '',
         description_en: initialData?.description_en || '',
         requirements_es: initialData?.requirements_es || initialData?.requirements || '',
@@ -48,8 +51,25 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
         'People & Culture'
     ];
     const seniorities = ['Trainee', 'Junior', 'Semi Senior', 'Senior'];
+    const employmentTypes = ['Short Term', 'Long Term'];
+    const languages = [
+        { es: 'Español', en: 'Spanish' },
+        { es: 'Inglés B2', en: 'English B2' },
+        { es: 'Inglés C1', en: 'English C1' },
+        { es: 'Inglés C2', en: 'English C2' }
+    ];
+    const experienceYears = ['+1', '+2', '+3', '+4', '+5', '+6', '+7', '+8', '+9', '+10', '+11', '+12', '+15', '+20'];
+    const locations = [
+        { es: 'Argentina', en: 'Argentina' },
+        { es: 'Colombia', en: 'Colombia' },
+        { es: 'México', en: 'Mexico' },
+        { es: 'LATAM', en: 'LATAM' },
+        { es: 'España', en: 'Spain' },
+        { es: 'India', en: 'India' },
+        { es: 'Pakistán', en: 'Pakistan' }
+    ];
 
-    const handleTranslate = async (field: 'title' | 'description' | 'requirements' | 'location') => {
+    const handleTranslate = async (field: 'title' | 'description' | 'requirements') => {
         const sourceText = (formData as any)[`${field}_es`];
         if (!sourceText) {
             alert('Escribe el texto en español primero para poder traducirlo.');
@@ -145,7 +165,7 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
         </button>
     );
 
-    const TranslateBtn = ({ field }: { field: 'title' | 'description' | 'requirements' | 'location' }) => (
+    const TranslateBtn = ({ field }: { field: 'title' | 'description' | 'requirements' }) => (
         lang === 'en' && (
             <button
                 type="button"
@@ -204,7 +224,7 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                         <TranslateBtn field="title" />
                     </div>
                     
-                    <div className="grid md:grid-cols-2 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         <div className="space-y-2">
                             <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
                                 Título ({lang.toUpperCase()})
@@ -234,9 +254,31 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                                 {seniorities.map(s => <option key={s} value={s}>{s}</option>)}
                             </select>
                         </div>
+                        <div className="space-y-2">
+                            <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Contratación</label>
+                            <select
+                                name="employment_type"
+                                value={formData.employment_type}
+                                onChange={handleChange}
+                                className="w-full px-5 py-3.5 bg-admin-bg/50 border border-admin-border rounded-xl focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none text-admin-text-primary font-bold appearance-none cursor-pointer"
+                            >
+                                {employmentTypes.map(t => <option key={t} value={t}>{t}</option>)}
+                            </select>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Vacantes</label>
+                            <input
+                                type="number"
+                                name="positions_count"
+                                value={formData.positions_count}
+                                onChange={handleChange}
+                                min="1"
+                                className="w-full px-5 py-3.5 bg-admin-bg/50 border border-admin-border rounded-xl focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none text-admin-text-primary font-bold transition-all"
+                            />
+                        </div>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8 pt-4">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 pt-4">
                         <div className="space-y-2">
                             <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Departamento</label>
                             <select
@@ -249,22 +291,29 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                             </select>
                         </div>
                         <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                                <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Ubicación</label>
-                                <TranslateBtn field="location" />
-                            </div>
-                            <input
-                                required={lang === 'es'}
-                                type="text"
+                            <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Ubicación</label>
+                            <select
                                 name={lang === 'es' ? 'location_es' : 'location_en'}
                                 value={lang === 'es' ? formData.location_es : formData.location_en}
                                 onChange={(e) => {
-                                    const key = lang === 'es' ? 'location_es' : 'location_en';
-                                    setFormData(prev => ({ ...prev, [key]: e.target.value }));
+                                    const val = e.target.value;
+                                    const locObj = locations.find(l => (lang === 'es' ? l.es : l.en) === val);
+                                    if (locObj) {
+                                        setFormData(prev => ({ 
+                                            ...prev, 
+                                            location_es: locObj.es,
+                                            location_en: locObj.en
+                                        }));
+                                    }
                                 }}
-                                placeholder={lang === 'es' ? 'Ej: Remote - USA' : 'e.g. Remote - USA'}
-                                className="w-full px-5 py-3.5 bg-admin-bg/50 border border-admin-border rounded-xl focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none text-admin-text-primary font-medium transition-all"
-                            />
+                                className="w-full px-5 py-3.5 bg-admin-bg/50 border border-admin-border rounded-xl focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none text-admin-text-primary font-bold appearance-none cursor-pointer"
+                            >
+                                {locations.map(l => (
+                                    <option key={l.es} value={lang === 'es' ? l.es : l.en}>
+                                        {lang === 'es' ? l.es : l.en}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div className="space-y-2">
                             <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Modalidad</label>
@@ -275,6 +324,32 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                                 className="w-full px-5 py-3.5 bg-admin-bg/50 border border-admin-border rounded-xl focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none text-admin-text-primary font-bold appearance-none cursor-pointer"
                             >
                                 {modalities.map(m => <option key={m} value={m}>{m}</option>)}
+                            </select>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Idioma</label>
+                            <select
+                                name="required_language"
+                                value={formData.required_language}
+                                onChange={handleChange}
+                                className="w-full px-5 py-3.5 bg-admin-bg/50 border border-admin-border rounded-xl focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none text-admin-text-primary font-bold appearance-none cursor-pointer"
+                            >
+                                {languages.map(l => (
+                                    <option key={l.es} value={l.es}>
+                                        {lang === 'es' ? l.es : l.en}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Experiencia</label>
+                            <select
+                                name="years_of_experience"
+                                value={formData.years_of_experience}
+                                onChange={handleChange}
+                                className="w-full px-5 py-3.5 bg-admin-bg/50 border border-admin-border rounded-xl focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none text-admin-text-primary font-bold appearance-none cursor-pointer"
+                            >
+                                {experienceYears.map(y => <option key={y} value={y}>{y} años</option>)}
                             </select>
                         </div>
                     </div>
