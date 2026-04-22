@@ -38,8 +38,19 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
             .eq('is_active', true)
             .order('created_at', { ascending: false });
         
-        if (error) throw error;
-        jobs = data;
+        if (error) {
+            // Fallback if slug column doesn't exist
+            const { data: fallbackData, error: fallbackError } = await supabase
+                .from('job_openings')
+                .select(`id, title, title_es, title_en, location, location_es, location_en, industry, seniority, modality, employment_type`)
+                .eq('is_active', true)
+                .order('created_at', { ascending: false });
+            
+            if (fallbackError) throw fallbackError;
+            jobs = fallbackData;
+        } else {
+            jobs = data;
+        }
     } catch (e) {
         console.warn('Job query failed:', e);
         jobs = [];

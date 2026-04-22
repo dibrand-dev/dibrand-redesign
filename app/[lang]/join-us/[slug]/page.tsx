@@ -20,13 +20,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug, lang } = await params;
     
     try {
-        const { data: job, error } = await supabase
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+        
+        let query = supabase
             .from('job_openings')
-            .select('id, slug, title, title_es, title_en')
-            .or(`slug.eq."${slug}",id.eq."${slug}"`)
-            .maybeSingle();
+            .select('id, slug, title, title_es, title_en');
 
-        if (error) throw error;
+        if (isUUID) {
+            query = query.or(`slug.eq.${slug},id.eq.${slug}`);
+        } else {
+            query = query.eq('slug', slug);
+        }
+
+        let { data: job, error } = await query.maybeSingle();
+
+        // Fallback for metadata if slug column is missing
+        if (error && isUUID) {
+            const { data: fallback } = await supabase
+                .from('job_openings')
+                .select('id, title, title_es, title_en')
+                .eq('id', slug)
+                .maybeSingle();
+            job = fallback;
+        }
 
         const title = job ? (lang === 'en' ? (job.title_en || job.title) : (job.title_es || job.title)) : 'Job Detail';
         
@@ -54,8 +70,10 @@ export default async function JobDetailPage({ params }: Props) {
 
     let job = null;
     try {
-        // Try to find by slug first, or by ID for backward compatibility
-        const { data, error } = await supabase
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+        
+        // Try to find by slug or ID
+        const query = supabase
             .from('job_openings')
             .select(`
                 id, slug,
@@ -65,18 +83,35 @@ export default async function JobDetailPage({ params }: Props) {
                 requirements, requirements_es, requirements_en,
                 industry, seniority, modality, employment_type,
                 is_active, created_at
-            `)
-            .or(`slug.eq."${slug}",id.eq."${slug}"`)
-            .maybeSingle();
+            `);
 
-        if (error) throw error;
-        
-        // If we found the job by ID but it has a slug, redirect 301 to the slug URL
-        if (data && data.id === slug && data.slug && data.slug !== slug) {
-            redirect(`/${lang}/join-us/${data.slug}`);
+        if (isUUID) {
+            query.or(`slug.eq.${slug},id.eq.${slug}`);
+        } else {
+            query.eq('slug', slug);
         }
-        
-        job = data;
+
+        const { data, error } = await query.maybeSingle();
+
+        // If there was an error (e.g. slug column missing), try fallback with only ID
+        if (error || !data) {
+            if (isUUID) {
+                const { data: fallbackData } = await supabase
+                    .from('job_openings')
+                    .select('*')
+                    .eq('id', slug)
+                    .maybeSingle();
+                job = fallbackData;
+            } else {
+                job = data;
+            }
+        } else {
+            // If we found the job by ID but it has a slug, redirect 301 to the slug URL
+            if (data && data.id === slug && data.slug && data.slug !== slug) {
+                redirect(`/${lang}/join-us/${data.slug}`);
+            }
+            job = data;
+        }
     } catch (e) {
         if ((e as any)?.digest?.includes('NEXT_REDIRECT')) throw e;
         console.error('Job query error:', e);
