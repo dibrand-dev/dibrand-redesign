@@ -7,7 +7,10 @@ export async function getCompanies() {
     const supabase = createAdminClient();
     const { data, error } = await supabase
         .from('companies')
-        .select('*')
+        .select(`
+            *,
+            job_openings(id)
+        `)
         .order('company_name', { ascending: true });
 
     if (error) throw error;
@@ -47,6 +50,7 @@ export async function createCompany(formData: any) {
     if (error) throw error;
 
     revalidatePath('/admin/companies');
+    revalidatePath('/admin/jobs');
     return { success: true };
 }
 
@@ -67,6 +71,7 @@ export async function updateCompany(id: string, formData: any) {
 
     revalidatePath('/admin/companies');
     revalidatePath(`/admin/companies/${id}`);
+    revalidatePath('/admin/jobs');
     return { success: true };
 }
 
@@ -80,5 +85,6 @@ export async function deleteCompany(id: string) {
     if (error) throw error;
 
     revalidatePath('/admin/companies');
+    revalidatePath('/admin/jobs');
     return { success: true };
 }

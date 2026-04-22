@@ -106,8 +106,7 @@ export default function CompaniesPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-[13px] font-bold text-[#191C1D]">
-                                            {/* We'll count these later if needed */}
-                                            -
+                                            {company.job_openings?.length || 0}
                                         </td>
                                         <td className="px-6 py-4">
                                             <Link 

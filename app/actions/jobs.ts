@@ -93,7 +93,8 @@ export async function createJob(formData: any) {
             questionnaire: formData.questionnaire,
             required_language: formData.required_language,
             years_of_experience: formData.years_of_experience,
-            positions_count: formData.positions_count
+            positions_count: formData.positions_count,
+            company_id: formData.company_id
         }]);
 
     if (error) throw error;
@@ -146,7 +147,8 @@ export async function updateJob(id: string, formData: any) {
             questionnaire: formData.questionnaire,
             required_language: formData.required_language,
             years_of_experience: formData.years_of_experience,
-            positions_count: formData.positions_count
+            positions_count: formData.positions_count,
+            company_id: formData.company_id
         })
         .eq('id', id);
 
