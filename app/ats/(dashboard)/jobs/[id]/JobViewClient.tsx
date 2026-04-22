@@ -66,6 +66,11 @@ interface JobData {
     location_es?: string;
     location_en?: string;
     industry?: string;
+    companies?: {
+        id: string;
+        company_name: string;
+        company_code: string;
+    };
 }
 
 export default function JobViewClient({ job, userRole }: { job: JobData | null; userRole?: string }) {
@@ -646,6 +651,12 @@ ${questionnaire.map(section => {
                                     <div>
                                         <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">RANGO SALARIAL</p>
                                         <p className="text-[15px] font-bold text-[#191C1D]">{job?.salary_range || '$120k - $160k'}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">EMPRESA (PRIVADO)</p>
+                                        <p className="text-[15px] font-bold text-[#0040A1] bg-[#D6E3FB] px-3 py-1 rounded-full inline-block">
+                                            {job?.companies?.company_code || 'DB-XXX'}
+                                        </p>
                                     </div>
                                     <div>
                                         <p className="text-[9px] font-black text-[#737785] tracking-widest uppercase mb-1">NIVEL DE EXPERIENCIA</p>

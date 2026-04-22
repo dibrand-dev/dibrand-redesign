@@ -41,6 +41,7 @@ export default async function JobViewPage(props: { params: Promise<{ id: string 
                 location_en,
                 questionnaire,
                 created_at,
+                companies(id, company_name, company_code),
                 candidates:job_applications(
                     id, first_name, last_name, email, status, created_at, is_deleted, avatar_url, recruiter_id
                 )

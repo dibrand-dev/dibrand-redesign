@@ -26,7 +26,8 @@ import LogoutButton from './LogoutButton';
 
 const MENU_ITEMS = [
     { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { label: 'Clientes', href: '/admin/brands', icon: Building2 },
+    { label: 'Empresas', href: '/admin/companies', icon: Building2 },
+    { label: 'Portfolio Logos', href: '/admin/brands', icon: LayoutGrid },
     { label: 'Casos de Éxito', href: '/admin/success-stories', icon: Trophy },
     { label: 'Testimonios', href: '/admin/testimonials', icon: MessageSquare },
     { label: 'Búsquedas Laborales', href: '/admin/jobs', icon: Briefcase },

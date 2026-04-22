@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Sparkles, Loader2, Trash2, Globe, ListChecks } from 'lucide-react';
 import Link from 'next/link';
 import { createJob, updateJob, deleteJob } from '@/app/actions/jobs';
+import { getCompanies } from '@/app/admin/(dashboard)/companies/actions';
 import TiptapEditor from '@/components/admin/TiptapEditor';
 import { DEFAULT_QUESTIONNAIRE } from '@/lib/ats-constants';
 
@@ -20,6 +21,22 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
     const [error, setError] = useState<string | null>(null);
     const [lang, setLang] = useState<'es' | 'en'>('es');
     const [translating, setTranslating] = useState<string | null>(null);
+    const [companies, setCompanies] = useState<any[]>([]);
+    const [loadingCompanies, setLoadingCompanies] = useState(true);
+
+    React.useEffect(() => {
+        const fetchCompanies = async () => {
+            try {
+                const data = await getCompanies();
+                setCompanies(data);
+            } catch (err) {
+                console.error('Error loading companies:', err);
+            } finally {
+                setLoadingCompanies(false);
+            }
+        };
+        fetchCompanies();
+    }, []);
 
     const [formData, setFormData] = useState({
         title_es: initialData?.title_es || initialData?.title || '',
@@ -40,6 +57,7 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
         salary_range: initialData?.salary_range || '',
         is_active: initialData?.is_active ?? true,
         questionnaire: initialData?.questionnaire || DEFAULT_QUESTIONNAIRE,
+        company_id: initialData?.company_id || '',
     });
 
     const modalities = ['Remoto', 'Híbrido', 'Presencial'];
@@ -125,7 +143,8 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                 title: formData.title_es, // Fallback legacy
                 description: formData.description_es,
                 requirements: formData.requirements_es,
-                location: formData.location_es
+                location: formData.location_es,
+                company_id: formData.company_id || null
             };
 
             if (initialData?.id) {
@@ -215,6 +234,32 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                 {/* Background Pattern */}
                 <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
                     <Globe size={200} />
+                </div>
+
+                {/* Section: Owner Company */}
+                <div className="space-y-6 relative z-10 border-b border-admin-border/50 pb-8">
+                    <div className="flex items-center justify-between border-b border-admin-border pb-4">
+                        <h3 className="text-[11px] font-black text-brand uppercase tracking-widest flex items-center gap-2">
+                            Empresa Propietaria (Privado)
+                        </h3>
+                    </div>
+                    <div className="max-w-md space-y-2">
+                        <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Seleccionar Cliente</label>
+                        <select
+                            name="company_id"
+                            value={formData.company_id}
+                            onChange={handleChange}
+                            className="w-full px-5 py-3.5 bg-admin-bg/50 border border-admin-border rounded-xl focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none text-admin-text-primary text-base font-bold transition-all appearance-none cursor-pointer"
+                        >
+                            <option value="">-- Vincular a una Empresa --</option>
+                            {companies.map(c => (
+                                <option key={c.id} value={c.id}>
+                                    {c.company_name} ({c.company_code})
+                                </option>
+                            ))}
+                        </select>
+                        <p className="text-[9px] text-[#737785] italic font-medium">Solo los administradores ven el nombre de la empresa. El ATS solo verá el código.</p>
+                    </div>
                 </div>
 
                 {/* Section: Basic Info */}
