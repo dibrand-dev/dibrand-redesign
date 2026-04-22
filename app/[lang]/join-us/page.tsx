@@ -47,7 +47,7 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
                 .order('created_at', { ascending: false });
             
             if (fallbackError) throw fallbackError;
-            jobs = fallbackData;
+            jobs = fallbackData as any[];
         } else {
             jobs = data;
         }

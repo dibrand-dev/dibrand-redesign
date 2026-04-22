@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
                 .select('id, title, title_es, title_en')
                 .eq('id', slug)
                 .maybeSingle();
-            job = fallback;
+            job = fallback as any;
         }
 
         const title = job ? (lang === 'en' ? (job.title_en || job.title) : (job.title_es || job.title)) : 'Job Detail';
@@ -101,7 +101,7 @@ export default async function JobDetailPage({ params }: Props) {
                     .select('*')
                     .eq('id', slug)
                     .maybeSingle();
-                job = fallbackData;
+                job = fallbackData as any;
             } else {
                 job = data;
             }
