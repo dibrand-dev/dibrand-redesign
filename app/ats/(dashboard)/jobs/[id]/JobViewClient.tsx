@@ -63,6 +63,7 @@ interface JobData {
     positions_count?: number;
     location_es?: string;
     location_en?: string;
+    industry?: string;
 }
 
 export default function JobViewClient({ job, userRole }: { job: JobData | null; userRole?: string }) {
