@@ -155,16 +155,24 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                 company_id: formData.company_id || null
             };
 
+            let result;
             if (initialData?.id) {
-                await updateJob(initialData.id, payload);
+                result = await updateJob(initialData.id, payload);
             } else {
-                await createJob(payload);
+                result = await createJob(payload);
             }
-            router.push('/admin/jobs');
-            router.refresh();
+
+            if (result.success) {
+                router.push('/admin/jobs');
+                router.refresh();
+            } else {
+                setError(result.error || 'Error al guardar.');
+                setSaving(false);
+            }
         } catch (err: any) {
             if (err.message === 'NEXT_REDIRECT') throw err;
-            setError(err.message || 'Error al guardar.');
+            console.error('Submit error:', err);
+            setError('Ocurrió un error inesperado al procesar la solicitud.');
             setSaving(false);
         }
     };
@@ -172,12 +180,19 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
     const handleDeleteJob = async () => {
         if (!confirm('¿Estás seguro de que quieres eliminar esta vacante?')) return;
         setSaving(true);
+        setError(null);
         try {
-            await deleteJob(initialData.id);
-            router.push('/admin/jobs');
-            router.refresh();
+            const result = await deleteJob(initialData.id);
+            if (result.success) {
+                router.push('/admin/jobs');
+                router.refresh();
+            } else {
+                setError(result.error || 'Error al eliminar.');
+                setSaving(false);
+            }
         } catch (err: any) {
-            setError(err.message || 'Error al eliminar.');
+            console.error('Delete error:', err);
+            setError('Ocurrió un error inesperado al eliminar.');
             setSaving(false);
         }
     };

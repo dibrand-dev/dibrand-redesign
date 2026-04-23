@@ -68,49 +68,61 @@ export async function createJob(formData: any) {
     const baseSlug = generateSlug(formData.title_es || formData.title);
     const uniqueSlug = await ensureUniqueSlug(supabase, baseSlug);
 
-    const { error } = await supabase
-        .from('job_openings')
-        .insert([{
-            title: formData.title,
-            title_es: formData.title_es,
-            title_en: formData.title_en,
-            slug: uniqueSlug,
-            industry: formData.industry,
-            location: formData.location,
-            location_es: formData.location_es,
-            location_en: formData.location_en,
-            employment_type: formData.employment_type,
-            description: formData.description,
-            description_es: formData.description_es,
-            description_en: formData.description_en,
-            requirements: formData.requirements,
-            requirements_es: formData.requirements_es,
-            requirements_en: formData.requirements_en,
-            seniority: formData.seniority,
-            modality: formData.modality,
-            salary_range: formData.salary_range,
-            is_active: formData.is_active,
-            questionnaire: formData.questionnaire,
-            required_language: formData.required_language,
-            years_of_experience: formData.years_of_experience,
-            positions_count: formData.positions_count,
-            company_id: formData.company_id,
-            stack_ids: formData.stack_ids || []
-        }]);
+    try {
+        const { error } = await supabase
+            .from('job_openings')
+            .insert([{
+                title: formData.title,
+                title_es: formData.title_es,
+                title_en: formData.title_en,
+                slug: uniqueSlug,
+                industry: formData.industry,
+                location: formData.location,
+                location_es: formData.location_es,
+                location_en: formData.location_en,
+                employment_type: formData.employment_type,
+                description: formData.description,
+                description_es: formData.description_es,
+                description_en: formData.description_en,
+                requirements: formData.requirements,
+                requirements_es: formData.requirements_es,
+                requirements_en: formData.requirements_en,
+                seniority: formData.seniority,
+                modality: formData.modality,
+                salary_range: formData.salary_range,
+                is_active: formData.is_active,
+                questionnaire: formData.questionnaire,
+                required_language: formData.required_language,
+                years_of_experience: formData.years_of_experience,
+                positions_count: formData.positions_count,
+                company_id: formData.company_id
+            }]);
 
-    if (error) throw error;
+        if (error) throw error;
 
-    // Link Tech Stacks
-    if (formData.stack_ids && formData.stack_ids.length > 0) {
-        const { data: job } = await supabase.from('job_openings').select('id').eq('slug', uniqueSlug).single();
-        if (job) {
-            const stackLinks = formData.stack_ids.map((stackId: string, index: number) => ({
-                job_id: job.id,
-                stack_id: stackId,
-                sort_order: index
-            }));
-            await supabase.from('job_opening_stacks').insert(stackLinks);
+        // Link Tech Stacks
+        if (formData.stack_ids && formData.stack_ids.length > 0) {
+            const { data: job } = await supabase.from('job_openings').select('id').eq('slug', uniqueSlug).single();
+            if (job) {
+                const stackLinks = formData.stack_ids.map((stackId: string, index: number) => ({
+                    job_id: job.id,
+                    stack_id: stackId,
+                    sort_order: index
+                }));
+                const { error: stackError } = await supabase.from('job_opening_stacks').insert(stackLinks);
+                if (stackError) console.error('Error linking stacks:', stackError);
+            }
         }
+
+        await logAdminAction('publicó búsqueda', 'job_opening', formData.title_es || formData.title);
+
+        revalidatePath('/admin/jobs');
+        revalidatePath('/en/join-us');
+        revalidatePath('/es/join-us');
+        return { success: true };
+    } catch (e: any) {
+        console.error('CRITICAL ERROR creating job:', e);
+        return { success: false, error: e.message || 'Error desconocido al crear la vacante' };
     }
 
     await logAdminAction('publicó búsqueda', 'job_opening', formData.title_es || formData.title);
@@ -136,86 +148,101 @@ export async function updateJob(id: string, formData: any) {
         updatedSlug = await ensureUniqueSlug(supabase, baseSlug, id);
     }
 
-    const { error } = await supabase
-        .from('job_openings')
-        .update({
-            title: formData.title,
-            title_es: formData.title_es,
-            title_en: formData.title_en,
-            slug: updatedSlug,
-            industry: formData.industry,
-            location: formData.location,
-            location_es: formData.location_es,
-            location_en: formData.location_en,
-            employment_type: formData.employment_type,
-            description: formData.description,
-            description_es: formData.description_es,
-            description_en: formData.description_en,
-            requirements: formData.requirements,
-            requirements_es: formData.requirements_es,
-            requirements_en: formData.requirements_en,
-            seniority: formData.seniority,
-            modality: formData.modality,
-            salary_range: formData.salary_range,
-            is_active: formData.is_active,
-            questionnaire: formData.questionnaire,
-            required_language: formData.required_language,
-            years_of_experience: formData.years_of_experience,
-            positions_count: formData.positions_count,
-            company_id: formData.company_id,
-            stack_ids: formData.stack_ids || []
-        })
-        .eq('id', id);
+    try {
+        const { error } = await supabase
+            .from('job_openings')
+            .update({
+                title: formData.title,
+                title_es: formData.title_es,
+                title_en: formData.title_en,
+                slug: updatedSlug,
+                industry: formData.industry,
+                location: formData.location,
+                location_es: formData.location_es,
+                location_en: formData.location_en,
+                employment_type: formData.employment_type,
+                description: formData.description,
+                description_es: formData.description_es,
+                description_en: formData.description_en,
+                requirements: formData.requirements,
+                requirements_es: formData.requirements_es,
+                requirements_en: formData.requirements_en,
+                seniority: formData.seniority,
+                modality: formData.modality,
+                salary_range: formData.salary_range,
+                is_active: formData.is_active,
+                questionnaire: formData.questionnaire,
+                required_language: formData.required_language,
+                years_of_experience: formData.years_of_experience,
+                positions_count: formData.positions_count,
+                company_id: formData.company_id
+            })
+            .eq('id', id);
 
-    if (error) throw error;
+        if (error) throw error;
 
-    // Update Tech Stacks (Clear and Re-insert)
-    await supabase.from('job_opening_stacks').delete().eq('job_id', id);
-    if (formData.stack_ids && formData.stack_ids.length > 0) {
-        const stackLinks = formData.stack_ids.map((stackId: string, index: number) => ({
-            job_id: id,
-            stack_id: stackId,
-            sort_order: index
-        }));
-        await supabase.from('job_opening_stacks').insert(stackLinks);
+        // Update Tech Stacks (Clear and Re-insert)
+        await supabase.from('job_opening_stacks').delete().eq('job_id', id);
+        if (formData.stack_ids && formData.stack_ids.length > 0) {
+            const stackLinks = formData.stack_ids.map((stackId: string, index: number) => ({
+                job_id: id,
+                stack_id: stackId,
+                sort_order: index
+            }));
+            const { error: stackError } = await supabase.from('job_opening_stacks').insert(stackLinks);
+            if (stackError) console.error('Error updating stacks:', stackError);
+        }
+
+        await logAdminAction('actualizó búsqueda', 'job_opening', formData.title_es || formData.title);
+
+        revalidatePath('/admin/jobs');
+        revalidatePath(`/en/join-us/${updatedSlug}`);
+        revalidatePath(`/es/join-us/${updatedSlug}`);
+        revalidatePath('/en/join-us');
+        revalidatePath('/es/join-us');
+        return { success: true };
+    } catch (e: any) {
+        console.error('CRITICAL ERROR updating job:', e);
+        return { success: false, error: e.message || 'Error desconocido al actualizar la vacante' };
     }
-
-    await logAdminAction('actualizó búsqueda', 'job_opening', formData.title_es || formData.title);
-
-    revalidatePath('/admin/jobs');
-    revalidatePath(`/en/join-us/${updatedSlug}`);
-    revalidatePath(`/es/join-us/${updatedSlug}`);
-    revalidatePath('/en/join-us');
-    revalidatePath('/es/join-us');
-    return { success: true };
 }
 
 export async function toggleJobStatus(id: string, currentStatus: boolean) {
     const supabase = createAdminClient();
-    const { error } = await supabase
-        .from('job_openings')
-        .update({ is_active: !currentStatus })
-        .eq('id', id);
+    try {
+        const { error } = await supabase
+            .from('job_openings')
+            .update({ is_active: !currentStatus })
+            .eq('id', id);
 
-    if (error) throw error;
+        if (error) throw error;
 
-    await logAdminAction(currentStatus ? 'pausó búsqueda' : 'activó búsqueda', 'job_opening', id);
+        await logAdminAction(currentStatus ? 'pausó búsqueda' : 'activó búsqueda', 'job_opening', id);
 
-    revalidatePath('/admin/jobs');
-    return { success: true };
+        revalidatePath('/admin/jobs');
+        return { success: true };
+    } catch (e: any) {
+        console.error('Error toggling job status:', e);
+        return { success: false, error: e.message || 'Error al cambiar el estado de la vacante' };
+    }
 }
 
 export async function deleteJob(id: string) {
     const supabase = createAdminClient();
-    const { error } = await supabase
-        .from('job_openings')
-        .delete()
-        .eq('id', id);
+    try {
+        const { error } = await supabase
+            .from('job_openings')
+            .delete()
+            .eq('id', id);
 
-    if (error) throw error;
+        if (error) throw error;
 
-    await logAdminAction('eliminó búsqueda', 'job_opening', id);
+        await logAdminAction('eliminó búsqueda', 'job_opening', id);
 
-    revalidatePath('/admin/jobs');
-    return { success: true };
+        revalidatePath('/admin/jobs');
+        return { success: true };
+    } catch (e: any) {
+        console.error('Error deleting job:', e);
+        return { success: false, error: e.message || 'Error al eliminar la vacante' };
+    }
 }

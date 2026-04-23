@@ -25,6 +25,7 @@ export default function JobsPage() {
     const [jobs, setJobs] = useState<JobOpening[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         fetchJobs();
@@ -32,33 +33,45 @@ export default function JobsPage() {
 
     async function fetchJobs() {
         setLoading(true);
+        setError(null);
         try {
             const data = await getJobs();
             setJobs(data || []);
         } catch (error) {
             console.error('Error fetching jobs:', error);
+            setError('Error al cargar las vacantes.');
         }
         setLoading(false);
     }
 
     async function handleToggle(id: string, currentStatus: boolean) {
         try {
-            await toggleJobStatus(id, currentStatus);
-            setJobs(prev => prev.map(job => 
-                job.id === id ? { ...job, is_active: !currentStatus } : job
-            ));
+            const result = await toggleJobStatus(id, currentStatus);
+            if (result.success) {
+                setJobs(prev => prev.map(job => 
+                    job.id === id ? { ...job, is_active: !currentStatus } : job
+                ));
+            } else {
+                alert(result.error || 'Error al cambiar el estado.');
+            }
         } catch (error) {
             console.error('Error updating status:', error);
+            alert('Error inesperado al cambiar el estado.');
         }
     }
 
     async function handleDelete(id: string) {
         if (!confirm('¿Estás seguro de que quieres eliminar esta vacante?')) return;
         try {
-            await deleteJob(id);
-            setJobs(prev => prev.filter(job => job.id !== id));
+            const result = await deleteJob(id);
+            if (result.success) {
+                setJobs(prev => prev.filter(job => job.id !== id));
+            } else {
+                alert(result.error || 'Error al eliminar.');
+            }
         } catch (error) {
             console.error('Error deleting job:', error);
+            alert('Error inesperado al eliminar.');
         }
     }
 
