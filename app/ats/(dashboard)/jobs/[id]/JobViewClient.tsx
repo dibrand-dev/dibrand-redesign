@@ -41,6 +41,9 @@ interface JobData {
     title_es?: string;
     title_en?: string;
     location: string;
+    location_es?: string;
+    location_en?: string;
+    industry?: string;
     is_active: boolean;
     description?: string;
     description_es?: string;
@@ -51,21 +54,18 @@ interface JobData {
     salary_range?: string;
     employment_type?: string;
     seniority?: string;
+    required_language?: string;
+    years_of_experience?: string;
+    positions_count?: number;
     stats?: {
         totalApplicants: number;
         daysOpen: number;
-        [key: string]: number; // Allow dynamic stage keys
+        [key: string]: number;
     };
     recentActivity?: any[];
     team?: any[];
     questionnaire?: any[];
     allCandidates?: any[];
-    required_language?: string;
-    years_of_experience?: string;
-    positions_count?: number;
-    location_es?: string;
-    location_en?: string;
-    industry?: string;
     companies?: {
         id: string;
         company_name: string;
@@ -90,7 +90,7 @@ export default function JobViewClient({ job, userRole }: { job: JobData | null; 
     const [descContent, setDescContent] = useState(job?.description_es || job?.description || '');
     const [reqContent, setReqContent] = useState(job?.requirements_es || job?.requirements || '');
     // Provide a default that matches DB convention if it was mapped via job.industry or just 'Engineering'
-    const [industryContent, setIndustryContent] = useState(job?.industry || 'Engineering');
+    const [industryContent, setIndustryContent] = useState<string>((job as any)?.industry || 'Engineering');
 
     const DEFAULT_QUESTIONNAIRE: QuestionnaireSection[] = [
         {

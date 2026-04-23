@@ -28,6 +28,14 @@ interface JobOpening {
     modality?: string;
     created_at?: string;
     salary_range?: string;
+    job_opening_stacks?: {
+        sort_order: number;
+        tech_stacks: {
+            id: string;
+            name: string;
+            icon_url: string;
+        };
+    }[];
 }
 
 interface JoinOurTeamProps {
@@ -176,8 +184,28 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                             >
                                 <div className="flex gap-6">
                                     {/* Left Slot: Tech Logo / Dibrand Logo placeholder */}
-                                    <div className="shrink-0 w-14 h-14 bg-[#101828] rounded-xl flex items-center justify-center text-white overflow-hidden shadow-inner group-hover:scale-105 transition-transform duration-500">
-                                        <div className="font-black text-2xl italic tracking-tighter opacity-90">di</div>
+                                    <div className="shrink-0 w-14 h-14 bg-white rounded-full flex items-center justify-center border border-[#EAECF0] overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-500 p-2">
+                                        {(() => {
+                                            const firstStack = job.job_opening_stacks
+                                                ?.sort((a, b) => a.sort_order - b.sort_order)[0]
+                                                ?.tech_stacks;
+                                            
+                                            if (firstStack?.icon_url) {
+                                                return (
+                                                    <img 
+                                                        src={firstStack.icon_url} 
+                                                        alt={firstStack.name} 
+                                                        className="w-full h-full object-contain"
+                                                    />
+                                                );
+                                            }
+                                            
+                                            return (
+                                                <div className="w-full h-full bg-[#101828] rounded-full flex items-center justify-center text-white p-2">
+                                                    <div className="font-black text-xl italic tracking-tighter opacity-90">di</div>
+                                                </div>
+                                            );
+                                        })()}
                                     </div>
 
                                     {/* Content */}

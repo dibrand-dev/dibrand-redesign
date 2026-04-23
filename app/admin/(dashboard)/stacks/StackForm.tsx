@@ -8,20 +8,44 @@ import { useRouter } from 'next/navigation';
 export default function StackForm() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [name, setName] = useState('');
+    const [iconUrl, setIconUrl] = useState('');
     const router = useRouter();
+
+    const getSimpleIconUrl = (techName: string) => {
+        const slug = techName
+            .toLowerCase()
+            .replace(/\.js/g, 'dotjs')
+            .replace(/\+/g, 'plus')
+            .replace(/#/g, 'sharp')
+            .replace(/\s+/g, '')
+            .replace(/[^a-z0-9]/g, '');
+        return `https://cdn.simpleicons.org/${slug}`;
+    };
+
+    const handleSearchLogo = () => {
+        if (!name) return;
+        setIconUrl(getSimpleIconUrl(name));
+    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
 
-        const formData = new FormData(e.currentTarget);
-        
         try {
-            await createStack(formData);
-            // Reset form
-            (e.target as HTMLFormElement).reset();
-            router.refresh();
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('icon_url', iconUrl);
+
+            const result = await createStack(formData);
+            if (result.success) {
+                setName('');
+                setIconUrl('');
+                router.refresh();
+            } else {
+                setError(result.error || 'Error al agregar la tecnología');
+            }
         } catch (err: any) {
             setError(err.message || 'Error al agregar la tecnología');
         } finally {
@@ -43,20 +67,42 @@ export default function StackForm() {
                         name="name"
                         type="text"
                         required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         disabled={isLoading}
                         className="w-full px-4 py-2.5 rounded-xl border border-admin-border focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none transition-all font-medium text-sm bg-admin-bg/50 disabled:opacity-50"
                         placeholder="Ej. React, Node.js, Python"
                     />
                 </div>
                 <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-admin-text-secondary uppercase tracking-wider ml-1">Icon URL (Opcional)</label>
-                    <input
-                        name="icon_url"
-                        type="text"
-                        disabled={isLoading}
-                        className="w-full px-4 py-2.5 rounded-xl border border-admin-border focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none transition-all font-medium text-sm bg-admin-bg/50 disabled:opacity-50"
-                        placeholder="https://..."
-                    />
+                    <div className="flex justify-between items-center mr-1">
+                        <label className="text-[11px] font-bold text-admin-text-secondary uppercase tracking-wider ml-1">Icon URL (Opcional)</label>
+                        {name && (
+                            <button 
+                                type="button" 
+                                onClick={handleSearchLogo}
+                                className="text-[9px] font-bold text-admin-accent uppercase hover:underline"
+                            >
+                                Sugerir Logo
+                            </button>
+                        )}
+                    </div>
+                    <div className="flex gap-2">
+                        <input
+                            name="icon_url"
+                            type="text"
+                            value={iconUrl}
+                            onChange={(e) => setIconUrl(e.target.value)}
+                            disabled={isLoading}
+                            className="flex-1 px-4 py-2.5 rounded-xl border border-admin-border focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none transition-all font-medium text-sm bg-admin-bg/50 disabled:opacity-50"
+                            placeholder="https://..."
+                        />
+                        {iconUrl && (
+                            <div className="w-10 h-10 rounded-xl bg-white border border-admin-border flex items-center justify-center p-2 shrink-0">
+                                <img src={iconUrl} alt="Preview" className="w-full h-full object-contain" onError={() => setIconUrl('')} />
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {error && (

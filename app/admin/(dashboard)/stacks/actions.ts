@@ -5,13 +5,23 @@ import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 export async function getStacks() {
     noStore();
-    const { data, error } = await supabase
-        .from('tech_stacks')
-        .select('*')
-        .order('name', { ascending: true });
+    try {
+        const { data, error } = await supabase
+            .from('tech_stacks')
+            .select('*')
+            .order('name', { ascending: true });
 
-    if (error) throw error;
-    return data || [];
+        if (error) throw error;
+        // Ensure we return a plain array
+        return (data || []).map(stack => ({
+            id: stack.id,
+            name: stack.name,
+            icon_url: stack.icon_url
+        }));
+    } catch (error) {
+        console.error('Error fetching stacks:', error);
+        return [];
+    }
 }
 
 export async function createStack(formData: FormData) {
@@ -32,18 +42,16 @@ export async function createStack(formData: FormData) {
 
         if (error) {
             console.error('Database error creating stack:', error);
-            // Handle unique constraint violation
-            if (error.code === '23505') {
-                throw new Error('Esta tecnología ya existe');
-            }
+            if (error.code === '23505') throw new Error('Esta tecnología ya existe');
             throw new Error(`Error de base de datos: ${error.message}`);
         }
+
+        revalidatePath('/admin', 'layout');
+        return { success: true };
     } catch (err: any) {
         console.error('Server action error creating stack:', err);
-        throw err;
+        return { success: false, error: err.message };
     }
-
-    revalidatePath('/admin', 'layout');
 }
 
 export async function deleteStack(id: string) {
@@ -59,22 +67,28 @@ export async function deleteStack(id: string) {
 export async function updateStack(id: string, name: string, iconUrl?: string) {
     if (!name) throw new Error('El nombre es obligatorio');
     
-    const updateData: any = { 
-        name: name.trim(),
-        icon_url: iconUrl?.trim() || null 
-    };
+    try {
+        const updateData: any = { 
+            name: name.trim(),
+            icon_url: iconUrl?.trim() || null 
+        };
 
-    const { error } = await supabase
-        .from('tech_stacks')
-        .update(updateData)
-        .eq('id', id);
+        const { error } = await supabase
+            .from('tech_stacks')
+            .update(updateData)
+            .eq('id', id);
 
-    if (error) {
-        console.error('Database error in updateStack:', error);
-        if (error.code === '23505') throw new Error('Esta tecnología ya existe');
-        throw new Error(error.message || 'Error desconocido al actualizar');
+        if (error) {
+            console.error('Database error in updateStack:', error);
+            if (error.code === '23505') throw new Error('Esta tecnología ya existe');
+            throw new Error(error.message || 'Error desconocido al actualizar');
+        }
+        
+        revalidatePath('/admin/stacks');
+        revalidatePath('/admin', 'layout');
+        return { success: true };
+    } catch (err: any) {
+        console.error('Server action error updating stack:', err);
+        return { success: false, error: err.message };
     }
-    
-    revalidatePath('/admin/stacks');
-    revalidatePath('/admin', 'layout');
 }

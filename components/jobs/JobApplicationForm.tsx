@@ -7,12 +7,22 @@ import { getTechStacks, uploadResume, submitApplication } from '@/app/actions/ap
 import { CheckCircle2, Loader2, UploadCloud, Send } from 'lucide-react';
 import { trackJoinUsFormSuccess } from '@/lib/gtm';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { z } from 'zod';
 
 interface JobApplicationFormProps {
     jobId: string;
     lang: string;
     dict: any;
 }
+
+const applicationSchema = z.object({
+    stack_ids: z.array(z.any()).min(3, "Por favor, selecciona al menos 3 tecnologías")
+});
+
+const POPULAR_TECH = [
+    'React', 'Node.js', 'Python', 'TypeScript', 'AWS', 
+    'Next.js', 'Tailwind CSS', 'PostgreSQL', 'Docker'
+];
 
 export default function JobApplicationForm({ jobId, lang, dict }: JobApplicationFormProps) {
     const [loading, setLoading] = useState(false);
@@ -24,6 +34,7 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
     const [selectedCountry, setSelectedCountry] = useState<any>(null);
     const [selectedState, setSelectedState] = useState<any>(null);
     const [resumeFile, setResumeFile] = useState<File | null>(null);
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const { executeRecaptcha } = useGoogleReCaptcha();
 
     useEffect(() => {
@@ -46,6 +57,25 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
         const countryStates = State.getStatesOfCountry(selected.value);
         setStates(countryStates.map(s => ({ value: s.isoCode, label: s.name })));
         setSelectedState(null);
+    };
+
+    const handleAddStack = (name: string) => {
+        const stackToAdd = stacks.find(s => s.label.toLowerCase() === name.toLowerCase());
+        if (!stackToAdd) return;
+
+        const isAlreadySelected = selectedStacks.some((s: any) => s.value === stackToAdd.value);
+        if (isAlreadySelected) return;
+
+        const newSelected = [...selectedStacks, stackToAdd];
+        setSelectedStacks(newSelected);
+
+        if (newSelected.length >= 3) {
+            setErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors.stack_ids;
+                return newErrors;
+            });
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -82,6 +112,27 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
         }
 
         try {
+            // Validation logic with Zod
+            const validation = applicationSchema.safeParse({ stack_ids: selectedStacks });
+            
+            if (!validation.success) {
+                const errorMessage = lang === 'es' 
+                    ? 'Por favor, selecciona al menos 3 tecnologías' 
+                    : 'Please select at least 3 technologies';
+                
+                setErrors(prev => ({ ...prev, stack_ids: errorMessage }));
+                const techSelector = document.getElementById('tech-stacks-select');
+                techSelector?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setLoading(false);
+                return;
+            } else {
+                setErrors(prev => {
+                    const newErrors = { ...prev };
+                    delete newErrors.stack_ids;
+                    return newErrors;
+                });
+            }
+
             const resumeUrl = await uploadResume(resumeFile);
 
             const formData = new FormData(form);
@@ -220,15 +271,68 @@ export default function JobApplicationForm({ jobId, lang, dict }: JobApplication
 
             <div className="space-y-1.5">
                 <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">{dict.techStacks} *</label>
-                <Select
-                    instanceId="tech-stacks-select"
-                    isMulti
-                    options={stacks}
-                    value={selectedStacks}
-                    onChange={(s) => setSelectedStacks(s)}
-                    styles={selectStyles}
-                    className="font-outfit"
-                />
+                <div id="tech-stacks-container" className="space-y-3">
+                    <Select
+                        instanceId="tech-stacks-select"
+                        isMulti
+                        options={stacks}
+                        value={selectedStacks}
+                        onChange={(s) => {
+                            setSelectedStacks(s || []);
+                            if (s && s.length >= 3) {
+                                setErrors(prev => {
+                                    const newErrors = { ...prev };
+                                    delete newErrors.stack_ids;
+                                    return newErrors;
+                                });
+                            }
+                        }}
+                        styles={{
+                            ...selectStyles,
+                            control: (base: any, state: any) => ({
+                                ...selectStyles.control(base, state),
+                                borderColor: errors.stack_ids ? '#ef4444' : (state.isFocused ? '#a04c97' : '#e4e4e7'),
+                                '&:hover': {
+                                    borderColor: errors.stack_ids ? '#ef4444' : '#a04c97'
+                                }
+                            })
+                        }}
+                        className="font-outfit"
+                    />
+
+                    {/* Popular Tech Chips */}
+                    <div className="flex flex-col gap-2">
+                        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight">
+                            {lang === 'es' ? 'Sugerencias rápidas:' : 'Quick suggestions:'}
+                        </span>
+                        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
+                            {POPULAR_TECH.map((tech) => {
+                                const isSelected = selectedStacks.some((s: any) => s.label.toLowerCase() === tech.toLowerCase());
+                                return (
+                                    <button
+                                        key={tech}
+                                        type="button"
+                                        onClick={() => handleAddStack(tech)}
+                                        disabled={isSelected}
+                                        className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium border transition-all duration-200 ${
+                                            isSelected 
+                                            ? 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed opacity-60' 
+                                            : 'bg-white border-zinc-200 text-zinc-600 hover:border-brand/40 hover:text-brand hover:bg-brand/5'
+                                        }`}
+                                    >
+                                        {tech}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+                <p className={`text-[10px] ${errors.stack_ids ? 'text-red-500 font-bold' : 'text-zinc-500'} font-outfit mt-1 flex justify-between items-center`}>
+                    <span>{errors.stack_ids || (lang === 'es' ? 'Selecciona al menos 3 tecnologías que domines' : 'Select at least 3 technologies you master')}</span>
+                    <span className={`font-bold ${selectedStacks.length >= 3 ? 'text-green-500' : 'text-brand'}`}>
+                        ({selectedStacks.length}/3)
+                    </span>
+                </p>
             </div>
 
             <div className="space-y-1.5">

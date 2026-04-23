@@ -20,7 +20,7 @@ export async function getJob(id: string) {
     const supabase = createAdminClient();
     const { data, error } = await supabase
         .from('job_openings')
-        .select('*')
+        .select('*, job_opening_stacks(stack_id)')
         .eq('id', id)
         .single();
 
@@ -94,10 +94,24 @@ export async function createJob(formData: any) {
             required_language: formData.required_language,
             years_of_experience: formData.years_of_experience,
             positions_count: formData.positions_count,
-            company_id: formData.company_id
+            company_id: formData.company_id,
+            stack_ids: formData.stack_ids || []
         }]);
 
     if (error) throw error;
+
+    // Link Tech Stacks
+    if (formData.stack_ids && formData.stack_ids.length > 0) {
+        const { data: job } = await supabase.from('job_openings').select('id').eq('slug', uniqueSlug).single();
+        if (job) {
+            const stackLinks = formData.stack_ids.map((stackId: string, index: number) => ({
+                job_id: job.id,
+                stack_id: stackId,
+                sort_order: index
+            }));
+            await supabase.from('job_opening_stacks').insert(stackLinks);
+        }
+    }
 
     await logAdminAction('publicó búsqueda', 'job_opening', formData.title_es || formData.title);
 
@@ -148,11 +162,23 @@ export async function updateJob(id: string, formData: any) {
             required_language: formData.required_language,
             years_of_experience: formData.years_of_experience,
             positions_count: formData.positions_count,
-            company_id: formData.company_id
+            company_id: formData.company_id,
+            stack_ids: formData.stack_ids || []
         })
         .eq('id', id);
 
     if (error) throw error;
+
+    // Update Tech Stacks (Clear and Re-insert)
+    await supabase.from('job_opening_stacks').delete().eq('job_id', id);
+    if (formData.stack_ids && formData.stack_ids.length > 0) {
+        const stackLinks = formData.stack_ids.map((stackId: string, index: number) => ({
+            job_id: id,
+            stack_id: stackId,
+            sort_order: index
+        }));
+        await supabase.from('job_opening_stacks').insert(stackLinks);
+    }
 
     await logAdminAction('actualizó búsqueda', 'job_opening', formData.title_es || formData.title);
 

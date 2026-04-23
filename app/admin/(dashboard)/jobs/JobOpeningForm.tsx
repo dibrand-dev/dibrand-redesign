@@ -8,6 +8,8 @@ import { createJob, updateJob, deleteJob } from '@/app/actions/jobs';
 import { getCompanies } from '@/app/admin/(dashboard)/companies/actions';
 import TiptapEditor from '@/components/admin/TiptapEditor';
 import { DEFAULT_QUESTIONNAIRE } from '@/lib/ats-constants';
+import Select from 'react-select';
+import { getStacks } from '@/app/admin/(dashboard)/stacks/actions';
 
 
 
@@ -23,19 +25,24 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
     const [translating, setTranslating] = useState<string | null>(null);
     const [companies, setCompanies] = useState<any[]>([]);
     const [loadingCompanies, setLoadingCompanies] = useState(true);
+    const [allStacks, setAllStacks] = useState<any[]>([]);
 
     React.useEffect(() => {
-        const fetchCompanies = async () => {
+        const fetchData = async () => {
             try {
-                const data = await getCompanies();
-                setCompanies(data);
+                const [companiesData, stacksData] = await Promise.all([
+                    getCompanies(),
+                    getStacks()
+                ]);
+                setCompanies(companiesData);
+                setAllStacks(stacksData);
             } catch (err) {
-                console.error('Error loading companies:', err);
+                console.error('Error loading form data:', err);
             } finally {
                 setLoadingCompanies(false);
             }
         };
-        fetchCompanies();
+        fetchData();
     }, []);
 
     const [formData, setFormData] = useState({
@@ -58,6 +65,7 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
         is_active: initialData?.is_active ?? true,
         questionnaire: initialData?.questionnaire || DEFAULT_QUESTIONNAIRE,
         company_id: initialData?.company_id || '',
+        stack_ids: initialData?.job_opening_stacks?.map((s: any) => s.stack_id) || [],
     });
 
     const modalities = ['Remoto', 'Híbrido', 'Presencial'];
@@ -415,6 +423,68 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                             />
                             <p className="text-[9px] text-gray-400 uppercase tracking-widest font-bold">DATO CONFIDENCIAL: Nunca se muestra en el sitio público.</p>
                         </div>
+                    </div>
+                </div>
+
+                {/* Section: Tech Stacks */}
+                <div className="space-y-6 relative z-10 border-b border-admin-border/50 pb-8">
+                    <div className="flex items-center justify-between border-b border-admin-border pb-4">
+                        <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                            Tech Stacks Requeridos
+                        </h3>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Tecnologías Principales</label>
+                        <Select
+                            isMulti
+                            options={allStacks.map(s => ({ value: s.id, label: s.name }))}
+                            value={allStacks
+                                .filter(s => formData.stack_ids.includes(s.id))
+                                .map(s => ({ value: s.id, label: s.name }))
+                            }
+                            onChange={(selectedOptions) => {
+                                setFormData(prev => ({
+                                    ...prev,
+                                    stack_ids: selectedOptions ? selectedOptions.map((o: any) => o.value) : []
+                                }));
+                            }}
+                            placeholder="Buscar tecnologías..."
+                            className="text-sm font-bold"
+                            styles={{
+                                control: (base) => ({
+                                    ...base,
+                                    backgroundColor: 'rgba(248, 250, 252, 0.5)',
+                                    borderColor: '#E2E8F0',
+                                    borderRadius: '0.75rem',
+                                    padding: '0.25rem',
+                                    '&:hover': {
+                                        borderColor: '#0040A1'
+                                    }
+                                }),
+                                multiValue: (base) => ({
+                                    ...base,
+                                    backgroundColor: '#0040A110',
+                                    borderRadius: '0.5rem',
+                                    border: '1px solid #0040A120'
+                                }),
+                                multiValueLabel: (base) => ({
+                                    ...base,
+                                    color: '#0040A1',
+                                    fontWeight: '700',
+                                    fontSize: '11px',
+                                    textTransform: 'uppercase'
+                                }),
+                                multiValueRemove: (base) => ({
+                                    ...base,
+                                    color: '#0040A1',
+                                    '&:hover': {
+                                        backgroundColor: '#0040A1',
+                                        color: 'white'
+                                    }
+                                })
+                            }}
+                        />
+                        <p className="text-[9px] text-[#737785] italic font-medium">El primer logo de la lista se usará como avatar en la sección Join-Us.</p>
                     </div>
                 </div>
 

@@ -7,12 +7,22 @@ import { getTechStacks, uploadResume, submitApplication, getTalentPoolJobId } fr
 import { CheckCircle2, Loader2, UploadCloud, Send, Heart } from 'lucide-react';
 import { trackJoinUsFormSuccess } from '@/lib/gtm';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { z } from 'zod';
 
 interface SpontaneousApplicationFormProps {
     lang: string;
     dict: any;
     onSuccess?: () => void;
 }
+
+const applicationSchema = z.object({
+    stack_ids: z.array(z.any()).min(3, "Por favor, selecciona al menos 3 tecnologías")
+});
+
+const POPULAR_TECH = [
+    'React', 'Node.js', 'Python', 'TypeScript', 'AWS', 
+    'Next.js', 'Tailwind CSS', 'PostgreSQL', 'Docker'
+];
 
 export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: SpontaneousApplicationFormProps) {
     const [loading, setLoading] = useState(false);
@@ -70,6 +80,19 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
         setSelectedState(null);
     };
 
+    const handleAddStack = (name: string) => {
+        const stackToAdd = stacks.find(s => s.label.toLowerCase() === name.toLowerCase());
+        if (!stackToAdd) return;
+
+        const isAlreadySelected = selectedStacks.some((s: any) => s.value === stackToAdd.value);
+        if (isAlreadySelected) return;
+
+        const newSelected = [...selectedStacks, stackToAdd];
+        setSelectedStacks(newSelected);
+
+        if (newSelected.length >= 3) setFormError(null);
+    };
+
     const [formError, setFormError] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -92,6 +115,15 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
         const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
         let captchaToken: string | null = null;
         
+        const validation = applicationSchema.safeParse({ stack_ids: selectedStacks });
+        if (!validation.success) {
+            setFormError(lang === 'es' ? 'Por favor, selecciona al menos 3 tecnologías' : 'Please select at least 3 technologies');
+            const techSelector = document.getElementById('stacks-select');
+            techSelector?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setLoading(false);
+            return;
+        }
+
         if (siteKey && siteKey.length > 5 && siteKey !== 'DUMMY_KEY_FOR_CONTEXT_ONLY' && executeRecaptcha) {
             try {
                 const tokenPromise = executeRecaptcha('spontaneous_apply');
@@ -312,17 +344,66 @@ export default function SpontaneousApplicationForm({ lang, dict, onSuccess }: Sp
             </div>
 
             <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{isEn ? 'Main Technologies' : 'Tecnologías Principales'}</label>
-                <Select
-                    instanceId="stacks-select"
-                    isMulti
-                    options={stacks}
-                    value={selectedStacks}
-                    onChange={(s) => setSelectedStacks(s)}
-                    styles={selectStyles}
-                    placeholder="e.g. React, Node.js..."
-                    className="font-inter"
-                />
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+                    {isEn ? 'Main Technologies' : 'Tecnologías Principales'} *
+                </label>
+                <div id="tech-stacks-container" className="space-y-4">
+                    <Select
+                        instanceId="stacks-select"
+                        isMulti
+                        options={stacks}
+                        value={selectedStacks}
+                        onChange={(s) => {
+                            setSelectedStacks(s || []);
+                            if (s && s.length >= 3) setFormError(null);
+                        }}
+                        styles={{
+                            ...selectStyles,
+                            control: (base: any, state: any) => ({
+                                ...selectStyles.control(base, state),
+                                borderColor: formError && selectedStacks.length < 3 ? '#ef4444' : (state.isFocused ? '#A3369D' : '#e2e8f0'),
+                                '&:hover': {
+                                    borderColor: formError && selectedStacks.length < 3 ? '#ef4444' : '#A3369D'
+                                }
+                            })
+                        }}
+                        placeholder={isEn ? "Select at least 3 technologies..." : "Selecciona al menos 3 tecnologías..."}
+                        className="font-inter"
+                    />
+
+                    {/* Popular Tech Chips */}
+                    <div className="flex flex-col gap-2.5">
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                            {lang === 'es' ? 'Sugerencias rápidas:' : 'Quick suggestions:'}
+                        </span>
+                        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-2 px-2">
+                            {POPULAR_TECH.map((tech) => {
+                                const isSelected = selectedStacks.some((s: any) => s.label.toLowerCase() === tech.toLowerCase());
+                                return (
+                                    <button
+                                        key={tech}
+                                        type="button"
+                                        onClick={() => handleAddStack(tech)}
+                                        disabled={isSelected}
+                                        className={`shrink-0 px-4 py-2 rounded-xl text-[11px] font-bold border transition-all duration-300 ${
+                                            isSelected 
+                                            ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed opacity-60' 
+                                            : 'bg-white border-slate-200 text-slate-600 hover:border-brand/40 hover:text-brand hover:bg-brand/5 hover:shadow-sm'
+                                        }`}
+                                    >
+                                        {tech}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+                <p className={`text-[10px] ${formError && selectedStacks.length < 3 ? 'text-red-500 font-bold' : 'text-slate-400'} font-inter mt-2 ml-1 flex justify-between items-center`}>
+                    <span>{isEn ? 'Select at least 3 technologies that you master' : 'Selecciona al menos 3 tecnologías que domines'}</span>
+                    <span className={`font-black uppercase tracking-widest ${selectedStacks.length >= 3 ? 'text-green-500' : 'text-brand'}`}>
+                        ({selectedStacks.length}/3)
+                    </span>
+                </p>
             </div>
 
             <div className="space-y-1.5">

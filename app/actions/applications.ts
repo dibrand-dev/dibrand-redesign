@@ -11,6 +11,15 @@ export async function submitApplication(formData: any) {
             job_id: formData.job_id
         });
 
+        // 0. Validation Check (Back-end)
+        if (!formData.stack_ids || formData.stack_ids.length < 3) {
+            console.warn('[submitApplication] Validation failed: Minimum 3 skills required');
+            return { 
+                success: false, 
+                error: 'Por favor, selecciona al menos 3 tecnologías. (Minimum 3 technologies required)' 
+            };
+        }
+
         // 0. Honeypot Check
         if (formData.website_secondary) {
             console.warn('Spam detected via Honeypot: Spontaneous application');

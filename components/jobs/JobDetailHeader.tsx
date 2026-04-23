@@ -27,8 +27,28 @@ export default function JobDetailHeader({ job, jobTitle, jobLocation, isEn }: Jo
                 {/* Left Content Block */}
                 <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8 flex-1">
                     {/* Logo Slot - Now Black per reference */}
-                    <div className="shrink-0 w-16 h-16 md:w-20 md:h-20 bg-[#101828] rounded-[18px] flex items-center justify-center text-white shadow-xl shadow-zinc-200">
-                        <div className="font-black text-2xl md:text-3xl italic tracking-tighter opacity-90">di</div>
+                    <div className="shrink-0 w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center border border-zinc-100 shadow-sm p-3">
+                        {(() => {
+                            const firstStack = job.job_opening_stacks
+                                ?.sort((a: any, b: any) => a.sort_order - b.sort_order)[0]
+                                ?.tech_stacks;
+                            
+                            if (firstStack?.icon_url) {
+                                return (
+                                    <img 
+                                        src={firstStack.icon_url} 
+                                        alt={firstStack.name} 
+                                        className="w-full h-full object-contain"
+                                    />
+                                );
+                            }
+                            
+                            return (
+                                <div className="w-full h-full bg-[#101828] rounded-full flex items-center justify-center text-white p-2">
+                                    <div className="font-black text-xl italic tracking-tighter opacity-90">di</div>
+                                </div>
+                            );
+                        })()}
                     </div>
 
                     {/* Info Block */}

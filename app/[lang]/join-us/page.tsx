@@ -33,7 +33,12 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
                 industry, 
                 seniority, 
                 modality,
-                employment_type
+                employment_type,
+                created_at,
+                job_opening_stacks(
+                    sort_order,
+                    tech_stacks(id, name, icon_url)
+                )
             `)
             .eq('is_active', true)
             .order('created_at', { ascending: false });

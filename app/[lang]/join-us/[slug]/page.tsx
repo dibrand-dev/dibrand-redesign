@@ -82,7 +82,11 @@ export default async function JobDetailPage({ params }: Props) {
                 description, description_es, description_en,
                 requirements, requirements_es, requirements_en,
                 industry, seniority, modality, employment_type,
-                is_active, created_at
+                is_active, created_at,
+                job_opening_stacks(
+                    sort_order,
+                    tech_stacks(id, name, icon_url)
+                )
             `);
 
         if (isUUID) {

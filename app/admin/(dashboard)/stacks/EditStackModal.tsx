@@ -21,15 +21,35 @@ export default function EditStackModal({ stack }: Props) {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
+    const getSimpleIconUrl = (techName: string) => {
+        const slug = techName
+            .toLowerCase()
+            .replace(/\.js/g, 'dotjs')
+            .replace(/\+/g, 'plus')
+            .replace(/#/g, 'sharp')
+            .replace(/\s+/g, '')
+            .replace(/[^a-z0-9]/g, '');
+        return `https://cdn.simpleicons.org/${slug}`;
+    };
+
+    const handleSearchLogo = () => {
+        if (!name) return;
+        setIconUrl(getSimpleIconUrl(name));
+    };
+
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
 
         try {
-            await updateStack(stack.id, name, iconUrl);
-            setIsOpen(false);
-            router.refresh();
+            const result = await updateStack(stack.id, name, iconUrl);
+            if (result.success) {
+                setIsOpen(false);
+                router.refresh();
+            } else {
+                setError(result.error || 'Error al actualizar');
+            }
         } catch (err: any) {
             setError(err.message || 'Error al actualizar');
         } finally {
@@ -71,13 +91,29 @@ export default function EditStackModal({ stack }: Props) {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[11px] font-bold text-[#737785] uppercase tracking-widest">Icon URL (Opcional)</label>
-                                <input
-                                    value={iconUrl}
-                                    onChange={(e) => setIconUrl(e.target.value)}
-                                    placeholder="https://..."
-                                    className="w-full px-4 py-3 rounded-xl border border-[#E2E8F0] text-[14px] font-medium focus:border-[#0040A1] outline-none transition-all shadow-sm"
-                                />
+                                <div className="flex justify-between items-center">
+                                    <label className="text-[11px] font-bold text-[#737785] uppercase tracking-widest">Icon URL (Opcional)</label>
+                                    <button 
+                                        type="button" 
+                                        onClick={handleSearchLogo}
+                                        className="text-[9px] font-bold text-[#0040A1] uppercase hover:underline"
+                                    >
+                                        Sugerir Logo
+                                    </button>
+                                </div>
+                                <div className="flex gap-3">
+                                    <input
+                                        value={iconUrl}
+                                        onChange={(e) => setIconUrl(e.target.value)}
+                                        placeholder="https://..."
+                                        className="flex-1 px-4 py-3 rounded-xl border border-[#E2E8F0] text-[14px] font-medium focus:border-[#0040A1] outline-none transition-all shadow-sm"
+                                    />
+                                    {iconUrl && (
+                                        <div className="w-12 h-12 rounded-xl border border-[#E2E8F0] bg-white flex items-center justify-center p-2 shrink-0">
+                                            <img src={iconUrl} alt="Preview" className="w-full h-full object-contain" onError={() => setIconUrl('')} />
+                                        </div>
+                                    )}
+                                </div>
                                 <p className="text-[10px] text-[#737785] font-medium">Si se deja vacío, se usará automáticamente Simple Icons.</p>
                             </div>
 
