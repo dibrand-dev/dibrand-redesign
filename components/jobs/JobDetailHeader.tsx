@@ -29,15 +29,18 @@ export default function JobDetailHeader({ job, jobTitle, jobLocation, isEn }: Jo
                     {/* Logo Slot - Now Black per reference */}
                     <div className="shrink-0 w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center border border-zinc-100 shadow-sm p-3">
                         {(() => {
-                            const firstStack = job.job_opening_stacks
-                                ?.sort((a: any, b: any) => a.sort_order - b.sort_order)[0]
-                                ?.tech_stacks;
+                            const stacks = job.job_opening_stacks || [];
+                            const firstStackLink = [...stacks].sort((a: any, b: any) => (a.sort_order || 0) - (b.sort_order || 0))[0];
+                            const firstStackData = firstStackLink?.tech_stacks;
                             
-                            if (firstStack?.icon_url) {
+                            // Handle both object and array response from Supabase
+                            const stack = Array.isArray(firstStackData) ? firstStackData[0] : firstStackData;
+                            
+                            if (stack?.icon_url) {
                                 return (
                                     <img 
-                                        src={firstStack.icon_url} 
-                                        alt={firstStack.name} 
+                                        src={stack.icon_url} 
+                                        alt={stack.name} 
                                         className="w-full h-full object-contain"
                                     />
                                 );

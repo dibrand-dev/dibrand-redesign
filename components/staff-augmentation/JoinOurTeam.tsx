@@ -186,15 +186,18 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
                                     {/* Left Slot: Tech Logo / Dibrand Logo placeholder */}
                                     <div className="shrink-0 w-14 h-14 bg-white rounded-full flex items-center justify-center border border-[#EAECF0] overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-500 p-2">
                                         {(() => {
-                                            const firstStack = job.job_opening_stacks
-                                                ?.sort((a, b) => a.sort_order - b.sort_order)[0]
-                                                ?.tech_stacks;
+                                            const stacks = job.job_opening_stacks || [];
+                                            const firstStackLink = [...stacks].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))[0];
+                                            const firstStackData = firstStackLink?.tech_stacks;
                                             
-                                            if (firstStack?.icon_url) {
+                                            // Handle both object and array response from Supabase
+                                            const stack = Array.isArray(firstStackData) ? firstStackData[0] : firstStackData;
+                                            
+                                            if (stack?.icon_url) {
                                                 return (
                                                     <img 
-                                                        src={firstStack.icon_url} 
-                                                        alt={firstStack.name} 
+                                                        src={stack.icon_url} 
+                                                        alt={stack.name} 
                                                         className="w-full h-full object-contain"
                                                     />
                                                 );

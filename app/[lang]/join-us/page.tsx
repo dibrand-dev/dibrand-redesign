@@ -24,7 +24,7 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
     // Fetch active job openings with bilingual support - STRICT WHITELIST FOR PUBLIC VIEW
     let jobs: any[] | null = null;
     try {
-        const { data, error } = await supabase
+        const query = supabase
             .from('job_openings')
             .select(`
                 id, slug,
@@ -42,22 +42,37 @@ export default async function CareersPage(props: { params: Promise<{ lang: "en" 
             `)
             .eq('is_active', true)
             .order('created_at', { ascending: false });
+
+        const { data, error } = await query;
         
         if (error) {
-            // Fallback if slug column doesn't exist
+            console.warn('Main job query failed, trying fallback:', error.message);
+            // Fallback if slug column doesn't exist or other schema mismatch
             const { data: fallbackData, error: fallbackError } = await supabase
                 .from('job_openings')
-                .select(`id, title, title_es, title_en, location, location_es, location_en, industry, seniority, modality, employment_type`)
+                .select(`
+                    id, 
+                    title, title_es, title_en, 
+                    location, location_es, location_en, 
+                    industry, seniority, modality, employment_type,
+                    job_opening_stacks(
+                        sort_order,
+                        tech_stacks(id, name, icon_url)
+                    )
+                `)
                 .eq('is_active', true)
                 .order('created_at', { ascending: false });
             
-            if (fallbackError) throw fallbackError;
+            if (fallbackError) {
+                console.error('Fallback job query failed too:', fallbackError.message);
+                throw fallbackError;
+            }
             jobs = fallbackData as any[];
         } else {
             jobs = data;
         }
     } catch (e) {
-        console.warn('Job query failed:', e);
+        console.error('CRITICAL: All job queries failed:', e);
         jobs = [];
     }
 

@@ -99,12 +99,29 @@ export default async function JobDetailPage({ params }: Props) {
 
         // If there was an error (e.g. slug column missing), try fallback with only ID
         if (error || !data) {
+            console.warn('Individual job query failed or returned no data, trying ID fallback:', error?.message);
             if (isUUID) {
-                const { data: fallbackData } = await supabase
+                const { data: fallbackData, error: fallbackError } = await supabase
                     .from('job_openings')
-                    .select('*')
+                    .select(`
+                        id, slug,
+                        title, title_es, title_en,
+                        location, location_es, location_en,
+                        description, description_es, description_en,
+                        requirements, requirements_es, requirements_en,
+                        industry, seniority, modality, employment_type,
+                        is_active, created_at,
+                        job_opening_stacks(
+                            sort_order,
+                            tech_stacks(id, name, icon_url)
+                        )
+                    `)
                     .eq('id', slug)
                     .maybeSingle();
+                
+                if (fallbackError) {
+                    console.error('ID fallback failed too:', fallbackError.message);
+                }
                 job = fallbackData as any;
             } else {
                 job = data;
