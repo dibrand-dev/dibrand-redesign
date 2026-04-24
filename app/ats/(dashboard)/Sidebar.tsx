@@ -41,14 +41,14 @@ export default function AtsSidebar() {
                 ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
             `}>
                 {/* Logo Section */}
-                <div className="pt-10 pb-12 px-10 flex items-center justify-between">
+                <div className="py-10 px-8 flex items-center justify-between">
                     <Link href="/ats" onClick={close} className="flex items-center">
                         <Image 
                             src="/logo_dibrand.svg" 
                             alt="Dibrand Logo" 
-                            width={180} 
-                            height={44} 
-                            className="object-contain h-11 w-auto"
+                            width={200} 
+                            height={56} 
+                            className="h-14 w-auto object-contain"
                         />
                     </Link>
                     <button 
