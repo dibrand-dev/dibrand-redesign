@@ -239,7 +239,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
     return (
         <div className="w-full max-w-[1240px] mx-auto py-6 font-inter overflow-x-hidden">
             {/* Breadcrumbs & Header */}
-            <div className="mb-10">
+            <div className="mb-6 lg:mb-10">
                 <nav className="flex items-center gap-3 text-[12px] font-bold text-slate-400 mb-6 uppercase tracking-widest">
                     <button onClick={() => router.push('/ats/candidates')} className="hover:text-slate-900 transition-colors">Candidatos</button>
                     <span className="text-slate-300">/</span>
@@ -254,14 +254,14 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
             <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
                 
                 {/* LEFT COLUMN */}
-                <div className="lg:col-span-8 space-y-10">
+                <div className="lg:col-span-8 space-y-6 lg:space-y-10">
                     {/* Personal Information */}
-                    <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-100">
-                        <div className="flex items-center gap-3 mb-10">
+                    <div className="bg-white rounded-2xl p-5 lg:p-10 shadow-sm border border-slate-100">
+                        <div className="flex items-center gap-3 mb-6 lg:mb-10">
                             <User size={20} className="text-[#0040A1]" />
                             <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Información Personal</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
-                            <div className="space-y-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 lg:gap-y-10">
+                            <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Nombre</label>
                                 <input 
                                     type="text"
@@ -277,7 +277,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 />
                                 {errors.first_name && <p className="text-[11px] font-bold text-red-500 mt-1 pl-1">{errors.first_name}</p>}
                             </div>
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Apellido</label>
                                 <input 
                                     type="text"
@@ -293,7 +293,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 />
                                 {errors.last_name && <p className="text-[11px] font-bold text-red-500 mt-1 pl-1">{errors.last_name}</p>}
                             </div>
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Correo Electrónico</label>
                                 <input 
                                     type="email"
@@ -308,7 +308,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 />
                                 {errors.email && <p className="text-[11px] font-bold text-red-500 mt-1 pl-1">{errors.email}</p>}
                             </div>
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Número de Teléfono</label>
                                 <div className="phone-input-container">
                                     <PhoneInput
@@ -330,7 +330,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                     className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[16px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
                                 />
                             </div>
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">País</label>
                                 <div className="relative">
                                     <select 
@@ -359,7 +359,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 </div>
                             </div>
 
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Provincia / Estado</label>
                                 <div className="relative">
                                     <select 
@@ -381,8 +381,8 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     </div>
 
                     {/* Cover Letter */}
-                    <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-100">
-                        <div className="flex items-center gap-3 mb-10">
+                    <div className="bg-white rounded-2xl p-5 lg:p-10 shadow-sm border border-slate-100">
+                        <div className="flex items-center gap-3 mb-6 lg:mb-10">
                             <FileText size={20} className="text-[#0040A1]" />
                             <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Carta de Presentación</h2>
                         </div>
@@ -415,7 +415,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     {/* Vetting Questionnaire (Dynamic) */}
                     {questionnaire && questionnaire.length > 0 && (
                         <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-100 animate-in fade-in slide-in-from-top-4 duration-500">
-                            <div className="flex items-center gap-3 mb-10">
+                            <div className="flex items-center gap-3 mb-6 lg:mb-10">
                                 <ListChecks size={20} className="text-[#0040A1]" />
                                 <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Cuestionario de Evaluación</h2>
                             </div>
@@ -475,7 +475,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                                                 placeholder="Escribe la respuesta..."
                                                             />
                                                         ) : q.type === 'sublist' && q.subquestions ? (
-                                                            <div className="space-y-3">
+                                                            <div className="space-y-2">
                                                                 {q.subquestions.map((sub: string, subIdx: number) => {
                                                                     const subAnswers = Array.isArray(currentAnswer) ? [...currentAnswer] : [];
                                                                     return (
@@ -516,16 +516,16 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                 </div>
 
                 {/* RIGHT COLUMN */}
-                <div className="lg:col-span-4 space-y-10">
+                <div className="lg:col-span-4 space-y-6 lg:space-y-10">
                     {/* Professional Details */}
-                    <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-100">
-                        <div className="flex items-center gap-3 mb-10">
+                    <div className="bg-white rounded-2xl p-5 lg:p-10 shadow-sm border border-slate-100">
+                        <div className="flex items-center gap-3 mb-6 lg:mb-10">
                             <Briefcase size={20} className="text-[#0040A1]" />
                             <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Detalles Profesionales</h2>
                         </div>
 
                         <div className="space-y-8">
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Posición Deseada</label>
                                 <div className="relative">
                                     <select 
@@ -545,7 +545,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 {errors.job_id && <p className="text-[11px] font-bold text-red-500 mt-1 pl-1">{errors.job_id}</p>}
                             </div>
 
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Etapa de Selección</label>
                                 <div className="relative">
                                     <select 
@@ -563,7 +563,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 </div>
                             </div>
 
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Skills (Tecnologías)</label>
                                 <div className="bg-[#F8FAFC] border border-slate-100 rounded-xl p-4 min-h-[120px] focus-within:ring-2 focus-within:ring-blue-100 transition-all">
                                     <div className="flex flex-wrap gap-2 mb-4">
@@ -624,8 +624,8 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     </div>
 
                     {/* Resume Upload */}
-                    <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-100">
-                        <div className="flex items-center gap-3 mb-10">
+                    <div className="bg-white rounded-2xl p-5 lg:p-10 shadow-sm border border-slate-100">
+                        <div className="flex items-center gap-3 mb-6 lg:mb-10">
                             <Upload size={20} className="text-[#0040A1]" />
                             <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Subir Currículum</h2>
                         </div>
