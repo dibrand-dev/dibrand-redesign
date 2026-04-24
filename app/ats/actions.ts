@@ -1063,7 +1063,6 @@ export async function updateRecruiterProfile(data: { fullName: string, jobTitle:
         console.error('CRITICAL ERROR IN updateRecruiterProfile:', e);
         throw e; // Rethrow to let the UI catch it
     }
-    }
 }
 
 export async function updateJobQuestionnaire(jobId: string, questionnaireData: any) {
