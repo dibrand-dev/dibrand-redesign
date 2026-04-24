@@ -42,13 +42,13 @@ export default function AtsSidebar() {
             `}>
                 {/* Logo Section */}
                 <div className="pt-10 pb-12 px-10 flex items-center justify-between">
-                    <Link href="/ats" onClick={close}>
+                    <Link href="/ats" onClick={close} className="flex items-center">
                         <Image 
                             src="/logo_dibrand.svg" 
                             alt="Dibrand Logo" 
-                            width={180} 
-                            height={24} 
-                            className="object-contain h-6 w-auto"
+                            width={160} 
+                            height={36} 
+                            className="object-contain h-9 w-auto"
                         />
                     </Link>
                     <button 

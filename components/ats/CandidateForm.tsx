@@ -13,6 +13,8 @@ import { toast } from 'react-hot-toast';
 import { capitalizeName } from '@/lib/utils';
 import { Country, State } from 'country-state-city';
 import { ATS_STAGES } from '@/lib/ats-constants';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 interface Props {
     candidate?: any;
@@ -25,6 +27,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
     const [jobs, setJobs] = useState<any[]>([]);
     const [techStacks, setTechStacks] = useState<any[]>([]);
     const [isUploading, setIsUploading] = useState(false);
+    const [errors, setErrors] = useState<Record<string, string>>({});
     
     const [formData, setFormData] = useState({
         first_name: candidate?.first_name ? capitalizeName(candidate.first_name) : '',
@@ -41,6 +44,21 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
         cv_filename: candidate?.cv_filename || '',
         questionnaire_answers: candidate?.questionnaire_answers || []
     });
+
+    const validate = () => {
+        const newErrors: Record<string, string> = {};
+        if (!formData.first_name) newErrors.first_name = 'El nombre es obligatorio';
+        if (!formData.last_name) newErrors.last_name = 'El apellido es obligatorio';
+        if (!formData.email) {
+            newErrors.email = 'El email es obligatorio';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = 'Email inválido';
+        }
+        if (!formData.job_id) newErrors.job_id = 'Debes seleccionar un puesto';
+        
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     // Location States
     const [countriesList] = useState(() => {
@@ -168,11 +186,9 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
         
-        if (!formData.first_name || !formData.last_name || !formData.email || !formData.job_id) {
-            toast.error('Por favor completa los campos obligatorios.');
+        if (!validate()) {
+            toast.error('Por favor corrige los errores en el formulario.');
             return;
         }
 
@@ -227,10 +243,10 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     <span className="text-slate-300">/</span>
                     <span className="text-slate-900 font-black">{isEdit ? 'Editar Perfil' : 'Agregar Nuevo'}</span>
                 </nav>
-                <h1 className="text-[36px] font-black text-slate-900 leading-none mb-3 tracking-tight">
+                <h1 className="text-[28px] lg:text-[36px] font-black text-slate-900 leading-tight mb-3 tracking-tight">
                     {isEdit ? 'Editar Candidato' : 'Agregar Nuevo Candidato'}
                 </h1>
-                <p className="text-[15px] text-slate-500 font-medium tracking-tight">Gestionando la próxima generación de talento para tu equipo.</p>
+                <p className="text-[14px] lg:text-[15px] text-slate-500 font-medium tracking-tight">Gestionando la próxima generación de talento para tu equipo.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
@@ -242,66 +258,78 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                         <div className="flex items-center gap-3 mb-10">
                             <User size={20} className="text-[#0040A1]" />
                             <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Información Personal</h2>
-                        </div>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Nombre</label>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Nombre</label>
                                 <input 
                                     type="text"
                                     placeholder="ej. Julian"
                                     value={formData.first_name}
-                                    onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+                                    onChange={(e) => {
+                                        setFormData({...formData, first_name: e.target.value});
+                                        if (errors.first_name) setErrors({...errors, first_name: ''});
+                                    }}
                                     onBlur={(e) => handleNameBlur('first_name', e.target.value)}
-                                    className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all font-inter"
+                                    className={`w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[16px] font-bold text-slate-900 outline-none border-2 transition-all font-inter ${errors.first_name ? 'border-red-500 bg-red-50' : 'border-transparent focus:ring-2 focus:ring-blue-100'}`}
                                     required
                                 />
+                                {errors.first_name && <p className="text-[11px] font-bold text-red-500 mt-1 pl-1">{errors.first_name}</p>}
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Apellido</label>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Apellido</label>
                                 <input 
                                     type="text"
                                     placeholder="ej. Vance"
                                     value={formData.last_name}
-                                    onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+                                    onChange={(e) => {
+                                        setFormData({...formData, last_name: e.target.value});
+                                        if (errors.last_name) setErrors({...errors, last_name: ''});
+                                    }}
                                     onBlur={(e) => handleNameBlur('last_name', e.target.value)}
-                                    className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
+                                    className={`w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[16px] font-bold text-slate-900 outline-none border-2 transition-all ${errors.last_name ? 'border-red-500 bg-red-50' : 'border-transparent focus:ring-2 focus:ring-blue-100'}`}
                                     required
                                 />
+                                {errors.last_name && <p className="text-[11px] font-bold text-red-500 mt-1 pl-1">{errors.last_name}</p>}
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Correo Electrónico</label>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Correo Electrónico</label>
                                 <input 
                                     type="email"
                                     placeholder="julian.v@ejemplo.com"
                                     value={formData.email}
-                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                    className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
+                                    onChange={(e) => {
+                                        setFormData({...formData, email: e.target.value});
+                                        if (errors.email) setErrors({...errors, email: ''});
+                                    }}
+                                    className={`w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[16px] font-bold text-slate-900 outline-none border-2 transition-all ${errors.email ? 'border-red-500 bg-red-50' : 'border-transparent focus:ring-2 focus:ring-blue-100'}`}
                                     required
                                 />
+                                {errors.email && <p className="text-[11px] font-bold text-red-500 mt-1 pl-1">{errors.email}</p>}
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Número de Teléfono</label>
-                                <input 
-                                    type="text"
-                                    placeholder="+1 (555) 000-0000"
-                                    value={formData.phone}
-                                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                                    className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
-                                />
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Número de Teléfono</label>
+                                <div className="phone-input-container">
+                                    <PhoneInput
+                                        placeholder="Ingresa número"
+                                        value={formData.phone}
+                                        onChange={(val) => setFormData({...formData, phone: val || ''})}
+                                        defaultCountry="AR"
+                                        className="w-full bg-[#F1F5F9] rounded-xl px-5 py-1 text-[16px] font-bold text-slate-900 outline-none border-none focus-within:ring-2 focus-within:ring-blue-100 transition-all flex items-center"
+                                    />
+                                </div>
                             </div>
                             <div className="md:col-span-2 space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Perfil de LinkedIn</label>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Perfil de LinkedIn</label>
                                 <input 
-                                    type="text"
-                                    placeholder="linkedin.com/in/usuario"
+                                    type="url"
+                                    placeholder="https://linkedin.com/in/usuario"
                                     value={formData.linkedin_url}
                                     onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
-                                    className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
+                                    className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[16px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all"
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">País</label>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">País</label>
                                 <div className="relative">
                                     <select 
                                         value={formData.country}
@@ -311,7 +339,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                             setSelectedCountryCode(iso);
                                             setFormData({...formData, country: countryName, state_province: ''});
                                         }}
-                                        className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer"
+                                        className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[16px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer"
                                     >
                                         <option value="">Seleccionar país</option>
                                         <optgroup label="Latinoamérica">
@@ -330,13 +358,13 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Provincia / Estado</label>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Provincia / Estado</label>
                                 <div className="relative">
                                     <select 
                                         value={formData.state_province}
                                         onChange={(e) => setFormData({...formData, state_province: e.target.value})}
                                         disabled={!selectedCountryCode}
-                                        className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer disabled:opacity-50"
+                                        className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[16px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer disabled:opacity-50"
                                     >
                                         <option value="">Seleccionar estado</option>
                                         {statesList.map(s => (
@@ -346,6 +374,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                     <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                                 </div>
                             </div>
+     </div>
                         </div>
                     </div>
 
@@ -372,11 +401,11 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 </div>
                             </div>
                             <textarea 
-                                rows={10}
+                                rows={8}
                                 placeholder="Escribe o pega aquí la carta de presentación del candidato..."
                                 value={formData.cover_letter}
                                 onChange={(e) => setFormData({...formData, cover_letter: e.target.value})}
-                                className="w-full px-8 py-8 text-[15px] font-medium text-slate-700 outline-none resize-none leading-relaxed bg-white"
+                                className="w-full px-6 lg:px-8 py-6 lg:py-8 text-[16px] font-medium text-slate-700 outline-none resize-none leading-relaxed bg-white"
                             ></textarea>
                         </div>
                     </div>
@@ -495,12 +524,15 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
 
                         <div className="space-y-8">
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Posición Deseada</label>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Posición Deseada</label>
                                 <div className="relative">
                                     <select 
                                         value={formData.job_id}
-                                        onChange={(e) => setFormData({...formData, job_id: e.target.value})}
-                                        className="w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer"
+                                        onChange={(e) => {
+                                            setFormData({...formData, job_id: e.target.value});
+                                            if (errors.job_id) setErrors({...errors, job_id: ''});
+                                        }}
+                                        className={`w-full bg-[#F1F5F9] rounded-xl px-5 py-4 text-[16px] font-bold text-slate-900 outline-none border-2 transition-all appearance-none cursor-pointer ${errors.job_id ? 'border-red-500 bg-red-50' : 'border-transparent focus:ring-2 focus:ring-blue-100'}`}
                                         required
                                     >
                                         <option value="">Selecciona un rol</option>
@@ -508,16 +540,16 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                     </select>
                                     <ChevronDown size={18} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                                 </div>
-                                <p className="text-[11px] text-slate-400 font-medium pl-1 italic">Puesto al que aspira el talento</p>
+                                {errors.job_id && <p className="text-[11px] font-bold text-red-500 mt-1 pl-1">{errors.job_id}</p>}
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">Etapa de Selección</label>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Etapa de Selección</label>
                                 <div className="relative">
                                     <select 
                                         value={formData.status}
                                         onChange={(e) => setFormData({...formData, status: e.target.value})}
-                                        className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[14px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer"
+                                        className="w-full bg-[#F1F5F9] rounded-xl px-4 py-4 text-[16px] font-bold text-slate-900 outline-none border-none focus:ring-2 focus:ring-blue-100 transition-all appearance-none cursor-pointer"
                                     >
                                         <option value="">Seleccionar etapa actual...</option>
                                         {ATS_STAGES.map(stage => (
@@ -534,7 +566,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                 <div className="bg-[#F8FAFC] border border-slate-100 rounded-xl p-4 min-h-[120px] focus-within:ring-2 focus-within:ring-blue-100 transition-all">
                                     <div className="flex flex-wrap gap-2 mb-4">
                                         {skills.map(skill => (
-                                            <span key={skill} className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-[11px] font-bold rounded-lg flex items-center gap-3 shadow-sm group">
+                                            <span key={skill} className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-[12px] font-bold rounded-lg flex items-center gap-3 shadow-sm group">
                                                 {skill}
                                                 <button 
                                                     type="button" 
@@ -548,7 +580,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                     </div>
                                     <input 
                                         list="tech-stacks"
-                                        placeholder="Escribe una tecnología y presiona Enter..."
+                                        placeholder="Escribe una tecnología..."
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 e.preventDefault();
@@ -559,11 +591,31 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                                 }
                                             }
                                         }}
-                                        className="w-full bg-transparent py-2 text-[14px] font-bold text-[#0040A1] placeholder:text-slate-300 placeholder:font-normal outline-none"
+                                        className="w-full bg-transparent py-2 text-[16px] font-bold text-[#0040A1] placeholder:text-slate-300 placeholder:font-normal outline-none"
                                     />
                                     <datalist id="tech-stacks">
                                         {techStacks.map(stack => <option key={stack.id} value={stack.name} />)}
                                     </datalist>
+
+                                    {/* Suggestions System */}
+                                    <div className="mt-4 pt-4 border-t border-slate-100">
+                                        <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-3">Sugerencias Populares</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {['React', 'Node.js', 'Python', 'TypeScript', 'Next.js', 'PostgreSQL', 'Docker']
+                                                .filter(s => !skills.includes(s))
+                                                .map(s => (
+                                                    <button 
+                                                        key={s}
+                                                        type="button"
+                                                        onClick={() => setSkills([...skills, s])}
+                                                        className="px-3 py-1.5 bg-white text-slate-500 text-[11px] font-bold rounded-lg border border-slate-200 hover:border-[#0040A1] hover:text-[#0040A1] transition-all"
+                                                    >
+                                                        + {s}
+                                                    </button>
+                                                ))
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -576,15 +628,17 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                             <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Subir Currículum</h2>
                         </div>
 
-                        <label className={`flex flex-col items-center justify-center py-10 px-6 border-2 border-dashed rounded-2xl bg-white transition-all cursor-pointer hover:bg-slate-50 border-slate-200 group ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                        <label className={`flex flex-col items-center justify-center py-12 px-6 border-2 border-dashed rounded-3xl bg-white transition-all cursor-pointer hover:bg-slate-50 border-slate-200 group relative ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
                             <input type="file" className="hidden" accept=".pdf,.docx,.doc" onChange={handleFileUpload} />
-                            <div className="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mb-6 text-slate-400 group-hover:text-[#0040A1] transition-colors">
-                                {isUploading ? <Loader2 size={28} className="animate-spin" /> : <Upload size={28} className="opacity-40" />}
+                            <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-6 text-slate-400 group-hover:text-[#0040A1] group-hover:bg-blue-50 transition-all">
+                                {isUploading ? <Loader2 size={32} className="animate-spin text-[#0040A1]" /> : <Upload size={32} className="opacity-40" />}
                             </div>
                             <div className="text-center">
-                                <p className="text-[15px] font-bold text-slate-900">{formData.cv_filename || 'Arrastra y suelta el archivo'}</p>
-                                <p className="text-[12px] font-medium text-slate-400 mt-1 uppercase tracking-tight">PDF, DOCX hasta 10MB</p>
-                                <p className="text-[13px] font-bold text-[#0040A1] mt-6 hover:underline">O busca en tus archivos</p>
+                                <p className="text-[16px] lg:text-[15px] font-bold text-slate-900">{formData.cv_filename || 'Seleccionar Archivo CV'}</p>
+                                <p className="text-[12px] font-medium text-slate-400 mt-2 uppercase tracking-tight">PDF, DOCX hasta 5MB</p>
+                                <div className="mt-6 px-6 py-3 bg-[#0040A1] text-white text-[14px] font-black rounded-2xl shadow-xl shadow-blue-900/10 active:scale-95 transition-all">
+                                    Abrir Archivos
+                                </div>
                             </div>
                         </label>
                     </div>
@@ -625,6 +679,39 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     )}
                 </div>
             </form>
+
+            <style jsx global>{`
+                .phone-input-container .PhoneInputInput {
+                    background: transparent;
+                    border: none;
+                    outline: none;
+                    font-weight: bold;
+                    font-size: 16px;
+                    color: #0F172A;
+                    width: 100%;
+                }
+                .phone-input-container .PhoneInputCountry {
+                    margin-right: 12px;
+                    display: flex;
+                    align-items: center;
+                }
+                .phone-input-container .PhoneInputCountrySelect {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 100%;
+                    width: 100%;
+                    opacity: 0;
+                    cursor: pointer;
+                    z-index: 1;
+                }
+                .phone-input-container .PhoneInputCountryIcon {
+                    width: 28px;
+                    height: 20px;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                    border-radius: 2px;
+                }
+            `}</style>
         </div>
     );
 }
