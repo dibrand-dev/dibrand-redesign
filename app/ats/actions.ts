@@ -691,16 +691,43 @@ export async function getAllTechStacks() {
 }
 
 export async function getRecruiters() {
-    const { data, error } = await supabase
-        .from('recruiters')
-        .select('*')
-        .order('full_name');
+    try {
+        // 1. Try to get from recruiters table
+        const { data: dbRecruiters, error: dbError } = await supabase
+            .from('recruiters')
+            .select('*')
+            .order('full_name');
 
-    if (error) {
-        console.error('Error in getRecruiters:', error);
+        if (!dbError && dbRecruiters && dbRecruiters.length > 0) {
+            return dbRecruiters;
+        }
+
+        console.log('Recruiters table empty or error, falling back to auth.admin.listUsers()');
+
+        // 2. Fallback: Get directly from Auth (requires Service Role Key)
+        const { data: { users }, error: authError } = await supabase.auth.admin.listUsers();
+        
+        if (authError) {
+            console.error('Error listing auth users:', authError);
+            return [];
+        }
+
+        // Map auth users to Recruiter format
+        return users
+            .filter(u => {
+                const role = (u.user_metadata?.role || '').toLowerCase();
+                return ['admin', 'superadmin', 'recruiter'].includes(role) || u.email?.includes('dibrand');
+            })
+            .map(u => ({
+                id: u.id,
+                full_name: u.user_metadata?.full_name || u.email || 'Reclutador',
+                avatar_url: u.user_metadata?.avatar_url || null
+            }));
+
+    } catch (error) {
+        console.error('CRITICAL error in getRecruiters:', error);
         return [];
     }
-    return data || [];
 }
 
 export async function getJobs() {
