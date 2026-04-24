@@ -116,3 +116,14 @@ export async function resendVerification(email: string) {
     
     return { success: true };
 }
+
+export async function getRecruiters() {
+    const { data, error } = await supabaseAdmin
+        .from('recruiters')
+        .select('id, full_name, email')
+        .eq('is_active', true)
+        .order('full_name');
+    
+    if (error) throw error;
+    return data;
+}

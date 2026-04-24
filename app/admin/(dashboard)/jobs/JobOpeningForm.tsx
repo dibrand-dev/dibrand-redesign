@@ -6,6 +6,7 @@ import { ArrowLeft, Save, Sparkles, Loader2, Trash2, Globe, ListChecks } from 'l
 import Link from 'next/link';
 import { createJob, updateJob, deleteJob } from '@/app/actions/jobs';
 import { getCompanies } from '@/app/admin/(dashboard)/companies/actions';
+import { getRecruiters } from '@/app/admin/(dashboard)/users/actions';
 import TiptapEditor from '@/components/admin/TiptapEditor';
 import { DEFAULT_QUESTIONNAIRE } from '@/lib/ats-constants';
 import Select from 'react-select';
@@ -24,18 +25,21 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
     const [lang, setLang] = useState<'es' | 'en'>('es');
     const [translating, setTranslating] = useState<string | null>(null);
     const [companies, setCompanies] = useState<any[]>([]);
+    const [recruiters, setRecruiters] = useState<any[]>([]);
     const [loadingCompanies, setLoadingCompanies] = useState(true);
     const [allStacks, setAllStacks] = useState<any[]>([]);
 
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const [companiesData, stacksData] = await Promise.all([
+                const [companiesData, stacksData, recruitersData] = await Promise.all([
                     getCompanies(),
-                    getStacks()
+                    getStacks(),
+                    getRecruiters()
                 ]);
                 setCompanies(companiesData);
                 setAllStacks(stacksData);
+                setRecruiters(recruitersData);
             } catch (err) {
                 console.error('Error loading form data:', err);
             } finally {
@@ -65,6 +69,7 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
         is_active: initialData?.is_active ?? true,
         questionnaire: initialData?.questionnaire || DEFAULT_QUESTIONNAIRE,
         company_id: initialData?.company_id || '',
+        recruiter_id: initialData?.recruiter_id || '',
         stack_ids: initialData?.job_opening_stacks?.map((s: any) => s.stack_id) || [],
     });
 
@@ -282,6 +287,24 @@ export default function JobOpeningForm({ initialData }: JobOpeningFormProps) {
                             ))}
                         </select>
                         <p className="text-[9px] text-[#737785] italic font-medium">Solo los administradores ven el nombre de la empresa. El ATS solo verá el código.</p>
+                    </div>
+
+                    <div className="max-w-md space-y-2">
+                        <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Reclutador Asignado</label>
+                        <select
+                            name="recruiter_id"
+                            value={formData.recruiter_id}
+                            onChange={handleChange}
+                            className="w-full px-5 py-3.5 bg-admin-bg/50 border border-admin-border rounded-xl focus:ring-4 focus:ring-admin-accent/5 focus:border-admin-accent outline-none text-admin-text-primary text-base font-bold transition-all appearance-none cursor-pointer"
+                        >
+                            <option value="">-- Sin Reclutador Asignado --</option>
+                            {recruiters.map(r => (
+                                <option key={r.id} value={r.id}>
+                                    {r.full_name} ({r.email})
+                                </option>
+                            ))}
+                        </select>
+                        <p className="text-[9px] text-[#737785] italic font-medium">Este reclutador recibirá notificaciones sobre esta vacante.</p>
                     </div>
                 </div>
 

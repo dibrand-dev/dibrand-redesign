@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { getCandidateById } from '../actions';
 import StatusSelector from '../StatusSelector';
+import RecruiterSelector from '../RecruiterSelector';
 import CandidateContent from '../CandidateContent';
 import DeleteCandidateButton from '../DeleteCandidateButton';
 import { ArrowLeft, Trash2 } from 'lucide-react';
@@ -51,8 +52,9 @@ export default async function CandidateDetailPage(props: { params: Promise<{ id:
                                 Candidate Status
                             </div>
                             <StatusSelector candidateId={candidate.id} currentStatus={candidate.status} />
+                            <RecruiterSelector candidateId={candidate.id} currentRecruiterId={candidate.recruiter_id} />
                             <p className="text-[10px] text-admin-text-secondary/60 leading-relaxed italic font-medium">
-                                Updating the status will notify the hiring team and update the CRM records.
+                                Updating the status or recruiter will notify the hiring team and update the CRM records.
                             </p>
                         </div>
                     </div>

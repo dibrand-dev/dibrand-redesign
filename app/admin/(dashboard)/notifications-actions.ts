@@ -1,14 +1,19 @@
 'use server';
 
-import { createAdminClient } from '@/lib/supabase-server';
+import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { revalidatePath } from 'next/cache';
 
 export async function getNotifications() {
   try {
-    const supabase = createAdminClient();
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) return [];
+
     const { data, error } = await supabase
       .from('notifications')
       .select('*')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(20);
 
@@ -24,39 +29,60 @@ export async function getNotifications() {
 }
 
 export async function markAsRead(id: string) {
-  const supabase = createAdminClient();
-  const { error } = await supabase
-    .from('notifications')
-    .update({ is_read: true })
-    .eq('id', id);
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) return { success: false };
 
-  if (error) {
-    console.error('Error marking notification as read:', error);
+    const { error } = await supabase
+      .from('notifications')
+      .update({ is_read: true })
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('Error marking notification as read:', error);
+      return { success: false };
+    }
+    
+    return { success: true };
+  } catch (err) {
+    console.error('Error in markAsRead:', err);
     return { success: false };
   }
-  
-  return { success: true };
 }
 
 export async function markAllAsRead() {
-  const supabase = createAdminClient();
-  const { error } = await supabase
-    .from('notifications')
-    .update({ is_read: true })
-    .eq('is_read', false);
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) return { success: false };
 
-  if (error) {
-    console.error('Error marking all notifications as read:', error);
+    const { error } = await supabase
+      .from('notifications')
+      .update({ is_read: true })
+      .eq('user_id', user.id)
+      .eq('is_read', false);
+
+    if (error) {
+      console.error('Error marking all notifications as read:', error);
+      return { success: false };
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error('Error in markAllAsRead:', err);
     return { success: false };
   }
-
-  return { success: true };
 }
 
 export async function createNotification(payload: {
-  type: 'candidate' | 'lead' | 'system';
+  user_id: string;
+  type: 'nota' | 'estado' | 'asignación' | 'recordatorio' | 'candidato';
   title: string;
-  description?: string;
+  message?: string;
   link?: string;
   metadata?: any;
 }) {

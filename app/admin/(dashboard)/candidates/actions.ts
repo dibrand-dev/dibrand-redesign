@@ -144,3 +144,13 @@ export async function deleteCandidate(id: string) {
     revalidatePath('/admin/candidates');
     revalidatePath(`/admin/candidates/${id}`);
 }
+
+export async function updateCandidateRecruiter(id: string, recruiterId: string | null) {
+    const { error } = await supabase
+        .from('job_applications')
+        .update({ recruiter_id: recruiterId })
+        .eq('id', id);
+
+    if (error) throw error;
+    revalidatePath(`/admin/candidates/${id}`);
+}

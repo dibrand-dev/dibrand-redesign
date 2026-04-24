@@ -1,13 +1,14 @@
 import AtsSidebar from './Sidebar';
 import { createClient } from '@/lib/supabase-server-client';
 import { redirect } from 'next/navigation';
-import { Bell, Search, HelpCircle, Menu } from 'lucide-react';
+import { Search, HelpCircle, Menu } from 'lucide-react';
 import LogoutButton from '@/app/admin/(dashboard)/LogoutButton';
 import { syncRecruiterProfile } from '../actions';
 import ProfileMenu from '@/components/ats/ProfileMenu';
 import { capitalizeName } from '@/lib/utils';
 import { SidebarProvider } from '@/components/ats/SidebarContext';
 import MobileMenuButton from '@/components/ats/MobileMenuButton';
+import NotificationBell from '@/components/admin/NotificationBell';
 
 export default async function AtsDashboardLayout({
     children,
@@ -60,10 +61,7 @@ export default async function AtsDashboardLayout({
                         <div className="flex items-center gap-4 lg:gap-8">
                             {/* Notify and Profile */}
                             <div className="flex items-center gap-3 lg:gap-6">
-                                <button className="text-slate-400 hover:text-slate-900 transition-colors relative p-2">
-                                    <Bell size={20} />
-                                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#0040A1] rounded-full border-2 border-[#F8FAFC]"></span>
-                                </button>
+                                <NotificationBell />
                                 
                                 <ProfileMenu 
                                     name={name} 

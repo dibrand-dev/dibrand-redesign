@@ -1,10 +1,11 @@
 import Sidebar from './Sidebar';
-import { Search, Bell, HelpCircle, Menu } from 'lucide-react';
+import { Search, HelpCircle, Menu } from 'lucide-react';
 import { createClient } from '@/lib/supabase-server-client';
 import { redirect } from 'next/navigation';
 import ProfileMenu from '@/components/ats/ProfileMenu';
 import { SidebarProvider } from '@/components/ats/SidebarContext';
 import MobileMenuButton from '@/components/ats/MobileMenuButton';
+import NotificationBell from '@/components/admin/NotificationBell';
 
 export default async function DashboardLayout({
     children,
@@ -57,10 +58,7 @@ export default async function DashboardLayout({
 
                         <div className="flex items-center gap-4 lg:gap-8 ml-4">
                             <div className="hidden sm:flex items-center gap-4 text-[#737785] border-r border-[#E2E8F0] pr-4 lg:pr-8">
-                                <button className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#F1F5F9] hover:text-[#191C1D] transition-all relative">
-                                    <Bell size={20} />
-                                    <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#B3261E] rounded-full border-2 border-white"></span>
-                                </button>
+                                <NotificationBell />
                                 <button className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#F1F5F9] hover:text-[#191C1D] transition-all">
                                     <HelpCircle size={20} />
                                 </button>
