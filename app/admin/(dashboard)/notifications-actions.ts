@@ -81,7 +81,7 @@ export async function markAllAsRead() {
 
 export async function createNotification(payload: {
   user_id?: string;
-  type: 'nota' | 'estado' | 'asignación' | 'recordatorio' | 'candidato' | 'candidate' | 'lead';
+  type: 'nota' | 'estado' | 'asignación' | 'recordatorio' | 'candidato' | 'candidate' | 'lead' | 'system' | 'info';
   title: string;
   message?: string;
   description?: string; // Support old field name

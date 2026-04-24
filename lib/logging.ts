@@ -26,7 +26,7 @@ export async function logAdminAction(action: string, targetType?: string, target
       await createNotification({
         type: 'system',
         title: 'Alerta del Sistema',
-        description: `Se ha ${action} correctamente el recurso: ${targetName}`,
+        message: `Se ha ${action} correctamente el recurso: ${targetName}`,
         link: '/admin/dashboard',
         metadata: { action, targetType, targetName }
       });
