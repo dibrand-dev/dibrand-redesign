@@ -694,10 +694,12 @@ export async function getRecruiters() {
     const { data, error } = await supabase
         .from('recruiters')
         .select('*')
-        .eq('is_active', true)
         .order('full_name');
 
-    if (error) throw error;
+    if (error) {
+        console.error('Error in getRecruiters:', error);
+        return [];
+    }
     return data || [];
 }
 

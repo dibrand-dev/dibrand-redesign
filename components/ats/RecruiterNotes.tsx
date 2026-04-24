@@ -58,11 +58,12 @@ export default function RecruiterNotes({
         const value = e.target.value;
         setNoteText(value);
 
-        // Simple mention trigger logic
+        // Improved mention trigger logic: match @ followed by word characters
         const lastAt = value.lastIndexOf('@');
-        if (lastAt !== -1 && (lastAt === 0 || value[lastAt - 1] === ' ')) {
+        if (lastAt !== -1 && (lastAt === 0 || value[lastAt - 1] === ' ' || value[lastAt - 1] === '\n')) {
             const query = value.slice(lastAt + 1);
-            if (!query.includes(' ')) {
+            // Allow searching until a space is found
+            if (!query.includes(' ') && !query.includes('\n')) {
                 setMentionSearch(query);
                 setShowMentions(true);
                 return;
@@ -75,7 +76,8 @@ export default function RecruiterNotes({
         const lastAt = noteText.lastIndexOf('@');
         const before = noteText.slice(0, lastAt);
         const after = noteText.slice(lastAt + mentionSearch.length + 1);
-        setNoteText(`${before}@${recruiter.full_name} ${after}`);
+        const name = recruiter.full_name || 'Recruiter';
+        setNoteText(`${before}@${name} ${after}`);
         setShowMentions(false);
         textareaRef.current?.focus();
     };
@@ -98,7 +100,7 @@ export default function RecruiterNotes({
     };
 
     const filteredRecruiters = recruiters.filter(r => 
-        r.full_name.toLowerCase().includes(mentionSearch.toLowerCase())
+        (r.full_name || '').toLowerCase().includes(mentionSearch.toLowerCase())
     ).slice(0, 5);
 
     const formatTimeAgo = (date: string) => {
@@ -134,24 +136,30 @@ export default function RecruiterNotes({
                     />
                     
                     {/* Mentions Dropdown */}
-                    {showMentions && filteredRecruiters.length > 0 && (
+                    {showMentions && (
                         <div className="absolute bottom-full left-6 mb-2 w-64 bg-white border border-[#E2E8F0] rounded-xl shadow-2xl z-20 py-2 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
                              <div className="px-4 py-2 text-[10px] font-bold text-[#A1A5B7] uppercase tracking-widest border-b border-[#F1F5F9] mb-1">Mention Recruiter</div>
-                             {filteredRecruiters.map(r => (
-                                 <button 
-                                     key={r.id}
-                                     onClick={() => insertMention(r)}
-                                     className="w-full px-4 py-2.5 flex items-center gap-3 text-left hover:bg-[#F1F5F9] transition-colors group"
-                                 >
-                                     <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-[#0040A1]">
-                                         {capitalizeName(r.full_name)[0]}
-                                     </div>
-                                     <div className="flex flex-col">
-                                         <span className="text-[12px] font-semibold text-[#191C1D]">{capitalizeName(r.full_name)}</span>
-                                         <span className="text-[10px] text-slate-400">@{r.full_name.split(' ')[0].toLowerCase()}</span>
-                                     </div>
-                                 </button>
-                             ))}
+                             {filteredRecruiters.length > 0 ? (
+                                 filteredRecruiters.map(r => (
+                                     <button 
+                                         key={r.id}
+                                         onClick={() => insertMention(r)}
+                                         className="w-full px-4 py-2.5 flex items-center gap-3 text-left hover:bg-[#F1F5F9] transition-colors group"
+                                     >
+                                         <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-[#0040A1]">
+                                             {(r.full_name || 'R')[0]}
+                                         </div>
+                                         <div className="flex flex-col">
+                                             <span className="text-[12px] font-semibold text-[#191C1D]">{r.full_name}</span>
+                                             <span className="text-[10px] text-slate-400">@{r.full_name?.split(' ')[0].toLowerCase()}</span>
+                                         </div>
+                                     </button>
+                                 ))
+                             ) : (
+                                 <div className="px-4 py-4 text-center text-[11px] text-[#A1A5B7] italic">
+                                     No recruiters found
+                                 </div>
+                             )}
                         </div>
                     )}
                 </div>
