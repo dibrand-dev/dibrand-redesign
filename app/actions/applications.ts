@@ -110,7 +110,7 @@ export async function submitApplication(formData: any) {
                 type: 'candidato',
                 title: 'Nuevo Candidato Recibido',
                 message: `Nuevo CV recibido: ${formData.full_name || 'Desconocido'}`,
-                link: '/admin/candidates?status=Nuevo',
+                link: '/ats/candidates?status=Nuevo',
                 metadata: { 
                     name: formData.full_name, 
                     email: formData.email, 
