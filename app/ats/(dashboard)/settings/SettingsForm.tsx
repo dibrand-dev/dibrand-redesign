@@ -53,8 +53,8 @@ export default function SettingsForm({ userId, initialData }: SettingsFormProps)
             if (!userId) throw new Error('No se encontró el ID de usuario');
 
             const fileExt = file.name.split('.').pop();
-            const fileName = `${userId}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const filePath = `recruiter-avatars/${fileName}`;
+            const fileName = `avatar-${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `${userId}/${fileName}`;
 
             const { error: uploadError } = await supabase.storage
                 .from('avatars')

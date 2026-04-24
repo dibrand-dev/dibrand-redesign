@@ -84,29 +84,53 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- A. Trigger for New Notes
+-- A. Trigger for New Notes (Handles Assignments & Mentions)
 CREATE OR REPLACE FUNCTION public.on_application_note_created()
 RETURNS TRIGGER AS $$
 DECLARE
     v_recruiter_id UUID;
     v_candidate_name TEXT;
+    v_mentioned_recruiter_id UUID;
+    v_mention RECORD;
 BEGIN
-    -- Find the assigned recruiter for this application
-    SELECT recruiter_id, (first_name || ' ' || last_name) INTO v_recruiter_id, v_candidate_name
+    -- 1. Resolve Candidate Info
+    SELECT recruiter_id, COALESCE(full_name, first_name || ' ' || last_name, 'Candidato') 
+    INTO v_recruiter_id, v_candidate_name
     FROM public.job_applications
     WHERE id = NEW.application_id;
 
-    -- Only notify if there's an assigned recruiter AND it's not the note author (if we had author_id)
-    -- Since we only have author_name, we notify the assigned recruiter regardless
+    -- 2. Notify Assigned Recruiter (Standard)
     IF v_recruiter_id IS NOT NULL THEN
         PERFORM public.create_notification(
             v_recruiter_id,
             'nota',
             'Nueva nota en candidato',
-            'Se ha agregado una nota para ' || v_candidate_name,
-            '/admin/candidates/' || NEW.application_id
+            'Se ha agregado una nota para ' || v_candidate_name || ': "' || LEFT(NEW.note_text, 50) || '..."',
+            '/ats/candidates/' || NEW.application_id
         );
     END IF;
+
+    -- 3. Notify Mentioned Recruiters (@name)
+    -- We look for @ followed by words in the note text
+    -- This is a simple implementation: looks for @[Name]
+    FOR v_mention IN 
+        SELECT id, full_name 
+        FROM public.recruiters 
+        WHERE NEW.note_text ~* ('@' || replace(full_name, ' ', '.*'))
+           OR NEW.note_text ~* ('@' || split_part(full_name, ' ', 1))
+    LOOP
+        -- Don't notify the assigned recruiter twice
+        IF v_mention.id != COALESCE(v_recruiter_id, '00000000-0000-0000-0000-000000000000'::uuid) THEN
+            PERFORM public.create_notification(
+                v_mention.id,
+                'nota',
+                'Has sido mencionado/a',
+                NEW.author_name || ' te mencionó en una nota de ' || v_candidate_name,
+                '/ats/candidates/' || NEW.application_id
+            );
+        END IF;
+    END LOOP;
+
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -126,8 +150,8 @@ BEGIN
             NEW.recruiter_id,
             'estado',
             'Estado actualizado',
-            'El estado de ' || NEW.first_name || ' ' || NEW.last_name || ' cambió a ' || NEW.status,
-            '/admin/candidates/' || NEW.id
+            'El estado de ' || COALESCE(NEW.full_name, NEW.first_name || ' ' || NEW.last_name, 'Candidato') || ' cambió a ' || NEW.status,
+            '/ats/candidates/' || NEW.id
         );
     END IF;
     RETURN NEW;
@@ -149,8 +173,8 @@ BEGIN
             NEW.recruiter_id,
             'asignación',
             'Nuevo candidato asignado',
-            'Se te ha asignado el candidato: ' || NEW.first_name || ' ' || NEW.last_name,
-            '/admin/candidates/' || NEW.id
+            'Se te ha asignado el candidato: ' || COALESCE(NEW.full_name, NEW.first_name || ' ' || NEW.last_name, 'Candidato'),
+            '/ats/candidates/' || NEW.id
         );
     END IF;
     RETURN NEW;
@@ -172,8 +196,8 @@ BEGIN
             NEW.recruiter_id,
             'asignación',
             'Nueva vacante asignada',
-            'Se te ha asignado la vacante: ' || NEW.title_es,
-            '/admin/jobs/' || NEW.id
+            'Se te ha asignado la vacante: ' || COALESCE(NEW.title, NEW.title_es),
+            '/ats/jobs/' || NEW.id
         );
     END IF;
     RETURN NEW;

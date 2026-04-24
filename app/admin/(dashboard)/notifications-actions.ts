@@ -11,10 +11,21 @@ export async function getNotifications() {
     
     if (!user) return [];
 
-    const { data, error } = await supabase
+    const isAdmin = user.user_metadata?.role === 'admin' || user.user_metadata?.role === 'SuperAdmin';
+    
+    let query = supabase
       .from('notifications')
-      .select('*')
-      .eq('user_id', user.id)
+      .select('*');
+
+    if (isAdmin) {
+      // Admins see their own notifications AND global ones (user_id is null)
+      query = query.or(`user_id.eq.${user.id},user_id.is.null`);
+    } else {
+      // Regular recruiters only see their own
+      query = query.eq('user_id', user.id);
+    }
+
+    const { data, error } = await query
       .order('created_at', { ascending: false })
       .limit(20);
 
