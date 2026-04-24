@@ -41,8 +41,13 @@ export default function RecruiterNotes({
     useEffect(() => {
         setIsMounted(true);
         const fetchRecruiters = async () => {
-            const data = await getRecruiters();
-            setRecruiters(data);
+            try {
+                const data = await getRecruiters();
+                console.log('Recruiters fetched:', data?.length, data);
+                setRecruiters(data || []);
+            } catch (err) {
+                console.error('Error fetching recruiters:', err);
+            }
         };
         fetchRecruiters();
 
@@ -56,14 +61,17 @@ export default function RecruiterNotes({
 
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = e.target.value;
+        const cursorPosition = e.target.selectionStart;
         setNoteText(value);
 
-        // Improved mention trigger logic: match @ followed by word characters
-        const lastAt = value.lastIndexOf('@');
-        if (lastAt !== -1 && (lastAt === 0 || value[lastAt - 1] === ' ' || value[lastAt - 1] === '\n')) {
-            const query = value.slice(lastAt + 1);
-            // Allow searching until a space is found
+        // Improved mention trigger logic using cursor position
+        const textBeforeCursor = value.slice(0, cursorPosition);
+        const lastAt = textBeforeCursor.lastIndexOf('@');
+        
+        if (lastAt !== -1 && (lastAt === 0 || textBeforeCursor[lastAt - 1] === ' ' || textBeforeCursor[lastAt - 1] === '\n')) {
+            const query = textBeforeCursor.slice(lastAt + 1);
             if (!query.includes(' ') && !query.includes('\n')) {
+                console.log('Mention search query:', query);
                 setMentionSearch(query);
                 setShowMentions(true);
                 return;
@@ -73,13 +81,27 @@ export default function RecruiterNotes({
     };
 
     const insertMention = (recruiter: Recruiter) => {
-        const lastAt = noteText.lastIndexOf('@');
-        const before = noteText.slice(0, lastAt);
-        const after = noteText.slice(lastAt + mentionSearch.length + 1);
+        const cursorPosition = textareaRef.current?.selectionStart || noteText.length;
+        const textBeforeCursor = noteText.slice(0, cursorPosition);
+        const textAfterCursor = noteText.slice(cursorPosition);
+        
+        const lastAt = textBeforeCursor.lastIndexOf('@');
+        const beforeAt = textBeforeCursor.slice(0, lastAt);
+        
         const name = recruiter.full_name || 'Recruiter';
-        setNoteText(`${before}@${name} ${after}`);
+        const newText = `${beforeAt}@${name} ${textAfterCursor}`;
+        
+        setNoteText(newText);
         setShowMentions(false);
-        textareaRef.current?.focus();
+        
+        // Return focus and set cursor after mention
+        setTimeout(() => {
+            if (textareaRef.current) {
+                const newPos = beforeAt.length + name.length + 2; // +1 for @, +1 for space
+                textareaRef.current.focus();
+                textareaRef.current.setSelectionRange(newPos, newPos);
+            }
+        }, 10);
     };
 
     const handleSubmit = async (e?: React.FormEvent) => {
