@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, X, Check } from 'lucide-react';
+import { ChevronDown, X, Check, Filter } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 interface FilterOption {
@@ -25,6 +25,7 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
     // Dropdown states
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
 
     // Current values from URL
     const currentJob = searchParams.get('jobId') || '';
@@ -79,6 +80,7 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
     const clearFilters = () => {
         router.push('/ats/candidates');
         setOpenDropdown(null);
+        setIsMobileModalOpen(false);
     };
 
     const Dropdown = ({ label, current, options, filterKey, type = 'list' }: any) => {
@@ -91,7 +93,6 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
             return label.toLowerCase().includes(searchTerm.toLowerCase());
         });
         
-        // Complex label logic for Recruiter Initialization
         let displayLabel = 'Todos';
         if (isMulti && currentSkills.length > 0) {
             displayLabel = `${currentSkills.length} seleccionados`;
@@ -104,7 +105,6 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
                 displayLabel = current;
             }
         } else if (type === 'recruiters' && !isAdmin && currentUser) {
-            // Default to current recruiter name if not admin and no filter set
             displayLabel = currentUser.user_metadata?.full_name || currentUser.email;
         }
 
@@ -167,47 +167,80 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
         );
     };
 
+    const MobileFilterItem = ({ label, current, options, filterKey, type = 'list' }: any) => {
+        const isMulti = filterKey === 'skills';
+        
+        let displayLabel = 'Todos';
+        if (isMulti && currentSkills.length > 0) {
+            displayLabel = `${currentSkills.length} seleccionados`;
+        } else if (current) {
+            if (type === 'jobs' || type === 'status') {
+                displayLabel = options.find((o: any) => o.id === current)?.label || current || 'Todos';
+            } else if (type === 'recruiters') {
+                displayLabel = options.find((o: any) => o.id === current)?.full_name || 'Todos';
+            } else {
+                displayLabel = current;
+            }
+        }
+
+        return (
+            <div className="space-y-3">
+                <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{label}</label>
+                <div className="flex flex-wrap gap-2">
+                    {!isMulti && (
+                        <button 
+                            onClick={() => updateFilter(filterKey, '')}
+                            className={`px-4 py-2.5 rounded-xl text-[13px] font-bold border transition-all ${!current ? 'bg-[#0040A1] text-white border-[#0040A1]' : 'bg-white text-slate-600 border-slate-200'}`}
+                        >
+                            Todos
+                        </button>
+                    )}
+                    {options.slice(0, 12).map((opt: any) => {
+                        const id = typeof opt === 'string' ? opt : (opt.id || opt.user_id);
+                        const label = typeof opt === 'string' ? opt : (opt.label || opt.full_name);
+                        const isSelected = isMulti ? currentSkills.includes(id) : current === id;
+                        
+                        return (
+                            <button 
+                                key={id}
+                                onClick={() => isMulti ? toggleSkill(id) : updateFilter(filterKey, id)}
+                                className={`px-4 py-2.5 rounded-xl text-[13px] font-bold border transition-all ${isSelected ? 'bg-[#0040A1] text-white border-[#0040A1]' : 'bg-white text-slate-600 border-slate-200'}`}
+                            >
+                                {label}
+                            </button>
+                        );
+                    })}
+                    {options.length > 12 && (
+                        <div className="w-full">
+                            <select 
+                                onChange={(e) => isMulti ? toggleSkill(e.target.value) : updateFilter(filterKey, e.target.value)}
+                                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[13px] font-bold text-slate-700 outline-none"
+                                value={isMulti ? '' : current}
+                            >
+                                <option value="">Ver más...</option>
+                                {options.slice(12).map((opt: any) => {
+                                    const id = typeof opt === 'string' ? opt : (opt.id || opt.user_id);
+                                    const label = typeof opt === 'string' ? opt : (opt.label || opt.full_name);
+                                    return <option key={id} value={id}>{label}</option>;
+                                })}
+                            </select>
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col mb-12">
-            <div className="flex flex-wrap items-center justify-between gap-8 py-6 border-y border-[#F1F5F9]" ref={dropdownRef}>
+            {/* Desktop Filters */}
+            <div className="hidden lg:flex items-center justify-between gap-8 py-6 border-y border-[#F1F5F9]" ref={dropdownRef}>
                 <div className="flex flex-wrap items-center gap-10">
-                    <Dropdown 
-                        label="Vacante" 
-                        current={currentJob} 
-                        options={jobs} 
-                        filterKey="jobId" 
-                        type="jobs"
-                    />
-                    
-                    <Dropdown 
-                        label="Tech Stack" 
-                        current={currentSkills} 
-                        options={allSkills} 
-                        filterKey="skills" 
-                    />
-                    
-                    <Dropdown 
-                        label="Ubicación" 
-                        current={currentCountry} 
-                        options={countries} 
-                        filterKey="country" 
-                    />
-                    
-                    <Dropdown 
-                        label="Etapa del Proceso" 
-                        current={currentStatus} 
-                        options={statuses} 
-                        filterKey="status" 
-                        type="status"
-                    />
-
-                    <Dropdown 
-                        label="Reclutador" 
-                        current={currentRecruiter} 
-                        options={recruiters} 
-                        filterKey="recruiterId"
-                        type="recruiters"
-                    />
+                    <Dropdown label="Vacante" current={currentJob} options={jobs} filterKey="jobId" type="jobs" />
+                    <Dropdown label="Tech Stack" current={currentSkills} options={allSkills} filterKey="skills" />
+                    <Dropdown label="Ubicación" current={currentCountry} options={countries} filterKey="country" />
+                    <Dropdown label="Etapa del Proceso" current={currentStatus} options={statuses} filterKey="status" type="status" />
+                    <Dropdown label="Reclutador" current={currentRecruiter} options={recruiters} filterKey="recruiterId" type="recruiters" />
                 </div>
                 
                 {(currentJob || currentCountry || currentStatus || currentRecruiter || currentSkills.length > 0) && (
@@ -215,10 +248,56 @@ export default function CandidateFilters({ jobs, countries, statuses, recruiters
                         onClick={clearFilters}
                         className="flex items-center gap-1.5 text-[11px] font-black text-[#6B7485] hover:text-red-500 transition-colors uppercase tracking-widest py-2"
                     >
-                        <X size={14} strokeWidth={3} /> Limpiar Filtros
+                        <X size={14} strokeWidth={3} /> Limpiar
                     </button>
                 )}
             </div>
+
+            {/* Mobile Filter Button */}
+            <div className="lg:hidden flex items-center justify-between py-4 border-y border-slate-100 mb-4">
+                <button 
+                    onClick={() => setIsMobileModalOpen(true)}
+                    className="flex items-center gap-3 px-6 py-3 bg-[#0040A1] text-white rounded-xl text-[14px] font-bold shadow-lg shadow-blue-200 w-full justify-center"
+                >
+                    <Filter size={18} />
+                    Filtros { (currentJob || currentCountry || currentStatus || currentRecruiter || currentSkills.length > 0) && `(${1 + (currentSkills.length > 0 ? 1 : 0) + (currentCountry ? 1 : 0) + (currentStatus ? 1 : 0) + (currentRecruiter ? 1 : 0)})` }
+                </button>
+            </div>
+
+            {/* Mobile Filter Modal */}
+            {isMobileModalOpen && (
+                <div className="fixed inset-0 z-[100] bg-white flex flex-col h-screen animate-in slide-in-from-bottom duration-300">
+                    <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100 shrink-0">
+                        <h2 className="text-[18px] font-black text-[#010101]">Filtros</h2>
+                        <button onClick={() => setIsMobileModalOpen(false)} className="p-2 text-slate-400">
+                            <X size={24} />
+                        </button>
+                    </div>
+                    
+                    <div className="flex-1 overflow-y-auto p-6 space-y-10 custom-scrollbar pb-32">
+                        <MobileFilterItem label="Vacante" current={currentJob} options={jobs} filterKey="jobId" type="jobs" />
+                        <MobileFilterItem label="Tech Stack" current={currentSkills} options={allSkills} filterKey="skills" />
+                        <MobileFilterItem label="Ubicación" current={currentCountry} options={countries} filterKey="country" />
+                        <MobileFilterItem label="Etapa" current={currentStatus} options={statuses} filterKey="status" type="status" />
+                        <MobileFilterItem label="Reclutador" current={currentRecruiter} options={recruiters} filterKey="recruiterId" type="recruiters" />
+                    </div>
+
+                    <div className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t border-slate-100 flex gap-4">
+                        <button 
+                            onClick={clearFilters}
+                            className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl text-[14px] font-bold"
+                        >
+                            Limpiar
+                        </button>
+                        <button 
+                            onClick={() => setIsMobileModalOpen(false)}
+                            className="flex-[2] py-4 bg-[#0040A1] text-white rounded-2xl text-[14px] font-bold shadow-xl shadow-blue-200"
+                        >
+                            Aplicar Filtros
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Active Skill Chips */}
             {currentSkills.length > 0 && (

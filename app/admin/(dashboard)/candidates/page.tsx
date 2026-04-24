@@ -4,6 +4,7 @@ import { User, Briefcase, MapPin, Tag, Search, Filter, ExternalLink } from 'luci
 import StatusSelector from './StatusSelector';
 import CandidateFilters from './CandidateFilters';
 import DeleteCandidateButton from './DeleteCandidateButton';
+import AdminCandidateMobileCard from './AdminCandidateMobileCard';
 
 export default async function CandidatesPage({
     searchParams,
@@ -18,17 +19,29 @@ export default async function CandidatesPage({
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                 <div>
-                    <h2 className="text-3xl font-black text-admin-text-primary tracking-tight uppercase">Candidatos <span className="text-admin-accent opacity-50">(Mini-ATS)</span></h2>
-                    <p className="text-admin-text-secondary text-sm font-medium italic">Gestiona las aplicaciones y el pipeline de talento</p>
+                    <h2 className="text-2xl sm:text-3xl font-black text-admin-text-primary tracking-tight uppercase">Candidatos <span className="text-admin-accent opacity-50 sm:inline hidden">(Mini-ATS)</span></h2>
+                    <p className="text-admin-text-secondary text-xs sm:text-sm font-medium italic">Gestiona las aplicaciones y el pipeline de talento</p>
                 </div>
             </div>
 
             <CandidateFilters search={search} status={status} />
 
-            {/* Listado */}
-            <div className="bg-admin-card-bg rounded-xl shadow-sm border border-admin-border overflow-hidden">
+            {/* Mobile View: Cards */}
+            <div className="lg:hidden grid grid-cols-1 gap-4">
+                {candidates.map((candidate) => (
+                    <AdminCandidateMobileCard key={candidate.id} candidate={candidate} />
+                ))}
+                {candidates.length === 0 && (
+                    <div className="bg-admin-card-bg rounded-xl p-10 text-center text-admin-text-secondary italic font-medium border border-admin-border">
+                        No se encontraron candidatos
+                    </div>
+                )}
+            </div>
+
+            {/* Desktop View: Table */}
+            <div className="hidden lg:block bg-admin-card-bg rounded-xl shadow-sm border border-admin-border overflow-hidden">
                 <table className="w-full text-left">
                     <thead className="bg-admin-bg/50 border-b border-admin-border">
                         <tr>

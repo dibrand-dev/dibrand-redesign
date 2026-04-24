@@ -57,20 +57,20 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const totalPages = Math.ceil(totalCount / limit);
 
     return (
-        <div className="max-w-[1104px] mx-auto bg-white min-h-screen p-10 shadow-sm border-x border-[#E1E2E5] font-inter">
+        <div className="max-w-[1104px] mx-auto bg-white min-h-screen px-4 py-8 lg:p-10 shadow-sm border-x border-[#E1E2E5] font-inter">
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-12">
+            <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 mb-8 lg:mb-12">
                 <div>
-                    <h1 className="text-[34px] font-bold text-[#010101] leading-tight mb-2 tracking-tight flex items-center gap-4">
+                    <h1 className="text-[28px] lg:text-[34px] font-bold text-[#010101] leading-tight mb-2 tracking-tight flex flex-wrap items-center gap-3 lg:gap-4">
                         Pool de Talento
-                        <span className="bg-[#EBF1FF] text-[#0040A1] text-[14px] font-black px-4 py-1.5 rounded-full border border-[#D0DFFF] animate-in fade-in zoom-in duration-500">
+                        <span className="bg-[#EBF1FF] text-[#0040A1] text-[12px] lg:text-[14px] font-black px-3 py-1 lg:px-4 lg:py-1.5 rounded-full border border-[#D0DFFF] animate-in fade-in zoom-in duration-500 whitespace-nowrap">
                             {totalCount} Candidatos
                         </span>
                     </h1>
                     <p className="text-[13px] text-[#6B7485] font-medium">Gestionando la próxima generación de líderes de la industria.</p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 w-full lg:w-auto">
                     <SearchTalentPredictive 
                         candidates={candidateNames} 
                         initialQuery={search} 
