@@ -1021,9 +1021,9 @@ export async function updateRecruiterProfile(data: { fullName: string, jobTitle:
 
         if (!user) throw new Error('Not authenticated');
 
-        // 1. Update Auth Metadata using Admin Client (More robust)
-        const { error: authError } = await supabase.auth.admin.updateUserById(user.id, {
-            user_metadata: {
+        // 1. Update Auth Metadata using standard updateUser (more secure for user-initiated changes)
+        const { error: authError } = await supabaseAuth.auth.updateUser({
+            data: {
                 full_name: data.fullName,
                 job_title: data.jobTitle,
                 phone: data.phone,
@@ -1033,7 +1033,7 @@ export async function updateRecruiterProfile(data: { fullName: string, jobTitle:
 
         if (authError) {
             console.error('AUTH METADATA UPDATE ERROR:', authError);
-            throw authError;
+            throw new Error(`Error updating auth: ${authError.message}`);
         }
 
         // 2. Update recruiters table (using UPSERT to be safe)
@@ -1053,16 +1053,16 @@ export async function updateRecruiterProfile(data: { fullName: string, jobTitle:
 
         if (dbError) {
             console.error('DATABASE UPDATE ERROR:', dbError);
-            throw dbError;
+            throw new Error(`Error updating database: ${dbError.message}`);
         }
 
         revalidatePath('/ats/settings');
         revalidatePath('/ats');
-        
         return { success: true };
-    } catch (error: any) {
-        console.error('CATCH BLOCK ERROR:', error);
-        throw error;
+    } catch (e: any) {
+        console.error('CRITICAL ERROR IN updateRecruiterProfile:', e);
+        throw e; // Rethrow to let the UI catch it
+    }
     }
 }
 
