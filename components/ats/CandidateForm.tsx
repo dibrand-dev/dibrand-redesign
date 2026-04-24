@@ -186,6 +186,8 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
         }
     };
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         
         if (!validate()) {
             toast.error('Por favor corrige los errores en el formulario.');
@@ -235,7 +237,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
     };
 
     return (
-        <div className="max-w-[1240px] mx-auto py-6 font-inter">
+        <div className="w-full max-w-[1240px] mx-auto py-6 font-inter overflow-x-hidden">
             {/* Breadcrumbs & Header */}
             <div className="mb-10">
                 <nav className="flex items-center gap-3 text-[12px] font-bold text-slate-400 mb-6 uppercase tracking-widest">
@@ -249,12 +251,12 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                 <p className="text-[14px] lg:text-[15px] text-slate-500 font-medium tracking-tight">Gestionando la próxima generación de talento para tu equipo.</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
                 
                 {/* LEFT COLUMN */}
                 <div className="lg:col-span-8 space-y-10">
                     {/* Personal Information */}
-                    <div className="bg-white rounded-2xl p-10">
+                    <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-100">
                         <div className="flex items-center gap-3 mb-10">
                             <User size={20} className="text-[#0040A1]" />
                             <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Información Personal</h2>
@@ -379,7 +381,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     </div>
 
                     {/* Cover Letter */}
-                    <div className="bg-white rounded-2xl p-10">
+                    <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-100">
                         <div className="flex items-center gap-3 mb-10">
                             <FileText size={20} className="text-[#0040A1]" />
                             <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Carta de Presentación</h2>
@@ -412,7 +414,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
 
                     {/* Vetting Questionnaire (Dynamic) */}
                     {questionnaire && questionnaire.length > 0 && (
-                        <div className="bg-white rounded-2xl p-10 animate-in fade-in slide-in-from-top-4 duration-500">
+                        <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-100 animate-in fade-in slide-in-from-top-4 duration-500">
                             <div className="flex items-center gap-3 mb-10">
                                 <ListChecks size={20} className="text-[#0040A1]" />
                                 <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Cuestionario de Evaluación</h2>
@@ -448,7 +450,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                                         </label>
                                                         
                                                         {q.type === 'yesno' ? (
-                                                            <div className="flex gap-3">
+                                                            <div className="flex flex-wrap gap-3">
                                                                 {['Sí', 'No'].map((opt) => (
                                                                     <button
                                                                         key={opt}
@@ -477,8 +479,8 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                                                 {q.subquestions.map((sub: string, subIdx: number) => {
                                                                     const subAnswers = Array.isArray(currentAnswer) ? [...currentAnswer] : [];
                                                                     return (
-                                                                        <div key={subIdx} className="flex items-center gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-slate-100">
-                                                                            <span className="text-[11px] font-bold text-slate-400 w-1/3 truncate">{sub}</span>
+                                                                        <div key={subIdx} className="flex flex-col sm:flex-row sm:items-center gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-slate-100">
+                                                                            <span className="text-[11px] font-bold text-slate-400 sm:w-1/3 truncate">{sub}</span>
                                                                             <input 
                                                                                 type="text"
                                                                                 value={subAnswers[subIdx] || ''}
@@ -486,7 +488,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                                                                                     subAnswers[subIdx] = e.target.value;
                                                                                     setAnswer(subAnswers);
                                                                                 }}
-                                                                                className="flex-1 bg-transparent border-none text-[13px] font-bold text-[#0040A1] outline-none"
+                                                                                className="w-full sm:flex-1 bg-white sm:bg-transparent rounded-lg sm:rounded-none px-4 sm:px-0 py-2 sm:py-0 text-[13px] font-bold text-[#0040A1] border border-slate-200 sm:border-none outline-none"
                                                                                 placeholder="Años / Info..."
                                                                             />
                                                                         </div>
@@ -516,7 +518,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                 {/* RIGHT COLUMN */}
                 <div className="lg:col-span-4 space-y-10">
                     {/* Professional Details */}
-                    <div className="bg-white rounded-2xl p-10">
+                    <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-100">
                         <div className="flex items-center gap-3 mb-10">
                             <Briefcase size={20} className="text-[#0040A1]" />
                             <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Detalles Profesionales</h2>
@@ -622,7 +624,7 @@ export default function CandidateForm({ candidate, isEdit }: Props) {
                     </div>
 
                     {/* Resume Upload */}
-                    <div className="bg-white rounded-2xl p-10">
+                    <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-100">
                         <div className="flex items-center gap-3 mb-10">
                             <Upload size={20} className="text-[#0040A1]" />
                             <h2 className="text-[15px] font-bold text-slate-900 tracking-tight">Subir Currículum</h2>

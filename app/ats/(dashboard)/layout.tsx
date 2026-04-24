@@ -41,12 +41,12 @@ export default async function AtsDashboardLayout({
 
     return (
         <SidebarProvider>
-            <div className="min-h-screen bg-[#F8FAFC] flex font-inter text-[#191C1D] antialiased overflow-hidden h-screen relative">
+            <div className="min-h-screen bg-[#F8FAFC] flex font-inter text-[#191C1D] antialiased overflow-hidden h-screen relative w-full">
                 {/* Sidebar */}
                 <AtsSidebar />
 
                 {/* Main Content Area */}
-                <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden relative">
+                <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden relative w-full overflow-x-hidden">
 
                     {/* Header - Minimalist, as shown in screenshot */}
                     <header className="h-16 lg:h-20 bg-transparent flex items-center justify-between px-4 lg:px-10 shrink-0 z-20">
@@ -77,7 +77,7 @@ export default async function AtsDashboardLayout({
                     </header>
 
                     {/* Main Content with Scrollbar */}
-                    <div className="flex-1 overflow-y-auto px-4 lg:px-10 pb-10 custom-scrollbar relative">
+                    <div className="flex-1 overflow-y-auto overflow-x-hidden w-full px-4 lg:px-10 pb-10 custom-scrollbar relative">
                         {children}
                     </div>
                 </main>

@@ -46,9 +46,9 @@ export default function AtsSidebar() {
                         <Image 
                             src="/logo_dibrand.svg" 
                             alt="Dibrand Logo" 
-                            width={160} 
-                            height={36} 
-                            className="object-contain h-9 w-auto"
+                            width={180} 
+                            height={44} 
+                            className="object-contain h-11 w-auto"
                         />
                     </Link>
                     <button 

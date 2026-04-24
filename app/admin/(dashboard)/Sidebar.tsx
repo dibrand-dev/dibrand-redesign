@@ -65,9 +65,9 @@ export default function Sidebar() {
                             <Image 
                                 src="/logo_dibrand.png" 
                                 alt="Dibrand Logo" 
-                                width={160} 
-                                height={40} 
-                                className="h-10 w-auto object-contain"
+                                width={180} 
+                                height={48} 
+                                className="h-12 w-auto object-contain"
                             />
                         </Link>
                     )}
