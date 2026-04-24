@@ -107,9 +107,9 @@ export async function submitApplication(formData: any) {
         // 6. Create Internal Notification (Non-blocking)
         try {
             await createNotification({
-                type: 'candidate',
+                type: 'candidato',
                 title: 'Nuevo Candidato Recibido',
-                description: `Nuevo CV recibido: ${formData.full_name || 'Desconocido'}`,
+                message: `Nuevo CV recibido: ${formData.full_name || 'Desconocido'}`,
                 link: '/admin/candidates?status=Nuevo',
                 metadata: { 
                     name: formData.full_name, 

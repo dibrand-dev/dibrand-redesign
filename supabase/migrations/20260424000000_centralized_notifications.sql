@@ -39,10 +39,11 @@ DROP POLICY IF EXISTS "Enable select for authenticated" ON public.notifications;
 DROP POLICY IF EXISTS "Enable update for authenticated" ON public.notifications;
 DROP POLICY IF EXISTS "Enable insert for authenticated" ON public.notifications;
 
-CREATE POLICY "Users can view own notifications" 
-ON public.notifications FOR SELECT 
-TO authenticated 
-USING (auth.uid() = user_id);
+CREATE POLICY "Users can view own or global notifications" 
+    ON public.notifications 
+    FOR SELECT 
+    TO authenticated 
+    USING (auth.uid() = user_id OR user_id IS NULL);
 
 CREATE POLICY "Users can update own notifications" 
 ON public.notifications FOR UPDATE 

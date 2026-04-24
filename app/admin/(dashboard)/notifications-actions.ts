@@ -80,17 +80,26 @@ export async function markAllAsRead() {
 }
 
 export async function createNotification(payload: {
-  user_id: string;
-  type: 'nota' | 'estado' | 'asignación' | 'recordatorio' | 'candidato';
+  user_id?: string;
+  type: 'nota' | 'estado' | 'asignación' | 'recordatorio' | 'candidato' | 'candidate' | 'lead';
   title: string;
   message?: string;
+  description?: string; // Support old field name
   link?: string;
   metadata?: any;
 }) {
   const supabase = createAdminClient();
+  
+  // Map description to message if provided
+  const finalPayload = {
+    ...payload,
+    message: payload.message || payload.description
+  };
+  delete (finalPayload as any).description;
+
   const { error } = await supabase
     .from('notifications')
-    .insert([payload]);
+    .insert([finalPayload]);
 
   if (error) {
     console.error('Error creating notification:', error);

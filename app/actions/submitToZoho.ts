@@ -105,7 +105,7 @@ export async function submitToZoho(formData: FormData) {
         await createNotification({
             type: 'lead',
             title: 'Nuevo Lead (E-commerce)',
-            description: `Consulta de ${data['First Name']} - ${data['Company'] || data['Email']}`,
+            message: `Consulta de ${data['First Name']} - ${data['Company'] || data['Email']}`,
             link: '/admin/dashboard',
             metadata: { company: data['Company'], email: data['Email'] }
         });
