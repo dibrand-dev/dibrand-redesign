@@ -3,9 +3,10 @@
 import React, { useState, useRef } from 'react';
 import { updateRecruiterProfile } from '@/app/ats/actions';
 import { Loader2, Camera, User } from 'lucide-react';
-import { createClient } from '@/lib/supabase-client';
+import { createClient } from '@/lib/supabase-browser-client';
 
 interface SettingsFormProps {
+    userId: string;
     initialData: {
         fullName: string;
         jobTitle: string;
@@ -15,7 +16,7 @@ interface SettingsFormProps {
     }
 }
 
-export default function SettingsForm({ initialData }: SettingsFormProps) {
+export default function SettingsForm({ userId, initialData }: SettingsFormProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [formData, setFormData] = useState({
@@ -49,11 +50,10 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
 
         setIsUploading(true);
         try {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error('No se encontró el usuario');
+            if (!userId) throw new Error('No se encontró el ID de usuario');
 
             const fileExt = file.name.split('.').pop();
-            const fileName = `${user.id}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const fileName = `${userId}-${Math.random().toString(36).substring(2)}.${fileExt}`;
             const filePath = `recruiter-avatars/${fileName}`;
 
             const { error: uploadError } = await supabase.storage

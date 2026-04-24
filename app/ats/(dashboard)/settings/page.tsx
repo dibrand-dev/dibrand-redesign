@@ -40,6 +40,7 @@ export default async function SettingsPage() {
 
                 {/* Interactive Profile Form */}
                 <SettingsForm 
+                    userId={user?.id || ''}
                     initialData={{
                         fullName,
                         jobTitle,
