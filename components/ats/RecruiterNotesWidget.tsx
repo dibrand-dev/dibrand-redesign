@@ -293,11 +293,41 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
                                     />
                                 ) : (
                                     <div className="text-[13px] text-slate-600 font-medium leading-relaxed whitespace-pre-wrap break-words mt-1">
-                                        {log.note_text.split(' ').map((word, i) => (
-                                            word.startsWith('@') ? (
-                                                <span key={i} className="text-blue-600 font-black bg-blue-50 px-1.5 py-0.5 rounded-md text-[11px] mr-1">{word}</span>
-                                            ) : `${word} `
-                                        ))}
+                                        {(() => {
+                                            const text = log.note_text;
+                                            if (!recruiters.length) return text;
+
+                                            // Create a regex to match @Full Name for all recruiters
+                                            const names = recruiters.map(r => r.full_name).filter(Boolean).join('|');
+                                            if (!names) return text;
+
+                                            const mentionRegex = new RegExp(`@(${names})`, 'g');
+                                            
+                                            const parts = [];
+                                            let lastIndex = 0;
+                                            let match;
+                                            
+                                            while ((match = mentionRegex.exec(text)) !== null) {
+                                                // Push text before match
+                                                if (match.index > lastIndex) {
+                                                    parts.push(text.slice(lastIndex, match.index));
+                                                }
+                                                // Push highlighted mention
+                                                parts.push(
+                                                    <span key={match.index} className="text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100/50 inline-flex items-center gap-1 mx-0.5 transform hover:scale-[1.02] transition-transform">
+                                                        {match[0]}
+                                                    </span>
+                                                );
+                                                lastIndex = mentionRegex.lastIndex;
+                                            }
+                                            
+                                            // Push remaining text
+                                            if (lastIndex < text.length) {
+                                                parts.push(text.slice(lastIndex));
+                                            }
+                                            
+                                            return parts.length > 0 ? parts : text;
+                                        })()}
                                     </div>
                                 )}
                             </div>
