@@ -1,8 +1,12 @@
-'use client';
+import React, { useState, useTransition, useEffect, useRef } from 'react';
+import { Link as LinkIcon, Edit2, Trash2, Check, X, AtSign } from 'lucide-react';
+import { addApplicationLog, updateApplicationLog, deleteApplicationLog, getRecruiters } from '@/app/ats/actions';
 
-import React, { useState, useTransition } from 'react';
-import { Link as LinkIcon, Edit2, Trash2, Check, X } from 'lucide-react';
-import { addApplicationLog, updateApplicationLog, deleteApplicationLog } from '@/app/ats/actions';
+interface Recruiter {
+    id: string;
+    full_name: string;
+    avatar_url?: string;
+}
 
 interface Note {
     id: string;
@@ -24,8 +28,71 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editValue, setEditValue] = useState('');
 
+    // Mention state
+    const [recruiters, setRecruiters] = useState<Recruiter[]>([]);
+    const [showMentions, setShowMentions] = useState(false);
+    const [mentionSearch, setMentionSearch] = useState('');
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        const fetchRecruiters = async () => {
+            try {
+                const data = await getRecruiters();
+                setRecruiters(data || []);
+            } catch (err) {
+                console.error('Error fetching recruiters:', err);
+            }
+        };
+        fetchRecruiters();
+    }, []);
+
     // Filter out systemic logs like rejection reasons, showing only real notes
     const manualNotes = initialLogs.filter(log => !log.note_text.startsWith('RECHAZADO: '));
+
+    const handleTextChange = (value: string, selectionStart: number) => {
+        setNote(value);
+
+        // Mention trigger logic using cursor position
+        const textBeforeCursor = value.slice(0, selectionStart);
+        const lastAt = textBeforeCursor.lastIndexOf('@');
+        
+        if (lastAt !== -1 && (lastAt === 0 || textBeforeCursor[lastAt - 1] === ' ' || textBeforeCursor[lastAt - 1] === '\n')) {
+            const query = textBeforeCursor.slice(lastAt + 1);
+            if (!query.includes(' ') && !query.includes('\n')) {
+                setMentionSearch(query);
+                setShowMentions(true);
+                return;
+            }
+        }
+        setShowMentions(false);
+    };
+
+    const insertMention = (recruiter: Recruiter) => {
+        const cursorPosition = textareaRef.current?.selectionStart || note.length;
+        const textBeforeCursor = note.slice(0, cursorPosition);
+        const textAfterCursor = note.slice(cursorPosition);
+        
+        const lastAt = textBeforeCursor.lastIndexOf('@');
+        const beforeAt = textBeforeCursor.slice(0, lastAt);
+        
+        const name = recruiter.full_name || 'Recruiter';
+        const newText = `${beforeAt}@${name} ${textAfterCursor}`;
+        
+        setNote(newText);
+        setShowMentions(false);
+        
+        setTimeout(() => {
+            if (textareaRef.current) {
+                const newPos = beforeAt.length + name.length + 2;
+                textareaRef.current.focus();
+                textareaRef.current.setSelectionRange(newPos, newPos);
+            }
+        }, 10);
+    };
+
+    const filteredRecruiters = recruiters.filter(r => 
+        (r.full_name || '').toLowerCase().includes(mentionSearch.toLowerCase())
+    ).slice(0, 5);
 
     const handlePost = () => {
         if (!note.trim()) return;
@@ -76,20 +143,65 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
 
     return (
         <div className="bg-white rounded-[24px] shadow-sm border border-slate-200/60 p-8 font-outfit">
-            <h3 className="text-[11px] font-black tracking-widest text-slate-400 uppercase mb-6">Notas e Insights del Reclutador</h3>
+            <div className="flex items-center justify-between mb-6">
+                <h3 className="text-[11px] font-black tracking-widest text-slate-400 uppercase">Notas e Insights del Reclutador</h3>
+                {recruiters.length > 0 && (
+                    <span className="text-[10px] text-slate-300 font-bold uppercase tracking-widest">
+                        {recruiters.length} reclutadores disponibles
+                    </span>
+                )}
+            </div>
             
-            <div className={`bg-white border border-slate-200 rounded-2xl p-5 mb-8 focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-blue-500 transition-all shadow-sm ${isPending ? 'opacity-70 pointer-events-none' : ''}`}>
+            <div className={`bg-white border border-slate-200 rounded-2xl p-5 mb-8 focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-blue-500 transition-all shadow-sm relative ${isPending ? 'opacity-70 pointer-events-none' : ''}`}>
                 <textarea 
+                    ref={textareaRef}
                     value={note}
-                    onChange={(e) => setNote(e.target.value)}
+                    onChange={(e) => handleTextChange(e.target.value, e.target.selectionStart)}
                     placeholder="Escribe una nota privada..." 
                     className="w-full text-[14px] text-slate-700 resize-none outline-none placeholder:text-slate-400 min-h-[100px] font-medium leading-relaxed"
                     disabled={isPending}
                 ></textarea>
+
+                {/* Mentions Dropdown */}
+                {showMentions && (
+                    <div className="absolute bottom-full left-0 mb-2 w-64 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 py-2 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+                         <div className="px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 mb-1">Mencionar a...</div>
+                         {filteredRecruiters.length > 0 ? (
+                             filteredRecruiters.map(r => (
+                                 <button 
+                                     key={r.id}
+                                     onClick={() => insertMention(r)}
+                                     className="w-full px-4 py-2.5 flex items-center gap-3 text-left hover:bg-slate-50 transition-colors group"
+                                 >
+                                     <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-[11px] font-bold text-blue-600">
+                                         {(r.full_name || 'R')[0]}
+                                     </div>
+                                     <div className="flex flex-col">
+                                         <span className="text-[12px] font-bold text-slate-700">{r.full_name}</span>
+                                         <span className="text-[10px] text-slate-400">@{r.full_name?.split(' ')[0].toLowerCase()}</span>
+                                     </div>
+                                 </button>
+                             ))
+                         ) : (
+                             <div className="px-4 py-4 text-center text-[11px] text-slate-400 italic">No se encontraron reclutadores</div>
+                         )}
+                    </div>
+                )}
+
                 <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-100">
                     <div className="flex gap-5 text-slate-400">
                         <button className="hover:text-blue-600 transition-colors" title="Adjuntar Link"><LinkIcon size={18} /></button>
-                        <button className="hover:text-blue-600 transition-colors" title="Mencionar Reclutador"><span className="font-extrabold text-[18px]">@</span></button>
+                        <button 
+                            onClick={() => {
+                                setNote(prev => prev + '@');
+                                setShowMentions(true);
+                                textareaRef.current?.focus();
+                            }}
+                            className="hover:text-blue-600 transition-colors" 
+                            title="Mencionar Reclutador"
+                        >
+                            <AtSign size={18} />
+                        </button>
                     </div>
                     <button 
                         onClick={handlePost}
@@ -181,7 +293,11 @@ export default function RecruiterNotesWidget({ candidateId, initialLogs }: Props
                                     />
                                 ) : (
                                     <div className="text-[13px] text-slate-600 font-medium leading-relaxed whitespace-pre-wrap break-words mt-1">
-                                        {log.note_text}
+                                        {log.note_text.split(' ').map((word, i) => (
+                                            word.startsWith('@') ? (
+                                                <span key={i} className="text-blue-600 font-black bg-blue-50 px-1.5 py-0.5 rounded-md text-[11px] mr-1">{word}</span>
+                                            ) : `${word} `
+                                        ))}
                                     </div>
                                 )}
                             </div>
