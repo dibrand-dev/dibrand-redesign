@@ -1048,9 +1048,9 @@ export async function updateRecruiterProfile(data: { fullName: string, jobTitle:
         const supabaseAuth = await createClient();
         const { data: { user } } = await supabaseAuth.auth.getUser();
 
-        if (!user) throw new Error('Not authenticated');
+        if (!user) return { success: false, error: 'No autenticado' };
 
-        // 1. Update Auth Metadata using standard updateUser (more secure for user-initiated changes)
+        // 1. Update Auth Metadata using standard updateUser
         const { error: authError } = await supabaseAuth.auth.updateUser({
             data: {
                 full_name: data.fullName,
@@ -1062,7 +1062,7 @@ export async function updateRecruiterProfile(data: { fullName: string, jobTitle:
 
         if (authError) {
             console.error('AUTH METADATA UPDATE ERROR:', authError);
-            throw new Error(`Error updating auth: ${authError.message}`);
+            return { success: false, error: `Error en Auth: ${authError.message}` };
         }
 
         // 2. Update recruiters table (using UPSERT to be safe)
@@ -1082,7 +1082,7 @@ export async function updateRecruiterProfile(data: { fullName: string, jobTitle:
 
         if (dbError) {
             console.error('DATABASE UPDATE ERROR:', dbError);
-            throw new Error(`Error updating database: ${dbError.message}`);
+            return { success: false, error: `Error en base de datos: ${dbError.message}` };
         }
 
         revalidatePath('/ats/settings');
@@ -1090,7 +1090,7 @@ export async function updateRecruiterProfile(data: { fullName: string, jobTitle:
         return { success: true };
     } catch (e: any) {
         console.error('CRITICAL ERROR IN updateRecruiterProfile:', e);
-        throw e; // Rethrow to let the UI catch it
+        return { success: false, error: e.message || 'Error crítico inesperado' };
     }
 }
 

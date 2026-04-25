@@ -86,6 +86,8 @@ export default function SettingsForm({ userId, initialData }: SettingsFormProps)
             const result = await updateRecruiterProfile(formData);
             if (result.success) {
                 alert('Perfil actualizado con éxito');
+            } else {
+                alert('Error al actualizar el perfil: ' + result.error);
             }
         } catch (error: any) {
             console.error('CRITICAL ERROR UPDATING PROFILE:', error);
