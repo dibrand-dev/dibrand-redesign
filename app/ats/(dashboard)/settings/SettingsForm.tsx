@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { updateRecruiterProfile } from '@/app/ats/actions';
 import { Loader2, Camera, User } from 'lucide-react';
 import { createClient } from '@/lib/supabase-browser-client';
+import { toast } from 'react-hot-toast';
 
 interface SettingsFormProps {
     userId: string;
@@ -39,12 +40,12 @@ export default function SettingsForm({ userId, initialData }: SettingsFormProps)
 
         // Basic validation
         if (!file.type.startsWith('image/')) {
-            alert('Por favor, selecciona una imagen válida.');
+            toast.error('Por favor, selecciona una imagen válida.');
             return;
         }
 
         if (file.size > 2 * 1024 * 1024) {
-            alert('La imagen es demasiado grande. El límite es 2MB.');
+            toast.error('La imagen es demasiado grande. El límite es 2MB.');
             return;
         }
 
@@ -73,7 +74,7 @@ export default function SettingsForm({ userId, initialData }: SettingsFormProps)
             
         } catch (error: any) {
             console.error('Error uploading avatar:', error);
-            alert('Error al subir la imagen: ' + (error.message || 'Error desconocido'));
+            toast.error('Error al subir la imagen: ' + (error.message || 'Error desconocido'));
         } finally {
             setIsUploading(false);
         }
@@ -85,14 +86,14 @@ export default function SettingsForm({ userId, initialData }: SettingsFormProps)
         try {
             const result = await updateRecruiterProfile(formData);
             if (result.success) {
-                alert('Perfil actualizado con éxito');
+                toast.success('Perfil actualizado con éxito');
             } else {
-                alert('Error al actualizar el perfil: ' + result.error);
+                toast.error('Error al actualizar el perfil: ' + result.error);
             }
         } catch (error: any) {
             console.error('CRITICAL ERROR UPDATING PROFILE:', error);
             const errorMessage = error.message || 'Error desconocido';
-            alert('Error al actualizar el perfil: ' + errorMessage);
+            toast.error('Error crítico: ' + errorMessage);
         } finally {
             setIsLoading(false);
         }
