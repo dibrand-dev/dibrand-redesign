@@ -22,6 +22,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/en/pricing-models/software-development-cost-2026',
         '/es/ai-index',
         '/en/ai-index',
+        '/es/join-us',
+        '/en/join-us',
     ];
 
     const sitemapEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
@@ -39,7 +41,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     if (cases) {
         cases.forEach((c) => {
-            // Add both languages if applicable, or just generic
             sitemapEntries.push({
                 url: `${baseUrl}/en/success-stories/${c.slug}`,
                 lastModified: new Date(c.updated_at || Date.now()),
@@ -51,6 +52,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 lastModified: new Date(c.updated_at || Date.now()),
                 changeFrequency: 'monthly',
                 priority: 0.7,
+            });
+        });
+    }
+
+    // Dynamic Job Openings
+    const { data: jobs } = await supabase
+        .from('job_openings')
+        .select('id, slug, created_at')
+        .eq('is_active', true);
+
+    if (jobs) {
+        jobs.forEach((job) => {
+            const finalSlug = job.slug || job.id;
+            sitemapEntries.push({
+                url: `${baseUrl}/en/join-us/${finalSlug}`,
+                lastModified: new Date(job.created_at || Date.now()),
+                changeFrequency: 'daily',
+                priority: 0.9,
+            });
+            sitemapEntries.push({
+                url: `${baseUrl}/es/join-us/${finalSlug}`,
+                lastModified: new Date(job.created_at || Date.now()),
+                changeFrequency: 'daily',
+                priority: 0.9,
             });
         });
     }
