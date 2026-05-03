@@ -132,7 +132,7 @@ export default function NotificationBell() {
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute right-0 mt-4 w-[320px] sm:w-[400px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50 origin-top-right"
+                        className="fixed top-[80px] left-1/2 -translate-x-1/2 w-[calc(100vw-1.5rem)] md:absolute md:top-auto md:mt-4 md:left-auto md:translate-x-0 md:right-0 md:w-[400px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-[100] md:origin-top-right origin-top"
                     >
                         {/* Header */}
                         <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
@@ -153,7 +153,7 @@ export default function NotificationBell() {
                         </div>
 
                         {/* List */}
-                        <div className="max-h-[450px] overflow-y-auto custom-scrollbar">
+                        <div className="max-h-[70vh] md:max-h-[450px] overflow-y-auto custom-scrollbar">
                             {loading ? (
                                 <div className="p-12 flex flex-col items-center justify-center gap-3 text-slate-400">
                                     <Loader2 size={24} className="animate-spin text-admin-accent" />
@@ -174,25 +174,25 @@ export default function NotificationBell() {
                                     {notifications.map((notif) => (
                                         <div 
                                             key={notif.id}
-                                            className={`p-5 flex gap-4 hover:bg-slate-50/80 transition-colors relative group ${!notif.is_read ? 'bg-admin-accent/[0.02]' : ''}`}
+                                            className={`p-5 md:p-5 flex gap-4 hover:bg-slate-50/80 transition-colors relative group ${!notif.is_read ? 'bg-admin-accent/[0.02]' : ''}`}
                                         >
                                             <div className="shrink-0 pt-1">
                                                 <div className={`w-2 h-2 rounded-full ${getTypeColor(notif.type)} ${!notif.is_read ? 'animate-pulse ring-4 ring-slate-100' : 'opacity-40'}`}></div>
                                             </div>
                                             <div className="flex-1 min-w-0 space-y-1">
                                                 <div className="flex items-start justify-between gap-2">
-                                                    <p className={`text-[13px] leading-tight ${!notif.is_read ? 'font-black text-slate-900' : 'font-bold text-slate-600'}`}>
+                                                    <p className={`text-[13px] leading-tight break-words whitespace-normal ${!notif.is_read ? 'font-black text-slate-900' : 'font-bold text-slate-600'}`}>
                                                         {notif.title}
                                                     </p>
-                                                    <span className="text-[9px] font-bold text-slate-400 uppercase whitespace-nowrap pt-0.5">
+                                                    <span className="text-[9px] font-bold text-slate-400 uppercase whitespace-nowrap pt-0.5 shrink-0">
                                                         {formatDistanceToNow(new Date(notif.created_at), { addSuffix: true, locale: es })}
                                                     </span>
                                                 </div>
-                                                <p className="text-[11px] text-slate-500 line-clamp-2 font-medium">
+                                                <p className="text-[12px] text-slate-500 font-medium whitespace-normal break-words">
                                                     {notif.message}
                                                 </p>
                                                 
-                                                <div className="flex items-center gap-3 pt-2">
+                                                <div className="flex items-center gap-3 pt-3">
                                                     {notif.link && (
                                                         <Link 
                                                             href={notif.link}
@@ -200,17 +200,17 @@ export default function NotificationBell() {
                                                                 handleMarkAsRead(notif.id);
                                                                 setIsOpen(false);
                                                             }}
-                                                            className="flex items-center gap-1 text-[10px] font-black text-admin-accent uppercase tracking-widest hover:underline"
+                                                            className="flex items-center gap-1 text-[11px] font-black text-admin-accent uppercase tracking-widest hover:underline"
                                                         >
-                                                            Ver detalles <ExternalLink size={10} />
+                                                            Ver detalles <ExternalLink size={12} />
                                                         </Link>
                                                     )}
                                                     {!notif.is_read && (
                                                         <button 
                                                             onClick={() => handleMarkAsRead(notif.id)}
-                                                            className="flex items-center gap-1 text-[10px] font-black text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-colors"
+                                                            className="flex items-center gap-1 text-[11px] font-black text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-colors"
                                                         >
-                                                            <Check size={10} /> Marcar leído
+                                                            <Check size={12} /> Marcar leído
                                                         </button>
                                                     )}
                                                 </div>
@@ -226,10 +226,10 @@ export default function NotificationBell() {
 
                         {/* Footer */}
                         {notifications.length > 0 && (
-                            <div className="px-6 py-3 bg-slate-50 border-t border-slate-100 text-center">
+                            <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 text-center">
                                 <Link 
                                     href="/admin/notifications" 
-                                    className="text-[10px] font-black text-slate-400 hover:text-slate-900 uppercase tracking-widest"
+                                    className="text-[11px] font-black text-slate-400 hover:text-slate-900 uppercase tracking-widest"
                                     onClick={() => setIsOpen(false)}
                                 >
                                     Ver historial completo
