@@ -78,21 +78,27 @@ export default function CandidateTabs({ candidate, logs }: CandidateTabsProps) {
     return (
         <div className="space-y-8">
             {/* Tabs Navigation */}
-            <div className="flex border-b border-slate-200">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id as any)}
-                        className={`flex items-center gap-2 px-6 py-4 text-[13px] font-bold transition-all border-b-2 -mb-[2px] ${
-                            activeTab === tab.id
-                                ? 'border-[#0B4FEA] text-[#0B4FEA]'
-                                : 'border-transparent text-slate-500 hover:text-slate-900'
-                        }`}
-                    >
-                        <tab.icon size={16} />
-                        {tab.label}
-                    </button>
-                ))}
+            <div className="relative w-full border-b border-slate-200">
+                {/* Mobile Fade Masks */}
+                <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#FAFAFA] to-transparent z-10 md:hidden pointer-events-none" />
+                <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-[#FAFAFA] to-transparent z-10 md:hidden pointer-events-none" />
+
+                <div className="flex overflow-x-auto whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as any)}
+                            className={`flex shrink-0 items-center gap-2 px-6 py-4 text-[13px] font-bold transition-all border-b-2 -mb-[2px] ${
+                                activeTab === tab.id
+                                    ? 'border-[#0B4FEA] text-[#0B4FEA]'
+                                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                            }`}
+                        >
+                            <tab.icon size={16} />
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Tab Content */}

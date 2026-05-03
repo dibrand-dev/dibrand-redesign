@@ -56,7 +56,7 @@ export default function EditableCoverLetter({ candidateId, initialContent }: Edi
     };
 
     return (
-        <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm">
+        <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm max-w-full overflow-hidden">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex flex-col gap-1">
                     <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">Cover Letter</h3>
@@ -91,12 +91,12 @@ export default function EditableCoverLetter({ candidateId, initialContent }: Edi
                 {!isEditing ? (
                     <button 
                         onClick={() => setIsEditing(true)}
-                        className="text-[11px] font-bold text-[#0040A1] hover:underline uppercase tracking-widest"
+                        className="text-[11px] font-bold text-[#0040A1] hover:underline uppercase tracking-widest shrink-0"
                     >
                         Edit
                     </button>
                 ) : (
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 shrink-0">
                         <button 
                             onClick={() => { setIsEditing(false); editor.commands.setContent(initialContent); }}
                             className="text-[11px] font-bold text-[#BA1A1A] hover:underline uppercase tracking-widest flex items-center gap-1"
@@ -116,10 +116,10 @@ export default function EditableCoverLetter({ candidateId, initialContent }: Edi
             </div>
 
             {isEditing ? (
-                <EditorContent editor={editor} className="editor-container" />
+                <EditorContent editor={editor} className="editor-container max-w-full overflow-hidden" />
             ) : (
-                <div className="p-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl min-h-[150px] text-[15px] leading-relaxed text-[#424654] font-medium prose prose-sm max-w-none whitespace-pre-wrap">
-                    <div dangerouslySetInnerHTML={{ __html: initialContent || "No cover letter provided." }} />
+                <div className="p-4 md:p-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl min-h-[150px] text-[15px] leading-relaxed text-[#424654] font-medium prose prose-sm max-w-full overflow-hidden whitespace-pre-wrap break-words">
+                    <div className="max-w-full overflow-hidden break-words whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: initialContent || "No cover letter provided." }} />
                 </div>
             )}
         </section>

@@ -225,39 +225,45 @@ export default function CandidateDetailTabs({ candidate, logs, allSkills, stages
     };
 
     return (
-        <div className="flex gap-10">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-10">
             {/* SideNav (Tabs) */}
-            <div className="w-20 flex flex-col items-center gap-8 pt-4 sticky top-24 self-start">
-                {tabs.map((tab) => (
-                    <button 
-                        key={tab.id}
-                        onClick={() => handleTabChange(tab.id)}
-                        className={`flex flex-col items-center gap-1.5 group transition-all ${
-                            activeTab === tab.id ? 'text-[#0040A1]' : 'text-[#A1A5B7] hover:text-[#0040A1]'
-                        }`}
-                    >
-                        <div className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-all ${
-                            activeTab === tab.id 
-                                ? 'bg-[#0040A1] text-white border-[#0040A1] shadow-lg shadow-blue-200 scale-105' 
-                                : 'bg-white border-[#E2E8F0] group-hover:border-[#0040A1]'
-                        }`}>
-                            <tab.icon size={20} />
-                        </div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest">{tab.label}</span>
-                    </button>
-                ))}
-                
-                <div className="mt-8 pt-8 border-t border-[#E2E8F0] w-full flex justify-center">
-                    <button className="w-12 h-12 rounded-xl bg-[#0040A1] text-white flex items-center justify-center shadow-lg shadow-blue-200 hover:bg-[#003380] hover:scale-105 transition-all" title="Hire Candidate">
-                        <UserPlus size={20} />
-                    </button>
+            <div className="relative w-full md:w-20 pt-4 md:sticky md:top-24 md:self-start">
+                {/* Mobile Fade Masks */}
+                <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent z-10 md:hidden pointer-events-none" />
+                <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white to-transparent z-10 md:hidden pointer-events-none" />
+
+                <div className="flex md:flex-col items-center gap-4 md:gap-8 overflow-x-auto whitespace-nowrap px-4 md:px-0 pb-4 md:pb-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    {tabs.map((tab) => (
+                        <button 
+                            key={tab.id}
+                            onClick={() => handleTabChange(tab.id)}
+                            className={`flex shrink-0 flex-col items-center gap-1.5 group transition-all ${
+                                activeTab === tab.id ? 'text-[#0040A1]' : 'text-[#A1A5B7] hover:text-[#0040A1]'
+                            }`}
+                        >
+                            <div className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-all ${
+                                activeTab === tab.id 
+                                    ? 'bg-[#0040A1] text-white border-[#0040A1] shadow-lg shadow-blue-200 scale-105' 
+                                    : 'bg-white border-[#E2E8F0] group-hover:border-[#0040A1]'
+                            }`}>
+                                <tab.icon size={20} />
+                            </div>
+                            <span className="text-[10px] font-bold uppercase tracking-widest">{tab.label}</span>
+                        </button>
+                    ))}
+                    
+                    <div className="flex shrink-0 items-center justify-center md:mt-8 md:pt-8 md:border-t md:border-[#E2E8F0] md:w-full ml-4 md:ml-0">
+                        <button className="w-12 h-12 rounded-xl bg-[#0040A1] text-white flex items-center justify-center shadow-lg shadow-blue-200 hover:bg-[#003380] hover:scale-105 transition-all" title="Hire Candidate">
+                            <UserPlus size={20} />
+                        </button>
+                    </div>
                 </div>
             </div>
 
             {/* Content Columns */}
-            <div className="flex-1 grid grid-cols-12 gap-10 min-h-[600px]">
+            <div className="flex-1 flex flex-col md:grid md:grid-cols-12 gap-10 min-h-[600px] w-full max-w-full overflow-hidden">
                 {/* Left (Tab Content) */}
-                <div className="col-span-8">
+                <div className="md:col-span-8 w-full max-w-full overflow-hidden">
                     {renderMainContent()}
                 </div>
 
