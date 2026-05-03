@@ -159,8 +159,39 @@ export default async function JobDetailPage({ params }: Props) {
         ? `Check out this opening at Dibrand: ${jobTitle}`
         : `Mira esta vacante en Dibrand: ${jobTitle}`;
 
+    const jobPostingSchema = {
+        "@context": "https://schema.org/",
+        "@type": "JobPosting",
+        "title": jobTitle,
+        "description": jobDescription + (jobRequirements ? `<br/><br/><strong>Requirements:</strong><br/>${jobRequirements}` : ''),
+        "datePosted": job.created_at,
+        "employmentType": job.employment_type?.toUpperCase().replace('-', '_') || "FULL_TIME",
+        "hiringOrganization": {
+            "@type": "Organization",
+            "name": "Dibrand",
+            "sameAs": "https://www.dibrand.co",
+            "logo": "https://www.dibrand.co/logo_dibrand.png"
+        },
+        "jobLocation": {
+            "@type": "Place",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": jobLocation || "Escobar",
+                "addressRegion": "Buenos Aires",
+                "addressCountry": "AR"
+            }
+        }
+    };
+    if (job.modality?.toLowerCase().includes('remot')) {
+        (jobPostingSchema as any).jobLocationType = "TELECOMMUTE";
+    }
+
     return (
         <div className="flex min-h-screen flex-col bg-white">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }}
+            />
             <main className="flex-grow pt-32 pb-20">
                 <div className="container mx-auto px-6 max-w-7xl">
                     {/* Navigation and Share Header */}
