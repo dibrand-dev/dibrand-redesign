@@ -56,11 +56,14 @@ export default function EditableCoverLetter({ candidateId, initialContent }: Edi
     };
 
     return (
-        <section className="bg-white rounded-[12px] p-8 border border-[#E2E8F0] shadow-sm max-w-full overflow-hidden">
+        <section 
+            className="bg-white rounded-[12px] p-4 md:p-8 border border-[#E2E8F0] shadow-sm"
+            style={{ width: '100%', maxWidth: '100vw', overflowX: 'hidden' }}
+        >
             <div className="flex items-center justify-between mb-6">
                 <div className="flex flex-col gap-1">
                     <h3 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">Cover Letter</h3>
-                    <div className="flex items-center gap-4 text-[#A1A5B7] mt-2">
+                    <div className="flex flex-wrap items-center gap-2 md:gap-4 text-[#A1A5B7] mt-2">
                         <button 
                             onClick={() => editor.chain().focus().toggleBold().run()}
                             className={`hover:text-[#191C1D] transition-colors ${editor.isActive('bold') ? 'text-[#0040A1]' : ''}`}
@@ -79,7 +82,7 @@ export default function EditableCoverLetter({ candidateId, initialContent }: Edi
                         >
                             <UnderlineIcon size={18} />
                         </button>
-                        <div className="w-px h-4 bg-[#E1E2E5]" />
+                        <div className="hidden md:block w-px h-4 bg-[#E1E2E5]" />
                         <button 
                             onClick={() => editor.chain().focus().toggleBulletList().run()}
                             className={`hover:text-[#191C1D] transition-colors ${editor.isActive('bulletList') ? 'text-[#0040A1]' : ''}`}
@@ -96,7 +99,7 @@ export default function EditableCoverLetter({ candidateId, initialContent }: Edi
                         Edit
                     </button>
                 ) : (
-                    <div className="flex items-center gap-4 shrink-0">
+                    <div className="flex items-center gap-2 md:gap-4 shrink-0">
                         <button 
                             onClick={() => { setIsEditing(false); editor.commands.setContent(initialContent); }}
                             className="text-[11px] font-bold text-[#BA1A1A] hover:underline uppercase tracking-widest flex items-center gap-1"
@@ -116,10 +119,28 @@ export default function EditableCoverLetter({ candidateId, initialContent }: Edi
             </div>
 
             {isEditing ? (
-                <EditorContent editor={editor} className="editor-container max-w-full overflow-hidden" />
+                <EditorContent 
+                    editor={editor} 
+                    className="editor-container prose prose-sm max-w-none" 
+                    style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }} 
+                />
             ) : (
-                <div className="p-4 md:p-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl min-h-[150px] text-[15px] leading-relaxed text-[#424654] font-medium prose prose-sm max-w-full overflow-hidden whitespace-pre-wrap break-words">
-                    <div className="max-w-full overflow-hidden break-words whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: initialContent || "No cover letter provided." }} />
+                <div 
+                    className="p-4 md:p-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl min-h-[150px] text-[15px] leading-relaxed text-[#424654] font-medium prose prose-sm max-w-none"
+                    style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
+                >
+                    <div 
+                        dangerouslySetInnerHTML={{ __html: initialContent || "No cover letter provided." }} 
+                        className="[&_*]:!break-all [&_*]:!whitespace-pre-wrap [&_p]:!break-all [&_p]:!whitespace-pre-wrap"
+                        style={{ 
+                            wordBreak: 'break-all', 
+                            overflowWrap: 'break-word', 
+                            whiteSpace: 'pre-wrap',
+                            width: '100%',
+                            maxWidth: '100%',
+                            overflowX: 'hidden'
+                        }}
+                    />
                 </div>
             )}
         </section>
