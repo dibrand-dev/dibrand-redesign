@@ -21,13 +21,15 @@ import {
     LogOut,
     HelpCircle,
     PlusCircle,
-    X
+    X,
+    Inbox
 } from 'lucide-react';
 import LogoutButton from './LogoutButton';
 import { useSidebar } from '@/components/ats/SidebarContext';
 
 const MENU_ITEMS = [
     { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+    { label: 'Leads', href: '/admin/leads', icon: Inbox },
     { label: 'Empresas', href: '/admin/companies', icon: Building2 },
     { label: 'Portfolio Logos', href: '/admin/brands', icon: LayoutGrid },
     { label: 'Casos de Éxito', href: '/admin/success-stories', icon: Trophy },

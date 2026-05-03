@@ -90,13 +90,13 @@ export async function submitToZoho(formData: FormData) {
     try {
         console.log(`[ContactForm] Saving lead to Supabase backup...`);
         const supabase = createAdminClient();
-        const { error: dbError } = await supabase.from('leads').insert({
-            name: `${data['First Name']} ${data['Last Name']}`,
+        const { data: newLead, error: dbError } = await supabase.from('leads').insert({
+            name: `${data['First Name']} ${data['Last Name']}`.trim(),
             email: data['Email'],
             company: data['Company'],
             message: data['Description'],
             service_interest: 'Landing Ecommerce'
-        });
+        }).select('id').single();
 
         if (dbError) throw dbError;
         supabaseSaved = true;
@@ -106,8 +106,8 @@ export async function submitToZoho(formData: FormData) {
             type: 'lead',
             title: 'Nuevo Lead (E-commerce)',
             message: `Consulta de ${data['First Name']} - ${data['Company'] || data['Email']}`,
-            link: '/admin/dashboard',
-            metadata: { company: data['Company'], email: data['Email'] }
+            link: '/admin/leads',
+            metadata: { company: data['Company'], email: data['Email'], leadId: newLead?.id }
         });
     } catch (saveError) {
         console.error('[ContactForm] CRITICAL: Failed to save lead to Supabase:', saveError);
