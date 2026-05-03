@@ -85,7 +85,8 @@ export default function ResumeViewer({ candidate }: ResumeViewerProps) {
                 </div>
             </div>
 
-            <div className="border border-slate-200 rounded-2xl bg-[#F8FAFC] flex flex-col items-center justify-center mb-6 h-[720px] relative overflow-hidden group">
+            {/* Desktop Viewer */}
+            <div className="hidden md:flex border border-slate-200 rounded-2xl bg-[#F8FAFC] flex-col items-center justify-center mb-6 h-[720px] relative overflow-hidden group">
                 {!fileUrl ? (
                     <div className="text-center p-10 animate-pulse">
                         <div className="w-20 h-20 bg-white shadow-sm rounded-3xl flex items-center justify-center mx-auto mb-6">
@@ -110,6 +111,23 @@ export default function ResumeViewer({ candidate }: ResumeViewerProps) {
                             </button>
                         </div>
                     </div>
+                )}
+            </div>
+
+            {/* Mobile Button (replaces viewer on small screens) */}
+            <div className="flex md:hidden flex-col items-center justify-center mb-6 pt-4 pb-2">
+                {!fileUrl ? (
+                    <div className="text-center py-4">
+                        <p className="text-slate-400 font-bold text-[13px]">Sin archivo adjunto</p>
+                    </div>
+                ) : (
+                    <button 
+                        onClick={handleOpenNewWindow}
+                        className="w-full py-4 bg-[#0040A1] text-white rounded-xl font-extrabold text-[15px] flex items-center justify-center gap-3 shadow-lg shadow-blue-900/20 active:scale-95 transition-transform"
+                    >
+                        <FileText size={20} />
+                        Ver CV Completo
+                    </button>
                 )}
             </div>
             

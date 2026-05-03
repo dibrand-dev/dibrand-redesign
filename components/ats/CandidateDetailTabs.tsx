@@ -107,7 +107,8 @@ export default function CandidateDetailTabs({ candidate, logs, allSkills, stages
                                      <button className="p-2 text-[#737785] hover:text-[#191C1D] transition-colors"><Maximize2 size={18} /></button>
                                 </div>
                             </div>
-                            <div className="aspect-[4/5] bg-[#F1F5F9] relative overflow-hidden group">
+                            {/* Desktop Viewer */}
+                            <div className="hidden md:block aspect-[4/5] bg-[#F1F5F9] relative overflow-hidden group">
                                 {candidate.resume_url || candidate.cv_filename ? (
                                     <iframe 
                                         src={`${(candidate.resume_url || candidate.cv_filename)?.startsWith('http') 
@@ -139,6 +140,27 @@ export default function CandidateDetailTabs({ candidate, logs, allSkills, stages
                                         View Full Screen
                                     </a>
                                 </div>
+                            </div>
+
+                            {/* Mobile Viewer (Prominent Button) */}
+                            <div className="block md:hidden p-6 bg-[#F1F5F9]">
+                                {candidate.resume_url || candidate.cv_filename ? (
+                                    <a 
+                                        href={(candidate.resume_url || candidate.cv_filename)?.startsWith('http') 
+                                            ? (candidate.resume_url || candidate.cv_filename) 
+                                            : `https://mdvyvqphumrciekgjlfb.supabase.co/storage/v1/object/public/resumes/${encodeURIComponent(candidate.resume_url || candidate.cv_filename || '')}`
+                                        }
+                                        target="_blank" 
+                                        className="w-full py-4 bg-[#0040A1] text-white rounded-xl font-extrabold text-[15px] flex items-center justify-center gap-3 shadow-lg shadow-blue-900/20 active:scale-95 transition-transform"
+                                    >
+                                        <FileText size={20} />
+                                        Ver CV Completo
+                                    </a>
+                                ) : (
+                                    <div className="text-center py-4">
+                                        <p className="text-slate-400 font-bold text-[13px]">Sin archivo adjunto</p>
+                                    </div>
+                                )}
                             </div>
                         </section>
                     </div>
