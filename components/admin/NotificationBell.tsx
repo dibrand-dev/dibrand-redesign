@@ -115,9 +115,9 @@ export default function NotificationBell() {
                 onClick={() => setIsOpen(!isOpen)}
                 className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all relative ${isOpen ? 'bg-[#F1F5F9] text-[#0040A1]' : 'text-slate-400 hover:bg-[#F1F5F9] hover:text-[#191C1D]'}`}
             >
-                <Bell size={20} className={unreadCount > 0 ? 'animate-[wiggle_1s_ease-in-out_infinite]' : ''} />
+                <Bell size={24} className={`flex-shrink-0 ${unreadCount > 0 ? 'animate-[wiggle_1s_ease-in-out_infinite]' : ''}`} />
                 {unreadCount > 0 && (
-                    <span className="absolute top-2.5 right-2.5 w-4 h-4 bg-[#B3261E] text-white text-[10px] font-black flex items-center justify-center rounded-full border-2 border-white">
+                    <span className="absolute top-0 right-0 -translate-y-1 translate-x-1 min-w-[18px] h-[18px] px-1 bg-[#B3261E] text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
                         {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                 )}
