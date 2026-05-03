@@ -222,6 +222,8 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
               tabIndex={-1}
               autoComplete="off"
             />
+            <input type="hidden" {...register('serviceInterest' as any)} value="Contacto Web" />
+            <input type="hidden" {...register('leadSource' as any)} value="Sitio Web - Formulario de Contacto" />
           </div>
 
           <div className="col-span-1 md:col-span-2 flex justify-end mt-4">

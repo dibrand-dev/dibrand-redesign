@@ -71,11 +71,15 @@ export async function submitToZoho(formData: FormData) {
     }
 
     // 1. Data Mapping
+    // Read optional source fields to properly tag leads by form origin
+    const serviceInterest = formData.get('serviceInterest')?.toString() || 'Contacto Web';
+    const leadSourceLabel = formData.get('leadSource')?.toString() || 'Sitio Web';
+
     const data: Record<string, string> = {
         xnQsjsdp: '6d71a7c1bbe8886135bf97dd9c30c91eca761aa888ff3e6fe19132dcf97ac9e0',
         xmIwtLD: '57f43a5dfe4852abfc956f4323ee14f3493e60c1312a16601d422007c6fb2ead4e4328ed58fe4ac23ca079d0470be156',
         actionType: 'TGVhZHM=',
-        'Lead Source': 'Landing Ecommerce Escobar',
+        'Lead Source': leadSourceLabel,
     };
 
     const userFields = ['First Name', 'Last Name', 'Email', 'Company', 'Description'];
@@ -95,7 +99,7 @@ export async function submitToZoho(formData: FormData) {
             email: data['Email'],
             company: data['Company'],
             message: data['Description'],
-            service_interest: 'Landing Ecommerce'
+            service_interest: serviceInterest
         }).select('id').single();
 
         if (dbError) throw dbError;
@@ -104,8 +108,8 @@ export async function submitToZoho(formData: FormData) {
 
         await createNotification({
             type: 'lead',
-            title: 'Nuevo Lead (E-commerce)',
-            message: `Consulta de ${data['First Name']} - ${data['Company'] || data['Email']}`,
+            title: `Nuevo Lead — ${serviceInterest}`,
+            message: `Consulta de ${data['First Name']} ${data['Last Name']} - ${data['Company'] || data['Email']}`,
             link: '/admin/leads',
             metadata: { company: data['Company'], email: data['Email'], leadId: newLead?.id }
         });
