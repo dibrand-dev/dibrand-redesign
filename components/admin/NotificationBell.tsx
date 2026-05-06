@@ -24,6 +24,11 @@ export default function NotificationBell() {
         setLoading(false);
     };
 
+    // Derive unread count from notifications state
+    const syncUnreadCount = (notifs: any[]) => {
+        setUnreadCount(notifs.filter((n: any) => !n.is_read).length);
+    };
+
     useEffect(() => {
         fetchNotifications();
 
@@ -39,8 +44,11 @@ export default function NotificationBell() {
                 },
                 (payload) => {
                     console.log('New notification received:', payload);
-                    setNotifications(prev => [payload.new, ...prev]);
-                    setUnreadCount(prev => prev + 1);
+                    setNotifications(prev => {
+                        const next = [payload.new, ...prev];
+                        syncUnreadCount(next);
+                        return next;
+                    });
                 }
             )
             .on(
@@ -51,15 +59,17 @@ export default function NotificationBell() {
                     table: 'notifications'
                 },
                 (payload) => {
-                    setNotifications(prev => 
-                        prev.map(n => n.id === payload.new.id ? payload.new : n)
-                    );
-                    setUnreadCount(prev => {
-                        const wasRead = payload.old.is_read;
-                        const isRead = payload.new.is_read;
-                        if (!wasRead && isRead) return Math.max(0, prev - 1);
-                        if (wasRead && !isRead) return prev + 1;
-                        return prev;
+                    setNotifications(prev => {
+                        // Fix race condition: if we already marked it as read locally,
+                        // don't overwrite with a stale Realtime payload that still has is_read=false
+                        const existing = prev.find(n => n.id === payload.new.id);
+                        if (existing?.is_read && !payload.new.is_read) {
+                            // Our optimistic update is ahead — ignore this stale payload
+                            return prev;
+                        }
+                        const next = prev.map(n => n.id === payload.new.id ? payload.new : n);
+                        syncUnreadCount(next);
+                        return next;
                     });
                 }
             )
@@ -82,20 +92,31 @@ export default function NotificationBell() {
     }, []);
 
     const handleMarkAsRead = async (id: string) => {
+        // Optimistic update first — prevents UI flicker
+        setNotifications(prev => {
+            const next = prev.map(n => n.id === id ? { ...n, is_read: true } : n);
+            syncUnreadCount(next);
+            return next;
+        });
         const result = await markAsRead(id);
-        if (result.success) {
-            setNotifications(prev => 
-                prev.map(n => n.id === id ? { ...n, is_read: true } : n)
-            );
-            setUnreadCount(prev => Math.max(0, prev - 1));
+        if (!result.success) {
+            // Rollback on failure
+            console.error('markAsRead failed, rolling back optimistic update');
+            fetchNotifications();
         }
     };
 
     const handleMarkAllAsRead = async () => {
+        // Optimistic update first
+        setNotifications(prev => {
+            const next = prev.map(n => ({ ...n, is_read: true }));
+            syncUnreadCount(next);
+            return next;
+        });
         const result = await markAllAsRead();
-        if (result.success) {
-            setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
-            setUnreadCount(0);
+        if (!result.success) {
+            console.error('markAllAsRead failed, rolling back');
+            fetchNotifications();
         }
     };
 

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Bell, CheckCircle, Clock, Trash2, User, Mail, FileText, ChevronRight, Inbox } from 'lucide-react';
-import { getNotifications, markAsRead, markAllAsRead } from '@/app/admin/(dashboard)/notifications-actions';
+import { Bell, CheckCircle, Clock, Trash2, User, Mail, FileText, ChevronRight, Inbox, RefreshCw, AlertTriangle } from 'lucide-react';
+import { getNotifications, markAsRead, markAllAsRead, hardResetNotifications } from '@/app/admin/(dashboard)/notifications-actions';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
@@ -10,6 +10,8 @@ import Link from 'next/link';
 export default function NotificationsPage() {
     const [notifications, setNotifications] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [resetting, setResetting] = useState(false);
+    const [resetMsg, setResetMsg] = useState<string | null>(null);
 
     useEffect(() => {
         fetchNotifications();
@@ -34,6 +36,19 @@ export default function NotificationsPage() {
     const handleMarkAllAsRead = async () => {
         setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
         await markAllAsRead();
+    };
+
+    const handleHardReset = async () => {
+        setResetting(true);
+        setResetMsg(null);
+        const result = await hardResetNotifications();
+        if (result.success) {
+            setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+            setResetMsg(`✓ ${result.count} notificación${result.count !== 1 ? 'es' : ''} reseteada${result.count !== 1 ? 's' : ''}. El contador debería estar en 0.`);
+        } else {
+            setResetMsg('Error al resetear. Revisa los logs del servidor.');
+        }
+        setResetting(false);
     };
 
     const getIcon = (type: string) => {
@@ -63,15 +78,44 @@ export default function NotificationsPage() {
                     <p className="text-admin-text-secondary text-sm mt-1 font-medium italic">Historial completo de alertas y eventos.</p>
                 </div>
                 
-                <button 
-                    onClick={handleMarkAllAsRead}
-                    disabled={notifications.every(n => n.is_read)}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-admin-accent text-white rounded-xl text-xs font-bold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-admin-accent/20"
-                >
-                    <CheckCircle size={16} />
-                    Marcar todas como leídas
-                </button>
+                <div className="flex items-center gap-3 flex-wrap">
+                    <button 
+                        onClick={handleMarkAllAsRead}
+                        disabled={notifications.every(n => n.is_read)}
+                        className="flex items-center gap-2 px-6 py-2.5 bg-admin-accent text-white rounded-xl text-xs font-bold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-admin-accent/20"
+                    >
+                        <CheckCircle size={16} />
+                        Marcar todas como leídas
+                    </button>
+
+                    {/* Hard Reset Button — Debugging tool */}
+                    <button 
+                        onClick={handleHardReset}
+                        disabled={resetting}
+                        title="Fuerza is_read=true en TODAS las notificaciones. Úsalo si el badge sigue marcando lecturas fantasma."
+                        className="flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold transition-all disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-amber-500/20"
+                    >
+                        {resetting ? (
+                            <RefreshCw size={14} className="animate-spin" />
+                        ) : (
+                            <AlertTriangle size={14} />
+                        )}
+                        Hard Reset
+                    </button>
+                </div>
             </div>
+
+            {/* Reset feedback message */}
+            {resetMsg && (
+                <div className={`px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 ${
+                    resetMsg.startsWith('✓') 
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                        : 'bg-red-50 text-red-700 border border-red-200'
+                }`}>
+                    {resetMsg}
+                    <button onClick={() => setResetMsg(null)} className="ml-auto text-xs underline opacity-60 hover:opacity-100">Cerrar</button>
+                </div>
+            )}
 
             {/* Content Card */}
             <div className="bg-admin-card-bg rounded-3xl border border-admin-border shadow-sm overflow-hidden min-h-[500px]">
