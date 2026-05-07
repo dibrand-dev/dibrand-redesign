@@ -17,8 +17,33 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { revalidatePath } from 'next/cache';
 import { createGoogleEvent, listGoogleEvents } from '@/lib/google-calendar';
-import { createClient } from '@/lib/supabase-server-client';
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface Attendee {
+    id: string;
+    full_name: string;
+    email: string;
+    avatar_url?: string | null;
+}
+
+// ─── getRecruitersForScheduling ───────────────────────────────────────────────
+// Fetches real Dibrand team members (recruiters table) for the attendee picker.
+export async function getRecruitersForScheduling(): Promise<Attendee[]> {
+    const { data, error } = await supabase
+        .from('recruiters')
+        .select('id, full_name, email, avatar_url')
+        .order('full_name');
+
+    if (error) {
+        console.error('[getRecruitersForScheduling] error:', error);
+        return [];
+    }
+    // Filter out entries without an email (shouldn't happen, but be safe)
+    return (data || []).filter((r): r is Attendee => !!r.email);
+}
+
+// ─── createInterview ──────────────────────────────────────────────────────────
 export async function createInterview(data: {
     candidate_id: string;
     recruiter_id: string | null;
@@ -27,13 +52,14 @@ export async function createInterview(data: {
     duration_minutes?: number;
     type: string;
     notes?: string;
+    // Additional team members to invite (beyond the candidate)
+    additional_attendees?: { email: string; name: string }[];
 }) {
+    const { additional_attendees, ...dbData } = data;
+
     const { data: interview, error } = await supabase
         .from('job_interviews')
-        .insert([{
-            ...data,
-            status: 'Scheduled'
-        }])
+        .insert([{ ...dbData, status: 'Scheduled' }])
         .select('*, candidate:job_applications(full_name, email), job:job_openings(title)')
         .single();
 
@@ -44,7 +70,7 @@ export async function createInterview(data: {
 
     let googleHangoutLink: string | null = null;
 
-    // Sync with Google Calendar if possible
+    // Sync with Google Calendar — candidate + all selected attendees receive real invite
     try {
         if (data.recruiter_id) {
             const googleEvent = await createGoogleEvent(data.recruiter_id, {
@@ -55,6 +81,8 @@ export async function createInterview(data: {
                 job_title: interview.job?.title,
                 scheduled_at: data.scheduled_at,
                 duration_minutes: data.duration_minutes || 60,
+                notes: data.notes,
+                additional_attendees: additional_attendees || [],
             });
 
             if (googleEvent?.hangoutLink) {
@@ -79,6 +107,7 @@ export async function createInterview(data: {
     };
 }
 
+// ─── getInterviews ────────────────────────────────────────────────────────────
 export async function getInterviews(filters: {
     startDate?: string;
     endDate?: string;
@@ -105,6 +134,7 @@ export async function getInterviews(filters: {
     return data || [];
 }
 
+// ─── getUpcomingInterviews ────────────────────────────────────────────────────
 export async function getUpcomingInterviews(limit = 10) {
     const now = new Date().toISOString();
     const { data, error } = await supabase
@@ -126,6 +156,7 @@ export async function getUpcomingInterviews(limit = 10) {
     return data || [];
 }
 
+// ─── getCombinedInterviews ────────────────────────────────────────────────────
 export async function getCombinedInterviews(
     recruiterId: string,
     startDate: string,
@@ -154,6 +185,7 @@ export async function getCombinedInterviews(
     return [...atsInterviews, ...formattedGoogle];
 }
 
+// ─── updateInterview ──────────────────────────────────────────────────────────
 export async function updateInterview(id: string, updates: Record<string, any>) {
     const { error } = await supabase
         .from('job_interviews')

@@ -95,49 +95,83 @@ export async function getRecruiterClient(recruiterId: string) {
   return oauth2Client;
 }
 
-export async function createGoogleEvent(recruiterId: string, interview: any) {
+export async function createGoogleEvent(recruiterId: string, interview: {
+  id: string;
+  type: string;
+  candidate_name?: string;
+  candidate_email?: string;
+  job_title?: string;
+  scheduled_at: string;
+  duration_minutes?: number;
+  notes?: string;
+  additional_attendees?: { email: string; name?: string }[];
+}) {
   const auth = await getRecruiterClient(recruiterId);
   if (!auth) return null;
 
   const calendar = google.calendar({ version: 'v3', auth });
-  
+
+  // Build attendee list: candidate + any additional (recruiters, SuperAdmin)
+  const attendees: { email: string; displayName?: string }[] = [];
+  if (interview.candidate_email) {
+    attendees.push({ email: interview.candidate_email, displayName: interview.candidate_name });
+  }
+  if (interview.additional_attendees) {
+    for (const a of interview.additional_attendees) {
+      if (a.email && !attendees.some(x => x.email === a.email)) {
+        attendees.push({ email: a.email, displayName: a.name });
+      }
+    }
+  }
+
+  const endTime = new Date(
+    new Date(interview.scheduled_at).getTime() + (interview.duration_minutes || 60) * 60000
+  ).toISOString();
+
   const event = {
-    summary: `${interview.type} Interview: ${interview.candidate_name}`,
-    description: `Interview for ${interview.job_title}. \nNotes: ${interview.notes || ''}`,
+    summary: `${interview.type} Interview: ${interview.candidate_name || 'Candidate'}`,
+    description: [
+      `📋 Position: ${interview.job_title || 'N/A'}`,
+      `👤 Candidate: ${interview.candidate_name || 'N/A'}`,
+      interview.notes ? `📝 Notes: ${interview.notes}` : null,
+      `\n🔗 Managed via Dibrand ATS`,
+    ].filter(Boolean).join('\n'),
     start: {
       dateTime: interview.scheduled_at,
-      timeZone: 'UTC',
+      timeZone: 'America/Argentina/Buenos_Aires',
     },
     end: {
-      dateTime: new Date(new Date(interview.scheduled_at).getTime() + (interview.duration_minutes || 60) * 60000).toISOString(),
-      timeZone: 'UTC',
+      dateTime: endTime,
+      timeZone: 'America/Argentina/Buenos_Aires',
     },
     conferenceData: {
       createRequest: {
-        requestId: `interview-${interview.id}-${Date.now()}`,
+        requestId: `dibrand-interview-${interview.id}-${Date.now()}`,
         conferenceSolutionKey: { type: 'hangoutsMeet' },
       },
     },
-    attendees: [
-        { email: interview.candidate_email }
-    ]
+    attendees,
+    guestsCanSeeOtherGuests: true,
+    sendUpdates: 'all', // Sends email invitations to all attendees
   };
 
   console.log('--- CREATING GOOGLE CALENDAR EVENT ---');
-  console.log('Payload:', JSON.stringify(event, null, 2));
+  console.log('Attendees:', attendees.map(a => a.email).join(', '));
 
   const response = await calendar.events.insert({
     calendarId: 'primary',
     requestBody: event,
     conferenceDataVersion: 1,
+    sendUpdates: 'all', // Required to send invitations
   });
 
   console.log('--- GOOGLE CALENDAR RESPONSE ---');
   console.log('Status:', response.status);
-  console.log('Event Link:', response.data.htmlLink);
+  console.log('Meet link:', response.data.hangoutLink);
 
   return response.data;
 }
+
 
 export async function listGoogleEvents(recruiterId: string, minTime: string, maxTime: string) {
     const auth = await getRecruiterClient(recruiterId);
