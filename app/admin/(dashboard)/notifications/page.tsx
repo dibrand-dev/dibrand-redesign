@@ -33,6 +33,15 @@ export default function NotificationsPage() {
         await markAsRead(id);
     };
 
+    // Client-side guard: remap stale /admin/dashboard links to /admin/leads
+    const sanitizeLink = (link: string) => {
+        if (!link) return link;
+        if (link === '/admin/dashboard' || link.endsWith('/admin/dashboard')) {
+            return '/admin/leads';
+        }
+        return link;
+    };
+
     const handleMarkAllAsRead = async () => {
         setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
         await markAllAsRead();
@@ -173,7 +182,9 @@ export default function NotificationsPage() {
                                             )}
                                             {notif.link && (
                                                 <Link 
-                                                    href={notif.link}
+                                                    href={sanitizeLink(notif.link)}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
                                                     onClick={() => handleMarkAsRead(notif.id)}
                                                     className="flex items-center gap-1 px-4 py-2 bg-zinc-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-admin-accent transition-colors shadow-lg shadow-zinc-900/10"
                                                 >

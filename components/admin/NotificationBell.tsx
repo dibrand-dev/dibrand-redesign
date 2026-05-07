@@ -130,6 +130,15 @@ export default function NotificationBell() {
         }
     };
 
+    // Client-side guard: remap stale /admin/dashboard links to /admin/leads
+    const sanitizeLink = (link: string) => {
+        if (!link) return link;
+        if (link === '/admin/dashboard' || link.endsWith('/admin/dashboard')) {
+            return '/admin/leads';
+        }
+        return link;
+    };
+
     return (
         <div className="relative" ref={dropdownRef}>
             <button 
@@ -216,10 +225,12 @@ export default function NotificationBell() {
                                                 <div className="flex items-center gap-3 pt-3">
                                                     {notif.link && (
                                                         <Link 
-                                                            href={notif.link}
+                                                            href={sanitizeLink(notif.link)}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
                                                             onClick={() => {
                                                                 handleMarkAsRead(notif.id);
-                                                                setIsOpen(false);
+                                                                // Don't close dropdown — user keeps context
                                                             }}
                                                             className="flex items-center gap-1 text-[11px] font-black text-admin-accent uppercase tracking-widest hover:underline"
                                                         >
