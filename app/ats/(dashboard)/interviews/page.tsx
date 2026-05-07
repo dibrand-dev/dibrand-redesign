@@ -8,8 +8,10 @@ import {
     X, Bell, CalendarX, Ban, TrendingUp, LineChart
 } from 'lucide-react';
 import {
-    getUpcomingInterviews, getRecruiters, createInterview,
-    getCandidateNames, getRecruiterJobs, getCombinedInterviews, syncRecruiterProfile
+    getUpcomingInterviews, createInterview, getCombinedInterviews
+} from '@/app/ats/(dashboard)/interviews/actions';
+import {
+    getRecruiters, getCandidateNames, getRecruiterJobs, syncRecruiterProfile
 } from '@/app/ats/actions';
 import { capitalizeName } from '@/lib/utils';
 

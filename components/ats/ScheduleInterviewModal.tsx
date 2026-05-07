@@ -6,7 +6,7 @@ import {
     X, Phone, Video, Users, Lock, Calendar, Clock, ChevronDown, 
     Plus, Bold, Italic, List, Link as LinkIcon, Paperclip 
 } from 'lucide-react';
-import { createInterview } from '@/app/ats/actions';
+import { createInterview } from '@/app/ats/(dashboard)/interviews/actions';
 
 interface Candidate {
     id: string;
