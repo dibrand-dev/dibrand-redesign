@@ -134,12 +134,14 @@ export default async function CandidateDetailPage({
                     </div>
 
                     {/* Progress Tracker Widget */}
-                    <div className="mb-10 overflow-x-auto pb-4">
+                    <div className="mb-10 relative z-10">
+                        <div className="overflow-x-auto pb-4">
                         <div className="min-w-[600px] lg:min-w-0">
                             <CandidatePipelineTracker 
                                 candidateId={id}
                                 currentStatus={candidate.status || 'Nuevo'} 
                             />
+                        </div>
                         </div>
                     </div>
 

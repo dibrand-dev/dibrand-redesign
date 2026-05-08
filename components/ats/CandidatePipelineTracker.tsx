@@ -86,7 +86,8 @@ export default function CandidatePipelineTracker({ candidateId, currentStatus }:
                                 className={cn(
                                     "relative w-full h-16 flex flex-col items-center justify-center transition-all duration-300 group",
                                     index !== 0 && "md:-ml-4",
-                                    isActiveMacro ? "z-30 shadow-lg scale-[1.02]" : "z-10 hover:z-20 hover:scale-[1.01]"
+                                    isActiveMacro ? "z-30 shadow-lg scale-[1.02]" : "z-10 hover:z-20 hover:scale-[1.01]",
+                                    openDropdown === macro.id && "z-[60]"
                                 )}
                                 style={{
                                     backgroundColor: bgStyle,
@@ -127,7 +128,7 @@ export default function CandidatePipelineTracker({ candidateId, currentStatus }:
                                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                        className="absolute top-full left-0 right-0 mt-3 z-50 bg-white rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 p-1.5 min-w-[180px]"
+                                        className="absolute top-full left-0 right-0 mt-3 z-[200] bg-white rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 p-1.5 min-w-[180px]"
                                     >
                                         <div className="space-y-1">
                                             {macro.stages.map((stage) => {
