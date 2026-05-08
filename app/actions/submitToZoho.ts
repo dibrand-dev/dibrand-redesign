@@ -110,7 +110,7 @@ export async function submitToZoho(formData: FormData) {
             type: 'lead',
             title: `Nuevo Lead — ${serviceInterest}`,
             message: `Consulta de ${data['First Name']} ${data['Last Name']} - ${data['Company'] || data['Email']}`,
-            link: '/admin/leads',
+            link: newLead?.id ? `/admin/leads?leadId=${newLead.id}` : '/admin/leads',
             metadata: { company: data['Company'], email: data['Email'], leadId: newLead?.id }
         });
     } catch (saveError) {

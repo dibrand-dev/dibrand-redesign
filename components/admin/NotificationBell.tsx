@@ -131,11 +131,21 @@ export default function NotificationBell() {
     };
 
     // Client-side guard: remap stale /admin/dashboard links to /admin/leads
-    const sanitizeLink = (link: string) => {
+    const sanitizeLink = (notif: any) => {
+        let link = notif.link;
         if (!link) return link;
         if (link === '/admin/dashboard' || link.endsWith('/admin/dashboard')) {
-            return '/admin/leads';
+            link = '/admin/leads';
         }
+        
+        // Dynamic deep linking for slide-overs based on metadata
+        if (link.includes('/admin/leads') && notif.metadata?.leadId && !link.includes('leadId=')) {
+            link = `${link}?leadId=${notif.metadata.leadId}`;
+        } else if (link.includes('/ats/candidates') && notif.metadata?.candidateId && !link.includes('schedule=')) {
+            // For now just pointing to candidate detail, could also pass ?schedule=true or something if needed
+            link = `/ats/candidates/${notif.metadata.candidateId}`;
+        }
+        
         return link;
     };
 
@@ -225,7 +235,7 @@ export default function NotificationBell() {
                                                 <div className="flex items-center gap-3 pt-3">
                                                     {notif.link && (
                                                         <Link 
-                                                            href={sanitizeLink(notif.link)}
+                                                            href={sanitizeLink(notif)}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             onClick={() => {

@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import ScheduleInterviewModal from '@/components/ats/ScheduleInterviewModal';
+import ScheduleInterviewSlideOverWrapper from '@/components/ats/ScheduleInterviewSlideOverWrapper';
 import EditCandidateModal from '@/components/ats/EditCandidateModal';
 import ProcessActionsWidget from '@/components/ats/ProcessActionsWidget';
 import CandidatePipelineTracker from '@/components/ats/CandidatePipelineTracker';
@@ -217,7 +217,7 @@ export default async function CandidateDetailPage({
             </div>
             
             {showSchedule && (
-                <ScheduleInterviewModal candidate={candidate} recruiterId={recruiterId || null} />
+                <ScheduleInterviewSlideOverWrapper candidate={candidate} recruiterId={recruiterId || null} />
             )}
 
             {showEdit && (
