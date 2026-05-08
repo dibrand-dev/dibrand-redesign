@@ -40,7 +40,7 @@ export async function getRecruitersForScheduling(): Promise<Attendee[]> {
         return [];
     }
     // Filter out entries without an email (shouldn't happen, but be safe)
-    return (data || []).filter((r): r is Attendee => !!r.email);
+    return (data || []).filter(r => !!r.email) as Attendee[];
 }
 
 // ─── createInterview ──────────────────────────────────────────────────────────
