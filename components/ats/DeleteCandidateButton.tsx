@@ -10,9 +10,10 @@ interface Props {
     candidateId: string;
     candidateName: string;
     variant?: 'header' | 'form';
+    className?: string;
 }
 
-export default function DeleteCandidateButton({ candidateId, candidateName, variant = 'header' }: Props) {
+export default function DeleteCandidateButton({ candidateId, candidateName, variant = 'header', className = '' }: Props) {
     const [isOpen, setIsOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const router = useRouter();
@@ -38,7 +39,7 @@ export default function DeleteCandidateButton({ candidateId, candidateName, vari
                 <button
                     type="button"
                     onClick={() => setIsOpen(true)}
-                    className="px-8 py-3 bg-red-600 text-white rounded-xl text-[13px] font-black shadow-xl shadow-red-600/20 hover:bg-red-700 transition-all flex items-center gap-2"
+                    className={`px-8 py-3 bg-red-600 text-white rounded-xl text-[13px] font-black shadow-xl shadow-red-600/20 hover:bg-red-700 transition-all flex items-center justify-center gap-2 ${className}`}
                 >
                     <Trash2 size={16} /> Eliminar Candidato
                 </button>
@@ -88,10 +89,11 @@ export default function DeleteCandidateButton({ candidateId, candidateName, vari
         <>
             <button 
                 onClick={() => setIsOpen(true)}
-                className="h-[42px] px-4 border border-red-100 bg-white rounded-xl text-[13px] font-bold text-red-500 hover:bg-red-50 shadow-sm transition-all flex items-center gap-2"
+                className={`h-[42px] px-4 border border-red-100 bg-white rounded-xl text-[13px] font-bold text-red-500 hover:bg-red-50 shadow-sm transition-all flex items-center justify-center gap-2 ${className}`}
                 title="Eliminar Candidato"
             >
                 <Trash2 size={16} />
+                {variant === 'header' ? null : 'Eliminar'}
             </button>
 
             {isOpen && (

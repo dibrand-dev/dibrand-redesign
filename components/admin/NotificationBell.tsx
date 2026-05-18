@@ -141,8 +141,9 @@ export default function NotificationBell() {
         // Dynamic deep linking for slide-overs based on metadata
         if (link.includes('/admin/leads') && notif.metadata?.leadId && !link.includes('leadId=')) {
             link = `${link}?leadId=${notif.metadata.leadId}`;
-        } else if (link.includes('/ats/candidates') && notif.metadata?.candidateId && !link.includes('schedule=')) {
-            // For now just pointing to candidate detail, could also pass ?schedule=true or something if needed
+        } else if (notif.metadata?.candidateId) {
+            // Always resolve to candidate profile if we have an ID —
+            // regardless of whether the link is /ats/candidates, /ats/candidates?status=..., or already /ats/candidates/{id}
             link = `/ats/candidates/${notif.metadata.candidateId}`;
         }
         

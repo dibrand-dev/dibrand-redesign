@@ -8,6 +8,13 @@ export const metadata: Metadata = {
         canonical: 'https://www.dibrand.co/',
     },
 };
+
+export const viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+};
+
 import ToasterProvider from "@/components/admin/ToasterProvider";
 
 const outfit = Outfit({

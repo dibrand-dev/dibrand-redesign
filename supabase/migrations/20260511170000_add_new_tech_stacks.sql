@@ -1,0 +1,35 @@
+-- Insert new tech stacks from the provided list
+INSERT INTO public.tech_stacks (name)
+SELECT unnest(ARRAY[
+    '.NET',
+    '.NET Core',
+    '.NET 6+',
+    'Kubernetes',
+    'AKS',
+    'GKE',
+    'Azure',
+    'Google Cloud Platform (GCP)',
+    'GitOps',
+    'Flux',
+    'Argo CD',
+    'Rancher',
+    'Helm',
+    'Kustomize',
+    'Docker',
+    'Terraform',
+    'Azure DevOps',
+    'GitHub Actions',
+    'Git',
+    'GitHub',
+    'Bitbucket',
+    'Bitbucket Pipelines',
+    'Prometheus',
+    'Grafana',
+    'ELK',
+    'Azure Monitor',
+    'GCP Operations Suite',
+    'PowerShell',
+    'Bash',
+    'Python'
+])
+ON CONFLICT (name) DO NOTHING;

@@ -60,9 +60,9 @@ export default async function CandidateDetailPage({
     const allSkills = Array.from(new Set([...resolvedStackNames, ...(candidate.skills || [])])).sort();
 
     return (
-        <div className="min-h-[calc(100vh-80px)] bg-[#FAFAFA] font-outfit relative pb-20 lg:pb-0">
+        <div className="min-h-[calc(100vh-80px)] bg-[#FAFAFA] font-outfit relative pb-20 lg:pb-0 overflow-x-hidden">
             {/* Main Content */}
-            <div className="overflow-y-auto px-4 sm:px-8 lg:px-12 py-6 lg:py-10 custom-scrollbar">
+            <div className="overflow-y-auto overflow-x-hidden px-4 sm:px-8 lg:px-12 py-6 lg:py-10 custom-scrollbar">
                 <div className="max-w-7xl mx-auto">
                     {/* Header */}
                     <div className="flex flex-col lg:flex-row justify-between items-start mb-8 lg:mb-10 gap-6 lg:gap-8">
@@ -134,9 +134,9 @@ export default async function CandidateDetailPage({
                     </div>
 
                     {/* Progress Tracker Widget */}
-                    <div className="mb-10 relative z-10">
-                        <div className="overflow-x-auto pb-4">
-                        <div className="min-w-[600px] lg:min-w-0">
+                    <div className="mb-10 relative z-30">
+                        <div className="overflow-x-auto pb-4 custom-scrollbar">
+                        <div className="min-w-[700px] lg:min-w-0">
                             <CandidatePipelineTracker 
                                 candidateId={id}
                                 currentStatus={candidate.status || 'Nuevo'} 
@@ -195,25 +195,29 @@ export default async function CandidateDetailPage({
             </div>
 
             {/* Sticky Mobile Footer */}
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 z-40 flex items-center gap-3 shadow-[0_-8px_30px_rgb(0,0,0,0.12)]">
-                <Link 
-                    href={`/ats/candidates/${id}/edit`} 
-                    className="flex-1 h-[52px] border border-slate-200 bg-white rounded-2xl text-[14px] font-bold text-slate-700 flex items-center justify-center gap-2 active:scale-95 transition-all"
-                >
-                    <Pencil size={18} /> Editar
-                </Link>
-                <div className="flex-none">
-                    <DeleteCandidateButton 
-                        candidateId={id} 
-                        candidateName={candidate.full_name || `${candidate.first_name} ${candidate.last_name}`} 
-                    />
-                </div>
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 z-40 flex flex-col gap-3 shadow-[0_-8px_30px_rgb(0,0,0,0.12)]">
                 <Link 
                     href={`/ats/candidates/${id}?schedule=true`} 
-                    className="flex-[2] h-[52px] bg-[#0040A1] text-white rounded-2xl text-[14px] font-bold shadow-lg shadow-blue-200 flex items-center justify-center active:scale-95 transition-all"
+                    className="w-full h-[52px] bg-[#0040A1] text-white rounded-2xl text-[14px] font-bold shadow-lg shadow-blue-200 flex items-center justify-center active:scale-95 transition-all"
                 >
                     Agendar Entrevista
                 </Link>
+                <div className="flex gap-3">
+                    <Link 
+                        href={`/ats/candidates/${id}/edit`} 
+                        className="flex-1 h-[52px] border border-slate-200 bg-white rounded-2xl text-[14px] font-bold text-slate-700 flex items-center justify-center gap-2 active:scale-95 transition-all"
+                    >
+                        <Pencil size={18} /> Editar
+                    </Link>
+                    <div className="flex-1 flex items-stretch">
+                        <DeleteCandidateButton 
+                            candidateId={id} 
+                            candidateName={candidate.full_name || `${candidate.first_name} ${candidate.last_name}`} 
+                            variant="form"
+                            className="w-full h-[52px] !shadow-none !px-4"
+                        />
+                    </div>
+                </div>
             </div>
             
             {showSchedule && (

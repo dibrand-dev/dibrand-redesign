@@ -76,7 +76,7 @@ export default async function AtsDashboard() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-5 gap-4 pt-8 border-t border-[#F1F5F9]">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 pt-8 border-t border-[#F1F5F9]">
                             {funnelStages.map((stage) => (
                                 <div key={stage.label} className="text-center group/stage">
                                     <p className="text-[11px] font-bold text-[#737785] uppercase tracking-wider mb-2">{stage.label}</p>

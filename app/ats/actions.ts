@@ -897,6 +897,25 @@ export async function createCandidate(formData: {
         return { error: error.message };
     }
 
+    // Notify admins about the new manually-added candidate
+    try {
+        const creatorName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Recruiter';
+        await createNotification({
+            type: 'candidato',
+            title: 'Nuevo Candidato Agregado',
+            message: `${creatorName} agregó al candidato ${capitalizedName}`,
+            link: `/ats/candidates/${data.id}`,
+            metadata: {
+                candidateId: data.id,
+                name: capitalizedName,
+                email: formData.email,
+                source: 'Manual'
+            }
+        });
+    } catch (notifError) {
+        console.error('Failed to create notification for new candidate:', notifError);
+    }
+
     revalidatePath('/ats/candidates');
     revalidatePath('/ats');
     
