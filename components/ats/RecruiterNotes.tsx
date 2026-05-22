@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Send, AtSign, Paperclip, MoreHorizontal, MessageSquare, Loader2, User } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Send, AtSign, Paperclip, MessageSquare, Loader2 } from 'lucide-react';
 import { addApplicationLog, getRecruiters } from '@/app/ats/actions';
-import { capitalizeName } from '@/lib/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
+import RichTextEditor from './RichTextEditor';
 
 interface Recruiter {
     id: string;
@@ -20,89 +20,38 @@ interface Note {
     created_at: string;
 }
 
-export default function RecruiterNotes({ 
-    applicationId, 
-    initialNotes 
-}: { 
-    applicationId: string; 
-    initialNotes: Note[] 
+/** Detect if a string is HTML (saved with the rich editor) vs plain text */
+function isHTML(str: string) {
+    return /<[a-z][\s\S]*>/i.test(str);
+}
+
+export default function RecruiterNotes({
+    applicationId,
+    initialNotes
+}: {
+    applicationId: string;
+    initialNotes: Note[]
 }) {
     const [noteText, setNoteText] = useState('');
     const [sending, setSending] = useState(false);
     const [recruiters, setRecruiters] = useState<Recruiter[]>([]);
-    const [showMentions, setShowMentions] = useState(false);
-    const [mentionSearch, setMentionSearch] = useState('');
     const [isMounted, setIsMounted] = useState(false);
-    
+
     const router = useRouter();
     const searchParams = useSearchParams();
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
         setIsMounted(true);
         const fetchRecruiters = async () => {
             try {
                 const data = await getRecruiters();
-                console.log('Recruiters fetched:', data?.length, data);
                 setRecruiters(data || []);
             } catch (err) {
                 console.error('Error fetching recruiters:', err);
             }
         };
         fetchRecruiters();
-
-        // Optional: Auto-focus if requested via query param
-        if (searchParams.get('focus') === 'true') {
-            setTimeout(() => {
-                textareaRef.current?.focus();
-            }, 500); // Small delay to allow tab animation
-        }
     }, [searchParams]);
-
-    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const value = e.target.value;
-        const cursorPosition = e.target.selectionStart;
-        setNoteText(value);
-
-        // Improved mention trigger logic using cursor position
-        const textBeforeCursor = value.slice(0, cursorPosition);
-        const lastAt = textBeforeCursor.lastIndexOf('@');
-        
-        if (lastAt !== -1 && (lastAt === 0 || textBeforeCursor[lastAt - 1] === ' ' || textBeforeCursor[lastAt - 1] === '\n')) {
-            const query = textBeforeCursor.slice(lastAt + 1);
-            if (!query.includes(' ') && !query.includes('\n')) {
-                console.log('Mention search query:', query);
-                setMentionSearch(query);
-                setShowMentions(true);
-                return;
-            }
-        }
-        setShowMentions(false);
-    };
-
-    const insertMention = (recruiter: Recruiter) => {
-        const cursorPosition = textareaRef.current?.selectionStart || noteText.length;
-        const textBeforeCursor = noteText.slice(0, cursorPosition);
-        const textAfterCursor = noteText.slice(cursorPosition);
-        
-        const lastAt = textBeforeCursor.lastIndexOf('@');
-        const beforeAt = textBeforeCursor.slice(0, lastAt);
-        
-        const name = recruiter.full_name || 'Recruiter';
-        const newText = `${beforeAt}@${name} ${textAfterCursor}`;
-        
-        setNoteText(newText);
-        setShowMentions(false);
-        
-        // Return focus and set cursor after mention
-        setTimeout(() => {
-            if (textareaRef.current) {
-                const newPos = beforeAt.length + name.length + 2; // +1 for @, +1 for space
-                textareaRef.current.focus();
-                textareaRef.current.setSelectionRange(newPos, newPos);
-            }
-        }, 10);
-    };
 
     const handleSubmit = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
@@ -120,10 +69,6 @@ export default function RecruiterNotes({
             setSending(false);
         }
     };
-
-    const filteredRecruiters = recruiters.filter(r => 
-        (r.full_name || '').toLowerCase().includes(mentionSearch.toLowerCase())
-    ).slice(0, 5);
 
     const formatTimeAgo = (date: string) => {
         const seconds = Math.floor((new Date().getTime() - new Date(date).getTime()) / 1000);
@@ -145,67 +90,27 @@ export default function RecruiterNotes({
     return (
         <section id="recruiter-notes" className="space-y-8 scroll-mt-32">
             <h4 className="text-[11px] font-black text-[#6B7485] uppercase tracking-[0.2em]">Recruiter Notes</h4>
-            
+
             {/* Drafting Card */}
             <div className="bg-white rounded-[12px] border border-[#E2E8F0] shadow-sm overflow-hidden focus-within:border-[#0040A1] transition-all">
-                <div className="relative">
-                    <textarea 
-                        ref={textareaRef}
-                        value={noteText}
-                        onChange={handleTextChange}
-                        placeholder="Add a private note for the team..."
-                        className="w-full h-32 p-6 text-[14px] text-[#191C1D] placeholder:text-[#A1A5B7] resize-none outline-none focus:ring-0 font-medium"
-                    />
-                    
-                    {/* Mentions Dropdown */}
-                    {showMentions && (
-                        <div className="absolute bottom-full left-6 mb-2 w-64 bg-white border border-[#E2E8F0] rounded-xl shadow-2xl z-20 py-2 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
-                             <div className="px-4 py-2 text-[10px] font-bold text-[#A1A5B7] uppercase tracking-widest border-b border-[#F1F5F9] mb-1">Mention Recruiter</div>
-                             {filteredRecruiters.length > 0 ? (
-                                 filteredRecruiters.map(r => (
-                                     <button 
-                                         key={r.id}
-                                         onClick={() => insertMention(r)}
-                                         className="w-full px-4 py-2.5 flex items-center gap-3 text-left hover:bg-[#F1F5F9] transition-colors group"
-                                     >
-                                         <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-[#0040A1]">
-                                             {(r.full_name || 'R')[0]}
-                                         </div>
-                                         <div className="flex flex-col">
-                                             <span className="text-[12px] font-semibold text-[#191C1D]">{r.full_name}</span>
-                                             <span className="text-[10px] text-slate-400">@{r.full_name?.split(' ')[0].toLowerCase()}</span>
-                                         </div>
-                                     </button>
-                                 ))
-                             ) : (
-                                 <div className="px-4 py-4 text-center text-[11px] text-[#A1A5B7] italic">
-                                     No recruiters found
-                                 </div>
-                             )}
-                        </div>
-                    )}
-                </div>
+                <RichTextEditor
+                    content={noteText}
+                    onChange={setNoteText}
+                    placeholder="Add a private note for the team..."
+                    disabled={sending}
+                    minHeight="100px"
+                />
 
                 <div className="px-6 py-4 bg-[#F8FAFC] border-t border-[#F1F5F9] flex items-center justify-between">
                     <div className="flex items-center gap-4 text-[#A1A5B7]">
                         <button className="hover:text-[#0040A1] transition-colors"><Paperclip size={18} /></button>
-                        <button 
-                            onClick={() => {
-                                setNoteText(prev => prev + '@');
-                                setShowMentions(true);
-                                textareaRef.current?.focus();
-                            }}
-                            className="hover:text-[#0040A1] transition-colors"
-                        >
-                            <AtSign size={18} />
-                        </button>
                     </div>
-                    <button 
+                    <button
                         onClick={() => handleSubmit()}
                         disabled={sending || !noteText.trim()}
                         className="px-10 py-2.5 bg-[#0040A1] text-white rounded-xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-[#003380] transition-all disabled:opacity-50"
                     >
-                        {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={14} />} 
+                        {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={14} />}
                         POST
                     </button>
                 </div>
@@ -229,21 +134,28 @@ export default function RecruiterNotes({
                                 </div>
                             </div>
                             <div className="bg-white border border-[#E2E8F0] hover:border-[#0040A1]/30 p-5 rounded-2xl rounded-tl-none shadow-sm transition-all group-hover:shadow-md">
-                                <p className="text-[13px] text-[#424654] leading-relaxed whitespace-pre-wrap font-medium">
-                                    {note.note_text.split(' ').map((word, i) => (
-                                        word.startsWith('@') ? (
-                                            <span key={i} className="text-[#0040A1] font-black bg-[#DAE2FF] px-1.5 py-0.5 rounded text-[11px]">{word} </span>
-                                        ) : `${word} `
-                                    ))}
-                                </p>
+                                {isHTML(note.note_text) ? (
+                                    <div
+                                        className="ats-note-content text-[13px] text-[#424654] leading-relaxed font-medium"
+                                        dangerouslySetInnerHTML={{ __html: note.note_text }}
+                                    />
+                                ) : (
+                                    <p className="text-[13px] text-[#424654] leading-relaxed whitespace-pre-wrap font-medium">
+                                        {note.note_text.split(' ').map((word, i) => (
+                                            word.startsWith('@') ? (
+                                                <span key={i} className="text-[#0040A1] font-black bg-[#DAE2FF] px-1.5 py-0.5 rounded text-[11px]">{word} </span>
+                                            ) : `${word} `
+                                        ))}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
                 ))}
                 {initialNotes.length === 0 && (
                     <div className="text-center py-16 bg-[#F8FAFC] rounded-2xl border-2 border-dashed border-[#E1E2E5]">
-                         <MessageSquare size={32} className="mx-auto mb-3 text-[#A1A5B7] opacity-20" />
-                         <p className="text-[13px] text-[#A1A5B7] font-medium">No internal messages or notes yet.</p>
+                        <MessageSquare size={32} className="mx-auto mb-3 text-[#A1A5B7] opacity-20" />
+                        <p className="text-[13px] text-[#A1A5B7] font-medium">No internal messages or notes yet.</p>
                     </div>
                 )}
             </div>

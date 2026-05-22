@@ -235,3 +235,106 @@ h6 {
 .job-content strong {
   @apply font-bold text-zinc-900;
 }
+
+/* -------------------------------------------------------
+   ATS Rich Text Editor (Tiptap / ProseMirror)
+   ------------------------------------------------------- */
+
+/* Editor content area */
+.ats-rich-editor .ProseMirror {
+  padding: 14px 18px;
+  outline: none;
+  font-size: 14px;
+  color: #334155;
+  font-weight: 500;
+  line-height: 1.7;
+  font-family: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Placeholder text */
+.ats-rich-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #94a3b8;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Inline formatting */
+.ats-rich-editor .ProseMirror strong {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.ats-rich-editor .ProseMirror em {
+  font-style: italic;
+}
+
+.ats-rich-editor .ProseMirror u {
+  text-decoration: underline;
+}
+
+/* Paragraphs */
+.ats-rich-editor .ProseMirror p {
+  margin: 0 0 6px 0;
+}
+.ats-rich-editor .ProseMirror p:last-child {
+  margin-bottom: 0;
+}
+
+/* Bullet list */
+.ats-rich-editor .ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin: 4px 0 8px;
+}
+
+/* Ordered list */
+.ats-rich-editor .ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 20px;
+  margin: 4px 0 8px;
+}
+
+.ats-rich-editor .ProseMirror li {
+  margin-bottom: 3px;
+}
+
+/* -------------------------------------------------------
+   Saved note HTML rendering (.ats-note-content)
+   ------------------------------------------------------- */
+.ats-note-content strong {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.ats-note-content em {
+  font-style: italic;
+}
+
+.ats-note-content u {
+  text-decoration: underline;
+}
+
+.ats-note-content p {
+  margin: 0 0 6px;
+}
+.ats-note-content p:last-child {
+  margin-bottom: 0;
+}
+
+.ats-note-content ul {
+  list-style-type: disc;
+  padding-left: 18px;
+  margin: 4px 0 8px;
+}
+
+.ats-note-content ol {
+  list-style-type: decimal;
+  padding-left: 18px;
+  margin: 4px 0 8px;
+}
+
+.ats-note-content li {
+  margin-bottom: 3px;
+}
