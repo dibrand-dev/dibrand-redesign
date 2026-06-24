@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recordatorio de vencimiento de servicio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f9fafb;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            color: #1f2937;
+        }
+
+        table {
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        td {
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background-color: #f9fafb;
+            padding-bottom: 40px;
+        }
+
+        .main {
+            background-color: #ffffff;
+            margin: 40px auto;
+            width: 100%;
+            max-width: 600px;
+            border-spacing: 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .header {
+            padding: 40px 30px 20px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 24px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #111827;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .content {
+            padding: 0 40px 30px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        .greeting {
+            font-size: 18px;
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 16px;
+        }
+
+        .audit-card {
+            background-color: #f3f4f6;
+            border-radius: 6px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .audit-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .audit-row:last-child {
+            border-bottom: none;
+        }
+
+        .audit-label {
+            font-weight: 500;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .audit-value {
+            font-weight: 600;
+            color: #111827;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .button-container {
+            text-align: center;
+            padding: 10px 0 30px;
+        }
+
+        .button {
+            background-color: #9e4d97;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @media screen and (max-width: 600px) {
+            .content {
+                padding: 0 20px 30px;
+            }
+            .main {
+                margin: 20px auto;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <table class="main" role="presentation">
+            <tr>
+                <td class="header">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1Qt2s5qAgLBwxPMHmxs2gOntfWLtS8LLfYKuFzH-V2lnXb6PhXjM2EPHHTedAQL8R4kfuFfWwCw48Rf80sYYqG2sJUy5lgofc5u_qIOdb1Pv58Phg0-PLEfm_p0SFLWJhEZdHAuXIZPSCHv5erNMU-AZZYYVQBg1kLHjLi2S8O0gTJ5qxNy9XB1dYajDlQCDbKTkxRQcPA4Q_X_JjckSpRMZwf4LFr-9m1cvC8PoE0_gx8imdiOmlCjuKKFLD-N3jbO3Jj_gCK8vI" alt="Dibrand Logo" class="logo">
+                    <h1 class="title">Recordatorio de vencimiento de servicio</h1>
+                </td>
+            </tr>
+            <tr>
+                <td class="content">
+                    <p class="greeting">Hola {{first_name}},</p>
+                    <p>Te informamos que tu servicio de infraestructura web para el dominio <strong>{{domain}}</strong> está próximo a vencer en exactamente 5 días.</p>
+                    <p>Es necesaria la regularización del mismo para evitar la suspensión automatizada de tus cuentas de correo y el servicio de hosting asociado.</p>
+                    
+                    <div class="audit-card">
+                        <div class="audit-row">
+                            <span class="audit-label">Concepto</span>
+                            <span class="audit-value">Hosting y correos corporativos</span>
+                        </div>
+                        <div class="audit-row">
+                            <span class="audit-label">Dominio asociado</span>
+                            <span class="audit-value">{{domain}}</span>
+                        </div>
+                        <div class="audit-row">
+                            <span class="audit-label">Fecha de renovación</span>
+                            <span class="audit-value">{{expiration_date}}</span>
+                        </div>
+                        <div class="audit-row">
+                            <span class="audit-label">Importe final</span>
+                            <span class="audit-value">{{amount}} {{currency}}</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="button-container">
+                    <a href="https://dibrand.co" class="button">Informar pago</a>
+                </td>
+            </tr>
+        </table>
+        <div class="footer">
+            Este es un mensaje automático enviado por el sistema de administración centralizado de dibrand.co.
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import fs from 'fs/promises';
+import path from 'path';
 
 export async function GET(request: Request) {
     const authHeader = request.headers.get('authorization');
@@ -51,6 +53,15 @@ export async function GET(request: Request) {
             return NextResponse.json({ success: true, message: 'No hay vencimientos en 5 días.', emailsSent: 0 });
         }
 
+        let templateHtml = '';
+        try {
+            const templatePath = path.join(process.cwd(), 'data', 'templates', 'hosting-alert.html');
+            templateHtml = await fs.readFile(templatePath, 'utf8');
+        } catch (err) {
+            console.error('Error leyendo la plantilla HTML:', err);
+            return NextResponse.json({ error: 'Template not found' }, { status: 500 });
+        }
+
         let emailsSent = 0;
         const errors: any[] = [];
 
@@ -75,23 +86,13 @@ export async function GET(request: Request) {
                 ? `$${amount.toLocaleString('es-AR')}` 
                 : `U$D ${amount.toLocaleString('en-US')}`;
 
-            const htmlContent = `
-                <div style="font-family: 'Outfit', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b;">
-                    <h2 style="color: #9e4d97;">Aviso de renovación de Hosting</h2>
-                    <p>Hola <strong>${client.first_name} ${client.last_name}</strong>,</p>
-                    <p>Te escribimos de Dibrand para recordarte que el servicio de hosting para tu dominio <strong>${client.domain}</strong> vence en exactamente 5 días.</p>
-                    
-                    <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #9e4d97;">
-                        <p style="margin: 5px 0;"><strong>Plan actual:</strong> ${client.hosting_plans?.name || 'Personalizado'}</p>
-                        <p style="margin: 5px 0;"><strong>Fecha de vencimiento:</strong> ${new Date(client.expiration_date).toLocaleDateString('es-AR')}</p>
-                        <p style="margin: 5px 0;"><strong>Monto de renovación:</strong> ${formattedAmount} ${client.currency}</p>
-                    </div>
-
-                    <p>Para evitar interrupciones en tu servicio web o correos, por favor contáctanos a la brevedad para coordinar el pago de la renovación.</p>
-                    
-                    <p>Saludos cordiales,<br><strong>El equipo de Dibrand</strong></p>
-                </div>
-            `;
+            // Reemplazar las variables dinámicas en el HTML
+            const htmlContent = templateHtml
+                .replace(/{{first_name}}/g, client.first_name)
+                .replace(/{{domain}}/g, client.domain)
+                .replace(/{{expiration_date}}/g, new Date(client.expiration_date).toLocaleDateString('es-AR'))
+                .replace(/{{amount}}/g, formattedAmount)
+                .replace(/{{currency}}/g, client.currency);
 
             const payload = {
                 sender: { name: SENDER_NAME, email: SENDER_EMAIL },
