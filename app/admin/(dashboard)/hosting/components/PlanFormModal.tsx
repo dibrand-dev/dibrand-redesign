@@ -23,10 +23,15 @@ export default function PlanFormModal({ plan, onClose }: PlanFormModalProps) {
         e.preventDefault();
         setIsLoading(true);
         try {
-            await saveHostingPlan(formData);
+            const result = await saveHostingPlan(formData);
+            if (result?.error) {
+                alert('Error de base de datos: ' + result.error);
+                setIsLoading(false);
+                return;
+            }
             onClose();
         } catch (error: any) {
-            alert('Error al guardar: ' + error.message);
+            alert('Error al procesar: ' + error.message);
             setIsLoading(false);
         }
     };

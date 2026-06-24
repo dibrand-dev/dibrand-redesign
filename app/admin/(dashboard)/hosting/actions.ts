@@ -30,15 +30,16 @@ export async function saveHostingPlan(plan: any) {
             .from('hosting_plans')
             .update(dbData)
             .eq('id', id);
-        if (error) throw new Error(error.message);
+        if (error) return { error: error.message };
     } else {
         const { error } = await supabase
             .from('hosting_plans')
             .insert([dbData]);
-        if (error) throw new Error(error.message);
+        if (error) return { error: error.message };
     }
 
     revalidatePath('/admin/hosting');
+    return { success: true };
 }
 
 export async function deleteHostingPlan(id: string) {
@@ -47,9 +48,10 @@ export async function deleteHostingPlan(id: string) {
         .delete()
         .eq('id', id);
 
-    if (error) throw new Error(error.message);
+    if (error) return { error: error.message };
 
     revalidatePath('/admin/hosting');
+    return { success: true };
 }
 
 // --- CLIENTS ---
@@ -92,15 +94,16 @@ export async function saveHostingClient(client: any) {
             .from('hosting_clients')
             .update(dbData)
             .eq('id', id);
-        if (error) throw new Error(error.message);
+        if (error) return { error: error.message };
     } else {
         const { error } = await supabase
             .from('hosting_clients')
             .insert([dbData]);
-        if (error) throw new Error(error.message);
+        if (error) return { error: error.message };
     }
 
     revalidatePath('/admin/hosting');
+    return { success: true };
 }
 
 export async function deleteHostingClient(id: string) {
@@ -109,9 +112,10 @@ export async function deleteHostingClient(id: string) {
         .delete()
         .eq('id', id);
 
-    if (error) throw new Error(error.message);
+    if (error) return { error: error.message };
 
     revalidatePath('/admin/hosting');
+    return { success: true };
 }
 
 // --- PAYMENT HISTORY ---
@@ -141,13 +145,14 @@ export async function savePayment(payment: any) {
             .from('payment_history')
             .update(dbData)
             .eq('id', id);
-        if (error) throw new Error(error.message);
+        if (error) return { error: error.message };
     } else {
         const { error } = await supabase
             .from('payment_history')
             .insert([dbData]);
-        if (error) throw new Error(error.message);
+        if (error) return { error: error.message };
     }
 
     revalidatePath('/admin/hosting');
+    return { success: true };
 }

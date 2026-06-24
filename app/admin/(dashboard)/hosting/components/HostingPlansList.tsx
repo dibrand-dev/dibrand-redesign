@@ -26,9 +26,12 @@ export default function HostingPlansList({ plans }: HostingPlansListProps) {
     const handleDelete = async (id: string) => {
         if (confirm('¿Estás seguro de que deseas eliminar este plan? No podrás hacerlo si tiene clientes asociados.')) {
             try {
-                await deleteHostingPlan(id);
+                const result = await deleteHostingPlan(id);
+                if (result?.error) {
+                    alert('Error de base de datos: ' + result.error);
+                }
             } catch (error: any) {
-                alert('Error al eliminar el plan: ' + error.message);
+                alert('Error al procesar: ' + error.message);
             }
         }
     };

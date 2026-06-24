@@ -39,10 +39,15 @@ export default function ClientFormModal({ client, plans, onClose }: ClientFormMo
                 expiration_date: new Date(formData.expiration_date).toISOString(),
                 custom_price_override: formData.custom_price_override ? Number(formData.custom_price_override) : null
             };
-            await saveHostingClient(dataToSave);
+            const result = await saveHostingClient(dataToSave);
+            if (result?.error) {
+                alert('Error de base de datos: ' + result.error);
+                setIsLoading(false);
+                return;
+            }
             onClose();
         } catch (error: any) {
-            alert('Error al guardar: ' + error.message);
+            alert('Error al procesar: ' + error.message);
             setIsLoading(false);
         }
     };

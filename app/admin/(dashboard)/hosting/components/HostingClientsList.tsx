@@ -29,9 +29,12 @@ export default function HostingClientsList({ clients, plans }: HostingClientsLis
     const handleDelete = async (id: string) => {
         if (confirm('¿Estás seguro de que deseas eliminar este cliente? Se perderá también su historial de pagos.')) {
             try {
-                await deleteHostingClient(id);
+                const result = await deleteHostingClient(id);
+                if (result?.error) {
+                    alert('Error de base de datos: ' + result.error);
+                }
             } catch (error: any) {
-                alert('Error al eliminar el cliente: ' + error.message);
+                alert('Error al procesar: ' + error.message);
             }
         }
     };
