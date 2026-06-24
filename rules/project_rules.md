@@ -21,3 +21,7 @@ Todos los títulos y etiquetas de la plataforma deben usar **'Sentence case'**.
 ## 4. Data Integrity
 Está **estrictamente prohibido** el uso de 'mock data' o nombres duros inventados.
 Toda la información debe provenir de tipos, esquemas reales de la base de datos o llamadas a la API correspondientes.
+
+## 5. Workflow y Versionado
+- **SIEMPRE** se debe hacer un commit y push a la rama `main` de manera automática tras desarrollar o solucionar un bug con éxito, para que el entorno de Vercel/Producción se actualice al instante.
+- **SIEMPRE** proveer comandos SQL limpios y directos al usuario cuando haya que aplicar cambios a la base de datos de Supabase, porque es la vía más rápida y preferida por el usuario.
