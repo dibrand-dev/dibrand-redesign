@@ -1,4 +1,4 @@
-import { getCandidateById, getApplicationLogs, getStackNames, syncRecruiterProfile, getApplicationsByEmail, getRecruiters, getAtsUserContext } from '@/app/ats/actions';
+import { getCandidateById, getApplicationLogs, getStackNames, syncRecruiterProfile, getApplicationsByEmail, getRecruiters, getAtsUserContext, getCandidateNames } from '@/app/ats/actions';
 import { 
     MapPin, Mail, Phone, Calendar, FileText, StickyNote, Clock,
     Check, Bold, Italic, Underline, List, ListOrdered, Link as LinkIcon, Download, Maximize2, User, Pencil, Users, Briefcase
@@ -18,6 +18,7 @@ import CandidateTabs from '@/components/ats/CandidateTabs';
 import CandidateSkills from '@/components/ats/CandidateSkills';
 import { capitalizeName, getInitials } from '@/lib/utils';
 import RecruiterAssignment from '@/components/ats/RecruiterAssignment';
+import SearchTalentPredictive from '@/components/ats/SearchTalentPredictive';
 import DeleteCandidateButton from '@/components/ats/DeleteCandidateButton';
 
 export default async function CandidateDetailPage({ 
@@ -37,6 +38,7 @@ export default async function CandidateDetailPage({
     const recruiterId = await syncRecruiterProfile();
     const allRecruiters = await getRecruiters();
     const userCtx = await getAtsUserContext();
+    const candidateNames = await getCandidateNames();
     const isAdmin = userCtx.role === 'admin' || userCtx.role === 'SuperAdmin';
 
     if (!candidate) notFound();
@@ -124,12 +126,15 @@ export default async function CandidateDetailPage({
                         </div>
 
                         {/* Desktop Actions */}
-                        <div className="hidden lg:flex items-center gap-3 shrink-0">
-                            <Link href={`/ats/candidates/${id}/edit`} className="h-[48px] px-6 border border-slate-200 bg-white rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
-                                <Pencil size={16} /> Editar
-                            </Link>
-                            <DeleteCandidateButton candidateId={id} candidateName={candidate.full_name || `${candidate.first_name} ${candidate.last_name}`} />
-                            <Link href={`/ats/candidates/${id}?schedule=true`} className="h-[48px] px-8 bg-[#0B4FEA] text-white rounded-xl text-[14px] font-bold hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center">Entrevista</Link>
+                        <div className="flex items-center gap-3 w-full lg:w-auto shrink-0 justify-end flex-wrap sm:flex-nowrap">
+                            <SearchTalentPredictive candidates={candidateNames} />
+                            <div className="hidden lg:flex items-center gap-3 shrink-0">
+                                <Link href={`/ats/candidates/${id}/edit`} className="h-[48px] px-6 border border-slate-200 bg-white rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
+                                    <Pencil size={16} /> Editar
+                                </Link>
+                                <DeleteCandidateButton candidateId={id} candidateName={candidate.full_name || `${candidate.first_name} ${candidate.last_name}`} />
+                                <Link href={`/ats/candidates/${id}?schedule=true`} className="h-[48px] px-8 bg-[#0B4FEA] text-white rounded-xl text-[14px] font-bold hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center">Entrevista</Link>
+                            </div>
                         </div>
                     </div>
 

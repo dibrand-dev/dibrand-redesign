@@ -22,7 +22,8 @@ import {
     HelpCircle,
     PlusCircle,
     X,
-    Inbox
+    Inbox,
+    Server
 } from 'lucide-react';
 import LogoutButton from './LogoutButton';
 import { useSidebar } from '@/components/ats/SidebarContext';
@@ -38,6 +39,7 @@ const MENU_ITEMS = [
     { label: 'Candidatos', href: '/admin/candidates', icon: Users },
     { label: 'Tech Stacks', href: '/admin/stacks', icon: Code },
     { label: 'Administradores', href: '/admin/users', icon: Settings },
+    { label: 'Gestión de hosting', href: '/admin/hosting', icon: Server },
     { label: 'Configuración', href: '/admin/settings', icon: Settings },
 ];
 
@@ -104,14 +106,14 @@ export default function Sidebar() {
                                 href={item.href}
                                 onClick={close}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative ${isActive
-                                    ? 'bg-[#F1F5F9] text-[#0040A1] font-semibold'
+                                    ? 'bg-[#F1F5F9] text-[#9e4d97] font-semibold'
                                     : 'text-[#737785] hover:bg-slate-50 hover:text-[#191C1D] font-medium'
                                     }`}
                             >
                                 {isActive && (
-                                    <span className="absolute left-0 top-3 bottom-3 w-1 bg-[#0040A1] rounded-full"></span>
+                                    <span className="absolute left-0 top-3 bottom-3 w-1 bg-[#9e4d97] rounded-full"></span>
                                 )}
-                                <Icon size={20} className={`${isActive ? 'text-[#0040A1]' : 'text-[#737785] group-hover:text-[#0040A1]'} transition-colors shrink-0`} />
+                                <Icon size={20} className={`${isActive ? 'text-[#9e4d97]' : 'text-[#737785] group-hover:text-[#9e4d97]'} transition-colors shrink-0`} />
                                 {!isCollapsed && (
                                     <span className="text-[13px] tracking-tight">
                                         {item.label}
@@ -133,7 +135,7 @@ export default function Sidebar() {
                         <Link 
                             href="/admin/cases/new"
                             onClick={close}
-                            className="w-full py-3 bg-[#0040A1] hover:bg-[#003380] text-white rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition-all shadow-sm"
+                            className="w-full py-3 bg-[#9e4d97] hover:bg-[#864080] text-white rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition-all shadow-sm"
                         >
                             <PlusCircle size={18} />
                             Nuevo Caso
@@ -143,7 +145,7 @@ export default function Sidebar() {
                         <Link 
                             href="/admin/cases/new"
                             onClick={close}
-                            className="w-10 h-10 mx-auto bg-[#0040A1] text-white rounded-xl flex items-center justify-center hover:bg-[#003380] transition-all"
+                            className="w-10 h-10 mx-auto bg-[#9e4d97] text-white rounded-xl flex items-center justify-center hover:bg-[#864080] transition-all"
                         >
                             <PlusCircle size={20} />
                         </Link>
@@ -156,7 +158,7 @@ export default function Sidebar() {
                 {/* Toggle Button - EXACT ATS STYLE */}
                 <button
                     onClick={() => setIsCollapsed(!isCollapsed)}
-                    className="absolute -right-4 top-28 w-8 h-8 bg-white border border-slate-100 rounded-2xl hidden lg:flex items-center justify-center text-slate-400 hover:text-[#0040A1] shadow-xl shadow-slate-200/50 transition-all hover:scale-110 z-40 group"
+                    className="absolute -right-4 top-28 w-8 h-8 bg-white border border-slate-100 rounded-2xl hidden lg:flex items-center justify-center text-slate-400 hover:text-[#9e4d97] shadow-xl shadow-slate-200/50 transition-all hover:scale-110 z-40 group"
                 >
                     {isCollapsed ? <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" /> : <ChevronLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />}
                 </button>

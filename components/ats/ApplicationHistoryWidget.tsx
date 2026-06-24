@@ -38,7 +38,7 @@ export default function ApplicationHistoryWidget({ candidate, logs }: Props) {
             title: 'Candidato Creado',
             description: `Registrado en el sistema asignado a ${candidate.recruiter?.full_name ? capitalizeName(candidate.recruiter.full_name) : 'Recruiter'}`,
             author: candidate.recruiter?.full_name ? capitalizeName(candidate.recruiter.full_name) : 'System',
-            author_avatar: null,
+            author_avatar: candidate.recruiter?.avatar_url || null,
             date: candidate.created_at
         }
     ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

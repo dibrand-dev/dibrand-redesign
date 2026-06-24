@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation';
 import { ShieldCheck, Lock, Eye, EyeOff, ArrowRight, CheckCircle } from 'lucide-react';
 
 export default function SetPasswordPage() {
-    const supabase = createBrowserClient(
+    const [supabase] = useState(() => createBrowserClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    ));
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -36,17 +36,14 @@ export default function SetPasswordPage() {
 
         // Safety timeout for cases where hash processing takes too long or fails
         const timer = setTimeout(() => {
-            if (initialLoading) {
-                setInitialLoading(false);
-                // Check if session became ready in the meantime
-            }
+            setInitialLoading(false);
         }, 5000);
 
         return () => {
             subscription.unsubscribe();
             clearTimeout(timer);
         };
-    }, [supabase, initialLoading]);
+    }, [supabase]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -149,6 +146,7 @@ export default function SetPasswordPage() {
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    autoComplete="new-password"
                                     className="w-full pl-12 pr-12 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-600 outline-none transition-all font-bold text-slate-900"
                                     placeholder="••••••••"
                                 />
@@ -171,6 +169,7 @@ export default function SetPasswordPage() {
                                     required
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
+                                    autoComplete="new-password"
                                     className="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-600 outline-none transition-all font-bold text-slate-900"
                                     placeholder="••••••••"
                                 />

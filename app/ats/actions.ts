@@ -314,7 +314,7 @@ export async function getCandidateById(id: string) {
             .select(`
                 *,
                 job:job_openings(title, questionnaire),
-                recruiter:recruiters(full_name)
+                recruiter:recruiters(full_name, avatar_url)
             `)
             .eq('id', id)
             .eq('is_deleted', false)
