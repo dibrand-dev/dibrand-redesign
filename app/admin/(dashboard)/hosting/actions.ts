@@ -10,7 +10,7 @@ export async function getHostingPlans() {
         .select('*')
         .order('name', { ascending: true });
 
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     return data || [];
 }
 
@@ -19,8 +19,8 @@ export async function saveHostingPlan(plan: any) {
 
     const dbData = {
         name,
-        price_ars,
-        price_usd,
+        price_ars: Number(price_ars),
+        price_usd: Number(price_usd),
         billing_cycle,
         updated_at: new Date().toISOString()
     };
@@ -30,12 +30,12 @@ export async function saveHostingPlan(plan: any) {
             .from('hosting_plans')
             .update(dbData)
             .eq('id', id);
-        if (error) throw error;
+        if (error) throw new Error(error.message);
     } else {
         const { error } = await supabase
             .from('hosting_plans')
             .insert([dbData]);
-        if (error) throw error;
+        if (error) throw new Error(error.message);
     }
 
     revalidatePath('/admin/hosting');
@@ -47,7 +47,7 @@ export async function deleteHostingPlan(id: string) {
         .delete()
         .eq('id', id);
 
-    if (error) throw error;
+    if (error) throw new Error(error.message);
 
     revalidatePath('/admin/hosting');
 }
@@ -67,7 +67,7 @@ export async function getHostingClients() {
         `)
         .order('expiration_date', { ascending: true });
 
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     return data || [];
 }
 
@@ -80,7 +80,7 @@ export async function saveHostingClient(client: any) {
         email: email || null,
         domain,
         plan_id,
-        custom_price_override: custom_price_override || null,
+        custom_price_override: custom_price_override ? Number(custom_price_override) : null,
         currency,
         start_date: start_date || new Date().toISOString(),
         expiration_date,
@@ -92,12 +92,12 @@ export async function saveHostingClient(client: any) {
             .from('hosting_clients')
             .update(dbData)
             .eq('id', id);
-        if (error) throw error;
+        if (error) throw new Error(error.message);
     } else {
         const { error } = await supabase
             .from('hosting_clients')
             .insert([dbData]);
-        if (error) throw error;
+        if (error) throw new Error(error.message);
     }
 
     revalidatePath('/admin/hosting');
@@ -109,7 +109,7 @@ export async function deleteHostingClient(id: string) {
         .delete()
         .eq('id', id);
 
-    if (error) throw error;
+    if (error) throw new Error(error.message);
 
     revalidatePath('/admin/hosting');
 }
@@ -122,7 +122,7 @@ export async function getPaymentHistory(clientId: string) {
         .eq('client_id', clientId)
         .order('payment_date', { ascending: false });
 
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     return data || [];
 }
 
@@ -141,12 +141,12 @@ export async function savePayment(payment: any) {
             .from('payment_history')
             .update(dbData)
             .eq('id', id);
-        if (error) throw error;
+        if (error) throw new Error(error.message);
     } else {
         const { error } = await supabase
             .from('payment_history')
             .insert([dbData]);
-        if (error) throw error;
+        if (error) throw new Error(error.message);
     }
 
     revalidatePath('/admin/hosting');
