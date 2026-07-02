@@ -66,9 +66,21 @@ export default async function CandidateDetailPage({
             {/* Main Content */}
             <div className="overflow-y-auto overflow-x-hidden px-4 sm:px-8 lg:px-12 py-6 lg:py-10 custom-scrollbar">
                 <div className="max-w-7xl mx-auto">
+                    {/* Top Actions Row */}
+                    <div className="flex items-center gap-3 w-full justify-end flex-wrap sm:flex-nowrap mb-6 lg:mb-8">
+                        <SearchTalentPredictive candidates={candidateNames} />
+                        <div className="hidden lg:flex items-center gap-3 shrink-0">
+                            <Link href={`/ats/candidates/${id}/edit`} className="h-[48px] px-6 border border-slate-200 bg-white rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
+                                <Pencil size={16} /> Editar
+                            </Link>
+                            <DeleteCandidateButton candidateId={id} candidateName={candidate.full_name || `${candidate.first_name} ${candidate.last_name}`} />
+                            <Link href={`/ats/candidates/${id}?schedule=true`} className="h-[48px] px-8 bg-[#0B4FEA] text-white rounded-xl text-[14px] font-bold hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center">Entrevista</Link>
+                        </div>
+                    </div>
+
                     {/* Header */}
-                    <div className="flex flex-col lg:flex-row justify-between items-start mb-8 lg:mb-10 gap-6 lg:gap-8">
-                        <div className="flex flex-col sm:flex-row items-start gap-6 min-w-0 flex-1">
+                    <div className="flex flex-col lg:flex-row items-start mb-8 lg:mb-10 gap-6 lg:gap-8 w-full">
+                        <div className="flex flex-col sm:flex-row items-start gap-6 min-w-0 flex-1 w-full">
                             <div className="w-[90px] h-[90px] lg:w-[110px] lg:h-[110px] rounded-full bg-[#EBF1FF] border border-[#D0DFFF] flex items-center justify-center text-[#0040A1] font-bold text-3xl lg:text-4xl shrink-0 overflow-hidden shadow-sm ring-4 ring-white relative group">
                                 {candidate.avatar_url ? (
                                     <img 
@@ -122,18 +134,6 @@ export default async function CandidateDetailPage({
                                         </Link>
                                     ))}
                                 </div>
-                            </div>
-                        </div>
-
-                        {/* Desktop Actions */}
-                        <div className="flex items-center gap-3 w-full lg:w-auto shrink-0 justify-end flex-wrap sm:flex-nowrap">
-                            <SearchTalentPredictive candidates={candidateNames} />
-                            <div className="hidden lg:flex items-center gap-3 shrink-0">
-                                <Link href={`/ats/candidates/${id}/edit`} className="h-[48px] px-6 border border-slate-200 bg-white rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2">
-                                    <Pencil size={16} /> Editar
-                                </Link>
-                                <DeleteCandidateButton candidateId={id} candidateName={candidate.full_name || `${candidate.first_name} ${candidate.last_name}`} />
-                                <Link href={`/ats/candidates/${id}?schedule=true`} className="h-[48px] px-8 bg-[#0B4FEA] text-white rounded-xl text-[14px] font-bold hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center">Entrevista</Link>
                             </div>
                         </div>
                     </div>
