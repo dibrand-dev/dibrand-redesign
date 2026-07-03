@@ -93,7 +93,7 @@ export default function JoinOurTeam({ jobs, lang, dict }: JoinOurTeamProps) {
     };
 
     return (
-        <section className="bg-[#F9FAFB] py-24 overflow-hidden min-h-screen font-inter">
+        <section className="bg-[#F9FAFB] pt-0 pb-24 overflow-hidden min-h-screen font-inter">
             <div className="container mx-auto px-6 max-w-7xl">
                 
                 {/* Search / Filter Bar */}
