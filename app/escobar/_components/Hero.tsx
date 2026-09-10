@@ -24,12 +24,12 @@ export default function Hero() {
         
         {/* Mega Search Bar (Semantic AEO design) */}
         <div className="w-full max-w-4xl mt-12">
-          <form action="#" className="relative group flex items-center bg-white rounded-full p-2 shadow-xl shadow-[#00142f]/5 transition-all focus-within:shadow-2xl focus-within:shadow-[#9e4d97]/15" method="GET">
-            <div className="flex items-center justify-center pl-6 pr-2 text-[#9e4d97]">
+          <form action="#" className="relative group flex items-center bg-white rounded-full p-2 shadow-xl shadow-[#00142f]/5 transition-all focus-within:shadow-2xl focus-within:shadow-[#006398]/15" method="GET">
+            <div className="flex items-center justify-center pl-6 pr-2 text-[#006398]">
               <span className="material-symbols-outlined text-[32px]">search</span>
             </div>
             <input aria-label="Buscar trámites, tasas, hospitales y servicios de Escobar" className="w-full h-14 bg-transparent text-[#00142f] text-lg placeholder:text-[#74777f] focus:outline-none px-2" placeholder="Ej: Pagar tasa, Turno hospital, Licencia de conducir..." type="search" />
-            <button className="bg-[#9e4d97] text-white px-8 h-14 rounded-full text-base font-semibold hover:bg-[#823d7c] transition-colors shrink-0 flex items-center gap-2 shadow-md" type="submit">
+            <button className="bg-[#006398] text-white px-8 h-14 rounded-full text-base font-semibold hover:bg-[#004a74] transition-colors shrink-0 flex items-center gap-2 shadow-md" type="submit">
               <span>Buscar</span>
               <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
             </button>
@@ -39,19 +39,19 @@ export default function Hero() {
         {/* Quick Action Pills */}
         <div className="w-full max-w-4xl mt-6 flex flex-wrap items-center justify-center gap-3">
           <span className="text-sm font-semibold text-[#44474e] mr-1">Frecuentes:</span>
-          <Link className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#00142f] font-semibold text-sm shadow-sm hover:bg-[#dce9ff] hover:text-[#9e4d97] transition-all" href="#">
-            <span className="material-symbols-outlined text-[#9e4d97] text-[18px]">calendar_month</span>
+          <Link className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#00142f] font-semibold text-sm shadow-sm hover:bg-[#dce9ff] hover:text-[#006398] transition-all" href="#">
+            <span className="material-symbols-outlined text-[#006398] text-[18px]">calendar_month</span>
             <span>Sacar turno</span>
           </Link>
-          <Link className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#00142f] font-semibold text-sm shadow-sm hover:bg-[#dce9ff] hover:text-[#9e4d97] transition-all" href="#">
-            <span className="material-symbols-outlined text-[#9e4d97] text-[18px]">receipt_long</span>
+          <Link className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#00142f] font-semibold text-sm shadow-sm hover:bg-[#dce9ff] hover:text-[#006398] transition-all" href="#">
+            <span className="material-symbols-outlined text-[#006398] text-[18px]">receipt_long</span>
             <span>Pagar tasas AMIP</span>
           </Link>
-          <Link className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#00142f] font-semibold text-sm shadow-sm hover:bg-[#dce9ff] hover:text-[#9e4d97] transition-all" href="#">
-            <span className="material-symbols-outlined text-[#9e4d97] text-[18px]">badge</span>
+          <Link className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#00142f] font-semibold text-sm shadow-sm hover:bg-[#dce9ff] hover:text-[#006398] transition-all" href="#">
+            <span className="material-symbols-outlined text-[#006398] text-[18px]">badge</span>
             <span>Licencias</span>
           </Link>
-          <Link className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#00142f] font-semibold text-sm shadow-sm hover:bg-[#dce9ff] hover:text-[#9e4d97] transition-all" href="#">
+          <Link className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#00142f] font-semibold text-sm shadow-sm hover:bg-[#dce9ff] hover:text-[#006398] transition-all" href="#">
             <span className="material-symbols-outlined text-[#ba1a1a] text-[18px]">shield_person</span>
             <span>Ojos y oídos en alerta</span>
           </Link>

@@ -7,14 +7,14 @@ export default function News() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <div className="flex items-center gap-2 text-[#9e4d97] text-sm font-semibold uppercase tracking-wider mb-1">
+            <div className="flex items-center gap-2 text-[#006398] text-sm font-semibold uppercase tracking-wider mb-1">
               <span className="material-symbols-outlined text-[18px]">feed</span>
               <span>Canales informativos</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-[#00142f] tracking-tight">Novedades y agenda</h2>
             <p className="text-base text-[#44474e] mt-1">Comunicaciones oficiales, avances de obras y rendición de cuentas.</p>
           </div>
-          <Link className="group inline-flex items-center gap-2 text-base font-semibold text-[#9e4d97] hover:text-[#00142f] transition-colors" href="#">
+          <Link className="group inline-flex items-center gap-2 text-base font-semibold text-[#006398] hover:text-[#00142f] transition-colors" href="#">
             <span>Sala de prensa completa</span>
             <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-[20px]">chevron_right</span>
           </Link>
@@ -36,7 +36,7 @@ export default function News() {
                   </span>
                   <span className="text-[#74777f] text-xs font-semibold">• Hace 2 días</span>
                 </div>
-                <h3 className="text-base font-bold text-[#00142f] group-hover:text-[#9e4d97] transition-colors line-clamp-2 leading-snug">
+                <h3 className="text-base font-bold text-[#00142f] group-hover:text-[#006398] transition-colors line-clamp-2 leading-snug">
                   Avanza la renovación integral de la calzada y desagües pluviales sobre la Av. De Los Inmigrantes
                 </h3>
                 <p className="text-sm text-[#44474e] line-clamp-1 mt-1">
@@ -44,7 +44,7 @@ export default function News() {
                 </p>
               </div>
               <div className="shrink-0 hidden sm:flex items-center pr-2">
-                <span className="material-symbols-outlined text-[#c4c6cf] group-hover:text-[#9e4d97] transition-colors text-[24px]">chevron_right</span>
+                <span className="material-symbols-outlined text-[#c4c6cf] group-hover:text-[#006398] transition-colors text-[24px]">chevron_right</span>
               </div>
             </article>
 
@@ -60,7 +60,7 @@ export default function News() {
                   </span>
                   <span className="text-[#74777f] text-xs font-semibold">• Hace 3 días</span>
                 </div>
-                <h3 className="text-base font-bold text-[#00142f] group-hover:text-[#9e4d97] transition-colors line-clamp-2 leading-snug">
+                <h3 className="text-base font-bold text-[#00142f] group-hover:text-[#006398] transition-colors line-clamp-2 leading-snug">
                   Escobar sostenible suma cinco nuevos puntos verdes inteligentes con energía solar autónoma
                 </h3>
                 <p className="text-sm text-[#44474e] line-clamp-1 mt-1">
@@ -68,7 +68,7 @@ export default function News() {
                 </p>
               </div>
               <div className="shrink-0 hidden sm:flex items-center pr-2">
-                <span className="material-symbols-outlined text-[#c4c6cf] group-hover:text-[#9e4d97] transition-colors text-[24px]">chevron_right</span>
+                <span className="material-symbols-outlined text-[#c4c6cf] group-hover:text-[#006398] transition-colors text-[24px]">chevron_right</span>
               </div>
             </article>
 
@@ -84,7 +84,7 @@ export default function News() {
                   </span>
                   <span className="text-[#74777f] text-xs font-semibold">• Hace 5 días</span>
                 </div>
-                <h3 className="text-base font-bold text-[#00142f] group-hover:text-[#9e4d97] transition-colors line-clamp-2 leading-snug">
+                <h3 className="text-base font-bold text-[#00142f] group-hover:text-[#006398] transition-colors line-clamp-2 leading-snug">
                   El hospital Néstor Kirchner incorporó nueva tecnología de diagnóstico por imágenes de alta resolución
                 </h3>
                 <p className="text-sm text-[#44474e] line-clamp-1 mt-1">
@@ -92,7 +92,7 @@ export default function News() {
                 </p>
               </div>
               <div className="shrink-0 hidden sm:flex items-center pr-2">
-                <span className="material-symbols-outlined text-[#c4c6cf] group-hover:text-[#9e4d97] transition-colors text-[24px]">chevron_right</span>
+                <span className="material-symbols-outlined text-[#c4c6cf] group-hover:text-[#006398] transition-colors text-[24px]">chevron_right</span>
               </div>
             </article>
           </div>
@@ -118,28 +118,28 @@ export default function News() {
               <div className="mt-6 space-y-2">
                 <Link className="group flex items-center justify-between p-3 rounded-xl bg-[#0f294a]/80 hover:bg-[#d3e4fe] hover:text-[#0b1c30] transition-all" href="#">
                   <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-[#cce5ff] group-hover:text-[#9e4d97] text-[22px]">gavel</span>
+                    <span className="material-symbols-outlined text-[#cce5ff] group-hover:text-[#006398] text-[22px]">gavel</span>
                     <span className="text-base font-semibold">Boletín oficial</span>
                   </div>
                   <span className="material-symbols-outlined text-[#d3e4fe] group-hover:text-[#0b1c30] text-[18px]">arrow_forward</span>
                 </Link>
                 <Link className="group flex items-center justify-between p-3 rounded-xl bg-[#0f294a]/80 hover:bg-[#d3e4fe] hover:text-[#0b1c30] transition-all" href="#">
                   <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-[#cce5ff] group-hover:text-[#9e4d97] text-[22px]">shopping_cart_checkout</span>
+                    <span className="material-symbols-outlined text-[#cce5ff] group-hover:text-[#006398] text-[22px]">shopping_cart_checkout</span>
                     <span className="text-base font-semibold">Licitaciones públicas</span>
                   </div>
                   <span className="material-symbols-outlined text-[#d3e4fe] group-hover:text-[#0b1c30] text-[18px]">arrow_forward</span>
                 </Link>
                 <Link className="group flex items-center justify-between p-3 rounded-xl bg-[#0f294a]/80 hover:bg-[#d3e4fe] hover:text-[#0b1c30] transition-all" href="#">
                   <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-[#cce5ff] group-hover:text-[#9e4d97] text-[22px]">description</span>
+                    <span className="material-symbols-outlined text-[#cce5ff] group-hover:text-[#006398] text-[22px]">description</span>
                     <span className="text-base font-semibold">Decretos municipales</span>
                   </div>
                   <span className="material-symbols-outlined text-[#d3e4fe] group-hover:text-[#0b1c30] text-[18px]">arrow_forward</span>
                 </Link>
                 <Link className="group flex items-center justify-between p-3 rounded-xl bg-[#0f294a]/80 hover:bg-[#d3e4fe] hover:text-[#0b1c30] transition-all" href="#">
                   <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-[#cce5ff] group-hover:text-[#9e4d97] text-[22px]">database</span>
+                    <span className="material-symbols-outlined text-[#cce5ff] group-hover:text-[#006398] text-[22px]">database</span>
                     <span className="text-base font-semibold">Portal de datos abiertos</span>
                   </div>
                   <span className="material-symbols-outlined text-[#d3e4fe] group-hover:text-[#0b1c30] text-[18px]">arrow_forward</span>

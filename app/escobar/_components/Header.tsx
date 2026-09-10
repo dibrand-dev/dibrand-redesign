@@ -38,7 +38,7 @@ export default function Header() {
             <img alt="Logo Escobar" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UlSPefOWKKovPsmFrPIgA4bESWRpLK8hwR5CtqQTLUUSNysNBKD0-VmJRejv257b19WnEzAPxQFrOVS6MuUSbVCLwYkpEAMTSKDbU5ILmEociB0jLDFYYK3fCB1vwaPtyik3H3H6tLFBSJBBQFJ6cRBSClJ2wjLCXVHX1Ls9uPmazgOmKoW42mR1yFmqigkEl0dSHLu5VcyYCd5xoGdhblP2KxwwsEJV2scJgB_Q0zjHg8WwYw47Ru3Gv1djVgQOPfpGHYtFkv" />
             <div className="flex flex-col">
               <span className="text-lg font-semibold text-[#00142f] leading-tight tracking-tight">Municipio de Escobar</span>
-              <span className="text-xs text-[#9e4d97] font-semibold uppercase tracking-wider">Gobierno municipal</span>
+              <span className="text-xs text-[#006398] font-semibold uppercase tracking-wider">Gobierno municipal</span>
             </div>
           </div>
           
@@ -50,7 +50,7 @@ export default function Header() {
           </nav>
           
           <div className="flex items-center gap-4 shrink-0">
-            <Link className="bg-[#9e4d97] text-white px-6 py-2 rounded-xl text-base font-semibold hover:bg-[#823d7c] transition-colors flex items-center gap-2 shadow-sm" href="#">
+            <Link className="bg-[#006398] text-white px-6 py-2 rounded-xl text-base font-semibold hover:bg-[#004a74] transition-colors flex items-center gap-2 shadow-sm" href="#">
               <span className="material-symbols-outlined text-[20px]">account_circle</span>
               <span>Ingresar a Escobar 360°</span>
             </Link>

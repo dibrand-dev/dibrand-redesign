@@ -54,7 +54,7 @@ export default function Discover() {
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Section Header */}
         <div className="mb-12">
-          <div className="flex items-center gap-2 text-[#9e4d97] text-sm font-semibold uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-[#006398] text-sm font-semibold uppercase tracking-wider mb-1">
             <span className="material-symbols-outlined text-[18px]">location_on</span>
             <span>Descentralización y proximidad</span>
           </div>
@@ -108,15 +108,15 @@ export default function Discover() {
                 </h3>
                 <div className="mt-4 space-y-2 text-sm text-[#44474e]">
                   <p className="flex items-start gap-2">
-                    <span className="material-symbols-outlined text-[#9e4d97] text-[20px] shrink-0">pin_drop</span>
+                    <span className="material-symbols-outlined text-[#006398] text-[20px] shrink-0">pin_drop</span>
                     <span>{activeData.address}</span>
                   </p>
                   <p className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[#9e4d97] text-[20px] shrink-0">schedule</span>
+                    <span className="material-symbols-outlined text-[#006398] text-[20px] shrink-0">schedule</span>
                     <span>Lunes a viernes de 07:30 a 15:00 hs</span>
                   </p>
                   <p className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[#9e4d97] text-[20px] shrink-0">phone_in_talk</span>
+                    <span className="material-symbols-outlined text-[#006398] text-[20px] shrink-0">phone_in_talk</span>
                     <span>{activeData.phone}</span>
                   </p>
                 </div>
@@ -134,7 +134,7 @@ export default function Discover() {
               </div>
 
               <div className="mt-8 flex items-center gap-4">
-                <Link className="flex-1 bg-[#9e4d97] text-white text-center py-2.5 rounded-lg text-base font-semibold hover:bg-[#823d7c] transition-colors shadow-sm" href="#">
+                <Link className="flex-1 bg-[#006398] text-white text-center py-2.5 rounded-lg text-base font-semibold hover:bg-[#004a74] transition-colors shadow-sm" href="#">
                   Pedir turno UGC
                 </Link>
                 <Link className="flex items-center justify-center p-2.5 rounded-lg bg-[#e5eeff] text-[#00142f] hover:bg-[#dce9ff] transition-colors" href="#" title="Ver en mapa">
@@ -148,7 +148,7 @@ export default function Discover() {
           <div className="lg:col-span-7 flex flex-col bg-white rounded-2xl shadow-sm border border-[#c4c6cf]/30 overflow-hidden">
             <div className="p-4 border-b border-[#c4c6cf]/20 bg-[#eff4ff]/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#9e4d97] text-[22px]">explore</span>
+                <span className="material-symbols-outlined text-[#006398] text-[22px]">explore</span>
                 <div>
                   <h3 className="text-base text-[#00142f] font-bold leading-tight">Mapa territorial y puntos de cercanía</h3>
                   <span className="text-xs text-[#44474e]">Belén de Escobar • Cobertura en tiempo real</span>
@@ -263,10 +263,10 @@ export default function Discover() {
               </div>
               <div className="flex items-center gap-3 shrink-0">
                 <Link className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white text-[#00142f] border border-[#c4c6cf]/40 hover:bg-[#e5eeff] text-sm font-semibold transition-colors shadow-sm" href="https://maps.google.com/?q=Alberdi+503+Belen+de+Escobar" rel="noopener" target="_blank">
-                  <span className="material-symbols-outlined text-[#9e4d97] text-[18px]">directions</span>
+                  <span className="material-symbols-outlined text-[#006398] text-[18px]">directions</span>
                   <span>Cómo llegar</span>
                 </Link>
-                <Link className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#9e4d97] text-white hover:bg-[#823d7c] text-sm font-semibold transition-colors shadow-sm" href="#">
+                <Link className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#006398] text-white hover:bg-[#004a74] text-sm font-semibold transition-colors shadow-sm" href="#">
                   <span className="material-symbols-outlined text-[18px]">calendar_today</span>
                   <span>Turno rápido</span>
                 </Link>
@@ -275,7 +275,7 @@ export default function Discover() {
             
             <div className="px-4 py-2.5 bg-[#eff4ff]/70 border-t border-[#c4c6cf]/20 flex flex-wrap items-center justify-between text-xs text-[#44474e] font-medium">
               <span>Red distrital en Belén: <strong>4 UGCs</strong> • <strong>6 Centros de salud</strong> • <strong>8 Puntos verdes</strong> • <strong>12 Postas de seguridad</strong></span>
-              <Link className="text-[#9e4d97] hover:underline font-bold inline-flex items-center gap-0.5" href="#">
+              <Link className="text-[#006398] hover:underline font-bold inline-flex items-center gap-0.5" href="#">
                 <span>Ver visor GIS completo</span>
                 <span className="material-symbols-outlined text-[14px]">open_in_new</span>
               </Link>
