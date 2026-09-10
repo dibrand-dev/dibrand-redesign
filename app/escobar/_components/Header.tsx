@@ -46,7 +46,7 @@ export default function Header() {
               </span>
             </button>
             
-            <img alt="Logo Escobar" className="h-7 sm:h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UlSPefOWKKovPsmFrPIgA4bESWRpLK8hwR5CtqQTLUUSNysNBKD0-VmJRejv257b19WnEzAPxQFrOVS6MuUSbVCLwYkpEAMTSKDbU5ILmEociB0jLDFYYK3fCB1vwaPtyik3H3H6tLFBSJBBQFJ6cRBSClJ2wjLCXVHX1Ls9uPmazgOmKoW42mR1yFmqigkEl0dSHLu5VcyYCd5xoGdhblP2KxwwsEJV2scJgB_Q0zjHg8WwYw47Ru3Gv1djVgQOPfpGHYtFkv" />
+            <img alt="Logo Escobar" className="h-9 sm:h-11 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UlSPefOWKKovPsmFrPIgA4bESWRpLK8hwR5CtqQTLUUSNysNBKD0-VmJRejv257b19WnEzAPxQFrOVS6MuUSbVCLwYkpEAMTSKDbU5ILmEociB0jLDFYYK3fCB1vwaPtyik3H3H6tLFBSJBBQFJ6cRBSClJ2wjLCXVHX1Ls9uPmazgOmKoW42mR1yFmqigkEl0dSHLu5VcyYCd5xoGdhblP2KxwwsEJV2scJgB_Q0zjHg8WwYw47Ru3Gv1djVgQOPfpGHYtFkv" />
             <div className="flex flex-col">
               <span className="text-sm sm:text-lg font-semibold text-[#00142f] leading-tight tracking-tight">Municipio de Escobar</span>
               <span className="hidden sm:block text-xs text-[#006398] font-semibold uppercase tracking-wider">Gobierno municipal</span>
