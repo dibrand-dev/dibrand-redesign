@@ -95,11 +95,11 @@ export default function Discover() {
             {/* UGC Detailed Box */}
             <div className="bg-white p-8 rounded-2xl shadow-sm flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded bg-[#cce5ff] text-[#011c2d] text-xs font-bold uppercase tracking-wider">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded bg-[#cce5ff] text-[#011c2d] text-[11px] sm:text-xs font-bold uppercase tracking-wider text-left">
                     UGC N° 1 y sede territorial
                   </span>
-                  <span className="text-xs text-[#1aa54c] flex items-center gap-1 font-semibold">
+                  <span className="text-xs text-[#1aa54c] flex items-center gap-1 font-semibold shrink-0">
                     <span className="w-2 h-2 rounded-full bg-[#1aa54c]"></span> Abierto hoy
                   </span>
                 </div>
