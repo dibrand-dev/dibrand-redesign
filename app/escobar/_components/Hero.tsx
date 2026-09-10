@@ -8,12 +8,6 @@ export default function Hero() {
       <div className="pointer-events-none absolute top-40 right-12 w-64 h-64 bg-[#7ffc97]/20 rounded-full blur-2xl -z-10"></div>
       
       <div className="max-w-5xl mx-auto px-6 lg:px-8 flex flex-col items-center text-center">
-        {/* Direct Context Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#e5eeff] text-[#00142f] text-sm font-semibold mb-6 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-[#1aa54c] animate-pulse"></span>
-          <span>Atención ciudadana unificada • Portal oficial de Escobar</span>
-        </div>
-        
         {/* Main Heading (Accessible, clear, humane) */}
         <h1 className="text-4xl md:text-5xl font-bold text-[#00142f] tracking-tight max-w-3xl">
           Hola, ¿qué trámite o servicio buscás hoy?
@@ -30,8 +24,8 @@ export default function Hero() {
             </div>
             <input aria-label="Buscar trámites, tasas, hospitales y servicios de Escobar" className="w-full h-14 bg-transparent text-[#00142f] text-lg placeholder:text-[#74777f] focus:outline-none px-2" placeholder="Ej: Pagar tasa, Turno hospital, Licencia de conducir..." type="search" />
             <button className="bg-[#006398] text-white px-8 h-14 rounded-full text-base font-semibold hover:bg-[#004a74] transition-colors shrink-0 flex items-center gap-2 shadow-md" type="submit">
-              <span>Buscar</span>
-              <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+              <span>Buscar con IA</span>
+              <span className="material-symbols-outlined text-[20px]">sparkles</span>
             </button>
           </form>
         </div>

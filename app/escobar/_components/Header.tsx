@@ -65,8 +65,8 @@ export default function Header() {
               <span className="material-symbols-outlined text-[20px]">account_circle</span>
               <span>Ingresar a Escobar 360°</span>
             </Link>
-            <Link className="md:hidden bg-[#006398] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#004a74] transition-colors shadow-sm" href="#">
-              Ingresar
+            <Link className="md:hidden bg-[#006398] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#004a74] transition-colors shadow-sm whitespace-nowrap" href="#">
+              Escobar 360°
             </Link>
             <div className="hidden sm:flex w-8 h-8 rounded-full bg-[#00142f] items-center justify-center">
               <span className="material-symbols-outlined text-white text-[18px]">person</span>
