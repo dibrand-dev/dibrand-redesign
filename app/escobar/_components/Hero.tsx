@@ -23,9 +23,11 @@ export default function Hero() {
               <span className="material-symbols-outlined text-[32px]">search</span>
             </div>
             <input aria-label="Buscar trámites, tasas, hospitales y servicios de Escobar" className="w-full h-14 bg-transparent text-[#00142f] text-lg placeholder:text-[#74777f] focus:outline-none px-2" placeholder="Ej: Pagar tasa, Turno hospital, Licencia de conducir..." type="search" />
-            <button className="bg-[#006398] text-white px-8 h-14 rounded-full text-base font-semibold hover:bg-[#004a74] transition-colors shrink-0 flex items-center gap-2 shadow-md" type="submit">
+            <button className="bg-[#006398] text-white px-8 h-14 rounded-full text-base font-semibold hover:bg-[#004a74] transition-colors shrink-0 flex items-center gap-2 shadow-md group-focus-within:bg-[#004a74]" type="submit">
               <span>Buscar</span>
-              <img src="/ai-sparkles.png" alt="Búsqueda con IA" className="w-5 h-5 object-contain invert" />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z" />
+              </svg>
             </button>
           </form>
         </div>
