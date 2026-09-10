@@ -35,13 +35,14 @@ export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
     const isApiRoute = pathname.startsWith('/api')
     const isEcommerce = pathname.startsWith('/ecommerce')
+    const isEscobar = pathname.startsWith('/escobar')
     const isStaticAsset = pathname.match(/\.(svg|png|jpg|jpeg|gif|webp|ico|pdf|txt|xml|json)$/) || 
                          pathname.startsWith('/_next') || 
                          pathname === '/favicon.ico' || 
                          pathname === '/logo.png'
 
-    // 0. IMMEDIATE EXCLUSION FOR API, ECOMMERCE AND STATIC ASSETS
-    if (isApiRoute || isStaticAsset || isEcommerce) {
+    // 0. IMMEDIATE EXCLUSION FOR API, ECOMMERCE, ESCOBAR AND STATIC ASSETS
+    if (isApiRoute || isStaticAsset || isEcommerce || isEscobar) {
         return NextResponse.next()
     }
 
