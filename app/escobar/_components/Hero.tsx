@@ -24,8 +24,8 @@ export default function Hero() {
             </div>
             <input aria-label="Buscar trámites, tasas, hospitales y servicios de Escobar" className="w-full h-14 bg-transparent text-[#00142f] text-lg placeholder:text-[#74777f] focus:outline-none px-2" placeholder="Ej: Pagar tasa, Turno hospital, Licencia de conducir..." type="search" />
             <button className="bg-[#006398] text-white px-8 h-14 rounded-full text-base font-semibold hover:bg-[#004a74] transition-colors shrink-0 flex items-center gap-2 shadow-md" type="submit">
-              <span>Buscar con IA</span>
-              <span className="material-symbols-outlined text-[20px]">sparkles</span>
+              <span>Buscar</span>
+              <img src="/ai-sparkles.png" alt="Búsqueda con IA" className="w-5 h-5 object-contain invert" />
             </button>
           </form>
         </div>
