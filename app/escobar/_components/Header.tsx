@@ -54,10 +54,10 @@ export default function Header() {
           </div>
           
           <nav className="hidden lg:flex items-center gap-2">
-            <Link className="px-4 py-2 rounded-xl text-base text-[#44474e] hover:bg-[#dce9ff] hover:text-[#0b1c30] transition-colors" href="#">El municipio</Link>
-            <Link className="px-4 py-2 rounded-xl text-base text-[#44474e] hover:bg-[#dce9ff] hover:text-[#0b1c30] transition-colors" href="#">Áreas de gestión</Link>
+            <Link className="px-4 py-2 rounded-xl text-base text-[#44474e] hover:bg-[#dce9ff] hover:text-[#0b1c30] transition-colors" href="#">Gestiones</Link>
+            <Link className="px-4 py-2 rounded-xl text-base text-[#44474e] hover:bg-[#dce9ff] hover:text-[#0b1c30] transition-colors" href="#">Ciudad y Tu Barrio</Link>
             <Link className="px-4 py-2 rounded-xl text-base text-[#44474e] hover:bg-[#dce9ff] hover:text-[#0b1c30] transition-colors" href="#">Disfrutá Escobar</Link>
-            <Link className="px-4 py-2 rounded-xl text-base text-[#44474e] hover:bg-[#dce9ff] hover:text-[#0b1c30] transition-colors" href="#">Novedades</Link>
+            <Link className="px-4 py-2 rounded-xl text-base text-[#44474e] hover:bg-[#dce9ff] hover:text-[#0b1c30] transition-colors" href="#">El Municipio</Link>
           </nav>
           
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
@@ -77,10 +77,10 @@ export default function Header() {
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
           <div className="lg:hidden absolute top-full left-0 w-full bg-white shadow-lg border-t border-[#f8f9ff] py-4 px-6 flex flex-col gap-2">
-            <Link className="px-4 py-3 rounded-xl text-base font-semibold text-[#00142f] hover:bg-[#e5eeff] transition-colors" href="#" onClick={() => setIsMenuOpen(false)}>El municipio</Link>
-            <Link className="px-4 py-3 rounded-xl text-base font-semibold text-[#00142f] hover:bg-[#e5eeff] transition-colors" href="#" onClick={() => setIsMenuOpen(false)}>Áreas de gestión</Link>
+            <Link className="px-4 py-3 rounded-xl text-base font-semibold text-[#00142f] hover:bg-[#e5eeff] transition-colors" href="#" onClick={() => setIsMenuOpen(false)}>Gestiones</Link>
+            <Link className="px-4 py-3 rounded-xl text-base font-semibold text-[#00142f] hover:bg-[#e5eeff] transition-colors" href="#" onClick={() => setIsMenuOpen(false)}>Ciudad y Tu Barrio</Link>
             <Link className="px-4 py-3 rounded-xl text-base font-semibold text-[#00142f] hover:bg-[#e5eeff] transition-colors" href="#" onClick={() => setIsMenuOpen(false)}>Disfrutá Escobar</Link>
-            <Link className="px-4 py-3 rounded-xl text-base font-semibold text-[#00142f] hover:bg-[#e5eeff] transition-colors" href="#" onClick={() => setIsMenuOpen(false)}>Novedades</Link>
+            <Link className="px-4 py-3 rounded-xl text-base font-semibold text-[#00142f] hover:bg-[#e5eeff] transition-colors" href="#" onClick={() => setIsMenuOpen(false)}>El Municipio</Link>
           </div>
         )}
       </div>
