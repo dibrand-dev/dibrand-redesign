@@ -100,7 +100,9 @@ export default function Footer() {
           <span>© 2025 Municipalidad de Escobar. Todos los derechos reservados.</span>
           <div className="flex items-center gap-2">
             <span>Desarrollado por:</span>
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD6VzAy75tC7gG6WveW8C00zxUCE1N_GFe-B1MnvaygWhGg02knumRBXsXbk9l0CoTNRN1983-h2R6spxfGVTzFyiQEyedPpBfe0ZoxFlMNmPTiKcCkSgZ2ApZKT8Unos3SGwdDoqwR8zaVaRjgSupVyKUlKiqcNkBQBP9uua9Q_KJUQFU7xQDlE3zgWXREyR-nOuLLshv0eTRXAMJzU5TH7ZQQ_zSTG-xYovdOHrmhFfCRR_rajPHtXEzun9WjqqVwQ" alt="DIBRAND" className="h-5 w-auto object-contain brightness-100" />
+            <Link href="https://www.dibrand.co/es" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD6VzAy75tC7gG6WveW8C00zxUCE1N_GFe-B1MnvaygWhGg02knumRBXsXbk9l0CoTNRN1983-h2R6spxfGVTzFyiQEyedPpBfe0ZoxFlMNmPTiKcCkSgZ2ApZKT8Unos3SGwdDoqwR8zaVaRjgSupVyKUlKiqcNkBQBP9uua9Q_KJUQFU7xQDlE3zgWXREyR-nOuLLshv0eTRXAMJzU5TH7ZQQ_zSTG-xYovdOHrmhFfCRR_rajPHtXEzun9WjqqVwQ" alt="DIBRAND" className="h-7 w-auto object-contain brightness-100" />
+            </Link>
           </div>
           <span>Cumple con el estándar de accesibilidad Web WCAG 2.1 AA</span>
         </div>
