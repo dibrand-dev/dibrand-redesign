@@ -20,10 +20,14 @@ export default function StatCounter({ value, label }: StatCounterProps) {
     const target = numericPart ? parseInt(numericPart[0], 10) : 0;
 
     const rounded = useTransform(count, (latest) => Math.round(latest));
-    const [displayValue, setDisplayValue] = useState(prefix + "0" + suffix);
+    // Start with the full target value for SSR & crawlers (SEO friendly)
+    const [displayValue, setDisplayValue] = useState(value);
 
     useEffect(() => {
         if (isInView && numericPart) {
+            // Reset to 0 visually and in motion value before animating
+            setDisplayValue(`${prefix}0${suffix}`);
+            count.set(0);
             const controls = animate(count, target, {
                 duration: 2,
                 ease: "easeOut",
@@ -31,7 +35,7 @@ export default function StatCounter({ value, label }: StatCounterProps) {
 
             return controls.stop;
         }
-    }, [isInView, target, count, numericPart]);
+    }, [isInView, target, count, numericPart, prefix, suffix]);
 
     // Use a simplified approach for SSR/Hydration and smooth updates
     useEffect(() => {
