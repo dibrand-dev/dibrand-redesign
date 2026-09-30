@@ -110,7 +110,7 @@ export default async function StaffAugmentationPage(props: { params: Promise<{ l
                             {content.theDibrandWay.title}
                         </h2>
                         <p className="text-xl text-slate-400 font-outfit font-light">
-                            Por qué nuestro staffing marca la diferencia.
+                            {content.theDibrandWay.subtitle}
                         </p>
                     </div>
 

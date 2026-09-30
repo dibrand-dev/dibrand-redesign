@@ -50,7 +50,7 @@ export default function HeroSection({ dict }: HeroSectionProps) {
                     <ScheduleButton text={dict.hero.cta} />
 
                     {/* Stats - Compact Row — forced drastically upwards manually */}
-                    <div className="mt-auto flex flex-wrap justify-center gap-8 md:gap-20 items-end pt-8 border-t border-white/15 w-full pb-72 md:pb-80">
+                    <div className="mt-auto flex flex-wrap justify-center gap-8 md:gap-20 items-end pt-8 w-full pb-72 md:pb-80">
                         {dict.stats.items.map((stat, index) => (
                             <StatCounter key={index} value={stat.value} label={stat.label} />
                         ))}
