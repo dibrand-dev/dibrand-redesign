@@ -191,7 +191,8 @@
             "submit": "Send Message",
             "sending": "Sending...",
             "success": "Message sent successfully! We'll be in touch soon.",
-            "error": "There was an error sending the message. Please try again."
+            "error": "There was an error sending the message. Please try again.",
+            "sendAnother": "Send another message"
         }
     },
     "staffAugmentation": {

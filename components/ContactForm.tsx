@@ -24,6 +24,7 @@ interface ContactFormProps {
         sending: string;
         success: string;
         error: string;
+        sendAnother?: string;
       };
     };
   };
@@ -118,7 +119,7 @@ function ContactFormFields({ dict, isDark = false }: ContactFormProps) {
               onClick={() => setSubmitStatus('idle')}
               className="mt-4 text-[#D83484] hover:text-[#A3369D] font-bold text-sm underline underline-offset-4 transition-colors"
             >
-              Enviar otro mensaje
+              {dict.contact.form.sendAnother || "Enviar otro mensaje"}
             </button>
         </div>
       ) : (

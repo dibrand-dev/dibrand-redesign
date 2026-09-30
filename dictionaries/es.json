@@ -191,7 +191,8 @@
             "submit": "Enviar Mensaje",
             "sending": "Enviando...",
             "success": "¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.",
-            "error": "Hubo un error al enviar el mensaje. Por favor intenta nuevamente."
+            "error": "Hubo un error al enviar el mensaje. Por favor intenta nuevamente.",
+            "sendAnother": "Enviar otro mensaje"
         }
     },
     "staffAugmentation": {
