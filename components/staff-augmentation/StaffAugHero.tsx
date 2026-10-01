@@ -41,7 +41,7 @@ export default function StaffAugHero({ dict, lang }: StaffAugHeroProps) {
                     <p className="text-xl md:text-3xl font-semibold text-white mb-4 font-outfit">
                         {dict.hero.subtitle1}
                     </p>
-                    <p className="text-base md:text-xl leading-relaxed text-white font-outfit font-light max-w-2xl mx-auto opacity-90">
+                    <p className="mt-4 md:mt-6 text-base md:text-xl leading-relaxed text-zinc-100 font-outfit font-light max-w-2xl mx-auto">
                         {dict.hero.subtitle2}
                     </p>
                 </div>

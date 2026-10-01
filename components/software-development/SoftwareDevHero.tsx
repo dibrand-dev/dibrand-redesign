@@ -35,7 +35,7 @@ export default function SoftwareDevHero({ dict }: SoftwareDevHeroProps) {
                         {dict.title}
                     </h1>
                     
-                    <p className="mt-4 md:mt-6 text-base md:text-xl leading-relaxed text-zinc-50 max-w-2xl mx-auto font-outfit font-light">
+                    <p className="mt-4 md:mt-6 text-base md:text-xl leading-relaxed text-zinc-100 max-w-2xl mx-auto font-outfit font-light">
                         {dict.subtitle}
                     </p>
 
