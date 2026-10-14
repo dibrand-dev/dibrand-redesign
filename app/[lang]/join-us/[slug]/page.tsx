@@ -184,6 +184,11 @@ export default async function JobDetailPage({ params }: Props) {
     };
     if (job.modality?.toLowerCase().includes('remot')) {
         (jobPostingSchema as any).jobLocationType = "TELECOMMUTE";
+        // Required by Google for remote (TELECOMMUTE) jobs
+        (jobPostingSchema as any).applicantLocationRequirements = {
+            "@type": "Country",
+            "name": "Argentina"
+        };
     }
 
     return (
