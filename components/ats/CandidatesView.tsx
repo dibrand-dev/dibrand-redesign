@@ -69,7 +69,9 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                                 country: candidate.country || 'N/A',
                                 avatar_url: candidate.avatar_url,
                                 first_name: candidate.first_name,
-                                last_name: candidate.last_name
+                                last_name: candidate.last_name,
+                                source: candidate.source,
+                                recruiter: candidate.recruiter
                             } as Candidate} 
                         />
                     ))

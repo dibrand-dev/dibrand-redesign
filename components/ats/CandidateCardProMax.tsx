@@ -13,8 +13,79 @@ interface Props {
   candidate: Candidate;
 }
 
+function resolveRecruiterPill(candidate: Candidate) {
+  const sourceLower = (candidate.source || '').toLowerCase();
+  const isWeb = sourceLower.includes('web') || sourceLower.includes('spontaneous') || sourceLower === 'website';
+
+  if (isWeb) {
+    return {
+      type: 'web' as const,
+      label: 'DB',
+      name: 'Web Dibrand',
+      tooltip: 'Origen: Web Dibrand'
+    };
+  }
+
+  // 1. Direct recruiter object from Supabase join
+  if (candidate.recruiter?.full_name) {
+    return {
+      type: 'recruiter' as const,
+      label: getInitials(candidate.recruiter.full_name) || 'RC',
+      name: candidate.recruiter.full_name,
+      avatarUrl: candidate.recruiter.avatar_url,
+      tooltip: `Reclutador: ${candidate.recruiter.full_name}`
+    };
+  }
+
+  // 2. Known recruiter ID (Norberto Riccitelli - SuperAdmin)
+  if (candidate.recruiter_id === 'f4cc5a2c-2b78-4b82-b990-83286548aefb') {
+    return {
+      type: 'recruiter' as const,
+      label: 'NR',
+      name: 'Norberto Riccitelli',
+      tooltip: 'Reclutador: Norberto Riccitelli'
+    };
+  }
+
+  // 3. Fallback extraction from recruiter notes if loaded from CSV
+  const notes = (candidate.recruiter_notes || '').toLowerCase();
+  if (notes.includes('katiuskasalazar') || notes.includes('katiuska')) {
+    return {
+      type: 'recruiter' as const,
+      label: 'KS',
+      name: 'Katiuska Salazar',
+      tooltip: 'Reclutadora: Katiuska Salazar'
+    };
+  }
+  if (notes.includes('velardis') || notes.includes('sofia')) {
+    return {
+      type: 'recruiter' as const,
+      label: 'SV',
+      name: 'Sofia Velardis',
+      tooltip: 'Reclutadora: Sofia Velardis'
+    };
+  }
+  if (notes.includes('norberto')) {
+    return {
+      type: 'recruiter' as const,
+      label: 'NR',
+      name: 'Norberto Riccitelli',
+      tooltip: 'Reclutador: Norberto Riccitelli'
+    };
+  }
+
+  // Default fallback if unassigned
+  return {
+    type: 'web' as const,
+    label: 'DB',
+    name: 'Web Dibrand',
+    tooltip: 'Origen: Web Dibrand'
+  };
+}
+
 const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
   const macro = getMacroConfig(candidate.status);
+  const pill = resolveRecruiterPill(candidate);
 
   return (
     <div className="bg-white border border-[#E1E2E5] rounded-[12px] p-6 hover:shadow-lg transition-all flex flex-col h-full font-inter relative group">
@@ -62,8 +133,25 @@ const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
       {/* Action Bar */}
       <div className="mt-auto flex items-center justify-between pt-4 border-t border-[#F1F5F9]">
          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#DAE2FF] flex items-center justify-center text-[#0040A1] text-[10px] font-bold">JD</div>
-            <div className="w-7 h-7 rounded-lg bg-[#EADDFF] flex items-center justify-center text-[#21005D] text-[10px] font-bold">MK</div>
+            {pill.type === 'web' ? (
+               <div 
+                  title={pill.tooltip}
+                  className="w-7 h-7 rounded-lg bg-[#9e4d97] text-white flex items-center justify-center text-[10px] font-bold shadow-xs select-none cursor-default tracking-tight"
+               >
+                  {pill.label}
+               </div>
+            ) : (
+               <div 
+                  title={pill.tooltip}
+                  className="w-7 h-7 rounded-lg bg-[#DAE2FF] text-[#0040A1] flex items-center justify-center text-[10px] font-bold shadow-xs select-none cursor-default overflow-hidden tracking-tight"
+               >
+                  {pill.avatarUrl ? (
+                     <img src={pill.avatarUrl} alt={pill.name} className="w-full h-full object-cover" />
+                  ) : (
+                     pill.label
+                  )}
+               </div>
+            )}
          </div>
          <Link href={`/ats/candidates/${candidate.id}`}>
             <span className="flex items-center gap-1.5 text-[12px] font-extrabold text-[#0040A1] hover:underline uppercase tracking-tight cursor-pointer">

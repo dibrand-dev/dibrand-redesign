@@ -17,4 +17,11 @@ export interface Candidate {
   recruiter_notes?: string;
   skills?: string[];
   avatar_url?: string;
+  source?: string;
+  recruiter?: {
+    id?: string;
+    full_name?: string;
+    avatar_url?: string;
+    email?: string;
+  };
 }
