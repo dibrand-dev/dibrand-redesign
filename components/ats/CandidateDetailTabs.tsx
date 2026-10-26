@@ -113,7 +113,7 @@ export default function CandidateDetailTabs({ candidate, logs, allSkills, stages
                                     <iframe 
                                         src={`${(candidate.resume_url || candidate.cv_filename)?.startsWith('http') 
                                             ? (candidate.resume_url || candidate.cv_filename) 
-                                            : `https://mdvyvqphumrciekgjlfb.supabase.co/storage/v1/object/public/resumes/${encodeURIComponent(candidate.resume_url || candidate.cv_filename || '')}`
+                                            : `${process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fduftfijlyqyzfbvbtmo.supabase.co'}/storage/v1/object/public/resumes/${encodeURIComponent(candidate.resume_url || candidate.cv_filename || '')}`
                                         }#toolbar=0&navpanes=0`}
                                         className="w-full h-full border-none"
                                         title="Candidate Resume"
@@ -132,7 +132,7 @@ export default function CandidateDetailTabs({ candidate, logs, allSkills, stages
                                     <a 
                                         href={(candidate.resume_url || candidate.cv_filename)?.startsWith('http') 
                                             ? (candidate.resume_url || candidate.cv_filename) 
-                                            : `https://mdvyvqphumrciekgjlfb.supabase.co/storage/v1/object/public/resumes/${encodeURIComponent(candidate.resume_url || candidate.cv_filename || '')}`
+                                            : `${process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fduftfijlyqyzfbvbtmo.supabase.co'}/storage/v1/object/public/resumes/${encodeURIComponent(candidate.resume_url || candidate.cv_filename || '')}`
                                         }
                                         target="_blank" 
                                         className="px-8 py-3 bg-[#0040A1] text-white rounded-xl text-[13px] font-bold hover:bg-[#003380] transition-all shadow-xl"
@@ -148,7 +148,7 @@ export default function CandidateDetailTabs({ candidate, logs, allSkills, stages
                                     <a 
                                         href={(candidate.resume_url || candidate.cv_filename)?.startsWith('http') 
                                             ? (candidate.resume_url || candidate.cv_filename) 
-                                            : `https://mdvyvqphumrciekgjlfb.supabase.co/storage/v1/object/public/resumes/${encodeURIComponent(candidate.resume_url || candidate.cv_filename || '')}`
+                                            : `${process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fduftfijlyqyzfbvbtmo.supabase.co'}/storage/v1/object/public/resumes/${encodeURIComponent(candidate.resume_url || candidate.cv_filename || '')}`
                                         }
                                         target="_blank" 
                                         className="w-full py-4 bg-[#0040A1] text-white rounded-xl font-extrabold text-[15px] flex items-center justify-center gap-3 shadow-lg shadow-blue-900/20 active:scale-95 transition-transform"
