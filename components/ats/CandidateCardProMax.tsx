@@ -11,21 +11,13 @@ import StagePill from './StagePill';
 
 interface Props {
   candidate: Candidate;
+  recruitersMap?: Record<string, { id: string; full_name: string; avatar_url?: string | null }>;
 }
 
-function resolveRecruiterPill(candidate: Candidate) {
-  const sourceLower = (candidate.source || '').toLowerCase();
-  const isWeb = sourceLower.includes('web') || sourceLower.includes('spontaneous') || sourceLower === 'website';
-
-  if (isWeb) {
-    return {
-      type: 'web' as const,
-      label: 'DB',
-      name: 'Web Dibrand',
-      tooltip: 'Origen: Web Dibrand'
-    };
-  }
-
+function resolveRecruiterPill(
+  candidate: Candidate,
+  recruitersMap?: Record<string, { id: string; full_name: string; avatar_url?: string | null }>
+) {
   // 1. Direct recruiter object from Supabase join
   if (candidate.recruiter?.full_name) {
     return {
@@ -33,11 +25,23 @@ function resolveRecruiterPill(candidate: Candidate) {
       label: getInitials(candidate.recruiter.full_name) || 'RC',
       name: candidate.recruiter.full_name,
       avatarUrl: candidate.recruiter.avatar_url,
-      tooltip: `Reclutador: ${candidate.recruiter.full_name}`
+      tooltip: `Reclutador(a): ${candidate.recruiter.full_name}`
     };
   }
 
-  // 2. Known recruiter ID (Norberto Riccitelli - SuperAdmin)
+  // 2. Lookup recruiter by candidate.recruiter_id in recruitersMap
+  if (candidate.recruiter_id && recruitersMap?.[candidate.recruiter_id]) {
+    const r = recruitersMap[candidate.recruiter_id];
+    return {
+      type: 'recruiter' as const,
+      label: getInitials(r.full_name) || 'RC',
+      name: r.full_name,
+      avatarUrl: r.avatar_url,
+      tooltip: `Reclutador(a): ${r.full_name}`
+    };
+  }
+
+  // 3. Known recruiter ID (Norberto Riccitelli - SuperAdmin)
   if (candidate.recruiter_id === 'f4cc5a2c-2b78-4b82-b990-83286548aefb') {
     return {
       type: 'recruiter' as const,
@@ -47,9 +51,17 @@ function resolveRecruiterPill(candidate: Candidate) {
     };
   }
 
-  // 3. Fallback extraction from recruiter notes if loaded from CSV
-  const notes = (candidate.recruiter_notes || '').toLowerCase();
-  if (notes.includes('katiuskasalazar') || notes.includes('katiuska')) {
+  // 4. Fallback extraction from recruiter notes or cover letter if loaded from CSV / historical data
+  const metaText = `${candidate.recruiter_notes || ''} ${candidate.cover_letter || ''}`.toLowerCase();
+  if (metaText.includes('daniela') || metaText.includes('veronesi') || metaText.includes('consultorarrhh')) {
+    return {
+      type: 'recruiter' as const,
+      label: 'DV',
+      name: 'Daniela Veronesi',
+      tooltip: 'Reclutadora: Daniela Veronesi'
+    };
+  }
+  if (metaText.includes('katiuskasalazar') || metaText.includes('katiuska')) {
     return {
       type: 'recruiter' as const,
       label: 'KS',
@@ -57,7 +69,7 @@ function resolveRecruiterPill(candidate: Candidate) {
       tooltip: 'Reclutadora: Katiuska Salazar'
     };
   }
-  if (notes.includes('velardis') || notes.includes('sofia')) {
+  if (metaText.includes('velardis') || metaText.includes('sofia')) {
     return {
       type: 'recruiter' as const,
       label: 'SV',
@@ -65,7 +77,7 @@ function resolveRecruiterPill(candidate: Candidate) {
       tooltip: 'Reclutadora: Sofia Velardis'
     };
   }
-  if (notes.includes('norberto')) {
+  if (metaText.includes('norberto')) {
     return {
       type: 'recruiter' as const,
       label: 'NR',
@@ -74,7 +86,19 @@ function resolveRecruiterPill(candidate: Candidate) {
     };
   }
 
-  // Default fallback if unassigned
+  // 5. If NO recruiter is assigned, check if it's from the web or spontaneous application
+  const sourceLower = (candidate.source || '').toLowerCase();
+  const isWeb = sourceLower.includes('web') || sourceLower.includes('spontaneous') || sourceLower === 'website';
+  if (isWeb) {
+    return {
+      type: 'web' as const,
+      label: 'DB',
+      name: 'Web Dibrand',
+      tooltip: 'Origen: Web Dibrand'
+    };
+  }
+
+  // 6. Default fallback for unassigned candidates in pool
   return {
     type: 'web' as const,
     label: 'DB',
@@ -83,12 +107,12 @@ function resolveRecruiterPill(candidate: Candidate) {
   };
 }
 
-const CandidateCardProMax: React.FC<Props> = ({ candidate }) => {
+const CandidateCardProMax: React.FC<Props> = ({ candidate, recruitersMap }) => {
   const macro = getMacroConfig(candidate.status);
-  const pill = resolveRecruiterPill(candidate);
+  const pill = resolveRecruiterPill(candidate, recruitersMap);
 
   return (
-    <div className="bg-white border border-[#E1E2E5] rounded-[12px] p-6 hover:shadow-lg transition-all flex flex-col h-full font-inter relative group">
+    <div className="bg-white border border-[#E1E2E5] rounded-[12px] p-6 hover:shadow-lg transition-all flex flex-col h-full font-outfit relative group">
       {/* Status Badge - Top Right - Sub Stage */}
       <div className="absolute top-6 right-6">
         <StagePill status={candidate.status} />

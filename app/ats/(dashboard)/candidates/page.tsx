@@ -57,7 +57,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
     const totalPages = Math.ceil(totalCount / limit);
 
     return (
-        <div className="max-w-[1104px] mx-auto bg-white min-h-screen px-4 py-8 lg:p-10 shadow-sm border-x border-[#E1E2E5] font-inter">
+        <div className="max-w-[1104px] mx-auto bg-white min-h-screen px-4 py-8 lg:p-10 shadow-sm border-x border-[#E1E2E5] font-outfit">
             {/* Header Section */}
             <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 mb-8 lg:mb-12">
                 <div>
@@ -93,6 +93,7 @@ export default async function AtsCandidatesPage({ searchParams }: { searchParams
                 totalCount={totalCount}
                 page={page}
                 totalPages={totalPages}
+                recruiters={recruiters}
                 filters={{ status, search, jobId, country, recruiterId, skills: skillsParam }}
             />
         </div>

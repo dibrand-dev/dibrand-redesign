@@ -32,7 +32,7 @@ export default function CandidateTabs({ candidate, logs }: CandidateTabsProps) {
                     <div className="animate-in fade-in slide-in-from-left-4 duration-500">
                         <CoverLetterCard 
                             candidateId={candidate.id} 
-                            initialContent={candidate.cover_letter} 
+                            initialContent={candidate.cover_letter || candidate.candidate_summary || ''} 
                         />
                     </div>
                 );
@@ -90,7 +90,7 @@ export default function CandidateTabs({ candidate, logs }: CandidateTabsProps) {
                             onClick={() => setActiveTab(tab.id as any)}
                             className={`flex shrink-0 items-center gap-2 px-6 py-4 text-[13px] font-bold transition-all border-b-2 -mb-[2px] ${
                                 activeTab === tab.id
-                                    ? 'border-[#0B4FEA] text-[#0B4FEA]'
+                                    ? 'border-[#9e4d97] text-[#9e4d97]'
                                     : 'border-transparent text-slate-500 hover:text-slate-900'
                             }`}
                         >

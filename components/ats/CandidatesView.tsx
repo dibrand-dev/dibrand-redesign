@@ -11,6 +11,7 @@ interface CandidatesViewProps {
     totalCount: number;
     page: number;
     totalPages: number;
+    recruiters?: Array<{ id: string; full_name: string; avatar_url?: string | null }>;
     // Pass filters to generate URLs locally
     filters: {
         status?: string;
@@ -22,7 +23,16 @@ interface CandidatesViewProps {
     };
 }
 
-export default function CandidatesView({ candidates, totalCount, page, totalPages, filters }: CandidatesViewProps) {
+export default function CandidatesView({ candidates, totalCount, page, totalPages, recruiters, filters }: CandidatesViewProps) {
+    const recruitersMap = React.useMemo(() => {
+        const map: Record<string, { id: string; full_name: string; avatar_url?: string | null }> = {};
+        if (recruiters) {
+            recruiters.forEach(r => {
+                if (r.id) map[r.id] = r;
+            });
+        }
+        return map;
+    }, [recruiters]);
     
     const getPageUrl = (p: number) => {
         const params = new URLSearchParams();
@@ -71,8 +81,11 @@ export default function CandidatesView({ candidates, totalCount, page, totalPage
                                 first_name: candidate.first_name,
                                 last_name: candidate.last_name,
                                 source: candidate.source,
+                                recruiter_notes: candidate.recruiter_notes,
+                                cover_letter: candidate.cover_letter,
                                 recruiter: candidate.recruiter
                             } as Candidate} 
+                            recruitersMap={recruitersMap}
                         />
                     ))
                 ) : (
