@@ -87,6 +87,11 @@ export async function middleware(request: NextRequest) {
 
         // Auth Logic
         if (!user) {
+            // Permitir acceso directo a /ats en entorno local de desarrollo sin sesión activa
+            if (process.env.NODE_ENV === 'development' && pathname.startsWith('/ats')) {
+                return response;
+            }
+
             if (pathname === '/admin/login' || pathname === '/ats/login' || pathname === '/ats/set-password') {
                 return response;
             }

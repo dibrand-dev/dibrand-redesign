@@ -1,27 +1,18 @@
-# Dibrand Redesign - Project Rules
+# Directivas de Proyecto - Dibrand Redesign
 
-Estas directrices son obligatorias para todo el desarrollo actual y futuro.
+## 1. Preservación Absoluta del Código Existente
+- Queda terminantemente prohibido modificar, refactorizar, renombrar o eliminar cualquier archivo, componente, estilo o tipografía existente en el repositorio.
+- No alterar estilos, dependencias ni configuraciones actuales salvo orden humana explícita y puntual.
+- Modo de operación inicial: Estrictamente lectura, auditoría y ejecución de servidor local.
 
-## 1. Typography
-La única fuente permitida para texto, UI y layouts es **'Outfit'** (mapeada a `font-sans` en Tailwind). 
-Queda estrictamente prohibido el uso de Montserrat o cualquier otra fuente no especificada.
+## 2. Estándares Oficiales de Marca (Solo para Nuevos Desarrollos)
+- Tipografía oficial: La ÚNICA tipografía permitida para nuevos componentes e interfaces es "Outfit" (Google Fonts), integrada vía `next/font/google` y mapeada a `font-sans` en Tailwind CSS.
+- Prohibición absoluta: Tienes terminantemente prohibido sugerir, importar o utilizar la fuente "Montserrat" o cualquier otra tipografía alternativa.
+- Paleta institucional: Color primario oficial `#9e4d97` (`--color-primary`).
+- Títulos: Todos los encabezados nuevos deben redactarse estrictamente en "Sentence case".
+- Integridad de datos: Prohibición total de generar información simulada, textos inventados o candidatos ficticios.
+- Estilo: Moderno, limpio y geométrico, adaptado a una agencia B2B Tech.
 
-## 2. Color Token
-El color hexadecimal oficial para:
-- Estados seleccionados
-- Botones principales
-- Bordes activos
-Es: **`#9e4d97`**
-
-## 3. Casing
-Todos los títulos y etiquetas de la plataforma deben usar **'Sentence case'**.
-- ✅ Correcto: 'Gestión de hosting', 'Historial de pagos', 'Registrar renovación'.
-- ❌ Incorrecto: 'Gestión De Hosting', 'HISTORIAL DE PAGOS', 'registrar renovación'.
-
-## 4. Data Integrity
-Está **estrictamente prohibido** el uso de 'mock data' o nombres duros inventados.
-Toda la información debe provenir de tipos, esquemas reales de la base de datos o llamadas a la API correspondientes.
-
-## 5. Workflow y Versionado
-- **SIEMPRE** se debe hacer un commit y push a la rama `main` de manera automática tras desarrollar o solucionar un bug con éxito, para que el entorno de Vercel/Producción se actualice al instante.
-- **SIEMPRE** proveer comandos SQL limpios y directos al usuario cuando haya que aplicar cambios a la base de datos de Supabase, porque es la vía más rápida y preferida por el usuario.
+## 3. Protocolo de Trabajo Agéntico
+- Seguir el ciclo Planificar > Ejecutar > Verificar.
+- Todo commit, push o comando que requiera permisos de red debe pasar por la aprobación en el Inbox.

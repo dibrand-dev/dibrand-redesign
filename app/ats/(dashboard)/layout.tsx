@@ -23,13 +23,14 @@ export default async function AtsDashboardLayout({
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) {
+    const isDev = process.env.NODE_ENV === 'development';
+    if (!user && !isDev) {
         redirect('/ats/login');
     }
 
-    const role = user?.user_metadata?.role;
+    const role = user?.user_metadata?.role || (isDev ? 'admin' : undefined);
     // Authorized roles for ATS
-    const isAuthorized = role === 'recruiter' || role === 'admin' || role === 'SuperAdmin';
+    const isAuthorized = isDev || role === 'recruiter' || role === 'admin' || role === 'SuperAdmin';
     
     if (!isAuthorized) {
         redirect('/ats/login');

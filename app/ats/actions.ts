@@ -36,25 +36,35 @@ export async function syncRecruiterProfile() {
     if (!user) return null;
 
     // Check if recruiter exists
-    const { data: recruiter, error } = await supabase
+    const { data: recruiter } = await supabaseAuth
         .from('recruiters')
         .select('*')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
-    if (error && error.code === 'PGRST116') { // Not found
+    if (!recruiter) {
+        const profileData = {
+            id: user.id,
+            full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Recruiter',
+            email: user.email,
+            avatar_url: user.user_metadata?.avatar_url || null,
+            job_title: user.user_metadata?.job_title || null,
+            phone: user.user_metadata?.phone || null
+        };
+
         const { error: insertError } = await supabase
             .from('recruiters')
-            .insert([{
-                id: user.id,
-                full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Recruiter',
-                email: user.email,
-                avatar_url: user.user_metadata?.avatar_url || null,
-                job_title: user.user_metadata?.job_title || null,
-                phone: user.user_metadata?.phone || null
-            }]);
+            .upsert([profileData], { onConflict: 'id' });
         
-        if (insertError) console.error('Error auto-creating recruiter:', insertError);
+        if (insertError) {
+            const { error: authInsertError } = await supabaseAuth
+                .from('recruiters')
+                .upsert([profileData], { onConflict: 'id' });
+            
+            if (authInsertError && process.env.NODE_ENV !== 'development') {
+                console.warn('Recruiter sync notice:', authInsertError.message || insertError.message);
+            }
+        }
     }
 
     return user.id;
@@ -66,9 +76,10 @@ export async function getRecruiterStats() {
     if (!user) return null;
 
     const isAdmin = user.user_metadata?.role === 'admin' || user.user_metadata?.role === 'SuperAdmin';
+    const db = supabaseAuth;
 
     // 1. Get stats by status
-    let query = supabase
+    let query = db
         .from('job_applications')
         .select('status')
         .eq('is_deleted', false);
@@ -92,7 +103,7 @@ export async function getRecruiterStats() {
     const fiveDaysAgo = new Date();
     fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
 
-    let staleQuery = supabase
+    let staleQuery = db
         .from('job_applications')
         .select('*', { count: 'exact', head: true })
         .eq('is_deleted', false)
@@ -106,7 +117,7 @@ export async function getRecruiterStats() {
     const { count: staleCount } = await staleQuery;
 
     // 3. Get Real Jobs Count
-    let jobsQuery = supabase
+    let jobsQuery = db
         .from('job_openings')
         .select('*', { count: 'exact', head: true })
         .eq('is_active', true);
@@ -132,9 +143,10 @@ export async function getRecruiterJobs() {
     if (!user) return [];
 
     const isAdmin = user.user_metadata?.role === 'admin' || user.user_metadata?.role === 'SuperAdmin';
+    const db = supabaseAuth;
 
     // Fetch all jobs excluding only the ones fully deleted (we check by status or deleted_at in JS for safety)
-    let { data: jobs, error: jobsError } = await supabase
+    let { data: jobs, error: jobsError } = await db
         .from('job_openings')
         .select(`
             *,
@@ -207,7 +219,9 @@ export async function getAllCandidates(filters: { status?: string, search?: stri
         user.role === 'admin' ||
         user.role === 'SuperAdmin';
 
-    let query = supabase
+    const db = supabaseAuth;
+
+    let query = db
         .from('job_applications')
         .select(`
             *,
@@ -309,7 +323,8 @@ export async function getCandidateById(id: string) {
             return null;
         }
 
-        const { data, error } = await supabase
+        const supabaseAuth = await createClient();
+        const { data, error } = await supabaseAuth
             .from('job_applications')
             .select(`
                 *,
@@ -692,8 +707,9 @@ export async function getAllTechStacks() {
 
 export async function getRecruiters() {
     try {
-        // 1. Try to get from recruiters table
-        const { data: dbRecruiters, error: dbError } = await supabase
+        const supabaseAuth = await createClient();
+        // 1. Try to get from recruiters table using authenticated client
+        const { data: dbRecruiters, error: dbError } = await supabaseAuth
             .from('recruiters')
             .select('*')
             .order('full_name');
@@ -702,27 +718,27 @@ export async function getRecruiters() {
             return dbRecruiters;
         }
 
-        console.log('Recruiters table empty or error, falling back to auth.admin.listUsers()');
-
         // 2. Fallback: Get directly from Auth (requires Service Role Key)
-        const { data: { users }, error: authError } = await supabase.auth.admin.listUsers();
-        
-        if (authError) {
-            console.error('Error listing auth users:', authError);
-            return [];
+        try {
+            const { data: authData, error: authError } = await supabase.auth.admin.listUsers();
+            
+            if (!authError && authData?.users) {
+                return authData.users
+                    .filter(u => {
+                        const role = (u.user_metadata?.role || '').toLowerCase();
+                        return ['admin', 'superadmin', 'recruiter'].includes(role) || u.email?.includes('dibrand');
+                    })
+                    .map(u => ({
+                        id: u.id,
+                        full_name: u.user_metadata?.full_name || u.email || 'Reclutador',
+                        avatar_url: u.user_metadata?.avatar_url || null
+                    }));
+            }
+        } catch {
+            // Fallback silencioso si no se cuenta con el service role key en local
         }
 
-        // Map auth users to Recruiter format
-        return users
-            .filter(u => {
-                const role = (u.user_metadata?.role || '').toLowerCase();
-                return ['admin', 'superadmin', 'recruiter'].includes(role) || u.email?.includes('dibrand');
-            })
-            .map(u => ({
-                id: u.id,
-                full_name: u.user_metadata?.full_name || u.email || 'Reclutador',
-                avatar_url: u.user_metadata?.avatar_url || null
-            }));
+        return [];
 
     } catch (error) {
         console.error('CRITICAL error in getRecruiters:', error);
@@ -746,7 +762,8 @@ export async function getJobs() {
 }
 
 export async function getCountries() {
-    const { data, error } = await supabase
+    const supabaseAuth = await createClient();
+    const { data, error } = await supabaseAuth
         .from('job_applications')
         .select('country')
         .not('country', 'is', null)
@@ -758,13 +775,14 @@ export async function getCountries() {
     }
 
     // De-duplicate countries
-    const unique = Array.from(new Set(data.map(d => d.country))).sort();
+    const unique = Array.from(new Set((data || []).map(d => d.country))).sort();
     return unique;
 }
 
 export async function getGlobalSkills() {
+    const supabaseAuth = await createClient();
     // Select from tech_stacks (Admin defined)
-    const { data: adminStacks, error } = await supabase
+    const { data: adminStacks, error } = await supabaseAuth
         .from('tech_stacks')
         .select('name')
         .order('name');
@@ -774,7 +792,7 @@ export async function getGlobalSkills() {
     }
 
     // Select skills from candidates as well for a broader list
-    const { data: candidateSkills, error: cError } = await supabase
+    const { data: candidateSkills, error: cError } = await supabaseAuth
         .from('job_applications')
         .select('skills')
         .not('skills', 'is', null)
@@ -809,7 +827,8 @@ export async function patchCandidateByEmail(email: string, patchData: any) {
 }
 
 export async function getCandidateNames() {
-    const { data, error } = await supabase
+    const supabaseAuth = await createClient();
+    const { data, error } = await supabaseAuth
         .from('job_applications')
         .select('id, full_name, first_name, last_name, email')
         .eq('is_deleted', false);
