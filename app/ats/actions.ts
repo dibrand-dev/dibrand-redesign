@@ -801,19 +801,30 @@ export async function getGlobalSkills() {
     const adminNames = (adminStacks || []).map(s => s.name);
     const candidateNames = (candidateSkills || []).flatMap(item => item.skills || []);
 
-    // Flatten, make unique and sort
-    return Array.from(new Set([...adminNames, ...candidateNames])).sort();
+    // Normalizar todo contra el catálogo canónico para evitar variantes (React vs React.js) en filtros
+    const { normalizeSkillsList } = await import('@/lib/skills-normalizer');
+    const unifiedNormalized = normalizeSkillsList([...adminNames, ...candidateNames], adminNames);
+
+    return unifiedNormalized.sort();
 }
 
 export async function updateCandidateSkills(id: string, skills: string[]) {
+    const supabaseAuth = await createClient();
+    
+    // Normalizar canónicamente y registrar cualquier stack nuevo en tech_stacks
+    const { ensureSkillsInTechStacks } = await import('@/lib/skills-normalizer');
+    const normalizedSkills = await ensureSkillsInTechStacks(skills, supabaseAuth);
+
     const { error } = await supabase
         .from('job_applications')
-        .update({ skills, updated_at: new Date().toISOString() })
+        .update({ skills: normalizedSkills, updated_at: new Date().toISOString() })
         .eq('id', id);
 
     if (error) throw error;
     revalidatePath(`/ats/candidates/${id}`);
-    return { success: true };
+    revalidatePath('/ats/candidates');
+    revalidatePath('/admin', 'layout');
+    return { success: true, skills: normalizedSkills };
 }
 
 export async function patchCandidateByEmail(email: string, patchData: any) {
@@ -1329,11 +1340,12 @@ export async function extractCandidateSkillsAction(candidateId: string) {
     }
 
     const { extractSkillsWithGemini } = await import('@/lib/ats-ai');
-    const result = await extractSkillsWithGemini(candidateId);
+    const result = await extractSkillsWithGemini(candidateId, supabaseAuth);
 
     if (result.success) {
         revalidatePath(`/ats/candidates/${candidateId}`);
         revalidatePath('/ats/candidates');
+        revalidatePath('/admin', 'layout');
     }
 
     return result;

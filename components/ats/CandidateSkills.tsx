@@ -97,8 +97,12 @@ export default function CandidateSkills({ candidateId, initialSkills, hasResume 
         const nextSkills = [...skills, normalizedSkill];
         setIsSaving(true);
         try {
-            await updateCandidateSkills(candidateId, nextSkills);
-            setSkills(nextSkills);
+            const res = await updateCandidateSkills(candidateId, nextSkills);
+            if (res && res.skills) {
+                setSkills(res.skills);
+            } else {
+                setSkills(nextSkills);
+            }
             setInputValue('');
             setShowSuggestions(false);
         } catch (error: any) {

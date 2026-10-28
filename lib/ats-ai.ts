@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { supabaseAdmin } from './supabase-admin';
+import { ensureSkillsInTechStacks, normalizeSkillsList } from './skills-normalizer';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fduftfijlyqyzfbvbtmo.supabase.co';
 
@@ -41,7 +42,10 @@ function extractJsonFromText(rawText: string): any {
  * Extrae habilidades técnicas de un currículum utilizando Gemini AI
  * y las guarda directamente en el perfil del candidato.
  */
-export async function extractSkillsWithGemini(candidateId: string): Promise<{
+export async function extractSkillsWithGemini(
+    candidateId: string,
+    client?: any
+): Promise<{
     success: boolean;
     skills?: string[];
     addedCount?: number;
@@ -49,6 +53,7 @@ export async function extractSkillsWithGemini(candidateId: string): Promise<{
     error?: string;
 }> {
     try {
+        const db = client || supabaseAdmin;
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY;
         if (!apiKey) {
             return {
@@ -58,7 +63,7 @@ export async function extractSkillsWithGemini(candidateId: string): Promise<{
         }
 
         // 1. Obtener datos del candidato
-        const { data: candidate, error: candError } = await supabaseAdmin
+        const { data: candidate, error: candError } = await db
             .from('job_applications')
             .select('id, full_name, first_name, last_name, resume_url, cv_filename, skills')
             .eq('id', candidateId)
@@ -154,21 +159,16 @@ export async function extractSkillsWithGemini(candidateId: string): Promise<{
             };
         }
 
-        // 4. Obtener catálogo global de tecnologías existentes para normalizar
-        let globalSkills: string[] = [];
+        // 4. Obtener catálogo oficial de tecnologías de tech_stacks
+        let officialStacks: string[] = [];
         try {
-            const [stacksRes, candidatesRes] = await Promise.all([
-                supabaseAdmin.from('tech_stacks').select('name').order('name'),
-                supabaseAdmin.from('job_applications').select('skills').not('skills', 'is', null).eq('is_deleted', false).limit(100)
-            ]);
-            const stackNames = (stacksRes.data || []).map((s: { name: string }) => s.name);
-            const candSkills = (candidatesRes.data || []).flatMap((c: { skills: string[] | null }) => c.skills || []);
-            globalSkills = Array.from(new Set([...stackNames, ...candSkills])).filter(Boolean);
+            const { data: stacksData } = await db.from('tech_stacks').select('name').order('name');
+            officialStacks = (stacksData || []).map((s: { name: string }) => s.name);
         } catch (e) {
-            console.warn('[ats-ai] Error al obtener catálogo de skills:', e);
+            console.warn('[ats-ai] Error al obtener catálogo de tech_stacks:', e);
         }
 
-        const sampleSkills = globalSkills.slice(0, 150).join(', ');
+        const sampleSkills = officialStacks.join(', ');
 
         // 5. Configurar Gemini
         const genAI = new GoogleGenerativeAI(apiKey);
@@ -263,22 +263,28 @@ Ejemplo:
             };
         }
 
-        // 7. Fusionar con las skills existentes del candidato (evitando duplicados case-insensitive)
+        // 7. Normalizar exhaustivamente contra tech_stacks y registrar tecnologías nuevas si no existen
+        const canonicalExtracted = await ensureSkillsInTechStacks(cleanedExtracted, db);
+
+        // Normalizar también las skills preexistentes del candidato por si tenían formatos antiguos no canónicos
         const currentSkills: string[] = candidate.skills || [];
-        const existingLower = new Set(currentSkills.map(s => s.toLowerCase().trim()));
+        const normalizedCurrent = normalizeSkillsList(currentSkills, officialStacks);
+
+        // Fusionar sin duplicados
+        const existingLower = new Set(normalizedCurrent.map((s: string) => s.toLowerCase().trim()));
         const newlyAddedSkills: string[] = [];
 
-        for (const skill of cleanedExtracted) {
-            if (!existingLower.has(skill.toLowerCase())) {
+        for (const skill of canonicalExtracted) {
+            if (!existingLower.has(skill.toLowerCase().trim())) {
                 newlyAddedSkills.push(skill);
-                existingLower.add(skill.toLowerCase());
+                existingLower.add(skill.toLowerCase().trim());
             }
         }
 
-        const mergedSkills = [...currentSkills, ...newlyAddedSkills];
+        const mergedSkills = [...normalizedCurrent, ...newlyAddedSkills];
 
         // 8. Actualizar base de datos
-        const { error: updateError } = await supabaseAdmin
+        const { error: updateError } = await db
             .from('job_applications')
             .update({
                 skills: mergedSkills,
@@ -293,12 +299,11 @@ Ejemplo:
 
         // 9. Registrar nota en el historial del candidato
         try {
-            const candidateName = candidate.full_name || `${candidate.first_name || ''} ${candidate.last_name || ''}`.trim() || 'Candidato';
             const logNote = newlyAddedSkills.length > 0
-                ? `✨ IA (Gemini): Se extrajeron ${newlyAddedSkills.length} habilidades del CV: ${newlyAddedSkills.join(', ')}.`
-                : `✨ IA (Gemini): Se analizó el CV. No se encontraron nuevas habilidades que no estuvieran ya registradas.`;
+                ? `✨ IA (Gemini): Se extrajeron y normalizaron ${newlyAddedSkills.length} habilidades del CV: ${newlyAddedSkills.join(', ')}.`
+                : `✨ IA (Gemini): Se analizó el CV. Todas las habilidades identificadas ya estaban registradas y normalizadas.`;
 
-            await supabaseAdmin
+            await db
                 .from('application_notes')
                 .insert([{
                     application_id: candidateId,
