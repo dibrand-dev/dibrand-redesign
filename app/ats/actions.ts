@@ -1319,3 +1319,23 @@ export async function deleteJob(jobId: string) {
     revalidatePath('/[lang]/join-us', 'page');
     return { success: true };
 }
+
+export async function extractCandidateSkillsAction(candidateId: string) {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+
+    if (!user) {
+        return { success: false, error: 'Debes iniciar sesión para ejecutar esta acción.' };
+    }
+
+    const { extractSkillsWithGemini } = await import('@/lib/ats-ai');
+    const result = await extractSkillsWithGemini(candidateId);
+
+    if (result.success) {
+        revalidatePath(`/ats/candidates/${candidateId}`);
+        revalidatePath('/ats/candidates');
+    }
+
+    return result;
+}
+

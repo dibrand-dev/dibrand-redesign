@@ -193,6 +193,7 @@ export default async function CandidateDetailPage({
                             <CandidateSkills 
                                 candidateId={id} 
                                 initialSkills={allSkills} 
+                                hasResume={!!(candidate.resume_url || candidate.cv_filename)}
                             />
                         </div>
                     </div>

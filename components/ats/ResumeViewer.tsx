@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Download, Maximize2, FileText, FileX, Upload, Loader2, RefreshCw } from 'lucide-react';
+import { Download, Maximize2, FileText, FileX, Upload, Loader2, RefreshCw, Sparkles } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
-import { updateCandidate } from '@/app/ats/actions';
+import { updateCandidate, extractCandidateSkillsAction } from '@/app/ats/actions';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
@@ -42,6 +42,7 @@ export default function ResumeViewer({ candidate }: ResumeViewerProps) {
     const [fileName, setFileName] = useState<string>(candidate.cv_filename || `${candidate.first_name || 'Candidato'}_Resume.pdf`);
     const [status, setStatus] = useState<'checking' | 'available' | 'not_found' | 'none'>('checking');
     const [isUploading, setIsUploading] = useState(false);
+    const [isExtractingSkills, setIsExtractingSkills] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
@@ -141,6 +142,30 @@ export default function ResumeViewer({ candidate }: ResumeViewerProps) {
         window.open(fileUrl, '_blank');
     };
 
+    const handleExtractSkills = async () => {
+        if (isExtractingSkills) return;
+        setIsExtractingSkills(true);
+        const toastId = toast.loading('Leyendo currículum con Gemini IA...');
+        try {
+            const res = await extractCandidateSkillsAction(candidate.id);
+            if (res.success) {
+                if ((res.addedCount || 0) > 0) {
+                    toast.success(`✨ ¡Éxito! Se detectaron y agregaron ${res.addedCount} habilidades al perfil.`, { id: toastId });
+                } else {
+                    toast.success('CV analizado. El candidato ya cuenta con todas las habilidades detectadas.', { id: toastId });
+                }
+                router.refresh();
+            } else {
+                toast.error(res.error || 'No se pudieron extraer las habilidades.', { id: toastId });
+            }
+        } catch (err: any) {
+            console.error('Error extracting skills in ResumeViewer:', err);
+            toast.error(err.message || 'Error al procesar el CV con IA.', { id: toastId });
+        } finally {
+            setIsExtractingSkills(false);
+        }
+    };
+
     return (
         <div className="bg-white rounded-[20px] shadow-sm border border-slate-200/60 p-6 md:p-8 h-full font-outfit">
             <input 
@@ -163,12 +188,29 @@ export default function ResumeViewer({ candidate }: ResumeViewerProps) {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                    {status === 'available' && (
+                        <button
+                            type="button"
+                            onClick={handleExtractSkills}
+                            disabled={isExtractingSkills || isUploading}
+                            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#9e4d97] to-[#0040A1] hover:from-[#893c83] hover:to-[#003487] text-white text-[12px] font-bold shadow-sm transition-all flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                            title="Analizar CV y extraer habilidades con Gemini IA"
+                        >
+                            {isExtractingSkills ? (
+                                <Loader2 size={14} className="animate-spin text-white" />
+                            ) : (
+                                <Sparkles size={14} className="text-pink-200" />
+                            )}
+                            <span>{isExtractingSkills ? 'Analizando...' : 'Extraer Skills (IA)'}</span>
+                        </button>
+                    )}
+
                     <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        disabled={isUploading}
-                        className="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:border-[#9e4d97] hover:text-[#9e4d97] text-[12px] font-bold transition-all flex items-center gap-1.5 disabled:opacity-50"
+                        disabled={isUploading || isExtractingSkills}
+                        className="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:border-[#9e4d97] hover:text-[#9e4d97] text-[12px] font-bold transition-all flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
                         title={status === 'available' ? 'Reemplazar currículum' : 'Subir currículum'}
                     >
                         {isUploading ? <Loader2 size={14} className="animate-spin text-[#9e4d97]" /> : <Upload size={14} />}

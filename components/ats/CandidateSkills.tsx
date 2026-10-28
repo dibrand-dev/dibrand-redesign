@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { updateCandidateSkills, getGlobalSkills } from '@/app/ats/actions';
-import { X, Plus, Search, Loader2 } from 'lucide-react';
+import { updateCandidateSkills, getGlobalSkills, extractCandidateSkillsAction } from '@/app/ats/actions';
+import { X, Plus, Search, Loader2, Sparkles } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface CandidateSkillsProps {
     candidateId: string;
     initialSkills: string[];
+    hasResume?: boolean;
 }
 
 /**
@@ -17,13 +19,21 @@ interface CandidateSkillsProps {
  * - Immediate association (saves to DB on add/remove).
  * - Duplicate prevention.
  */
-export default function CandidateSkills({ candidateId, initialSkills }: CandidateSkillsProps) {
+export default function CandidateSkills({ candidateId, initialSkills, hasResume }: CandidateSkillsProps) {
     const [skills, setSkills] = useState<string[]>(initialSkills || []);
     const [globalSkills, setGlobalSkills] = useState<string[]>([]);
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isExtracting, setIsExtracting] = useState(false);
     const suggestionsRef = useRef<HTMLDivElement>(null);
+
+    // Sync if initialSkills changes
+    useEffect(() => {
+        if (initialSkills) {
+            setSkills(initialSkills);
+        }
+    }, [initialSkills]);
 
     // Fetch master list of skills/tech stacks
     useEffect(() => {
@@ -48,6 +58,30 @@ export default function CandidateSkills({ candidateId, initialSkills }: Candidat
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+    const handleAiExtract = async () => {
+        if (isExtracting || isSaving) return;
+        setIsExtracting(true);
+        const toastId = toast.loading('Leyendo currículum con Gemini IA...');
+        try {
+            const res = await extractCandidateSkillsAction(candidateId);
+            if (res.success && res.skills) {
+                setSkills(res.skills);
+                if ((res.addedCount || 0) > 0) {
+                    toast.success(`✨ ¡Éxito! Se agregaron ${res.addedCount} nuevas habilidades desde el CV.`, { id: toastId });
+                } else {
+                    toast.success('CV analizado. El candidato ya contaba con todas las habilidades detectadas.', { id: toastId });
+                }
+            } else {
+                toast.error(res.error || 'No se pudieron extraer las habilidades.', { id: toastId });
+            }
+        } catch (err: any) {
+            console.error('Error extracting skills with AI:', err);
+            toast.error(err.message || 'Error al procesar el CV con IA.', { id: toastId });
+        } finally {
+            setIsExtracting(false);
+        }
+    };
 
     const handleAddSkill = async (skill: string) => {
         const normalizedSkill = skill.trim();
@@ -95,9 +129,49 @@ export default function CandidateSkills({ candidateId, initialSkills }: Candidat
 
     return (
         <section className="bg-white rounded-[20px] p-6 shadow-sm border border-slate-200/60 font-sans">
-            <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-5">
-                Core Competencies
-            </h3>
+            <div className="flex items-center justify-between mb-5 gap-2">
+                <h3 className="text-[10px] font-black tracking-widest text-slate-400 uppercase">
+                    Core Competencies
+                </h3>
+                <button
+                    type="button"
+                    onClick={handleAiExtract}
+                    disabled={isExtracting || isSaving}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold text-white bg-gradient-to-r from-[#9e4d97] to-[#0040A1] hover:from-[#893c83] hover:to-[#003487] rounded-lg shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    title="Analizar CV del candidato con Gemini y completar skills"
+                >
+                    {isExtracting ? (
+                        <>
+                            <Loader2 size={13} className="animate-spin text-white" />
+                            <span>Analizando...</span>
+                        </>
+                    ) : (
+                        <>
+                            <Sparkles size={13} className="text-pink-200" />
+                            <span>Completar con IA</span>
+                        </>
+                    )}
+                </button>
+            </div>
+
+            {/* Zero state banner when no skills are listed */}
+            {skills.length === 0 && !isExtracting && (
+                <div className="w-full p-4 mb-4 bg-purple-50/60 rounded-xl border border-purple-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left animate-in fade-in duration-300">
+                    <div>
+                        <p className="text-[12px] font-bold text-slate-800">Sin habilidades registradas</p>
+                        <p className="text-[11px] text-slate-500">Gemini puede leer el currículum y completar las tecnologías automáticamente.</p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={handleAiExtract}
+                        disabled={isExtracting || isSaving}
+                        className="shrink-0 px-3 py-1.5 bg-[#9e4d97] hover:bg-[#86377f] text-white text-[11px] font-bold rounded-lg shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    >
+                        <Sparkles size={12} />
+                        Extraer con IA
+                    </button>
+                </div>
+            )}
 
             {/* Chips Container */}
             <div className="flex flex-wrap gap-2 mb-6 min-h-[40px]">
@@ -110,14 +184,20 @@ export default function CandidateSkills({ candidateId, initialSkills }: Candidat
                         <button 
                             onClick={() => handleRemoveSkill(skill)}
                             className="text-slate-400 hover:text-[#D83484] transition-colors"
-                            disabled={isSaving}
+                            disabled={isSaving || isExtracting}
                             aria-label={`Remove ${skill}`}
                         >
                             <X size={14} strokeWidth={3} />
                         </button>
                     </div>
-                )) : (
-                    <p className="text-[12px] text-slate-400 italic">No skills listed yet</p>
+                )) : !isExtracting && (
+                    <p className="text-[12px] text-slate-400 italic">No hay habilidades cargadas aún</p>
+                )}
+                {isExtracting && (
+                    <div className="flex items-center gap-2 text-[12px] text-[#9e4d97] font-semibold py-2">
+                        <Loader2 size={16} className="animate-spin" />
+                        <span>Extrayendo tecnologías con Gemini...</span>
+                    </div>
                 )}
             </div>
 
